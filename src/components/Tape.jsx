@@ -35,7 +35,6 @@ const Tape = () => {
 }
 const TapeContainer = styled.section`
   position: relative;
-  border-radius: 0 24px 24px 0;
   padding: 40px 24px 32px;
   background: #121726;
   max-width: 430px;
@@ -96,7 +95,7 @@ const TapeList = styled.section`
     flex-direction: column;
     gap: 24px;
     margin-top: 32px;
-    max-height: 985px;
+    max-height: 100vh;
     overflow-y: auto;
     scrollbar-width: none;
     padding-bottom: 80px;

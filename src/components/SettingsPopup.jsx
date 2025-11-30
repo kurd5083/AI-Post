@@ -44,7 +44,7 @@ const SettingsPopup = () => {
 const PopupContent = styled.div`
     box-sizing: border-box;
     overflow-y: auto;
-    max-height: calc(100% - 177px);
+    height: 100%;
     scrollbar-width: none;
     padding-bottom: 24px;
 `

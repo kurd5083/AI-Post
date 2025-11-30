@@ -20,8 +20,8 @@ const MainLayout = () => {
 const MainContainer = styled.section`
   position: relative;
   display: flex;
-
-  &::after {
+  height: 100vh;
+  /* &::after {
     content: '';
     position: absolute;
     width: 100%;
@@ -31,14 +31,15 @@ const MainContainer = styled.section`
     background-color: #131826;
     z-index: -1;
     filter: blur(80px);
-  }
+  } */
 `
 const Main = styled.main`
   position: relative;
   box-sizing: border-box;
   background-color: #131826;
-  max-width: 1240px;
-  width: 100%;
+  /* max-width: 1240px; */
+  flex: 1;
+  min-width: 0;
   padding: 0 32px;
   z-index: 1;
   

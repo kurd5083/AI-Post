@@ -69,8 +69,6 @@ const PublicationsList = styled.div`
     grid-template-rows: max-content;
     margin-top: 50px;
     gap: 16px 24px;
-    max-height: 560px;
-    height: 100%;
 `;
 
 const PaginationWrapper = styled.div`

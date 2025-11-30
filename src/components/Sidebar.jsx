@@ -54,6 +54,8 @@ const Sidebar = () => {
 }
 
 const SidebarContainer = styled.section`
+  display: flex;
+  flex-direction: column;
   position: relative;
   border-radius: 24px 0 0 24px;
   padding: 40px 24px 32px;
@@ -150,8 +152,10 @@ const SidebarListItem = styled.li`
 const SidebarFooter = styled.div`
   display: flex;
   flex-direction: column;
+  flex-grow: 1;
+  justify-content: flex-end;
   gap: 32px;
-  margin-top: 300px;
+  margin-top: 20px;
 `
 const SidebarFooterTop = styled.div`
   display: flex;

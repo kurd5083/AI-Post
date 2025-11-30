@@ -10,6 +10,9 @@ const TableGroupsTable = () => {
         { id: 2, number: '#2', image: ava_groups, name: 'Для наших ребят', status: 'Премодерация постов', online: false },
         { id: 3, number: '#3', image: ava_groups, name: 'Для наших ребят', status: 'Премодерация постов', online: true },
         { id: 4, number: '#4', image: ava_groups, name: 'Для наших ребят', status: 'Премодерация постов', online: true },
+        { id: 5, number: '#5', image: ava_groups, name: 'Для наших ребят', status: 'Премодерация постов', online: false },
+        { id: 6, number: '#6', image: ava_groups, name: 'Для наших ребят', status: 'Премодерация постов', online: true },
+        { id: 7, number: '#7', image: ava_groups, name: 'Для наших ребят', status: 'Премодерация постов', online: true },
     ];
 
     return (
@@ -17,31 +20,35 @@ const TableGroupsTable = () => {
             <Table>
                 <TableHead>
                     <tr>
-                        <HeaderCell style={{ width: "350px" }}>Название группы</HeaderCell>
-                        <HeaderCell style={{ width: "350px" }}>Список</HeaderCell>
-                        <HeaderCell style={{ width: "260px" }}>Статус</HeaderCell>
+                        <HeaderCell>Название группы</HeaderCell>
+                        <HeaderCell>Список</HeaderCell>
+                        <HeaderCell>Статус</HeaderCell>
                         <HeaderCell>Параметры</HeaderCell>
                     </tr>
                 </TableHead>
+
                 <TableBody>
                     {tableData.map((row) => (
                         <TableItem key={row.id}>
-                            <TableCell style={{ width: "350px" }}>
-                                <p>{row.number} <img src={row.image} alt="image Groups" /> {row.name}</p>
+                            <TableCell>
+                                <p>{row.number} <img src={row.image} alt="Group" /> {row.name}</p>
                             </TableCell>
-                            <TableCell style={{ width: "350px" }}>
+
+                            <TableCell>
                                 <TableCellStatus>{row.status}</TableCellStatus>
                             </TableCell>
-                            <TableCell style={{ width: "260px" }}>
+
+                            <TableCell>
                                 <TableCellOnline $online={row.online}>
                                     <StatusIndicator $online={row.online}/>
                                     {row.online ? 'Онлайн' : 'Ошибка'}
                                 </TableCellOnline>
                             </TableCell>
-                            <TableCell style={{ width: "200px" }}>
-                                <ButtonDir><img src={dir_white} alt="dir icon" width={16} height={13}/></ButtonDir>
-                                <ButtonSetting><img src={setting} alt="setting icon" width={16} height={16}/></ButtonSetting>
-                                <ButtonDel><img src={del} alt="del icon" width={14} height={16}/></ButtonDel>
+
+                            <TableCell>
+                                <ButtonDir><img src={dir_white} alt="" width={16} height={13} /></ButtonDir>
+                                <ButtonSetting><img src={setting} alt="" width={16} height={16} /></ButtonSetting>
+                                <ButtonDel><img src={del} alt="" width={14} height={16} /></ButtonDel>
                             </TableCell>
                         </TableItem>
                     ))}
@@ -51,17 +58,22 @@ const TableGroupsTable = () => {
     );
 };
 
+export default TableGroupsTable;
+
 const TableContainer = styled.div`
     margin-top: 20px;
 `;
 
 const Table = styled.table`
     width: 100%;
-    border-spacing: 0 30px;
-    display: flex;
-    flex-direction: column;
+    border-spacing: 0 20px;
 `;
+
 const TableHead = styled.thead`
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+
     th:first-child {
         padding-left: 24px;
     }
@@ -69,6 +81,7 @@ const TableHead = styled.thead`
         padding-right: 24px;
     }
 `;
+
 const HeaderCell = styled.th`
     text-align: left;
     font-weight: 700;
@@ -76,24 +89,30 @@ const HeaderCell = styled.th`
     font-size: 12px;
     text-transform: uppercase;
 `;
+
 const TableBody = styled.tbody`
-    box-sizing: border-box;
-    max-height: 306px;
+    display: block;
+    max-height: calc(100vh - 874px);
     overflow-y: auto;
-    scrollbar-width: none;
-    padding-bottom: 80px;
+    scrollbar-width: none; 
 `;
 
 const TableItem = styled.tr`
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+
     td {
         padding: 15px 0;
     }
+
     td:first-child {
-        border-radius: 8px 0 0 8px; 
+        border-radius: 8px 0 0 8px;
         padding-left: 24px;
     }
+
     td:last-child {
-        border-radius: 0 8px 8px 0 ;
+        border-radius: 0 8px 8px 0;
         padding-right: 24px;
     }
 
@@ -101,7 +120,8 @@ const TableItem = styled.tr`
         background-color: #1C2438;
         border-radius: 24px;
     }
-`
+`;
+
 const TableCell = styled.td`
     font-size: 14px;
 
@@ -116,8 +136,9 @@ const TableCell = styled.td`
             height: 40px;
             border-radius: 12px;
         }
-}
+    }
 `;
+
 const TableCellStatus = styled.button`
     padding: 16px 24px;
     border-radius: 12px;
@@ -132,6 +153,7 @@ const TableCellOnline = styled.div`
     align-items: center;
     color: ${props => props.$online ? '#D6DCEC' : '#EF6284'};
 `;
+
 const StatusIndicator = styled.span`
     display: inline-block;
     width: 16px;
@@ -140,6 +162,7 @@ const StatusIndicator = styled.span`
     background-color: ${props => props.$online ? '#B5EC5B' : '#EF6284'};
     margin-right: 16px;
 `;
+
 const ButtonDir = styled.button`
     background-color: #336CFF;
     width: 48px;
@@ -147,6 +170,7 @@ const ButtonDir = styled.button`
     border-radius: 12px;
     margin-right: 8px;
 `;
+
 const ButtonSetting = styled.button`
     border: 2px solid #2F3953;
     width: 48px;
@@ -154,10 +178,10 @@ const ButtonSetting = styled.button`
     border-radius: 12px;
     margin-right: 24px;
 `;
+
 const ButtonDel = styled.button`
     background-color: #EF628414;
     width: 48px;
     height: 48px;
     border-radius: 12px;
 `;
-export default TableGroupsTable;
