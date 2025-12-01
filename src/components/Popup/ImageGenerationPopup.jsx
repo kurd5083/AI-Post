@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import Checkbox from "@/shared/Checkbox";
 import { imagegeneration } from "@/data/imagegeneration";
+
 const ImageGenerationPopup = () => {
     return (
         <ImageGenerationContent>

@@ -4,22 +4,23 @@ import styled from "styled-components";
 import { menuItems } from "@/data/sidebar";
 import arrow_back from "@/assets/sidebar/arrow-back.svg";
 import acc_icon from "@/assets/sidebar/acc-icon.png";
-
+import { usePopupStore } from "@/store/popupStore";
 
 const Sidebar = () => {
+  const { closePopup } = usePopupStore()
   const [activePage, setActivePage] = useState(1);
   
   const handleItemClick = (index) => {
     setActivePage(index);
   };
-
+  
   return (
     <SidebarContainer>
       <SidebarHead>
-        <SidebarTitle>
+        <SidebarTitle onClick={() => closePopup()}>
           <mark>AI</mark>Post
         </SidebarTitle>
-        <Link to={-1}><img src={arrow_back} alt="arrow back" /></Link>
+        <img src={arrow_back} alt="arrow back" />
       </SidebarHead>
       {menuItems.map((section, sectionIndex) => (
         <SidebarNav key={sectionIndex}>
@@ -54,6 +55,7 @@ const Sidebar = () => {
 }
 
 const SidebarContainer = styled.section`
+  box-sizing: border-box;
   display: flex;
   flex-direction: column;
   position: relative;
@@ -61,6 +63,8 @@ const SidebarContainer = styled.section`
   padding: 40px 24px 32px;
   background: #121726;
   max-width: 240px;
+  width: 100%;
+  
   &::before {
     content: '';
     position: absolute;
@@ -99,8 +103,9 @@ const SidebarTitle = styled.h1`
   gap: 10px;
   font-size: 18px;
   font-weight: 900;
+  cursor: pointer;
+
   mark {
-    background-color: transparent;
     color:#336CFF;
   }
 `
@@ -155,7 +160,7 @@ const SidebarFooter = styled.div`
   flex-grow: 1;
   justify-content: flex-end;
   gap: 32px;
-  margin-top: 20px;
+  margin-top: 40px;
 `
 const SidebarFooterTop = styled.div`
   display: flex;

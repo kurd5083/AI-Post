@@ -3,9 +3,7 @@
 body {
   font-family: "Montserrat", sans-serif;
   background-color: #131826;
-  /* padding: 88px 80px; */
   margin: 0 auto;
-  /* max-width: 1920px; */
   color: #D6DCEC;
 }
 
@@ -47,6 +45,7 @@ ul {
 input {
   box-sizing: border-box;
   font-family: "Montserrat", sans-serif;
+  outline: none;
 }
 
 button {
@@ -54,4 +53,8 @@ button {
   font-family: "Montserrat", sans-serif;
   border: none;
   background: transparent;
+}
+
+mark {
+  background-color: transparent;
 }

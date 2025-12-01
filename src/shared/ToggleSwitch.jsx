@@ -1,17 +1,17 @@
 import { useState } from "react";
 import styled from "styled-components";
 
-const ToggleSwitch = () => {
+const ToggleSwitch = ({ bg }) => {
     const [isOn, setIsOn] = useState(false);
 
     const handleToggle = () => {
-        setIsOn(prev => !prev);
+      setIsOn(prev => !prev);
     };
 
     return (
         <SwitchContainer>
             <SwitchLabel>
-                <SwitchInput type="checkbox" checked={isOn} onChange={handleToggle} />
+                <SwitchInput type="checkbox" checked={isOn} onChange={handleToggle} bg={bg}/>
                 <Slider />
             </SwitchLabel>
         </SwitchContainer>
@@ -37,7 +37,7 @@ const SwitchInput = styled.input`
   height: 0;
 
   &:checked + span {
-    background-color: #FF9C55;
+    background-color: ${props => props.bg};
   }
 
   &:checked + span::before {

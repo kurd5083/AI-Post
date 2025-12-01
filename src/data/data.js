@@ -66,6 +66,14 @@ export const data = [
         }
     },
     {
+        key: "link_generation_prev",
+        name: "Генерация ссылок",
+        extra: {
+            background: "#603642",
+            image: link_generation
+        }
+    },
+    {
         key: "link_generation",
         name: "Генерация ссылок",
         extra: {
@@ -152,7 +160,21 @@ export const data = [
             background: "#44336D",
             image: create_post
         }
-    }
-    
+    },
+    {
+        key: "create_post_common",
+        name: "Создать пост",
+        extra: {
+            background: "#44336D",
+            image: create_post
+        }
+    },
+    {
+        key: "promotion",
+        name: "Продвижение",
+        extra: {
+            background: "#552F43",
+            image: create_post
+        }
+    },
 ]
-

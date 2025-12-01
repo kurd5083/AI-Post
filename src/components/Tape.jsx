@@ -34,23 +34,23 @@ const Tape = () => {
     )
 }
 const TapeContainer = styled.section`
-  position: relative;
-  padding: 40px 24px 32px;
-  background: #121726;
-  max-width: 430px;
-  padding: 35px 43px 0 0;
-  overflow: hidden;
+    position: relative;
+    padding: 40px 24px 32px;
+    background: #121726;
+    max-width: 430px;
+    padding: 35px 43px 0 0;
+    overflow: hidden;
 
-  &::after {
-    content: '';
-    position: absolute;
-    right: -100px;
-    top: -150px;
-    width: 200px;   
-    height: 200px;
-    background: #1844C2;
-    filter: blur(60px);
-  }
+    &::after {
+        content: '';
+        position: absolute;
+        right: -100px;
+        top: -150px;
+        width: 200px;   
+        height: 200px;
+        background: #1844C2;
+        filter: blur(60px);
+    }
 `
 const TapeHead = styled.div`
     display: flex;
@@ -118,6 +118,11 @@ const TapeItem = styled.article`
     padding: 8px 8px 8px 33px;
     border: 2px solid #1F273B;
     border-radius: 24px;
+
+    &:hover {
+        background-color: #181F30;
+        border: 2px solid #181F30;
+    }
 `
 const TapeItemContent = styled.div`
     display: flex;

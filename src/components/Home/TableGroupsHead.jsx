@@ -56,7 +56,6 @@ const TableGroupsHeadBtn = styled.button`
     font-weight: 600;
     mark {
         color: #6A7080;
-        background-color: transparent;
     }
 `
 const TableGroupsHeadRight = styled.div`

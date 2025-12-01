@@ -8,7 +8,7 @@ const Header = () => {
     return (
         <HeaderContainer>
             <HeaderContent>
-                <img src={money} alt="money icon" />
+                <img src={money} alt="money icon"/>
                 <HeaderSubtext>Баланс:</HeaderSubtext>
                 <HeaderBalance>1, 876 <mark>₽</mark> </HeaderBalance>
                 <HeaderBtnAdd>+ Пополнить</HeaderBtnAdd>
@@ -41,7 +41,6 @@ const HeaderBalance = styled.p`
     margin-left: 16px;
 
     mark {
-        background-color: transparent;
         color: #336CFF;
     }
 `

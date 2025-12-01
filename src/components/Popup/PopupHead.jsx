@@ -7,12 +7,12 @@ import { usePopupStore } from "@/store/popupStore"
 import { data } from "@/data/data";
 
 const PopupHead = () => {
-    const { popup, closePopup } = usePopupStore()
+    const { popup, closePopup, goBack  } = usePopupStore()
     const foundItem = data.find(elem => elem.key == popup.content)
     return (
         <>
             <PopupListInfo>
-                {popup.content != 'settings' && <PopupArrow src={arrow} alt="arrow icon" width={8} height={16} />}
+                {popup.content != 'settings' && <PopupArrow src={arrow} alt="arrow icon" width={8} height={16} onClick={goBack}/>}
                 <PopupListAva src={ava_icon} alt="ava icon" width={48} height={48} />
                 <PopupListInfoContent>
                     <p>Antropia Digital</p>
@@ -75,9 +75,9 @@ const PopupListHead = styled.section`
     justify-content: space-between;
     gap: 24px;
     padding-bottom: 40px;
+    margin-top: 40px;
 `
 const PopupListHeadContent = styled.div`
-    margin-top: 40px;
     display: flex;
     align-items: center;
     gap: 40px;
@@ -91,7 +91,7 @@ const PopupListHeadContent = styled.div`
 const IconSettings = styled.img`
     box-sizing: border-box;
     border-radius: 8px;
-    padding: 11px 10px;
+    padding: 10px;
 `
 
 const PopupListHeadBtn = styled.button`

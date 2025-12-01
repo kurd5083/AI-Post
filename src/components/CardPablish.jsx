@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import time from "@/assets/time.svg";
-
+import arrow from "@/assets/arrow.svg";
 const CardPablish = ({ item }) => {
     return (
         <CardPablishItem>
@@ -16,17 +16,43 @@ const CardPablish = ({ item }) => {
             </CardPablishItemHead>
             <CardPablishText>{item.text}</CardPablishText>
             <CardPablishSubtext>{item.subtext}</CardPablishSubtext>
+            <CardPablishOpen>
+                <img src={arrow} alt="arrow icon" />
+            </CardPablishOpen>
         </CardPablishItem>
     )
 }
-const CardPablishItem = styled.div`
+const CardPablishOpen = styled.button`
+    display: flex;
+    align-items: center;
+    justify-content: center;
     box-sizing: border-box;
-    padding: 24px;
-    /* border: 2px solid #1F273B; */
-    background-color: #181F30;
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    width: 32px;
+    height: 32px;
+    border-radius: 32px;
+    border: 2px solid #1C2438;
+`
+
+const CardPablishItem = styled.div`
+    position: relative; 
+    box-sizing: border-box;
+    padding: 20px;
+    border: 2px solid #1F273B;
     border-radius: 24px;
-    max-width: 345px;
-    height: min-content;
+
+    &:hover {
+        background-color: #181F30;
+        border: 2px solid #181F30;
+        ${CardPablishOpen} {
+            background-color: #1C2438;
+            svg path {
+                stroke: #D6DCEC; 
+            }
+        }
+    }
 `
 const CardPablishItemHead = styled.div`
     display: flex;
@@ -68,6 +94,7 @@ const CardPablishText = styled.p`
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
+    padding-right: 40px;
 `
 const CardPablishSubtext = styled.p`
     margin-top: 16px;
@@ -78,5 +105,7 @@ const CardPablishSubtext = styled.p`
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
+    padding-right: 60px;
 `
+
 export default CardPablish

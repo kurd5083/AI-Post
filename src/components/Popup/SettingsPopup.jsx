@@ -13,7 +13,7 @@ const SettingsPopup = () => {
                     <PopupContentTitle>{section.label}</PopupContentTitle>
                     <PopupContentList>
                         {section.items.map((item, index) => (
-                            <PopupContentItem key={index} onClick={() => changeContent(item.key)}>
+                            <PopupContentItem key={index} onClick={item.right !== 'switch' ? () => changeContent(item.key) : undefined}>
                                 <PopupContentLeft>
                                     <img src={item.extra.image} alt={item.name} style={{ background: item.extra.background }} width={40} height={40} />
                                     <PopupContentInfo $place={item.place} $size={item.size}>
@@ -24,14 +24,14 @@ const SettingsPopup = () => {
                                 {item.right == 'arrow' ? (
                                     <img src={arrow} alt="arrow icon" height={12} width={6} />
                                 ) : item.right == 'switch' ? (
-                                    <ToggleSwitch />
+                                    <ToggleSwitch bg="#FF9C55"/>
                                 ) : item.right == 'textarrow' ? (
                                     <PopupContentRight>
                                         <span>Премодерация</span>
                                         <img src={arrow} alt="arrow icon" height={12} width={6} />
                                     </PopupContentRight>
                                 ) : (
-                                    <p>{item.status}</p>
+                                    <PopupContentCounter>{item.status}</PopupContentCounter>
                                 )}
                             </PopupContentItem>
                         ))}
@@ -42,11 +42,6 @@ const SettingsPopup = () => {
     )
 }
 const PopupContent = styled.div`
-    box-sizing: border-box;
-    overflow-y: auto;
-    height: 100%;
-    scrollbar-width: none;
-    padding-bottom: 24px;
 `
 const PopupNav = styled.nav`
     margin-top: 40px;
@@ -108,6 +103,7 @@ const PopupContentInfo = styled.div`
         color: #6A7080;
         font-size: ${props => props.$place ? '24px' : '12px'};
         font-weight: 700;
+        text-transform: uppercase;
     }
 `
 const PopupContentRight = styled.div`
@@ -115,4 +111,17 @@ const PopupContentRight = styled.div`
     align-items: center;
     gap: 16px;
 `
+const PopupContentCounter = styled.p`
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 56px;
+    height: 56px;
+    border: 2px solid #1F273B;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 14px;
+`
+
+
 export default SettingsPopup

@@ -90,7 +90,7 @@ export const settings = {
                     }
                 },
                 {
-                    key: "link_generation",
+                    key: "link_generation_prev",
                     name: "Генерация ссылок",
                     right: 'arrow',
                     extra: {
@@ -172,7 +172,7 @@ export const settings = {
                     }
                 },
                 {
-                    key: "create_post",
+                    key: "industrial_library",
                     name: "Дополнительно",
                     right: 'arrow',
                     extra: {

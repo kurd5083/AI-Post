@@ -1,17 +1,14 @@
 import styled from "styled-components";
 import CardPablish from "@/components/CardPablish";
-import { publications } from "../data/publications";
+import { publications } from "../../data/publications";
 import { useState } from "react";
 
 const PublicationsPopup = () => {
     const itemsPerPage = 9;
     const [currentPage, setCurrentPage] = useState(1);
-
     const totalPages = Math.ceil(publications.length / itemsPerPage);
-
     const indexOfLast = currentPage * itemsPerPage;
     const indexOfFirst = indexOfLast - itemsPerPage;
-
     const currentItems = publications.slice(indexOfFirst, indexOfLast);
 
     return (
@@ -21,7 +18,6 @@ const PublicationsPopup = () => {
                 <PublicationsFilter>Архив <span>0</span></PublicationsFilter>
                 <PublicationsFilter>По дате <span></span></PublicationsFilter>
             </PublicationsHead>
-
             <PublicationsList>
                 {currentItems.map((item, index) => (
                     <CardPablish key={index} item={item} />
@@ -65,7 +61,7 @@ const PublicationsFilter = styled.p`
 
 const PublicationsList = styled.div`
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(275px, min-content));
+    grid-template-columns: repeat(auto-fit, minmax(320px, min-content));
     grid-template-rows: max-content;
     margin-top: 50px;
     gap: 16px 24px;

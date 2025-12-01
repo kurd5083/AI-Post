@@ -5,8 +5,6 @@ import { industriallibrary } from "@/data/industriallibrary";
 const IndustrialLibraryPopup = () => {
     return (
         <IndustrialLibraryContent>
-            <IndustrialLibraryContentTitle>Выберите одну стилистику</IndustrialLibraryContentTitle>
-            <div>
                 {industriallibrary.map((item, index) => (
                     <IndustrialLibraryContentItem key={index}>
                         <Checkbox>
@@ -17,21 +15,13 @@ const IndustrialLibraryPopup = () => {
                         </Checkbox>
                     </IndustrialLibraryContentItem>
                 ))}
-            </div>
-            <IndustrialLibraryBtn>Сохранить </IndustrialLibraryBtn>
+            <IndustrialLibraryBtn>Сохранить</IndustrialLibraryBtn>
         </IndustrialLibraryContent>
     )
 }
 const IndustrialLibraryContent = styled.div`
-    display: flex;
-    flex-direction: column;
-    gap: 32px;
 `
-const IndustrialLibraryContentTitle = styled.h3`
-    font-size: 12px;
-    font-weight: 700;
-    color: #6A7080;
-`
+
 const IndustrialLibraryContentItem = styled.div`
     display: flex;
     padding: 24px 0;
@@ -66,5 +56,6 @@ const IndustrialLibraryBtn = styled.button`
     font-weight: 700;
     font-size: 14px;
     max-width: 147px;
+    margin-top: 30px;
 `
 export default IndustrialLibraryPopup

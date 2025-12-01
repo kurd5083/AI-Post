@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import create_post  from "@/assets/popup/create-post-sec.svg";
+
 const CreatePostPopup = () => {
   return (
     <CreatePostContainer>
@@ -10,6 +11,7 @@ const CreatePostPopup = () => {
     </CreatePostContainer>
   )
 }
+
 const CreatePostContainer = styled.div`
     display: flex;
     flex-direction: column;

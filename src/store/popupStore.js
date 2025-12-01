@@ -4,13 +4,40 @@ export const usePopupStore = create((set, get) => ({
     popup: null,
 
     openPopup: () => {
-        set({ popup: { status: true, content: 'settings' } });
+        set({ popup: { status: true, content: 'settings', previousPage: [] } });
     },
 
     closePopup: () => {
         set({ popup: null });
     },
+
     changeContent: (popupData) => {
-        set({ popup: { status: true, content: popupData } });
+        const currentPopup = get().popup;
+
+        set({
+            popup: {
+                status: true,
+                content: popupData,
+                previousPage: currentPopup
+                    ? [...(currentPopup.previousPage || []), currentPopup.content]
+                    : [],
+            },
+        });
+    },
+
+    goBack: () => {
+        const currentPopup = get().popup;
+        if (!currentPopup || !currentPopup.previousPage?.length) return;
+
+        const previousPages = [...currentPopup.previousPage];
+        const lastPage = previousPages.pop();
+
+        set({
+            popup: {
+                status: true,
+                content: lastPage,
+                previousPage: previousPages,
+            },
+        });
     },
 }));
