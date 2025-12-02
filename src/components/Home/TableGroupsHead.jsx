@@ -53,7 +53,7 @@ const TableGroupsHeadBtn = styled.button`
     color: #6A7080;
     padding-bottom: 18px;
     font-size: 14px;
-    font-weight: 600;
+    font-weight: 700;
     mark {
         color: #6A7080;
     }

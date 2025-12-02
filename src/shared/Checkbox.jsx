@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { useState } from "react";
 
-const Checkbox = ({ children }) => {
+const Checkbox = ({ color, children }) => {
     const [checked, setChecked] = useState(false);
 
     return (
@@ -10,7 +10,7 @@ const Checkbox = ({ children }) => {
                 checked={checked}
                 onChange={(e) => setChecked(e.target.checked)}
             />
-            <StyledCheckbox checked={checked} />
+            <StyledCheckbox $color={color} checked={checked} />
             {children}
         </CheckboxContainer>
     );
@@ -43,7 +43,7 @@ const StyledCheckbox = styled.div`
         content: "";
         width: 16px;
         height: 16px;
-        background: #336CFF;
+        background: ${({ $color }) => $color || "#336CFF"};
         border-radius: 50%;
         display: ${(props) => (props.checked ? "block" : "none")};
     }

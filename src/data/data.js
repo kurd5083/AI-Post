@@ -122,6 +122,14 @@ export const data = [
         }
     },
     {
+        key: "schedule_interval",
+        name: "Расписание",
+        extra: {
+            background: "#5F6046",
+            image: schedule
+        }
+    },
+    {
         key: "sources",
         name: "Источники",
         extra: {
@@ -130,8 +138,16 @@ export const data = [
         }
     },
     {
+        key: "compilation",
+        name: "Подборка",
+        extra: {
+            background: "#203F67",
+            image: sources
+        }
+    },
+    {
         key: "post_style",
-        name: "Стиль постов",
+        name: "Стиль промптов",
         extra: {
             background: "#5F3C36",
             image: post_style

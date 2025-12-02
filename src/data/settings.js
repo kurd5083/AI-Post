@@ -164,7 +164,7 @@ export const settings = {
                 },
                 {
                     key: "post_style",
-                    name: "Стиль постов",
+                    name: "Стиль промптов",
                     right: 'arrow',
                     extra: {
                         background: "#5F3C36",
@@ -172,7 +172,7 @@ export const settings = {
                     }
                 },
                 {
-                    key: "industrial_library",
+                    key: "advanced",
                     name: "Дополнительно",
                     right: 'arrow',
                     extra: {

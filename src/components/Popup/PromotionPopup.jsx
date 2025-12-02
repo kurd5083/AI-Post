@@ -6,7 +6,7 @@ const PromotionPopup = () => {
     return (
         <PromotionContainer>
             <PromotionHead>
-                <PromotionHeadText>Просмотр</PromotionHeadText>
+                <PromotionHeadText $active={true}>Просмотр</PromotionHeadText>
                 <PromotionHeadText>Бусты</PromotionHeadText>
             </PromotionHead>
             <PromotionViews>
@@ -50,12 +50,13 @@ const PromotionHead = styled.div`
 const PromotionHeadText = styled.p`
     display: flex;
     gap: 32px;
-    color: #6A7080;
+    color: ${({$active}) => $active ? '#D6DCEC' : '#6A7080'};
     padding-bottom: 32px;
-    border-bottom: 2px solid #2E3954;
+    border-bottom: 2px solid ${({$active}) => $active ? '#D6DCEC' : '#2E3954'};
     font-weight: 700;
     font-size: 24px;
     padding-right: 40px;
+    cursor: pointer;
 `
 const PromotionViews = styled.div`
     display: flex;
@@ -88,7 +89,7 @@ const PromoteText = styled.p`
     font-weight: 600;
     color: #6A7080;
 `
-const PromotionBtnSave = styled.p`
+const PromotionBtnSave = styled.button`
     box-sizing: border-box;
     padding: 21px 32px;
     border-radius: 12px;

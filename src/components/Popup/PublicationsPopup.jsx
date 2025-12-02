@@ -20,7 +20,7 @@ const PublicationsPopup = () => {
             </PublicationsHead>
             <PublicationsList>
                 {currentItems.map((item, index) => (
-                    <CardPablish key={index} item={item} />
+                    <CardPablish key={index} item={item} bg={true} />
                 ))}
             </PublicationsList>
 
@@ -70,8 +70,10 @@ const PublicationsList = styled.div`
 const PaginationWrapper = styled.div`
     display: flex;
     justify-content: center;
+    align-items: flex-end;
     gap: 37px;
     margin-top: 70px;
+    height: 100%;
 `;
 
 const PageBtn = styled.button`

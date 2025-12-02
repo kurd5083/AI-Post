@@ -1,0 +1,178 @@
+import { useState } from "react";
+import styled from "styled-components";
+import { usePopupStore } from "@/store/popupStore"
+import plus_blue from "@/assets/popup/plus-blue.svg";
+import Drag from "@/shared/Drag";
+
+const MAX_PROMPT_LENGTH = 100;
+
+const IndustrialStylePopup = () => {
+    const { changeContent } = usePopupStore()
+    const [prompt, setPrompt] = useState("");
+    const handlePromptChange = (e) => {
+        if (e.target.value.length <= MAX_PROMPT_LENGTH) {
+            setPrompt(e.target.value);
+        }
+    };
+    const handleTest = () => {
+        if (!prompt.trim()) return;
+        console.log("Тестирование промпта:", prompt);
+    };
+    return (
+        <IndustrialStyleContainer>
+            <IndustrialStyleLeft>
+                <IndustrialStyleBtn onClick={() => changeContent("industrial_library")}>Библиотека промптов</IndustrialStyleBtn>
+                <IndustrialStyleTitle>Промпт</IndustrialStyleTitle>
+                <IndustrialStyleContent>
+                    <div>
+                        <textarea
+                            placeholder="Введите промпт..."
+                            value={prompt}
+                            onChange={handlePromptChange}
+                        ></textarea>
+                    </div>
+                    <button
+                        disabled={!prompt.trim()}
+                        onClick={handleTest}
+                    >
+                        Тест
+                    </button>
+                    <p>{prompt.length} / {MAX_PROMPT_LENGTH}</p>
+                </IndustrialStyleContent>
+                <IndustrialStyleDesc>Введите промпт — это задание для генерации поста. <mark>Чем точнее формулировка, тем лучше результат.</mark></IndustrialStyleDesc>
+                <IndustrialStyleTitle>Подпись</IndustrialStyleTitle>
+                <IndustrialStyleInputContainer>
+                    <IndustrialStyleInput type="text" placeholder="Описание канала" />
+                    <IndustrialStyleImg src={plus_blue} alt="plus icon" width={16} height={16} />
+                </IndustrialStyleInputContainer>
+                <IndustrialStyleDesc>Подпись будет добавлена в <mark>конец каждого поста.</mark> Например: ссылка или призыв подписаться.</IndustrialStyleDesc>
+            </IndustrialStyleLeft>
+            <IndustrialStyleRight>
+                <IndustrialStyleTitle>Креативность</IndustrialStyleTitle>
+                <Drag />
+                <IndustrialStyleDesc>Ползунок <mark>«Креативность»</mark> регулирует, насколько
+                    оригинальным и неожиданным будет текст поста.
+                    Высокие значения <mark>увеличивают</mark> вариативность, что
+                    может привести к менее предсказуемым результатам</IndustrialStyleDesc>
+            </IndustrialStyleRight>
+        </IndustrialStyleContainer>
+    )
+}
+const IndustrialStyleContainer = styled.div`
+    display: flex;
+    gap: 80px;
+`
+const IndustrialStyleLeft = styled.div`
+ h2 {
+    margin-top: 40px;
+ }
+`
+
+const IndustrialStyleBtn = styled.button`
+    padding: 21px 24px;
+    border-radius: 12px;
+    color: #D6DCEC;
+    background-color: #2B89ED;
+    font-weight: 700;
+    font-size: 14px;
+`
+const IndustrialStyleInputContainer = styled.div`
+  display: flex;
+  gap: 24px;
+`
+const IndustrialStyleTitle = styled.h2`
+  font-size: 12px;
+  font-weight: 700;
+  color: #6A7080;
+  text-transform: uppercase;
+  margin-bottom: 24px;
+`
+const IndustrialStyleDesc = styled.p`
+  font-size: 14px;
+  line-height: 24px;
+  font-weight: 700;
+  color: #6A7080;
+  margin-top: 24px;
+  max-width: 420px;
+
+  mark {
+    color: #FF7F48;
+  }
+`
+const IndustrialStyleContent = styled.div`
+    position: relative;
+    width: fit-content;
+
+    div {
+        background-color: #1C2336;
+        box-sizing: border-box;
+        padding: 32px 32px 60px;
+        width: 470px;
+        border-radius: 24px;
+        min-height: 170px;
+
+        &::placeholder {
+            color: #6A7080;
+        }
+    }
+    textarea {
+        background-color: #1C2336;
+        border: none;
+        outline: none;
+        color: #6A7080;
+        resize: none;
+        width: 100%;
+        font-size: 14px;
+        line-height: 24px;
+        font-weight: 600;
+        scrollbar-width: none;
+    }
+    button {
+        position: absolute;
+        bottom: 32px;
+        left: 32px;
+        padding: 10px 24px 12px;
+        font-size: 14px;
+        font-weight: 700;
+        color: #D6DCEC;
+        border-radius: 12px;
+        border: 2px solid #333E59;
+    }
+    p {
+        position: absolute;
+        bottom: 44px;
+        right: 32px;
+        font-size: 12px;
+        font-weight: 700;
+    }
+    
+`
+
+const IndustrialStyleInput = styled.input`
+  background-color: transparent;
+  max-width: 280px;
+  width: 100%;
+  color: #D6DCEC;
+  font-size: 24px;
+  font-weight: 700;
+  padding-bottom: 24px;
+  border: none;
+  border-bottom: 2px solid #2E3954;
+
+  &::placeholder {
+    color: #D6DCEC;
+  }
+`
+const IndustrialStyleImg = styled.img`
+  padding: 12px;
+  background-color: #142036;
+  border-radius: 50%;
+  cursor: pointer;
+`
+const IndustrialStyleRight = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+`
+
+export default IndustrialStylePopup

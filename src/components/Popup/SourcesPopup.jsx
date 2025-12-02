@@ -1,8 +1,10 @@
 import styled from "styled-components";
 import plus_blue from "@/assets/popup/plus-blue.svg";
-import del from "@/assets/popup/del.svg";
+import { usePopupStore } from "@/store/popupStore"
 
 const SourcesPopup = () => {
+  const { changeContent } = usePopupStore()
+
   return (
     <SourcesContainer>
       <SourcesText>
@@ -11,19 +13,34 @@ const SourcesPopup = () => {
       </SourcesText>
 
       <SourcesKey>
-      <SourcesKeyTitle>Мои источники:</SourcesKeyTitle>
+        <SourcesKeyTitle>Мои источники:</SourcesKeyTitle>
         <SourcesKeySubitle>Введите источник</SourcesKeySubitle>
         <SourcesInputContainer>
-          <SourcesInput type="text"/>
+          <SourcesInput type="text" />
           <SourcesImg src={plus_blue} alt="plus icon" width={16} height={16} />
         </SourcesInputContainer>
         <SourcesBlocks>
-          <SourcesBlock>apple.com<img src={del} alt="del icon" width={14} height={16} /></SourcesBlock>
-          <SourcesBlock>Citilink.ru<img src={del} alt="del icon" width={14} height={16} /></SourcesBlock>
-          <SourcesBlock>dns.shop<img src={del} alt="del icon" width={14} height={16} /></SourcesBlock>
+          <SourcesBlock>
+            apple.com
+            <svg width="14" height="16" viewBox="0 0 14 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M2.625 16C2.14375 16 1.73192 15.8261 1.3895 15.4782C1.04708 15.1304 0.875583 14.7117 0.875 14.2222V2.66667H0V0.888889H4.375V0H9.625V0.888889H14V2.66667H13.125V14.2222C13.125 14.7111 12.9538 15.1298 12.6114 15.4782C12.269 15.8267 11.8568 16.0006 11.375 16H2.625ZM4.375 12.4444H6.125V4.44444H4.375V12.4444ZM7.875 12.4444H9.625V4.44444H7.875V12.4444Z" fill="#6A7080" />
+            </svg>
+          </SourcesBlock>
+          <SourcesBlock>
+            Citilink.ru
+            <svg width="14" height="16" viewBox="0 0 14 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M2.625 16C2.14375 16 1.73192 15.8261 1.3895 15.4782C1.04708 15.1304 0.875583 14.7117 0.875 14.2222V2.66667H0V0.888889H4.375V0H9.625V0.888889H14V2.66667H13.125V14.2222C13.125 14.7111 12.9538 15.1298 12.6114 15.4782C12.269 15.8267 11.8568 16.0006 11.375 16H2.625ZM4.375 12.4444H6.125V4.44444H4.375V12.4444ZM7.875 12.4444H9.625V4.44444H7.875V12.4444Z" fill="#6A7080" />
+            </svg>
+          </SourcesBlock>
+          <SourcesBlock>
+            dns.shop
+            <svg width="14" height="16" viewBox="0 0 14 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M2.625 16C2.14375 16 1.73192 15.8261 1.3895 15.4782C1.04708 15.1304 0.875583 14.7117 0.875 14.2222V2.66667H0V0.888889H4.375V0H9.625V0.888889H14V2.66667H13.125V14.2222C13.125 14.7111 12.9538 15.1298 12.6114 15.4782C12.269 15.8267 11.8568 16.0006 11.375 16H2.625ZM4.375 12.4444H6.125V4.44444H4.375V12.4444ZM7.875 12.4444H9.625V4.44444H7.875V12.4444Z" fill="#6A7080" />
+            </svg>
+          </SourcesBlock>
         </SourcesBlocks>
       </SourcesKey>
-      <SourcesButton>Подборки источников</SourcesButton>
+      <SourcesButton onClick={() => changeContent("compilation")}>Подборки источников</SourcesButton>
     </SourcesContainer>
   )
 }
@@ -44,72 +61,80 @@ const SourcesText = styled.p`
     }
 `
 const SourcesKey = styled.div`
-    margin-top: 40px;
+  margin-top: 40px;
 `
 const SourcesKeyTitle = styled.h2`
-    font-weight: 700;
-    font-size: 24px;
-    margin-bottom: 40px;
+  font-weight: 700;
+  font-size: 24px;
+  margin-bottom: 40px;
 `
 const SourcesKeySubitle = styled.h3`
-    text-transform: uppercase;
-    font-weight: 700;
-    font-size: 12px;
-    color: #6A7080;
-    margin-bottom: 26px;
+  text-transform: uppercase;
+  font-weight: 700;
+  font-size: 12px;
+  color: #6A7080;
+  margin-bottom: 26px;
 `
 const SourcesInputContainer = styled.div`
-    display: flex;
-    gap: 24px;
+  display: flex;
+  gap: 24px;
 `
 const SourcesInput = styled.input`
-    background-color: transparent;
-    max-width: 280px;
-    width: 100%;
-    color: #D6DCEC;
-    font-size: 24px;
-    font-weight: 700;
-    padding-bottom: 24px;
-    border: none;
-    border-bottom: 2px solid #2E3954;
+  background-color: transparent;
+  max-width: 280px;
+  width: 100%;
+  color: #D6DCEC;
+  font-size: 24px;
+  font-weight: 700;
+  padding-bottom: 24px;
+  border: none;
+  border-bottom: 2px solid #2E3954;
 
-    &::placeholder {
-        color: #D6DCEC;
-    }
+  &::placeholder {
+    color: #D6DCEC;
+  }
 `
 const SourcesImg = styled.img`
-    padding: 12px;
-    background-color: #142036;
-    border-radius: 50%;
-    cursor: pointer;
+  padding: 12px;
+  background-color: #142036;
+  border-radius: 50%;
+  cursor: pointer;
 `
 const SourcesBlocks = styled.div`
-    display: flex;
-    gap: 16px;
-    margin-top: 32px;
+  display: flex;
+  gap: 16px;
+  margin-top: 32px;
 `
 const SourcesBlock = styled.p`
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-radius: 12px;
-    border: 2px solid #333E59;
-    padding: 16px 16px 18px 24px;
-    max-width: 240px;
-    width: 100%;
-    font-size: 14px;
-    font-weight: 700;
-    img {
-        cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: 12px;
+  border: 2px solid #333E59;
+  padding: 16px 16px 18px 24px;
+  max-width: 240px;
+  width: 100%;
+  font-size: 14px;
+  font-weight: 700;
+  
+  svg {
+    cursor: pointer;
+      
+    &:hover {
+      path {
+        fill: #2B89ED 
+      }
     }
+  }  
 `
 const SourcesButton = styled.button`
-    padding: 21px 24px;
-    border-radius: 12px;
-    color: #D6DCEC;
-    background-color: #2B89ED;
-    font-weight: 700;
-    font-size: 14px;
-    margin-top: 40px;
+  padding: 21px 24px;
+  border-radius: 12px;
+  color: #D6DCEC;
+  background-color: #2B89ED;
+  font-weight: 700;
+  font-size: 14px;
+  margin-top: 40px; 
 `
+
 export default SourcesPopup

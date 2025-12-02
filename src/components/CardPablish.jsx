@@ -1,9 +1,9 @@
 import styled from "styled-components";
 import time from "@/assets/time.svg";
 import arrow from "@/assets/arrow.svg";
-const CardPablish = ({ item }) => {
+const CardPablish = ({ item, bg }) => {
     return (
-        <CardPablishItem>
+        <CardPablishItem $bg={bg}>
             <CardPablishItemHead>
                 <CardPablishItemName>
                     <CardPablishItemImg src={item.ava} alt={item.username} />
@@ -40,8 +40,9 @@ const CardPablishItem = styled.div`
     position: relative; 
     box-sizing: border-box;
     padding: 20px;
-    border: 2px solid #1F273B;
+    border: 2px solid ${({ $bg }) => $bg ? '#181F30' : '#1F273B'};
     border-radius: 24px;
+    background-color: ${({ $bg }) => $bg ? '#181F30' : 'transporent'};
 
     &:hover {
         background-color: #181F30;
@@ -86,6 +87,7 @@ const CardPablishItemTime = styled.p`
     font-weight: 700;
 `
 const CardPablishText = styled.p`
+    box-sizing: border-box;
     margin-top: 26px;
     font-size: 24px;
     line-height: 24px;
@@ -97,6 +99,7 @@ const CardPablishText = styled.p`
     padding-right: 40px;
 `
 const CardPablishSubtext = styled.p`
+    box-sizing: border-box;
     margin-top: 16px;
     font-size: 14px;
     line-height: 14px;

@@ -2,28 +2,27 @@ import { useState } from "react";
 import styled from "styled-components";
 import arrow from "@/assets/arrow.svg";
 
-const CustomSelect = ({ options, placeholder = "Выберите значение" }) => {
+const CustomSelect = ({ options, placeholder = "Выберите значение", value, onChange }) => {
   const [open, setOpen] = useState(false);
-  const [selected, setSelected] = useState("");
 
   const toggle = () => setOpen(!open);
 
-  const onSelect = (value) => {
-    setSelected(value);
+  const onSelect = (option) => {
+    onChange(option);       
     setOpen(false);
   };
 
   return (
     <SelectWrapper>
       <SelectHeader onClick={toggle}>
-        <span>{selected || placeholder}</span>
+        <span>{value?.label || placeholder}</span>
         <img src={arrow} alt="arrow icon" className={open ? "open" : ""} />
       </SelectHeader>
 
       {open && (
         <SelectList>
           {options.map((opt) => (
-            <SelectItem key={opt.value} onClick={() => onSelect(opt.label)}>
+            <SelectItem key={opt.value} onClick={() => onSelect(opt)}>
               {opt.label}
             </SelectItem>
           ))}
@@ -37,18 +36,16 @@ export default CustomSelect;
 
 const SelectWrapper = styled.div`
   position: relative;
-  width: 247px;
+  width: 165px;
   font-weight: 700;
 `;
 
 const SelectHeader = styled.div`
   box-sizing: border-box;
-  border: 2px solid #333e59;
-  border-radius: 12px;
-  padding: 16px 24px;
-  background-color: transparent;
+  border-bottom: 2px solid #333e59;
+  padding-bottom: 32px;
   color: #d6dcec;
-  font-size: 14px;
+  font-size: 24px;
   cursor: pointer;
   display: flex;
   justify-content: space-between;
@@ -68,8 +65,8 @@ const SelectHeader = styled.div`
 
 const SelectList = styled.ul`
   position: absolute;
-  /* top: calc(100% + 4px); */
-  bottom: calc(100% + 4px);;
+  top: calc(100% + 4px);
+  /* bottom: calc(100% + 4px); */
   left: 0;
   width: 100%;
   background: #191e2d;
