@@ -1,0 +1,82 @@
+import styled from "styled-components";
+import time from "@/assets/time.svg";
+
+const CardPablish = ({ item }) => {
+    return (
+        <CardPablishItem>
+            <CardPablishItemHead>
+                <CardPablishItemName>
+                    <CardPablishItemImg src={item.ava} alt={item.username} />
+                    <p>{item.username}</p>
+                </CardPablishItemName>
+                <CardPablishItemTime>
+                    <img src={time} alt="time icon" />
+                    {item.time}
+                </CardPablishItemTime>
+            </CardPablishItemHead>
+            <CardPablishText>{item.text}</CardPablishText>
+            <CardPablishSubtext>{item.subtext}</CardPablishSubtext>
+        </CardPablishItem>
+    )
+}
+const CardPablishItem = styled.div`
+    box-sizing: border-box;
+    padding: 24px;
+    /* border: 2px solid #1F273B; */
+    background-color: #181F30;
+    border-radius: 24px;
+    max-width: 345px;
+    height: min-content;
+`
+const CardPablishItemHead = styled.div`
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+`
+const CardPablishItemName = styled.div`
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    
+    p {
+        max-width: 100px;         
+        white-space: nowrap;  
+        overflow: hidden;     
+        text-overflow: ellipsis;
+        font-size: 14px;
+        font-weight: 700;
+    }
+`
+const CardPablishItemImg = styled.img`
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+`
+const CardPablishItemTime = styled.p`
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+    font-weight: 700;
+`
+const CardPablishText = styled.p`
+    margin-top: 26px;
+    font-size: 24px;
+    line-height: 24px;
+    font-weight: 700;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+`
+const CardPablishSubtext = styled.p`
+    margin-top: 16px;
+    font-size: 14px;
+    line-height: 14px;
+    font-weight: 600;
+    color: #6A7080;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+`
+export default CardPablish
