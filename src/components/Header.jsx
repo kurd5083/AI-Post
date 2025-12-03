@@ -1,10 +1,8 @@
 import styled from "styled-components";
 import money from "@/assets/header/money.svg";
 import setting from "@/assets/setting.svg";
-import { usePopupStore } from "@/store/popupStore"
 
 const Header = () => {
-    const { openPopup } = usePopupStore()
     return (
         <HeaderContainer>
             <HeaderContent>
@@ -13,7 +11,7 @@ const Header = () => {
                 <HeaderBalance>1, 876 <mark>₽</mark> </HeaderBalance>
                 <HeaderBtnAdd>+ Пополнить</HeaderBtnAdd>
             </HeaderContent>
-            <HeaderBtnSet onClick={() => openPopup()}><img src={setting} alt="setting icon" />Настройки аккаунта</HeaderBtnSet>
+            <HeaderBtnSet><img src={setting} alt="setting icon" />Настройки аккаунта</HeaderBtnSet>
         </HeaderContainer>
     )
 }

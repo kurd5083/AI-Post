@@ -87,7 +87,7 @@ const FeedMentionsList = styled(Swiper)`
         width: 80px;
         height: 100%;
         background: linear-gradient(to left, #131826, #13182600);
-        backdrop-filter: blur(8px);
+        backdrop-filter: blur(2px);
         mask-image: linear-gradient(to left, black 50%, transparent);
         z-index: 1;
     }

@@ -1,10 +1,24 @@
+import { useRef, useState } from "react";
 import styled from 'styled-components';
 import ava_groups from "@/assets/TableGroups/ava-groups.png";
 import dir_white from "@/assets/TableGroups/dir-white.svg";
 import del from "@/assets/TableGroups/del.svg";
 import setting from "@/assets/setting.svg";
+import { usePopupStore } from "@/store/popupStore"
 
 const TableGroupsTable = () => {
+    const wrapperRef = useRef(null);
+    const [fadeVisible, setFadeVisible] = useState(true);
+    const { openPopup } = usePopupStore();
+
+    const handleScroll = () => {
+        const el = wrapperRef.current;
+        if (!el) return;
+
+        const isEnd = el.scrollTop + el.clientHeight >= el.scrollHeight - 1;
+        setFadeVisible(!isEnd);
+    };
+
     const tableData = [
         { id: 1, number: '#1', image: ava_groups, name: 'Для наших ребят', status: 'Премодерация постов', online: true },
         { id: 2, number: '#2', image: ava_groups, name: 'Для наших ребят', status: 'Премодерация постов', online: false },
@@ -16,8 +30,8 @@ const TableGroupsTable = () => {
     ];
 
     return (
-        <TableContainer>
-            <TableWrapper>
+        <TableContainer fadeVisible={fadeVisible}>
+            <TableWrapper ref={wrapperRef} onScroll={handleScroll}>
                 <Table>
                     <colgroup>
                         <col style={{ width: "35%" }} />
@@ -55,7 +69,7 @@ const TableGroupsTable = () => {
                                 <TableCell>
                                     <ButtonsWrap>
                                         <ButtonDir title="Перейти"><img src={dir_white} alt="" width={16} height={13} /></ButtonDir>
-                                        <ButtonSetting title="Настройки"><img src={setting} alt="" width={16} height={16} /></ButtonSetting>
+                                        <ButtonSetting onClick={() => openPopup()} title="Настройки"><img src={setting} alt="" width={16} height={16} /></ButtonSetting>
                                         <ButtonDel title="Удалить"><img src={del} alt="" width={14} height={16} /></ButtonDel>
                                     </ButtonsWrap>
                                 </TableCell>
@@ -71,26 +85,43 @@ const TableGroupsTable = () => {
 export default TableGroupsTable;
 
 const TableContainer = styled.div`
+    position: relative;
     margin-top: 20px;
+
+    /* &::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 135px;
+        background: linear-gradient(to top, #131826, transparent);
+        backdrop-filter: blur(8px);
+        pointer-events: none;
+        transition: opacity 0.2s;
+        opacity: ${props => props.fadeVisible ? 1 : 0};
+    } */
+    &::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        height: 135px;
+        width: 100%;
+        background: linear-gradient(to top, #131826, transparent);
+        backdrop-filter: blur(8px);
+        mask-image: linear-gradient(to top, black 50%, transparent);
+        transition: opacity 0.2s;
+        opacity: ${props => props.fadeVisible ? 1 : 0};
+        pointer-events: none;
+    }
 `;
 
 const TableWrapper = styled.div`
-    position: relative;
     width: 100%;
     max-height: calc(100vh - 800px); 
     min-height: 400px;
     overflow-y: auto;
     scrollbar-width: none;
-    &::after {
-        content: '';
-        position: fixed;
-        bottom: 0;
-        height: 135px;
-        width: 100%;
-        background: linear-gradient(to top, #131826, #13182600);
-        backdrop-filter: blur(8px);
-        mask-image: linear-gradient(to top, black 50%, transparent);
-    }
 `;
 
 const Table = styled.table`

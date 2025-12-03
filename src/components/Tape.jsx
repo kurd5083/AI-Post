@@ -1,3 +1,4 @@
+import { useRef, useState } from "react";
 import styled from "styled-components";
 import fire from "@/assets/tape/fire.svg";
 import filter from "@/assets/tape/filter.svg";
@@ -5,13 +6,24 @@ import time from "@/assets/time.svg";
 import { posts } from "@/data/posts";
 
 const Tape = () => {
+    const listRef = useRef(null);
+    const [fadeVisible, setFadeVisible] = useState(true);
+
+    const handleScroll = () => {
+        const el = listRef.current;
+        if (!el) return;
+
+        const isEnd = el.scrollHeight - el.scrollTop === el.clientHeight;
+        setFadeVisible(!isEnd);
+    };
+
     return (
         <TapeContainer>
             <TapeHead>
                 <TapeTitle><img src={fire} alt="fire icon" /><mark>Лайв</mark> лента</TapeTitle>
                 <TapeBtn><img src={filter} alt="filter icon" />Фильтр</TapeBtn>
             </TapeHead>
-            <TapeList>
+            <TapeList ref={listRef} onScroll={handleScroll} fadeVisible={fadeVisible}>
                 {posts.map((item, i) => (
                     <TapeItem key={i}>
                         <TapeItemContent>
@@ -95,10 +107,9 @@ const TapeList = styled.section`
     flex-direction: column;
     gap: 24px;
     margin-top: 32px;
-    max-height: 100vh;
+    max-height: calc(100vh - 230px);
     overflow-y: auto;
     scrollbar-width: none;
-    padding-bottom: 80px;
     
     &::after {
         content: '';
@@ -106,9 +117,12 @@ const TapeList = styled.section`
         bottom: 0;
         height: 135px;
         width: 100%;
-        background: linear-gradient(to top, #131826, #13182600);
+        background: linear-gradient(to top, #131826, transparent);
         backdrop-filter: blur(8px);
         mask-image: linear-gradient(to top, black 50%, transparent);
+        transition: opacity 0.2s;
+        opacity: ${props => props.fadeVisible ? 1 : 0};
+        pointer-events: none;
     }
 `
 const TapeItem = styled.article`

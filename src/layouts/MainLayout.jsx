@@ -32,7 +32,7 @@ const Main = styled.main`
   min-width: 0;
   padding: 0 32px;
   z-index: 1;
-  overflow-y: ${({ $blocked }) => ($blocked ? "hidden" : "auto")};
+  overflow-y: ${({ $blocked }) => ($blocked ? "clip" : "auto")};
   scrollbar-width: none;
   max-height: 100vh;
 `
