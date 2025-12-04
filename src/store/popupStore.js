@@ -2,41 +2,16 @@ import { create } from 'zustand';
 
 export const usePopupStore = create((set, get) => ({
     popup: null,
-    savedScrollPosition: 0, 
 
     openPopup: () => {
-        const scrollY = window.scrollY;
-        set({ savedScrollPosition: scrollY });
-        
         window.scrollTo({ top: 0, behavior: "smooth" });
-        
-        document.documentElement.style.overflow = 'hidden';
-        document.body.style.overflow = 'hidden';
-        
-        if (window.innerWidth < 1400) {
-            document.body.style.position = 'fixed';
-            document.body.style.width = '100%';
-        }
-        
+        document.body.style.overflow = "hidden";
         set({ popup: { status: true, content: 'settings', previousPage: [] } });
     },
 
     closePopup: () => {
-        const { savedScrollPosition } = get();
-        
-        document.documentElement.style.overflow = '';
-        document.body.style.overflow = '';
-        document.body.style.position = '';
-        document.body.style.width = '';
-        
-        if (savedScrollPosition > 0) {
-            window.scrollTo(0, savedScrollPosition);
-        }
-        
-        set({ 
-            popup: null,
-            savedScrollPosition: 0 
-        });
+        document.body.style.overflow = "";
+        set({ popup: null });
     },
 
     changeContent: (popupData) => {
