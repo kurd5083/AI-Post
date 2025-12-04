@@ -91,7 +91,7 @@ const PopupListContainer = styled.section`
     width: 100%;
     overflow-y: auto;
     scrollbar-width: none;
-    max-height: calc(100% - 320px);
+    max-height: calc(100vh - 100px);
     height: 100%;
     z-index: 10;
     @media(max-width: 1600px) {
