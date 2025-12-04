@@ -181,6 +181,9 @@ const ScheduleDaysBlock = styled.div`
     display: flex;
     flex-direction: column;
     gap: 24px;
+    h4 {
+        width: 120px;
+    }
 `
 
 export default SchedulePopup

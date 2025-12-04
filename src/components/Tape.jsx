@@ -150,6 +150,8 @@ const TapeTitle = styled.h1`
     flex-direction: row;
     gap: 16px;
 		align-items: center;
+    line-height: 40px;
+    font-size: 40px;
   }
   img {
     width: 25px;

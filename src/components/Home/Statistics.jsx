@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import styled from "styled-components";
 import rating from "@/assets/statistics/rating.svg";
 import { statistics } from "@/data/statistics";

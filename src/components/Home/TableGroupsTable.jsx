@@ -229,13 +229,22 @@ const TableBody = styled.tbody``;
 
 const TableItem = styled.tr`
   transition: background .15s ease;
-
+  
+  @media(max-width: 768px) {
+		&:last-child {
+      td {
+        border-bottom: 0;
+      }
+    }
+	}
+  
   td {
     padding: 15px 0;
 		@media(max-width: 768px) {
 			border-bottom: 2px solid #1F273B;
 			border-radius: 0 !important; 
 			padding: 30px 0;
+      
 		}
   }
         
