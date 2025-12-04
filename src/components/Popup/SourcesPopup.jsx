@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import plus_blue from "@/assets/popup/plus-blue.svg";
 import { usePopupStore } from "@/store/popupStore"
+import BtnSave from "@/shared/BtnSave";
 
 const SourcesPopup = () => {
   const { changeContent } = usePopupStore()
@@ -40,7 +41,10 @@ const SourcesPopup = () => {
           </SourcesBlock>
         </SourcesBlocks>
       </SourcesKey>
-      <SourcesButton onClick={() => changeContent("compilation")}>Подборки источников</SourcesButton>
+      <SourcesButtons>
+        <BtnSave onClick={() => changeContent("compilation")} $color="#D6DCEC" $bg="#2B89ED">Подборки источников</BtnSave>
+        <BtnSave>Сохранить</BtnSave>
+      </SourcesButtons>
     </SourcesContainer>
   )
 }
@@ -82,13 +86,17 @@ const SourcesInputContainer = styled.div`
 const SourcesInput = styled.input`
   background-color: transparent;
   max-width: 280px;
-  width: 100%;
+  width: max-content;
   color: #D6DCEC;
   font-size: 24px;
   font-weight: 700;
   padding-bottom: 24px;
   border: none;
   border-bottom: 2px solid #2E3954;
+
+  @media(max-width: 480px) {
+    font-size: 16px;
+  }
 
   &::placeholder {
     color: #D6DCEC;
@@ -102,13 +110,16 @@ const SourcesImg = styled.img`
 `
 const SourcesBlocks = styled.div`
   display: flex;
+  flex-wrap: wrap;
   gap: 16px;
   margin-top: 32px;
 `
 const SourcesBlock = styled.p`
+  flex: 1;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 20px;
   border-radius: 12px;
   border: 2px solid #333E59;
   padding: 16px 16px 18px 24px;
@@ -127,14 +138,10 @@ const SourcesBlock = styled.p`
     }
   }  
 `
-const SourcesButton = styled.button`
-  padding: 21px 24px;
-  border-radius: 12px;
-  color: #D6DCEC;
-  background-color: #2B89ED;
-  font-weight: 700;
-  font-size: 14px;
-  margin-top: 40px; 
+const SourcesButtons = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
 `
 
 export default SourcesPopup

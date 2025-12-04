@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import ToggleSwitch from "@/shared/ToggleSwitch";
-import Counter from "../../shared/Counter";
+import Counter from "@/shared/Counter";
+import BtnSave from "@/shared/BtnSave";
 
 const PromotionPopup = () => {
     return (
@@ -34,7 +35,7 @@ const PromotionPopup = () => {
                     </CounterContainer>
                 </PostContainer>
             </PromotePost>
-            <PromotionBtnSave>Сохранить</PromotionBtnSave>
+            <BtnSave  $margin="64">Сохранить</BtnSave>
         </PromotionContainer>
 
     )
@@ -57,6 +58,9 @@ const PromotionHeadText = styled.p`
     font-size: 24px;
     padding-right: 40px;
     cursor: pointer;
+    @media(max-width: 480px) {
+        padding-right: 0;
+    }
 `
 const PromotionViews = styled.div`
     display: flex;
@@ -66,6 +70,9 @@ const PromotionViews = styled.div`
 const PostTitle = styled.h2`
     font-size: 24px;
     font-weight: 700;
+    @media(max-width: 480px) {
+        font-size: 16px;
+    }
 `
 const PostContainer = styled.div`
     display: flex;
@@ -76,30 +83,24 @@ const ViewsPost = styled.div`
     display: flex;
     flex-direction: column;
     gap: 32px;
+    @media(max-width: 480px) {
+        margin-top: 48px;
+    }
 `
 const PromotePost = styled.div`
     display: flex;
     flex-direction: column;
     gap: 24px;
     margin-top: 64px;
+    @media(max-width: 480px) {
+        margin-top: 48px;
+    }
 `
 const PromoteText = styled.p`
     line-height: 24px;
     font-size: 14px;
     font-weight: 600;
     color: #6A7080;
-`
-const PromotionBtnSave = styled.button`
-    box-sizing: border-box;
-    padding: 21px 32px;
-    border-radius: 12px;
-    color: #336CFF;
-    background-color: #1B243E;
-    font-weight: 700;
-    font-size: 14px;
-    max-width: 147px;
-    text-align: center;
-    margin-top: 64px;
 `
 const CounterContainer  = styled.div`
     display: flex;
@@ -121,6 +122,9 @@ const PostInput  = styled.input`
     font-size: 14px;
     font-weight: 700;
     background-color: transparent;
+    @media(max-width: 480px) {
+        font-size: 16px;
+    }
     &::placeholder {
         color: #D6DCEC;
     }

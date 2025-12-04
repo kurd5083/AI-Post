@@ -21,8 +21,11 @@ const MainLayout = () => {
 const MainContainer = styled.section`
   position: relative;
   display: flex;
-  height: 100vh;
-
+  max-height: 100vh;
+  @media(max-width: 1400px) {
+    flex-direction: column;
+    max-height: fit-content;
+  }
 `
 const Main = styled.main`
   position: relative;
@@ -34,6 +37,8 @@ const Main = styled.main`
   z-index: 1;
   overflow-y: ${({ $blocked }) => ($blocked ? "clip" : "auto")};
   scrollbar-width: none;
-  max-height: 100vh;
+  @media(max-width: 1600px) {
+    padding: 0;
+  }
 `
 export default MainLayout

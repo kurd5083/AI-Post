@@ -147,7 +147,7 @@ export const settings = {
                 {
                     key: "schedule",
                     name: "Расписание",
-                    right: 'arrow',
+                    right: 'imgarrow',
                     extra: {
                         background: "#5F6046",
                         image: schedule

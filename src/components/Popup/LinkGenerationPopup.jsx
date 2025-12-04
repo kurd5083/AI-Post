@@ -2,6 +2,7 @@ import styled from "styled-components";
 import { usePopupStore } from "@/store/popupStore";
 import CheckboxText from "@/shared/CheckboxText";
 import CustomSelect from "@/shared/CustomSelect";
+import BtnSave from "@/shared/BtnSave";
 
 const LinkGenerationPopup = () => {
   const { goBack } = usePopupStore()
@@ -54,8 +55,8 @@ const LinkGenerationPopup = () => {
         </LinkGenerationItem>
       </LinkGenerationContent>
       <LinkGenerationButtons>
-        <LinkGenerationCreate>Создать ссылку</LinkGenerationCreate>
-        <LinkGenerationCancel onClick={goBack}>Отменить</LinkGenerationCancel>
+        <BtnSave $color="#D6DCEC" $bg="#336CFF" $margin="0">Создать ссылку</BtnSave>
+        <BtnSave onClick={goBack} $color="#6A7080" $bg="#191E2D" $margin="0">Отменить</BtnSave>
       </LinkGenerationButtons>
     </LinkGenerationContainer>
   )
@@ -103,7 +104,8 @@ const ItemInput = styled.input`
   border: 2px solid #333E59;
   border-radius: 12px;
   background-color: transparent;
-  width: 582px;
+  max-width: 582px;
+  width: 100%;
   padding: 16px 24px;
   font-size: 14px;
   font-weight: 700;
@@ -113,27 +115,10 @@ const ItemInput = styled.input`
     color: #D6DCEC;
   }
 `
-
 const LinkGenerationButtons = styled.div`
   display: flex;
   gap: 8px;
   margin-top: 32px;
-`
-const LinkGenerationCreate = styled.button`
-  padding: 21px 32px;
-  color: #D6DCEC;
-  background-color: #336CFF;
-  border-radius: 12px;
-  font-size: 14px;
-  font-weight: 700;
-`
-const LinkGenerationCancel = styled.button`
-  padding: 21px 32px;
-  color: #6A7080;
-  background-color: #191E2D;
-  border-radius: 12px;
-  font-size: 14px;
-  font-weight: 700;
 `
 
 export default LinkGenerationPopup

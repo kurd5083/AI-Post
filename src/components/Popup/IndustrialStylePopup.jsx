@@ -3,64 +3,71 @@ import styled from "styled-components";
 import { usePopupStore } from "@/store/popupStore"
 import plus_blue from "@/assets/popup/plus-blue.svg";
 import Drag from "@/shared/Drag";
+import BtnSave from "@/shared/BtnSave";
 
 const MAX_PROMPT_LENGTH = 100;
 
 const IndustrialStylePopup = () => {
-    const { changeContent } = usePopupStore()
-    const [prompt, setPrompt] = useState("");
-    const handlePromptChange = (e) => {
-        if (e.target.value.length <= MAX_PROMPT_LENGTH) {
-            setPrompt(e.target.value);
-        }
-    };
-    const handleTest = () => {
-        if (!prompt.trim()) return;
-        console.log("Тестирование промпта:", prompt);
-    };
-    return (
-        <IndustrialStyleContainer>
-            <IndustrialStyleLeft>
-                <IndustrialStyleBtn onClick={() => changeContent("industrial_library")}>Библиотека промптов</IndustrialStyleBtn>
-                <IndustrialStyleTitle>Промпт</IndustrialStyleTitle>
-                <IndustrialStyleContent>
-                    <div>
-                        <textarea
-                            placeholder="Введите промпт..."
-                            value={prompt}
-                            onChange={handlePromptChange}
-                        ></textarea>
-                    </div>
-                    <button
-                        disabled={!prompt.trim()}
-                        onClick={handleTest}
-                    >
-                        Тест
-                    </button>
-                    <p>{prompt.length} / {MAX_PROMPT_LENGTH}</p>
-                </IndustrialStyleContent>
-                <IndustrialStyleDesc>Введите промпт — это задание для генерации поста. <mark>Чем точнее формулировка, тем лучше результат.</mark></IndustrialStyleDesc>
-                <IndustrialStyleTitle>Подпись</IndustrialStyleTitle>
-                <IndustrialStyleInputContainer>
-                    <IndustrialStyleInput type="text" placeholder="Описание канала" />
-                    <IndustrialStyleImg src={plus_blue} alt="plus icon" width={16} height={16} />
-                </IndustrialStyleInputContainer>
-                <IndustrialStyleDesc>Подпись будет добавлена в <mark>конец каждого поста.</mark> Например: ссылка или призыв подписаться.</IndustrialStyleDesc>
-            </IndustrialStyleLeft>
-            <IndustrialStyleRight>
-                <IndustrialStyleTitle>Креативность</IndustrialStyleTitle>
-                <Drag />
-                <IndustrialStyleDesc>Ползунок <mark>«Креативность»</mark> регулирует, насколько
-                    оригинальным и неожиданным будет текст поста.
-                    Высокие значения <mark>увеличивают</mark> вариативность, что
-                    может привести к менее предсказуемым результатам</IndustrialStyleDesc>
-            </IndustrialStyleRight>
-        </IndustrialStyleContainer>
-    )
+	const { changeContent } = usePopupStore()
+	const [prompt, setPrompt] = useState("");
+	const handlePromptChange = (e) => {
+		if (e.target.value.length <= MAX_PROMPT_LENGTH) {
+			setPrompt(e.target.value);
+		}
+	};
+	const handleTest = () => {
+		if (!prompt.trim()) return;
+		console.log("Тестирование промпта:", prompt);
+	};
+	return (
+		<>
+			<IndustrialStyleContainer>
+				<IndustrialStyleLeft>
+					<BtnSave onClick={() => changeContent("industrial_library")} $color="#D6DCEC" $bg="#2B89ED" $margin="0">Библиотека промптов</BtnSave>
+					
+					<IndustrialStyleTitle>Промпт</IndustrialStyleTitle>
+					<IndustrialStyleContent>
+						<div>
+							<textarea
+								placeholder="Введите промпт..."
+								value={prompt}
+								onChange={handlePromptChange}
+							></textarea>
+						</div>
+						<button
+							disabled={!prompt.trim()}
+							onClick={handleTest}
+						>
+							Тест
+						</button>
+						<p>{prompt.length} / {MAX_PROMPT_LENGTH}</p>
+					</IndustrialStyleContent>
+					<IndustrialStyleDesc>Введите промпт — это задание для генерации поста. <mark>Чем точнее формулировка, тем лучше результат.</mark></IndustrialStyleDesc>
+					<IndustrialStyleTitle>Подпись</IndustrialStyleTitle>
+					<IndustrialStyleInputContainer>
+						<IndustrialStyleInput type="text" placeholder="Описание канала" />
+						<IndustrialStyleImg src={plus_blue} alt="plus icon" width={16} height={16} />
+					</IndustrialStyleInputContainer>
+					<IndustrialStyleDesc>Подпись будет добавлена в <mark>конец каждого поста.</mark> Например: ссылка или призыв подписаться.</IndustrialStyleDesc>
+				</IndustrialStyleLeft>
+				<IndustrialStyleRight>
+					<IndustrialStyleTitle>Креативность</IndustrialStyleTitle>
+					<Drag />
+					<IndustrialStyleDesc>Ползунок <mark>«Креативность»</mark> регулирует, насколько
+						оригинальным и неожиданным будет текст поста.
+						Высокие значения <mark>увеличивают</mark> вариативность, что
+						может привести к менее предсказуемым результатам</IndustrialStyleDesc>
+				</IndustrialStyleRight>
+
+			</IndustrialStyleContainer>
+			<BtnSave>Сохранить</BtnSave>
+		</>
+	)
 }
 const IndustrialStyleContainer = styled.div`
     display: flex;
-    gap: 80px;
+    flex-wrap: wrap;
+    gap: 40px 80px;
 `
 const IndustrialStyleLeft = styled.div`
  h2 {
@@ -68,14 +75,6 @@ const IndustrialStyleLeft = styled.div`
  }
 `
 
-const IndustrialStyleBtn = styled.button`
-    padding: 21px 24px;
-    border-radius: 12px;
-    color: #D6DCEC;
-    background-color: #2B89ED;
-    font-weight: 700;
-    font-size: 14px;
-`
 const IndustrialStyleInputContainer = styled.div`
   display: flex;
   gap: 24px;
@@ -101,16 +100,18 @@ const IndustrialStyleDesc = styled.p`
 `
 const IndustrialStyleContent = styled.div`
     position: relative;
-    width: fit-content;
 
     div {
         background-color: #1C2336;
         box-sizing: border-box;
         padding: 32px 32px 60px;
         width: 470px;
+				
         border-radius: 24px;
         min-height: 170px;
-
+				@media (max-width: 768px) {
+					width: 100%;
+				}
         &::placeholder {
             color: #6A7080;
         }
@@ -151,14 +152,16 @@ const IndustrialStyleContent = styled.div`
 const IndustrialStyleInput = styled.input`
   background-color: transparent;
   max-width: 280px;
-  width: 100%;
+  width: max-content;
   color: #D6DCEC;
   font-size: 24px;
   font-weight: 700;
   padding-bottom: 24px;
   border: none;
   border-bottom: 2px solid #2E3954;
-
+  @media(max-width: 480px) {
+    font-size: 16px;
+  }
   &::placeholder {
     color: #D6DCEC;
   }

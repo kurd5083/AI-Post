@@ -2,8 +2,9 @@ import styled from "styled-components";
 import CustomSelect from "@/shared/CustomSelect";
 import plus_neutral_green from "@/assets/popup/plus-neutral-green.svg";
 import Checkbox from "@/shared/Checkbox";
-import TimeInput from "../../shared/TimeInput";
+import TimeInput from "@/shared/TimeInput";
 import { usePopupStore } from "@/store/popupStore"
+import BtnSave from "@/shared/BtnSave";
 
 const SchedulePopup = () => {
     const { changeContent } = usePopupStore()
@@ -80,6 +81,7 @@ const SchedulePopup = () => {
                         </ScheduleDaysBlock>
                     </ScheduleDays>
                 </ScheduleKey>
+                <BtnSave>Сохранить</BtnSave>
             </ScheduleContent>
         </div>
     )
@@ -99,6 +101,9 @@ const ScheduleHeadText = styled.p`
     font-size: 24px;
     padding-right: 40px;
     cursor: pointer;
+    @media(max-width: 480px) {
+        padding-right: 0;
+    }
 `
 const ScheduleContent = styled.div`
     display: flex;
@@ -132,13 +137,16 @@ const ScheduleImg = styled.img`
 `
 const ScheduleBlocks = styled.div`
     display: flex;
+    flex-wrap: wrap;
     gap: 16px;
     margin-top: 32px;
 `
 const ScheduleBlock = styled.p`
+    flex: 1;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: 20px;
     border-radius: 12px;
     border: 2px solid #333E59;
     padding: 16px 16px 18px 24px;

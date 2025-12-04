@@ -1,5 +1,7 @@
 import styled from "styled-components";
 import arrow from "@/assets/arrow.svg";
+import bell_blue from "@/assets/popup/bell-blue.svg";
+
 import { settings } from "@/data/settings";
 import ToggleSwitch from "@/shared/ToggleSwitch";
 import { usePopupStore } from "@/store/popupStore"
@@ -16,7 +18,7 @@ const SettingsPopup = () => {
                             <PopupContentItem key={index} onClick={item.right !== 'switch' ? () => changeContent(item.key) : undefined}>
                                 <PopupContentLeft>
                                     <img src={item.extra.image} alt={item.name} style={{ background: item.extra.background }} width={40} height={40} />
-                                    <PopupContentInfo $place={item.place} $size={item.size}>
+                                    <PopupContentInfo $place={item.place} $size={item.size} $publications={item.key}>
                                         <h3>{item.name}</h3>
                                         {item.status && <span>{item.status}</span>}
                                     </PopupContentInfo>
@@ -28,6 +30,11 @@ const SettingsPopup = () => {
                                 ) : item.right == 'textarrow' ? (
                                     <PopupContentRight>
                                         <span>Премодерация</span>
+                                        <img src={arrow} alt="arrow icon" height={12} width={6} />
+                                    </PopupContentRight>
+                                ) : item.right == 'imgarrow' ? (
+                                    <PopupContentRight>
+                                        <img src={bell_blue} alt="bell icon" height={24} width={20} />
                                         <img src={arrow} alt="arrow icon" height={12} width={6} />
                                     </PopupContentRight>
                                 ) : (
@@ -104,6 +111,9 @@ const PopupContentInfo = styled.div`
         font-size: ${props => props.$place ? '24px' : '12px'};
         font-weight: 700;
         text-transform: uppercase;
+        @media(max-width: 480px) {
+            display: ${props => props.$publications == "publications" ? 'none' : 'block' };
+        }
     }
 `
 const PopupContentRight = styled.div`

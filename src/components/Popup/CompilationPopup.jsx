@@ -1,17 +1,21 @@
 import styled from "styled-components";
 import arrow from "@/assets/arrow.svg";
+import BtnSave from "@/shared/BtnSave";
 
 const CompilationPopup = () => {
   return (
-    <CompilationList>
-    <CompilationItem>
-      <CompilationText>IT</CompilationText>
-      <CompilationSubtext>Качественные источники для вашего канала с релевантным контентом</CompilationSubtext>
-      <CompilationOpen>
-        <img src={arrow} alt="arrow icon" />
-      </CompilationOpen>
-    </CompilationItem>
-    </CompilationList>
+    <>
+      <CompilationList>
+        <CompilationItem>
+          <CompilationText>IT</CompilationText>
+          <CompilationSubtext>Качественные источники для вашего канала с релевантным контентом</CompilationSubtext>
+          <CompilationOpen>
+            <img src={arrow} alt="arrow icon" />
+          </CompilationOpen>
+        </CompilationItem>
+      </CompilationList>
+      <BtnSave>Сохранить</BtnSave>
+    </>
   )
 }
 const CompilationList = styled.div`

@@ -1,13 +1,16 @@
+import { useState } from "react";
 import styled from "styled-components";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import { Navigation } from "swiper/modules";
 import { feedmentions } from "@/data/feedmentions";
 import tg from "@/assets/feedmentions/tg.svg";
-import arrow from "@/assets/feedmentions/arrow.svg";
+import arrow from "@/assets/arrow.svg";
 import CardPablish from "@/components/CardPablish";
 
 const FeedMentions = () => {
+  const [fadeVisible, setFadeVisible] = useState(true);
+
   return (
     <FeedMentionsContainer>
       <FeedMentionsHead>
@@ -15,6 +18,7 @@ const FeedMentions = () => {
           <img src={tg} alt="tg icon" />
           Лента упоминаний
         </FeedMentionsTitle>
+
         <FeedMentionsButtons>
           <FeedMentionsButton className="prev">
             <img src={arrow} alt="arrow icon" />
@@ -26,18 +30,21 @@ const FeedMentions = () => {
       </FeedMentionsHead>
 
       <FeedMentionsList
+        fadeVisible={fadeVisible}
         modules={[Navigation]}
         navigation={{
           nextEl: ".next",
           prevEl: ".prev",
         }}
         spaceBetween={16}
-        slidesPerView='auto'
+        slidesPerView="auto"
+        onReachEnd={() => setFadeVisible(false)}
+        onFromEdge={() => setFadeVisible(true)}
       >
         {feedmentions.map((item, index) => (
-            <FeedMentionsItem key={index}>
-              <CardPablish item={item}/>
-            </FeedMentionsItem>
+          <FeedMentionsItem key={index}>
+            <CardPablish item={item} />
+          </FeedMentionsItem>
         ))}
       </FeedMentionsList>
     </FeedMentionsContainer>
@@ -45,54 +52,96 @@ const FeedMentions = () => {
 };
 
 const FeedMentionsContainer = styled.section`
-    margin-top: 70px;
-    padding: 0 24px;
+  position: relative;
+  margin-top: 70px;
+  padding: 0 clamp(0px, calc((100vw - 1600px) * 24 / 400), 24px);
+  @media (max-width: 1600px) {
+    padding: 0 32px;
+  }
+  @media (max-width: 1400px) {
+    padding: 0;
+  }
+  @media (max-width: 480px) {
+    margin-top: 32px;
+  }
 `
 const FeedMentionsHead = styled.div`
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  @media (max-width: 1400px) {
+    padding: 0 32px;
+  }
+  @media (max-width: 480px) {
+    padding: 0 24px;
+  }
 `
 const FeedMentionsTitle = styled.h2`
-    display: flex;
-    align-items: center;
-    gap: 24px;
+  display: flex;
+  align-items: center;
+  gap: 24px;
 `
 const FeedMentionsButtons = styled.div`
-    display: flex;
-    gap: 8px;
+  display: flex;
+  gap: 8px;
+  
 `
 const FeedMentionsButton = styled.button`
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 48px;
-    height: 48px;
-    border-radius: 50%;
-    background-color: #1C2438;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background-color: #1C2438;
 
-    &:last-child {
-        transform: rotate(180deg);
+  @media (max-width: 480px) {
+    position: absolute;
+    top: 50%;
+    right: 16px;
+    transform: translateY(10px);
+    width: 32px;
+    height: 32px;
+    z-index: 2;
+  }
+  &:first-child {
+    transform: rotate(180deg);
+    @media (max-width: 480px) {
+      transform: rotate(180deg) translateY(-10px);
+      left: 16px;
     }
+  }
 `
 const FeedMentionsList = styled(Swiper)`
-    position: relative;
-    margin-top: 24px;
-
-    &::after {
-        content: '';
-        position: absolute;
-        top: 0;
-        right: 0;
-        width: 80px;
-        height: 100%;
-        background: linear-gradient(to left, #131826, #13182600);
-        backdrop-filter: blur(2px);
-        mask-image: linear-gradient(to left, black 50%, transparent);
-        z-index: 1;
+  position: relative;
+  margin-top: 24px;
+  @media (max-width: 1400px) {
+    padding: 0 32px;
+  }
+  @media (max-width: 480px) {
+    padding: 0 24px;
+  }
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 80px;
+    height: 100%;
+    background: linear-gradient(to left, #131826, transparent);
+    backdrop-filter: blur(2px);
+    mask-image: linear-gradient(to left, black 50%, transparent);
+    z-index: 1;
+    transition: opacity 0.25s ease;
+    opacity: ${(props) => (props.fadeVisible ? 1 : 0)};
+    pointer-events: none;
+    @media (max-width: 480px) {
+      display: none;
     }
-`
+  }
+`;
+
 const FeedMentionsItem = styled(SwiperSlide)`
-    max-width: 345px;
+  max-width: 345px;
 `
 export default FeedMentions

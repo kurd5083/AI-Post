@@ -21,7 +21,8 @@ const CheckboxText = ({ options, bg }) => {
 };
 const CheckboxContainer = styled.div`
   display: flex;
-  gap: 8px;
+  gap: 16px;
+  flex-wrap: wrap;
 `;
 
 const CheckboxOption = styled.button`

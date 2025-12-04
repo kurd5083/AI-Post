@@ -113,6 +113,9 @@ const FilteringInput = styled.input`
     &::placeholder {
         color: #D6DCEC;
     }
+    @media(max-width: 480px) {
+        font-size: 16px;
+    }
 `
 const FilteringImg = styled.img`
     padding: 12px;
@@ -122,13 +125,16 @@ const FilteringImg = styled.img`
 `
 const FilteringBlocks = styled.div`
     display: flex;
+    flex-wrap: wrap;
     gap: 16px;
     margin-top: 32px;
 `
 const FilteringBlock = styled.p`
+    flex: 1;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: 20px;
     border-radius: 12px;
     border: 2px solid #333E59;
     padding: 16px 16px 18px 24px;

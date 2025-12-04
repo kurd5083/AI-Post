@@ -39,6 +39,10 @@ const DragContainer = styled.div`
     padding: 24px 32px;
     border-radius: 24px;
     background-color: #1C2336;
+    @media (max-width: 480px) {
+        padding: 24px;
+        gap: 24px;
+    }
 `;
 
 const DragLine = styled.span`
@@ -48,7 +52,9 @@ const DragLine = styled.span`
     width: calc(100% - 120px);
     height: 2px;
     background-color: #6A7080;
-
+    @media (max-width: 480px) {
+        width: calc(100% - 110px);
+    }
     &:after {
         content: '';
         position: absolute;

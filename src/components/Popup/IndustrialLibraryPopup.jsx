@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import Checkbox from "@/shared/Checkbox";
 import { industriallibrary } from "@/data/industriallibrary";
+import BtnSave from "@/shared/BtnSave";
 
 const IndustrialLibraryPopup = () => {
     return (
@@ -15,7 +16,7 @@ const IndustrialLibraryPopup = () => {
                         </Checkbox>
                     </IndustrialLibraryContentItem>
                 ))}
-            <IndustrialLibraryBtn>Сохранить</IndustrialLibraryBtn>
+            <BtnSave $color="#336CFF" $bg="#1B243E">Сохранить</BtnSave>
         </IndustrialLibraryContent>
     )
 }
@@ -48,14 +49,5 @@ const IndustrialLibraryContentItem = styled.div`
         color: #6A7080;
     }
 `
-const IndustrialLibraryBtn = styled.button`
-    padding: 21px 32px;
-    border-radius: 12px;
-    color: #336CFF;
-    background-color: #1B243E;
-    font-weight: 700;
-    font-size: 14px;
-    max-width: 147px;
-    margin-top: 30px;
-`
+
 export default IndustrialLibraryPopup

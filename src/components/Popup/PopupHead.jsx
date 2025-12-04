@@ -23,7 +23,7 @@ const PopupHead = () => {
                 <PopupListHeadContent>
                     {popup.content == 'settings' ? (
                         <>
-                            <img src={setting} alt="setting icon" width={48} height={48} />
+                            <IconSettingsMain src={setting} alt="setting icon" width={48} height={48} />
                             <h2>Настройки</h2>
                         </>
                     ) : (
@@ -35,7 +35,7 @@ const PopupHead = () => {
                 </PopupListHeadContent>
                 <PopupListHeadBtn onClick={() => closePopup()}>
                     <img src={close} alt="close icon" />
-                    Закрыть окно
+                    <span>Закрыть окно</span>
                 </PopupListHeadBtn>
             </PopupListHead>
         </>
@@ -71,7 +71,7 @@ const PopupListInfoContent = styled.div`
 `
 const PopupListHead = styled.section`
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: space-between;
     gap: 24px;
     padding-bottom: 40px;
@@ -79,7 +79,7 @@ const PopupListHead = styled.section`
 `
 const PopupListHeadContent = styled.div`
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     gap: 40px;
     h2 {
         font-size: 48px;
@@ -87,11 +87,29 @@ const PopupListHeadContent = styled.div`
         font-weight: 700;
     }
 
+    @media(max-width: 480px) {
+        gap: 24px;
+        h2 {
+            font-size: 32px;
+            line-height: 32px;
+        }
+    }
+`
+const IconSettingsMain = styled.img`
+    @media(max-width: 480px) {
+        width: 24px;
+        height: 24px;
+        margin-top: 4px;
+    }
 `
 const IconSettings = styled.img`
     box-sizing: border-box;
     border-radius: 8px;
     padding: 10px;
+    margin-top: 6px;
+    @media(max-width: 480px) {
+        margin-top: 0;
+    }
 `
 
 const PopupListHeadBtn = styled.button`
@@ -104,6 +122,16 @@ const PopupListHeadBtn = styled.button`
     border: 2px solid #333E59;
     border-radius: 12px;
     padding: 15px 24px;
+    flex-shrink: 0;
+    @media(max-width: 768px) {
+        top: 20px;
+        right: 32px;
+        position: absolute;
+        padding: 14px;
+        span {
+            display: none;
+        }
+    }
 `
 
 export default PopupHead

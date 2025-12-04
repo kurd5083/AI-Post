@@ -85,7 +85,7 @@ const PopupListContainer = styled.section`
     position: absolute;
     top: 100px;
     left: 0;
-    padding: 20px 73px 0;   
+    padding: 20px clamp(32px, calc((100vw - 1600px) * (73 - 32) / 400 + 32px), 73px) 30px;
     background-color: #1217268F;
     backdrop-filter: blur(20px);
     width: 100%;
@@ -93,8 +93,13 @@ const PopupListContainer = styled.section`
     scrollbar-width: none;
     max-height: calc(100vh - 100px);
     height: 100%;
-    padding-bottom: 30px;
     z-index: 10;
+    @media(max-width: 1600px) {
+        padding: 20px 32px 30px;   
+    }
+    @media(max-width: 480px) {
+        padding: 20px 24px 30px;   
+    }
 `
 
 export default Popup

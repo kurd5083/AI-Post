@@ -1,11 +1,29 @@
+import { useState, useEffect } from "react";
 import styled from "styled-components";
 import CardPablish from "@/components/CardPablish";
 import { publications } from "../../data/publications";
-import { useState } from "react";
+
+const itemsPerPageDefault = 9;
+const itemsPerPageSmall = 6;
 
 const PublicationsPopup = () => {
-    const itemsPerPage = 9;
     const [currentPage, setCurrentPage] = useState(1);
+    const [itemsPerPage, setItemsPerPage] = useState(itemsPerPageDefault);
+    
+    useEffect(() => {
+        const handleResize = () => {
+            if (window.innerWidth < 1600) {
+                setItemsPerPage(itemsPerPageSmall);
+            } else {
+                setItemsPerPage(itemsPerPageDefault);
+            }
+        };
+
+        handleResize();
+        window.addEventListener("resize", handleResize);
+        return () => window.removeEventListener("resize", handleResize);
+    }, []);
+
     const totalPages = Math.ceil(publications.length / itemsPerPage);
     const indexOfLast = currentPage * itemsPerPage;
     const indexOfFirst = indexOfLast - itemsPerPage;
@@ -72,8 +90,8 @@ const PaginationWrapper = styled.div`
     justify-content: center;
     align-items: flex-end;
     gap: 37px;
-    margin-top: 70px;
     height: 100%;
+    padding-top: 40px;
 `;
 
 const PageBtn = styled.button`

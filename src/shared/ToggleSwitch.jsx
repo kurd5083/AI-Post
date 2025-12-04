@@ -29,6 +29,9 @@ const SwitchLabel = styled.label`
   display: inline-block;
   width: 93px;
   height: 40px;
+  @media(max-width: 480px) {
+    width: 72px;
+  }
 `;
 
 const SwitchInput = styled.input`
@@ -42,6 +45,9 @@ const SwitchInput = styled.input`
 
   &:checked + span::before {
     transform: translateX(50px);
+    @media(max-width: 480px) {
+      transform: translateX(30px);
+    }
   }
 `;
 

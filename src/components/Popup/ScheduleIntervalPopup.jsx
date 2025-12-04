@@ -3,9 +3,10 @@ import plus_neutral_green from "@/assets/popup/plus-neutral-green.svg";
 import TimeInput from "@/shared/TimeInput";
 import { usePopupStore } from "@/store/popupStore"
 import Checkbox from "@/shared/Checkbox";
+import BtnSave from "@/shared/BtnSave";
 
 const SchedulePopup = () => {
-    const { changeContent } = usePopupStore()
+    const { changeContent, goBack } = usePopupStore()
     return (
         <div>
             <ScheduleHead>
@@ -39,6 +40,10 @@ const SchedulePopup = () => {
                         </Checkbox>
                     </ScheduleKeyItem>
                 </ScheduleKey>
+                <ScheduleButtons>
+                    <BtnSave $color="#D6DCEC" $bg="#336CFF" $margin="0">Сохранить</BtnSave>
+                    <BtnSave onClick={goBack} $color="#6A7080" $bg="#191E2D" $margin="0">Отменить</BtnSave>
+                </ScheduleButtons>
             </ScheduleContent>
         </div>
     )
@@ -58,6 +63,9 @@ const ScheduleHeadText = styled.p`
     font-size: 24px;
     padding-right: 40px;
     cursor: pointer;
+    @media(max-width: 480px) {
+        padding-right: 0;
+    }
 `
 const ScheduleContent = styled.div`
     display: flex;
@@ -126,6 +134,11 @@ const ScheduleKeyItem = styled.div`
         display: flex;
         align-items: center;
     }
+`
+const ScheduleButtons = styled.div`
+  display: flex;
+  gap: 8px;
+  margin-top: 64px;
 `
 
 export default SchedulePopup

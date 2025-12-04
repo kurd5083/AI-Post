@@ -22,6 +22,8 @@ const Sidebar = () => {
         </SidebarTitle>
         <img src={arrow_back} alt="arrow back" />
       </SidebarHead>
+      <SidebarNavContainer>
+
       {menuItems.map((section, sectionIndex) => (
         <SidebarNav key={sectionIndex}>
           {section.title && <SidebarNavTitle>{section.title}</SidebarNavTitle>}
@@ -32,8 +34,11 @@ const Sidebar = () => {
                 $isActive={activePage === item.id}
                 onClick={() => handleItemClick(item.id)}
               >
-                <Link to={item.to}>
-                  <img src={item.icon} alt={`${item.text} icon`} />
+                 <Link to={item.to}>
+                  <img 
+                    src={activePage === item.id ? item.iconActive : item.icon} 
+                    alt={`${item.text} icon`} 
+                  />
                   {item.text}
                 </Link>
               </SidebarListItem>
@@ -41,6 +46,8 @@ const Sidebar = () => {
           </SidebarList>
         </SidebarNav>
       ))}
+      </SidebarNavContainer>
+
       <SidebarFooter>
         <SidebarFooterTop>
           <SidebarAvaContainer>
@@ -65,17 +72,7 @@ const SidebarContainer = styled.section`
   max-width: 240px;
   width: 100%;
   
-  &::before {
-    content: '';
-    position: absolute;
-    left: -5px;
-    top: 0;
-    background-color: #232A3C;
-    height: 100%;
-    width: 100%;
-    z-index: -1;
-    border-radius: 40px 0 0 40px;
-  }
+
   &::after {
     content: '';
     position: absolute;
@@ -93,6 +90,9 @@ const SidebarContainer = styled.section`
     filter: blur(100px);
     transform: rotate(180deg);
   }
+  @media(max-width: 1400px) {
+    display: none;
+  }
 `
 const SidebarHead = styled.div`
   display: flex;
@@ -108,6 +108,11 @@ const SidebarTitle = styled.h1`
   mark {
     color:#336CFF;
   }
+`
+
+const SidebarNavContainer = styled.div`
+  overflow-y: auto;
+  scrollbar-width: none;
 `
 const SidebarNav = styled.nav`
   margin-top: 65px;
@@ -138,7 +143,7 @@ const SidebarListItem = styled.li`
       background-color: #336CFF;
       width: 2px;
       border-radius: 0 2px 2px 0;
-      left: -29px;
+      left: -23px;
     }
   `}
 
@@ -152,6 +157,7 @@ const SidebarListItem = styled.li`
 
   &:hover {
     color: #FFFFFF;
+    
   }
 `
 const SidebarFooter = styled.div`
