@@ -8,61 +8,59 @@ import BtnSave from "@/shared/BtnSave";
 const MAX_PROMPT_LENGTH = 100;
 
 const IndustrialStylePopup = () => {
-	const { changeContent } = usePopupStore()
-	const [prompt, setPrompt] = useState("");
-	const handlePromptChange = (e) => {
-		if (e.target.value.length <= MAX_PROMPT_LENGTH) {
-			setPrompt(e.target.value);
-		}
-	};
-	const handleTest = () => {
-		if (!prompt.trim()) return;
-		console.log("Тестирование промпта:", prompt);
-	};
-	return (
-		<>
-			<IndustrialStyleContainer>
-				<IndustrialStyleLeft>
-					<BtnSave onClick={() => changeContent("industrial_library")} $color="#D6DCEC" $bg="#2B89ED" $margin="0">Библиотека промптов</BtnSave>
-					
-					<IndustrialStyleTitle>Промпт</IndustrialStyleTitle>
-					<IndustrialStyleContent>
-						<div>
-							<textarea
-								placeholder="Введите промпт..."
-								value={prompt}
-								onChange={handlePromptChange}
-							></textarea>
-						</div>
-						<button
-							disabled={!prompt.trim()}
-							onClick={handleTest}
-						>
-							Тест
-						</button>
-						<p>{prompt.length} / {MAX_PROMPT_LENGTH}</p>
-					</IndustrialStyleContent>
-					<IndustrialStyleDesc>Введите промпт — это задание для генерации поста. <mark>Чем точнее формулировка, тем лучше результат.</mark></IndustrialStyleDesc>
-					<IndustrialStyleTitle>Подпись</IndustrialStyleTitle>
-					<IndustrialStyleInputContainer>
-						<IndustrialStyleInput type="text" placeholder="Описание канала" />
-						<IndustrialStyleImg src={plus_blue} alt="plus icon" width={16} height={16} />
-					</IndustrialStyleInputContainer>
-					<IndustrialStyleDesc>Подпись будет добавлена в <mark>конец каждого поста.</mark> Например: ссылка или призыв подписаться.</IndustrialStyleDesc>
-				</IndustrialStyleLeft>
-				<IndustrialStyleRight>
-					<IndustrialStyleTitle>Креативность</IndustrialStyleTitle>
-					<Drag />
-					<IndustrialStyleDesc>Ползунок <mark>«Креативность»</mark> регулирует, насколько
-						оригинальным и неожиданным будет текст поста.
-						Высокие значения <mark>увеличивают</mark> вариативность, что
-						может привести к менее предсказуемым результатам</IndustrialStyleDesc>
-				</IndustrialStyleRight>
-
-			</IndustrialStyleContainer>
-			<BtnSave>Сохранить</BtnSave>
-		</>
-	)
+  const { changeContent } = usePopupStore()
+  const [prompt, setPrompt] = useState("");
+  const handlePromptChange = (e) => {
+    if (e.target.value.length <= MAX_PROMPT_LENGTH) {
+      setPrompt(e.target.value);
+    }
+  };
+  const handleTest = () => {
+    if (!prompt.trim()) return;
+    console.log("Тестирование промпта:", prompt);
+  };
+  return (
+    <>
+      <IndustrialStyleContainer>
+        <IndustrialStyleLeft>
+          <BtnSave onClick={() => changeContent("industrial_library")} $color="#D6DCEC" $bg="#2B89ED" $margin="0">Библиотека промптов</BtnSave>
+          <IndustrialStyleTitle>Промпт</IndustrialStyleTitle>
+          <IndustrialStyleContent>
+            <div>
+              <textarea
+                placeholder="Введите промпт..."
+                value={prompt}
+                onChange={handlePromptChange}
+              ></textarea>
+            </div>
+            <button
+              disabled={!prompt.trim()}
+              onClick={handleTest}
+            >
+              Тест
+            </button>
+            <p>{prompt.length} / {MAX_PROMPT_LENGTH}</p>
+          </IndustrialStyleContent>
+          <IndustrialStyleDesc>Введите промпт — это задание для генерации поста. <mark>Чем точнее формулировка, тем лучше результат.</mark></IndustrialStyleDesc>
+          <IndustrialStyleTitle>Подпись</IndustrialStyleTitle>
+          <IndustrialStyleInputContainer>
+            <IndustrialStyleInput type="text" placeholder="Описание канала" />
+            <IndustrialStyleImg src={plus_blue} alt="plus icon" width={16} height={16} />
+          </IndustrialStyleInputContainer>
+          <IndustrialStyleDesc>Подпись будет добавлена в <mark>конец каждого поста.</mark> Например: ссылка или призыв подписаться.</IndustrialStyleDesc>
+        </IndustrialStyleLeft>
+        <IndustrialStyleRight>
+          <IndustrialStyleTitle>Креативность</IndustrialStyleTitle>
+          <Drag />
+          <IndustrialStyleDesc>Ползунок <mark>«Креативность»</mark> регулирует, насколько
+            оригинальным и неожиданным будет текст поста.
+            Высокие значения <mark>увеличивают</mark> вариативность, что
+            может привести к менее предсказуемым результатам</IndustrialStyleDesc>
+        </IndustrialStyleRight>
+      </IndustrialStyleContainer>
+      <BtnSave>Сохранить</BtnSave>
+    </>
+  )
 }
 const IndustrialStyleContainer = styled.div`
     display: flex;
