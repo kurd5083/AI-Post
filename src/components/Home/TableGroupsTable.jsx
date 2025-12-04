@@ -109,7 +109,7 @@ const TableContainer = styled.div`
 
 const TableWrapper = styled.div`
   width: 100%;
-  max-height: calc(100vh - 600px); 
+  max-height: calc(100svh - 600px); 
   min-height: 400px;
   overflow-y: auto;
   scrollbar-width: none;

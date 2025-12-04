@@ -189,10 +189,11 @@ const TapeList = styled(Swiper)`
   margin-top: 32px;
   overflow-y: auto;
   scrollbar-width: none;  
-  max-height: calc(100vh - 195px);
+  max-height: calc(100svh - 195px);
   padding-bottom: 20px;
   @media (max-width: 1400px) {
     padding: 0 32px;
+    max-height: fit-content;
   }
   @media (max-width: 480px) {
     padding: 0 24px;
