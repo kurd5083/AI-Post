@@ -4,7 +4,7 @@ import plus_neutral_green from "@/assets/popup/plus-neutral-green.svg";
 import Checkbox from "@/shared/Checkbox";
 import TimeInput from "@/shared/TimeInput";
 import { usePopupStore } from "@/store/popupStore"
-import BtnSave from "@/shared/BtnSave";
+import BtnBase from "@/shared/BtnBase";
 
 const SchedulePopup = () => {
     const { changeContent } = usePopupStore()
@@ -81,7 +81,7 @@ const SchedulePopup = () => {
                         </ScheduleDaysBlock>
                     </ScheduleDays>
                 </ScheduleKey>
-                <BtnSave>Сохранить</BtnSave>
+                <BtnBase $margin="64">Сохранить</BtnBase>
             </ScheduleContent>
         </div>
     )

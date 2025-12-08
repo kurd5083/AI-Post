@@ -1,11 +1,11 @@
 import { useRef, useState } from "react";
 import styled from 'styled-components';
 import dir_white from "@/assets/TableGroups/dir-white.svg";
-import del from "@/assets/TableGroups/del.svg";
+import del from "@/assets/del.svg";
 import setting from "@/assets/setting.svg";
 import list from "@/assets/TableGroups/list.svg";
 import { usePopupStore } from "@/store/popupStore"
-import { tabledata } from "@/data/tabledata";
+import { tablehomedata } from "@/data/tablehomedata";
 import useResolution from "@/lib/useResolution";
 
 const TableGroupsTable = () => {
@@ -41,7 +41,7 @@ const TableGroupsTable = () => {
 						</tr>
 					</TableHead>
 					<TableBody>
-						{tabledata.map((row) => (
+						{tablehomedata.map((row) => (
 							<TableItem key={row.id}>
 								<TableCell>
 									<p>

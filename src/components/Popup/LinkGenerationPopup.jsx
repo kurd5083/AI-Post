@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { usePopupStore } from "@/store/popupStore";
 import CheckboxText from "@/shared/CheckboxText";
 import CustomSelect from "@/shared/CustomSelect";
-import BtnSave from "@/shared/BtnSave";
+import BtnBase from "@/shared/BtnBase";
 
 const LinkGenerationPopup = () => {
   const { goBack } = usePopupStore()
@@ -55,8 +55,8 @@ const LinkGenerationPopup = () => {
         </LinkGenerationItem>
       </LinkGenerationContent>
       <LinkGenerationButtons>
-        <BtnSave $color="#D6DCEC" $bg="#336CFF" $margin="0">Создать ссылку</BtnSave>
-        <BtnSave onClick={goBack} $color="#6A7080" $bg="#191E2D" $margin="0">Отменить</BtnSave>
+        <BtnBase $color="#D6DCEC" $bg="#336CFF">Создать ссылку</BtnBase>
+        <BtnBase onClick={goBack} $color="#6A7080" $bg="#191E2D">Отменить</BtnBase>
       </LinkGenerationButtons>
     </LinkGenerationContainer>
   )

@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { usePopupStore } from "@/store/popupStore"
 import plus_blue from "@/assets/popup/plus-blue.svg";
 import Drag from "@/shared/Drag";
-import BtnSave from "@/shared/BtnSave";
+import BtnBase from "@/shared/BtnBase";
 
 const MAX_PROMPT_LENGTH = 100;
 
@@ -23,7 +23,7 @@ const IndustrialStylePopup = () => {
     <>
       <IndustrialStyleContainer>
         <IndustrialStyleLeft>
-          <BtnSave onClick={() => changeContent("industrial_library")} $color="#D6DCEC" $bg="#2B89ED" $margin="0">Библиотека промптов</BtnSave>
+          <BtnBase onClick={() => changeContent("industrial_library")} $color="#D6DCEC" $bg="#2B89ED">Библиотека промптов</BtnBase>
           <IndustrialStyleTitle>Промпт</IndustrialStyleTitle>
           <IndustrialStyleContent>
             <div>
@@ -58,7 +58,7 @@ const IndustrialStylePopup = () => {
             может привести к менее предсказуемым результатам</IndustrialStyleDesc>
         </IndustrialStyleRight>
       </IndustrialStyleContainer>
-      <BtnSave>Сохранить</BtnSave>
+      <BtnBase $margin="64">Сохранить</BtnBase>
     </>
   )
 }
@@ -144,7 +144,6 @@ const IndustrialStyleContent = styled.div`
         font-size: 12px;
         font-weight: 700;
     }
-    
 `
 
 const IndustrialStyleInput = styled.input`

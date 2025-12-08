@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import arrow from "@/assets/arrow.svg";
-import BtnSave from "@/shared/BtnSave";
+import BtnBase from "@/shared/BtnBase";
 
 const CompilationPopup = () => {
   return (
@@ -14,7 +14,7 @@ const CompilationPopup = () => {
           </CompilationOpen>
         </CompilationItem>
       </CompilationList>
-      <BtnSave>Сохранить</BtnSave>
+      <BtnBase $margin="64">Сохранить</BtnBase>
     </>
   )
 }

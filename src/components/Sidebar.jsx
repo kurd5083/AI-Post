@@ -1,61 +1,68 @@
-import { useState } from "react";
 import { Link } from "react-router";
 import styled from "styled-components";
 import { menuItems } from "@/data/sidebar";
-import arrow_back from "@/assets/sidebar/arrow-back.svg";
+import arrow_close from "@/assets/sidebar/arrow-close.svg";
 import acc_icon from "@/assets/sidebar/acc-icon.png";
 import { usePopupStore } from "@/store/popupStore";
+import { useSidebarStore } from "@/store/sidebarStore";
 
 const Sidebar = () => {
   const { closePopup } = usePopupStore()
-  const [activePage, setActivePage] = useState(1);
+  const { 
+    activePage, 
+    setActivePage, 
+    isSidebarVisible, 
+    hideSidebar,
+    showSidebar
+  } = useSidebarStore();
   
   const handleItemClick = (index) => {
     setActivePage(index);
+    closePopup();
   };
   
   return (
-    <SidebarContainer>
-      <SidebarHead>
+    <SidebarContainer $isSidebarVisible={isSidebarVisible}>
+      <SidebarHead $isSidebarVisible={isSidebarVisible}>
         <SidebarTitle onClick={() => closePopup()}>
-          <mark>AI</mark>Post
+          <mark>AI</mark>{isSidebarVisible && 'Post'}
         </SidebarTitle>
-        <img src={arrow_back} alt="arrow back" />
+        <SidebarClose $isSidebarVisible={isSidebarVisible} src={arrow_close} alt="arrow close" onClick={() => isSidebarVisible ? hideSidebar() : showSidebar()}/>
       </SidebarHead>
-      <SidebarNavContainer>
+      <SidebarNavContainer $isSidebarVisible={isSidebarVisible}>
+        {menuItems.map((section, sectionIndex) => (
+          <SidebarNav key={sectionIndex}>
+            {section.title && <SidebarNavTitle>{section.title}</SidebarNavTitle>}
+            <SidebarList>
+              {section.items.map((item) => (
+                <SidebarListItem
+                  key={item.id}
+                  $isActive={activePage === item.id}
+                  onClick={() => handleItemClick(item.id)}
+                  $isSidebarVisible={isSidebarVisible}
+                >
+                  <Link to={item.to}>
+                    <img 
+                      src={activePage === item.id ? item.iconActive : item.icon} 
+                      alt={`${item.text} icon`} 
+                    />
+                    {isSidebarVisible && item.text}
+                  </Link>
+                </SidebarListItem>
+              ))}
+            </SidebarList>
+          </SidebarNav>
+        ))}
+        </SidebarNavContainer>
 
-      {menuItems.map((section, sectionIndex) => (
-        <SidebarNav key={sectionIndex}>
-          {section.title && <SidebarNavTitle>{section.title}</SidebarNavTitle>}
-          <SidebarList>
-            {section.items.map((item) => (
-              <SidebarListItem
-                key={item.id}
-                $isActive={activePage === item.id}
-                onClick={() => handleItemClick(item.id)}
-              >
-                 <Link to={item.to}>
-                  <img 
-                    src={activePage === item.id ? item.iconActive : item.icon} 
-                    alt={`${item.text} icon`} 
-                  />
-                  {item.text}
-                </Link>
-              </SidebarListItem>
-            ))}
-          </SidebarList>
-        </SidebarNav>
-      ))}
-      </SidebarNavContainer>
-
-      <SidebarFooter>
+      <SidebarFooter  $isSidebarVisible={isSidebarVisible}>
         <SidebarFooterTop>
           <SidebarAvaContainer>
             <SidebarAva src={acc_icon} alt="accaunt icon" />
           </SidebarAvaContainer>
-          <p>Arseniy P.</p>
+          {isSidebarVisible && <p>Arseniy P.</p>}
         </SidebarFooterTop>
-        <SidebarFooterBtn>+ Пополнить</SidebarFooterBtn>
+        <SidebarFooterBtn>+{isSidebarVisible && 'Пополнить'} </SidebarFooterBtn>
       </SidebarFooter>
     </SidebarContainer>
   )
@@ -67,9 +74,9 @@ const SidebarContainer = styled.section`
   flex-direction: column;
   position: relative;
   border-radius: 24px 0 0 24px;
-  padding: 40px 24px 32px;
+  padding: 40px 0 32px;
   background: #121726;
-  max-width: 240px;
+  max-width: ${({ $isSidebarVisible }) => $isSidebarVisible ? '240px' : '116px'};
   width: 100%;
   
 
@@ -97,6 +104,7 @@ const SidebarContainer = styled.section`
 const SidebarHead = styled.div`
   display: flex;
   justify-content: space-between;
+  padding: 0 24px;
 `
 const SidebarTitle = styled.h1`
   display: flex;
@@ -109,10 +117,17 @@ const SidebarTitle = styled.h1`
     color:#336CFF;
   }
 `
+const SidebarClose = styled.img`
+  cursor: pointer;
+  transform: rotate(${({ $isSidebarVisible }) => $isSidebarVisible ? '0deg' : '180deg'});
+`
 
 const SidebarNavContainer = styled.div`
+  position: relative;
   overflow-y: auto;
   scrollbar-width: none;
+  z-index: 1;
+  padding: 0 ${({ $isSidebarVisible }) => $isSidebarVisible ? '24px' : '40px'};
 `
 const SidebarNav = styled.nav`
   margin-top: 65px;
@@ -122,6 +137,9 @@ const SidebarNavTitle = styled.h2`
   font-weight: 700;
   color: #6A7080;
   margin-bottom: 32px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 `
 const SidebarList = styled.ul`
   display: flex;
@@ -143,7 +161,7 @@ const SidebarListItem = styled.li`
       background-color: #336CFF;
       width: 2px;
       border-radius: 0 2px 2px 0;
-      left: -23px;
+      left: ${props.$isSidebarVisible ? '-23px' : '-40px'};
     }
   `}
 
@@ -167,6 +185,7 @@ const SidebarFooter = styled.div`
   justify-content: flex-end;
   gap: 32px;
   margin-top: 40px;
+  padding: 0 ${({ $isSidebarVisible }) => $isSidebarVisible ? '24px' : '40px'};
 `
 const SidebarFooterTop = styled.div`
   display: flex;

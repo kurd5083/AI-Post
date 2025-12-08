@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import plus_blue from "@/assets/popup/plus-blue.svg";
 import { usePopupStore } from "@/store/popupStore"
-import BtnSave from "@/shared/BtnSave";
+import BtnBase from "@/shared/BtnBase";
 
 const SourcesPopup = () => {
   const { changeContent } = usePopupStore()
@@ -42,8 +42,8 @@ const SourcesPopup = () => {
         </SourcesBlocks>
       </SourcesKey>
       <SourcesButtons>
-        <BtnSave onClick={() => changeContent("compilation")} $color="#D6DCEC" $bg="#2B89ED">Подборки источников</BtnSave>
-        <BtnSave>Сохранить</BtnSave>
+        <BtnBase $margin="40" onClick={() => changeContent("compilation")} $color="#D6DCEC" $bg="#2B89ED">Подборки источников</BtnBase>
+        <BtnBase $margin="64">Сохранить</BtnBase>
       </SourcesButtons>
     </SourcesContainer>
   )

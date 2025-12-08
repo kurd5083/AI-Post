@@ -4,21 +4,24 @@ import setting from "@/assets/setting.svg";
 import arrow from "@/assets/arrow.svg";
 import close from "@/assets/popup/close.svg";
 import { usePopupStore } from "@/store/popupStore"
-import { data } from "@/data/data";
+import { popupdata } from "@/data/popupdata";
 
 const PopupHead = () => {
     const { popup, closePopup, goBack  } = usePopupStore()
-    const foundItem = data.find(elem => elem.key == popup.content)
+    const foundItem = popupdata.find(elem => elem.key == popup.content)
     return (
         <>
-            <PopupListInfo>
-                {popup.content != 'settings' && <PopupArrow src={arrow} alt="arrow icon" width={8} height={16} onClick={goBack}/>}
-                <PopupListAva src={ava_icon} alt="ava icon" width={48} height={48} />
-                <PopupListInfoContent>
-                    <p>Antropia Digital</p>
-                    <span>14.670 Подписчиков</span>
-                </PopupListInfoContent>
-            </PopupListInfo>
+            {popup.content !== 'notifications' && (
+                <PopupListInfo>
+                    {popup.content != 'settings' && <PopupArrow src={arrow} alt="arrow icon" width={8} height={16} onClick={goBack}/>}
+                    <PopupListAva src={ava_icon} alt="ava icon" width={48} height={48} />
+                    <PopupListInfoContent>
+                        <p>Antropia Digital</p>
+                        <span>14.670 Подписчиков</span>
+                    </PopupListInfoContent>
+                </PopupListInfo>
+            )}
+            
             <PopupListHead>
                 <PopupListHeadContent>
                     {popup.content == 'settings' ? (
@@ -45,6 +48,7 @@ const PopupListInfo = styled.section`
     display: flex;
     align-items: center;
     gap: 24px;
+    margin-bottom: 40px;
 `
 const PopupArrow = styled.img`
     transform: rotate(180deg);
@@ -75,7 +79,6 @@ const PopupListHead = styled.section`
     justify-content: space-between;
     gap: 24px;
     padding-bottom: 40px;
-    margin-top: 40px;
 `
 const PopupListHeadContent = styled.div`
     display: flex;

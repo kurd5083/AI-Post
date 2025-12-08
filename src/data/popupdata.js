@@ -14,8 +14,9 @@ import sources from "@/assets/popup/sources.svg";
 import post_style from "@/assets/popup/post-style.svg";
 import advanced from "@/assets/popup/advanced.svg";
 import create_post from "@/assets/popup/create-post.svg";
+import bell from "@/assets/bell.svg";
 
-export const data = [
+export const popupdata = [
     {
         key: "posting",
         name: "Постинг",
@@ -191,6 +192,14 @@ export const data = [
         extra: {
             background: "#552F43",
             image: create_post
+        }
+    },
+    {
+        key: "notifications",
+        name: "Уведомления",
+        extra: {
+            background: "#525766",
+            image: bell
         }
     },
 ]

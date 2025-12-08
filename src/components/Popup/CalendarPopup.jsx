@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { useState, useEffect } from "react";
 import CustomSelectSec from "@/shared/CustomSelectSec";
 import arrow from "@/assets/arrow.svg";
-import BtnSave from "@/shared/BtnSave";
+import BtnBase from "@/shared/BtnBase";
 
 const CalendarPopup = () => {
     const [currentDate, setCurrentDate] = useState(new Date(2026, 8, 22));
@@ -190,7 +190,7 @@ const CalendarPopup = () => {
                         );
                     })}
                 </WeekGrid>
-                <BtnSave $color="#AC60FD" $bg="#1F203D" $margin="64">Добавить пост</BtnSave>
+                <BtnBase $color="#AC60FD" $bg="#1F203D" $margin="64">Добавить пост</BtnBase>
                 <CalendarText>На этот день нету запланированных постов</CalendarText>
             </CalendarContainer>
         </div>

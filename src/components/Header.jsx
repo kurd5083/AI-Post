@@ -1,11 +1,13 @@
 import styled from "styled-components";
 import money from "@/assets/header/money.svg";
-import bell from "@/assets/header/bell.svg";
+import bell from "@/assets/bell.svg";
 import setting from "@/assets/setting.svg";
 import acc_icon from "@/assets/sidebar/acc-icon.png";
 import burger from "@/assets/header/burger.svg";
+import { usePopupStore } from "@/store/popupStore"
 
 const Header = () => {
+		const { openPopup } = usePopupStore();
 	return (
 		<HeaderContainer>
 			<HeaderContent>
@@ -24,7 +26,7 @@ const Header = () => {
 				<HeaderBtnAdd>+ Пополнить</HeaderBtnAdd>
 			</HeaderContent>
 			<HeaderBtns>
-				<HeaderBtnBell><img src={bell} alt="bell icon" width={20} height={24}/></HeaderBtnBell>
+				<HeaderBtnBell  onClick={() => openPopup("notifications")}><img src={bell} alt="bell icon" width={20} height={24}/></HeaderBtnBell>
 				<HeaderBtnSet><img src={setting} alt="setting icon" width={24} height={24}/>Настройки аккаунта</HeaderBtnSet>
 				<HeaderBtnBurger><img src={burger} alt="burger icon" width={16} height={11}/></HeaderBtnBurger>
 			</HeaderBtns>

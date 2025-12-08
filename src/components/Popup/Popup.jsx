@@ -20,6 +20,7 @@ import SchedulePopup from "@/components/Popup/SchedulePopup";
 import ScheduleIntervalPopup from "@/components/Popup/ScheduleIntervalPopup";
 import IndustrialStylePopup from "@/components/Popup/IndustrialStylePopup";
 import CalendarPopup from "@/components/Popup/CalendarPopup";
+import NotificationsPopup from "@/components/Popup/NotificationsPopup";
 
 const Popup = () => {
     const { popup } = usePopupStore()
@@ -72,6 +73,8 @@ const Popup = () => {
                 <IndustrialStylePopup/>
             ) : popup.content == 'calendar' ? (
                 <CalendarPopup/>
+            ) : popup.content == 'notifications' ? (
+                <NotificationsPopup/>
             ) : (
                 2
             )}

@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import create_post  from "@/assets/popup/create-post-sec.svg";
-import BtnSave from "@/shared/BtnSave";
+import BtnBase from "@/shared/BtnBase";
 
 const CreatePostPopup = () => {
   return (
@@ -8,7 +8,7 @@ const CreatePostPopup = () => {
       <img src={create_post} alt="create post icon" width={123} height={113}/>
       <CreatePostTitle>Генерируем пост</CreatePostTitle>
       <CreatePostText>Это может занять несколько минут...</CreatePostText>
-      <BtnSave $color="#AC60FD" $bg="#1F1E38" $margin="0">Отменить генерирование</BtnSave>
+      <BtnBase $color="#AC60FD" $bg="#1F1E38">Отменить генерирование</BtnBase>
     </CreatePostContainer>
   )
 }

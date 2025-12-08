@@ -1,6 +1,6 @@
 import ava_groups from "@/assets/TableGroups/ava-groups.png";
 
-export const tabledata = [
+export const tablehomedata = [
     { id: 1, number: '#1', image: ava_groups, name: 'Для наших ребят', status: 'Премодерация постов', online: true },
     { id: 2, number: '#2', image: ava_groups, name: 'Для наших ребят', status: 'Премодерация постов', online: false },
     { id: 3, number: '#3', image: ava_groups, name: 'Для наших ребят', status: 'Премодерация постов', online: true },

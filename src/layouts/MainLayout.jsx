@@ -3,6 +3,7 @@ import styled from "styled-components";
 import Sidebar from "@/components/Sidebar"
 import Tape from "@/components/Tape"
 import Header from "@/components/Header";
+import Popup from "@/components/Popup/Popup"
 import { usePopupStore } from "@/store/popupStore";
 
 const MainLayout = () => {
@@ -13,6 +14,7 @@ const MainLayout = () => {
       <Main $blocked={popup?.status}>
         <Header/>
         <Outlet />
+        {popup && <Popup content={popup.content}/>}
       </Main>
       <Tape/>
     </MainContainer>

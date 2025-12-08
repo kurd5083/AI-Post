@@ -3,10 +3,16 @@ import { create } from 'zustand';
 export const usePopupStore = create((set, get) => ({
     popup: null,
 
-    openPopup: () => {
+    openPopup: (content = 'settings') => {
         window.scrollTo({ top: 0, behavior: "smooth" });
         document.body.style.overflow = "hidden";
-        set({ popup: { status: true, content: 'settings', previousPage: [] } });
+        set({ 
+            popup: { 
+                status: true, 
+                content: content, 
+                previousPage: [] 
+            } 
+        });
     },
 
     closePopup: () => {

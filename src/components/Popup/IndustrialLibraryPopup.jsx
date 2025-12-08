@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import Checkbox from "@/shared/Checkbox";
 import { industriallibrary } from "@/data/industriallibrary";
-import BtnSave from "@/shared/BtnSave";
+import BtnBase from "@/shared/BtnBase";
 
 const IndustrialLibraryPopup = () => {
     return (
@@ -16,7 +16,7 @@ const IndustrialLibraryPopup = () => {
                         </Checkbox>
                     </IndustrialLibraryContentItem>
                 ))}
-            <BtnSave $color="#336CFF" $bg="#1B243E">Сохранить</BtnSave>
+            <BtnBase $color="#336CFF" $bg="#1B243E">Сохранить</BtnBase>
         </IndustrialLibraryContent>
     )
 }

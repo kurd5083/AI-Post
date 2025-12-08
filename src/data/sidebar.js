@@ -33,21 +33,21 @@ export const menuItems = [
                 icon: ai_generator, 
                 iconActive: ai_generator_active,
                 text: "AI Генератор", 
-                to: "/" 
+                to: "/ai-generator" 
             },
             { 
                 id: 3, 
                 icon: analytics, 
                 iconActive: analytics_active,
                 text: "Аналитика", 
-                to: "/" 
+                to: "/analytics" 
             },
             { 
                 id: 4, 
                 icon: templates, 
                 iconActive: templates_active,
                 text: "Шаблоны", 
-                to: "/" 
+                to: "/templates" 
             }
         ]
     },
@@ -59,28 +59,28 @@ export const menuItems = [
                 icon: calendar, 
                 iconActive: calendar_active,
                 text: "Календарь", 
-                to: "/" 
+                to: "/calendar" 
             },
             { 
                 id: 6, 
                 icon: account, 
                 iconActive: account_active,
                 text: "Аккаунт", 
-                to: "/" 
+                to: "/account" 
             },
             { 
                 id: 7, 
                 icon: promotion, 
                 iconActive: promotion_active,
                 text: "Продвижение", 
-                to: "/" 
+                to: "/promotion" 
             },
             { 
                 id: 8, 
                 icon: media, 
                 iconActive: media_active,
                 text: "Медиа", 
-                to: "/" 
+                to: "/media" 
             }
         ]
     },
@@ -91,7 +91,7 @@ export const menuItems = [
                 icon: help, 
                 iconActive: help_active,
                 text: "Помощь", 
-                to: "/" 
+                to: "/help" 
             }
         ]
     }

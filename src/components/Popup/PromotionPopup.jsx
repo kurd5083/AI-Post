@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import ToggleSwitch from "@/shared/ToggleSwitch";
 import Counter from "@/shared/Counter";
-import BtnSave from "@/shared/BtnSave";
+import BtnBase from "@/shared/BtnBase";
 
 const PromotionPopup = () => {
     return (
@@ -35,7 +35,7 @@ const PromotionPopup = () => {
                     </CounterContainer>
                 </PostContainer>
             </PromotePost>
-            <BtnSave  $margin="64">Сохранить</BtnSave>
+            <BtnBase  $margin="64">Сохранить</BtnBase>
         </PromotionContainer>
 
     )

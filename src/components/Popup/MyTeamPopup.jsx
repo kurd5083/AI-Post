@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import my_team  from "@/assets/popup/my-team.svg";
-import BtnSave from "@/shared/BtnSave";
+import BtnBase from "@/shared/BtnBase";
 
 const MyTeamPopup = () => {
   return (
@@ -8,7 +8,7 @@ const MyTeamPopup = () => {
       <img src={my_team} alt="my team icon" width={129} height={113}/>
       <MyTeamTitle>Разделите администрирование со своими коллегами</MyTeamTitle>
       <MyTeamText>Пригласите их по кнопке ниже</MyTeamText>
-      <BtnSave $color="#5ABAFF" $bg="#1B283C" $margin="0">Пригласить в команду</BtnSave>
+      <BtnBase $color="#5ABAFF" $bg="#1B283C">Пригласить в команду</BtnBase>
     </MyTeamContainer>
   )
 }

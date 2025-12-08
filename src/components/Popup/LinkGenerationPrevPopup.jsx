@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import link_generation  from "@/assets/popup/link-generation.svg";
 import { usePopupStore } from "@/store/popupStore"
-import BtnSave from "@/shared/BtnSave";
+import BtnBase from "@/shared/BtnBase";
 
 const LinkGenerationPrevPopup = () => {
   const { changeContent } = usePopupStore()
@@ -10,7 +10,7 @@ const LinkGenerationPrevPopup = () => {
       <img src={link_generation} alt="link generation icon" width={123} height={113}/>
       <LinkGenerationTitle>Пригласительных ссылок пока нет</LinkGenerationTitle>
       <LinkGenerationText>Создайте первую ссылку для приглашения пользователей в канал</LinkGenerationText>
-      <BtnSave onClick={() => changeContent("link_generation")} $color="#FC5B5B" $bg="#29212F" $margin="0">+ Создать ссылку</BtnSave>
+      <BtnBase onClick={() => changeContent("link_generation")} $color="#FC5B5B" $bg="#29212F">+ Создать ссылку</BtnBase>
     </LinkGenerationContainer>
   )
 }
