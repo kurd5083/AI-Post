@@ -2,18 +2,18 @@ import styled from "styled-components";
 import arrow from "@/assets/arrow.svg";
 import bell_blue from "@/assets/popup/bell-blue.svg";
 
-import { settings } from "@/data/settings";
+import { settingsData } from "@/data/settingsData";
 import ToggleSwitch from "@/shared/ToggleSwitch";
 import { usePopupStore } from "@/store/popupStore"
 
 const SettingsPopup = () => {
     const { changeContent } = usePopupStore()
     return (
-        <PopupContent>
-            {settings.sections.map((section) => (
+        <div>
+            {settingsData.sections.map((section) => (
                 <PopupNav key={section.key}>
                     <PopupContentTitle>{section.label}</PopupContentTitle>
-                    <PopupContentList>
+                    <ul>
                         {section.items.map((item, index) => (
                             <PopupContentItem key={index} onClick={item.right !== 'switch' ? () => changeContent(item.key) : undefined}>
                                 <PopupContentLeft>
@@ -42,14 +42,13 @@ const SettingsPopup = () => {
                                 )}
                             </PopupContentItem>
                         ))}
-                    </PopupContentList>
+                    </ul>
                 </PopupNav>
             ))}
-        </PopupContent>
+        </div>
     )
 }
-const PopupContent = styled.div`
-`
+
 const PopupNav = styled.nav`
     margin-top: 40px;
     display: flex;
@@ -64,9 +63,6 @@ const PopupContentTitle = styled.h2`
     font-size: 12px;
     font-weight: 700;
     text-transform: uppercase;
-`
-const PopupContentList = styled.ul`
-
 `
 const PopupContentItem = styled.li`
     display: flex;
@@ -132,6 +128,5 @@ const PopupContentCounter = styled.p`
     font-weight: 700;
     font-size: 14px;
 `
-
 
 export default SettingsPopup

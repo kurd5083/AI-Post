@@ -1,4 +1,4 @@
-import ava_groups from "@/assets/TableGroups/ava-groups.png";
+import ava_groups from "@/assets/table-groups/ava-groups.png";
 
 export const tablemyordersdata = [
     { 

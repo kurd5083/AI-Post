@@ -1,15 +1,15 @@
 import styled from "styled-components";
 import rating from "@/assets/statistics/rating.svg";
-import { statistics } from "@/data/statistics";
+import { statisticsData } from "@/data/statisticsData";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import useSwipeAllowed from "@/lib/useSwipeAllowed";
 
-const Statistics = () => {
+const Statistics = ({ padding }) => {
   const { isSwipe } = useSwipeAllowed(1600);
 
   return (
-    <StatisticsContainer>
+    <StatisticsContainer $padding={padding}>
       <StatisticsTitle>
         <img src={rating} alt="rating icon" />Статистика
       </StatisticsTitle>
@@ -17,10 +17,10 @@ const Statistics = () => {
       <StatisticsList
         key={isSwipe}
         spaceBetween={16}
-        slidesPerView={isSwipe ? "auto" : statistics.length}
+        slidesPerView={isSwipe ? "auto" : statisticsData.length}
         allowTouchMove={isSwipe}
       >
-        {statistics.map((item, index) => (
+        {statisticsData.map((item, index) => (
           <StatisticsItem key={index}>
             <StatisticsItemHead>
               <StatisticsItemImg
@@ -39,17 +39,19 @@ const Statistics = () => {
 };
 
 const StatisticsContainer = styled.section`
-  margin-top: 50px;
-  padding: 0 clamp(0px, calc((100vw - 1600px) * 24 / 400), 24px);
-  @media (max-width: 1600px) {
-    padding: 0 32px;
-  }
-  @media (max-width: 1400px) {
-    padding: 0;
-  }
-  @media (max-width: 480px) {
-    margin-top: 32px;
-  }
+  margin-top: 32px;
+
+  ${({$padding}) => $padding && `
+    padding: 0 24px;
+    
+    @media (max-width: 1600px) {
+      padding: 0 32px;
+    }
+    
+    @media (max-width: 1400px) {
+      padding: 0;
+    }
+  `}
 `
 const StatisticsTitle = styled.h2`
   display: flex;

@@ -1,0 +1,132 @@
+import styled from 'styled-components';
+import { tableHomeData } from "@/data/tableHomeData";
+import dir_white from "@/assets/table-groups/dir-white.svg";
+import del from "@/assets/del.svg";
+import setting from "@/assets/setting.svg";
+import { usePopupStore } from "@/store/popupStore"
+
+const GridGroups = () => {
+  const { openPopup } = usePopupStore();
+  
+  return (
+    <GridContainer>
+      {tableHomeData.map((row) => (
+        <GridItem key={row.id}>
+          <p>{row.number}</p>
+          <GridImg src={row.image} alt="Group" />
+          <span>{row.name}</span>
+          <GridOnline $online={row.online}>
+            <StatusIndicator $online={row.online} />
+            {row.online ? 'Онлайн' : 'Ошибка'}
+          </GridOnline>
+          <GridStatus>Премодерация</GridStatus>
+          <ButtonsWrap>
+            <ButtonDir onClick={() => openPopup("move_channel", "popup_window")} title="Перейти"><img src={dir_white} alt="dir icon" width={16} height={13} /></ButtonDir>
+            <ButtonSetting onClick={() => openPopup()} title="Настройки"><img src={setting} alt="setting icon" width={16} height={16} /></ButtonSetting>
+            <ButtonDel title="Удалить"><img src={del} alt="del icon" width={14} height={16} /></ButtonDel>
+          </ButtonsWrap>
+        </GridItem>
+      ))}
+    </GridContainer>
+  );
+};
+
+const GridContainer = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  padding-bottom: 30px;
+`;
+const GridItem = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding: 16px;
+  background-color: #1C2438;
+  border-radius: 16px;
+  text-align: center;
+`;
+const GridImg = styled.img`
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  object-fit: cover;
+`;
+const GridStatus = styled.button`
+  padding: 18px 24px;
+  border-radius: 12px;
+  color: #6A7080;
+  border: 2px solid #1F273B;
+  font-size: 14px;
+  font-weight: 700;
+  background: transparent;
+  &:hover {
+    background-color: #336CFF;
+    color: #fff;
+  }
+`;
+
+const GridOnline = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: ${props => props.$online ? '#D6DCEC' : '#EF6284'};
+`;
+
+const StatusIndicator = styled.span`
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: ${props => props.$online ? '#B5EC5B' : '#EF6284'};
+  margin-right: 16px;
+`;
+
+const ButtonsWrap = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
+const BaseButton = styled.button`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  flex-shrink: 0;
+  transition: all 0.2s;
+	margin-right: 8px;
+	@media (max-width: 480px) {
+    margin-right: 4px !important;
+		width: 40px;
+  	height: 40px;
+  }
+`;
+const ButtonDir = styled(BaseButton)`
+  border: 2px solid #336CFF;
+  
+
+  &:hover {
+    background-color: #336CFF;
+  }
+`;
+
+const ButtonSetting = styled(BaseButton)`
+  border: 2px solid #2F3953;
+  margin-right: 24px;
+  @media (max-width: 991px) {
+    flex-direction: row;
+    margin-right: 8px;
+  }
+`;
+
+const ButtonDel = styled(BaseButton)`
+  border: 2px solid #2F3953;
+
+  &:hover {
+    border: none;
+    background-color: rgba(239, 98, 132, 0.08);
+  }
+`;
+export default GridGroups;

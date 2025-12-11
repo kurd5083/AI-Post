@@ -1,13 +1,15 @@
 import styled from "styled-components";
 import money from "@/assets/header/money.svg";
 import bell from "@/assets/bell.svg";
-import setting from "@/assets/setting.svg";
-import acc_icon from "@/assets/sidebar/acc-icon.png";
+import acc_icon from "@/assets/acc-icon.png";
 import burger from "@/assets/header/burger.svg";
 import { usePopupStore } from "@/store/popupStore"
+import { useMenuStore } from "@/store/menuStore";
 
 const Header = () => {
-		const { openPopup } = usePopupStore();
+	const { openPopup } = usePopupStore();
+	const { menu, openMenu, closeMenu } = useMenuStore();
+
 	return (
 		<HeaderContainer>
 			<HeaderContent>
@@ -22,30 +24,31 @@ const Header = () => {
 						<HeaderBalance>1, 876 <mark>₽</mark></HeaderBalance>
 					</HeaderBalanceContent>
 				</HeaderBalanceContainer>
-				
-				<HeaderBtnAdd>+ Пополнить</HeaderBtnAdd>
+				<HeaderBtnAdd onClick={() => openPopup("replenish")}>+ Пополнить</HeaderBtnAdd>
 			</HeaderContent>
 			<HeaderBtns>
-				<HeaderBtnBell  onClick={() => openPopup("notifications")}><img src={bell} alt="bell icon" width={20} height={24}/></HeaderBtnBell>
-				<HeaderBtnSet><img src={setting} alt="setting icon" width={24} height={24}/>Настройки аккаунта</HeaderBtnSet>
-				<HeaderBtnBurger><img src={burger} alt="burger icon" width={16} height={11}/></HeaderBtnBurger>
+				<HeaderBtnBell onClick={() => openPopup("notifications")}><img src={bell} alt="bell icon" width={20} height={24}/></HeaderBtnBell>
+				<HeaderBtnBurger onClick={() => menu ? closeMenu() : openMenu()}><img src={burger} alt="burger icon" width={16} height={11}/></HeaderBtnBurger>
 			</HeaderBtns>
 		</HeaderContainer>
 	)
 }
 
 const HeaderContainer = styled.header`
+	position: relative;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-top: 23px;
-  padding: 0 clamp(0px, calc((100vw - 1600px) * 24 / 400), 24px);
+  padding: 24px;
+  z-index: 1000;
+  background-color: #131826;
     
   @media (max-width: 1600px) {
-    padding: 0 32px;
+    padding: 24px 32px;
   }
+
 	@media(max-width: 768px) {
-		padding: 0 24px;
+		padding: 24px;
 	}
 `
 const HeaderContent = styled.div`
@@ -57,7 +60,6 @@ const HeaderBalanceImg = styled.img`
 		display: none;
 	}
 `
-
 const HeaderBalanceContainer = styled.div`
   display: flex;
 	flex-direction: column;
@@ -79,7 +81,6 @@ const HeaderBalanceContainer = styled.div`
 const HeaderBalanceContent = styled.div`
   display: flex;
 `
-
 const HeaderSubtext = styled.p`
   color: #6A7080;
   font-size: 14px;

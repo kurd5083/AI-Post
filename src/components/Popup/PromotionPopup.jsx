@@ -2,13 +2,15 @@ import styled from "styled-components";
 import ToggleSwitch from "@/shared/ToggleSwitch";
 import Counter from "@/shared/Counter";
 import BtnBase from "@/shared/BtnBase";
+import { usePopupStore } from "@/store/popupStore"
 
 const PromotionPopup = () => {
+    const { changeContent } = usePopupStore()
     return (
-        <PromotionContainer>
+        <div>
             <PromotionHead>
                 <PromotionHeadText $active={true}>Просмотр</PromotionHeadText>
-                <PromotionHeadText>Бусты</PromotionHeadText>
+                <PromotionHeadText onClick={() => changeContent("boosts")}>Бусты</PromotionHeadText>
             </PromotionHead>
             <PromotionViews>
                 <ToggleSwitch bg="#EF6283"/>
@@ -36,14 +38,11 @@ const PromotionPopup = () => {
                 </PostContainer>
             </PromotePost>
             <BtnBase  $margin="64">Сохранить</BtnBase>
-        </PromotionContainer>
+        </div>
 
     )
 }
 
-const PromotionContainer = styled.div`
-
-`
 const PromotionHead = styled.div`
     display: flex;
     gap: 32px;

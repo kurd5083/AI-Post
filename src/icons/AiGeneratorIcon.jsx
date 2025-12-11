@@ -1,0 +1,20 @@
+const AiGeneratorIcon = ({
+  color = "#6A7080",
+  width = 16,
+  height = 16,
+}) => (
+  <svg
+    width={width}
+    height={height}
+    viewBox="0 0 16 16"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      d="M10.4 5.6L7.20001 4.39999L10.4 3.19879L11.6 0L12.8011 3.19879L16 4.39999L12.8011 5.6L11.6 8.79999L10.4 5.6ZM3.99998 12L0 10.4L3.99998 8.79999L5.6 4.80001L7.20001 8.79999L11.2 10.4L7.20001 12L5.6 16L3.99998 12Z"
+      fill={color}
+    />
+  </svg>
+);
+
+export default AiGeneratorIcon;

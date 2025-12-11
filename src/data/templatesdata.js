@@ -1,4 +1,4 @@
-export const templatesdata = [
+export const templatesData = [
     {
         id: 1,
         category: "Маркетинг",

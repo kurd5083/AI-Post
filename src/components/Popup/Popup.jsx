@@ -13,6 +13,7 @@ import CreatePostPopup from "@/components/Popup/CreatePostPopup";
 import LinkGenerationPrevPopup from "@/components/Popup/LinkGenerationPrevPopup";
 import LinkGenerationPopup from "@/components/Popup/LinkGenerationPopup";
 import PromotionPopup from "@/components/Popup/PromotionPopup";
+import BoostsPopup from "@/components/Popup/BoostsPopup";
 import FilteringPopup from "@/components/Popup/FilteringPopup";
 import SourcesPopup from "@/components/Popup/SourcesPopup";
 import CompilationPopup from "@/components/Popup/CompilationPopup";
@@ -21,6 +22,13 @@ import ScheduleIntervalPopup from "@/components/Popup/ScheduleIntervalPopup";
 import IndustrialStylePopup from "@/components/Popup/IndustrialStylePopup";
 import CalendarPopup from "@/components/Popup/CalendarPopup";
 import NotificationsPopup from "@/components/Popup/NotificationsPopup";
+import ReplenishPopup from "@/components/Popup/ReplenishPopup";
+import ProfilePopup from "@/components/Popup/ProfilePopup";
+import ChoosePostPopup from "@/components/Popup/ChoosePostPopup";
+import UploadMediaPopup from "@/components/Popup/UploadMediaPopup";
+import CompilationUploadPopup from "@/components/Popup/CompilationUploadPopup";
+import CreatePostManuallyPopup from "@/components/Popup/CreatePostManuallyPopup";
+import AdvancedPopup from "@/components/Popup/AdvancedPopup";
 
 const Popup = () => {
     const { popup } = usePopupStore()
@@ -59,6 +67,8 @@ const Popup = () => {
                 <LinkGenerationPopup/>
             ) : popup.content == 'promotion' ? (
                 <PromotionPopup/>
+            ) : popup.content == 'boosts' ? (
+                <BoostsPopup/>
             ) : popup.content == 'filtering' ? (
                 <FilteringPopup/>
             ) : popup.content == 'sources' ? (
@@ -75,6 +85,20 @@ const Popup = () => {
                 <CalendarPopup/>
             ) : popup.content == 'notifications' ? (
                 <NotificationsPopup/>
+            ) : popup.content == 'replenish' ? (
+                <ReplenishPopup/>
+            ) : popup.content == 'profile' ? (
+                <ProfilePopup/>
+            ) : popup.content == 'choose_post' ? (
+                <ChoosePostPopup/>
+            ) : popup.content == 'upload_media' ? (
+                <UploadMediaPopup/>
+            ) : popup.content == 'compilation_upload' ? (
+                <CompilationUploadPopup/>
+            ) : popup.content == 'create_post_manually' ? (
+                <CreatePostManuallyPopup/>
+            ) : popup.content == 'advanced' ? (
+                <AdvancedPopup/>
             ) : (
                 2
             )}
@@ -86,22 +110,22 @@ const PopupListContainer = styled.section`
     flex-direction: column;
     box-sizing: border-box;
     position: absolute;
-    top: 100px;
+    top: 0;
     left: 0;
-    padding: 20px clamp(32px, calc((100vw - 1600px) * (73 - 32) / 400 + 32px), 73px) 30px;
-    background-color: #1217268F;
-    backdrop-filter: blur(20px);
+    padding: 120px 56px 30px;
+    background-color: #121726ad;
+    backdrop-filter: blur(30px);
     width: 100%;
     overflow-y: auto;
     scrollbar-width: none;
-    max-height: calc(100dvh - 100px);
+    max-height: 100dvh;
     height: 100%;
     z-index: 10;
     @media(max-width: 1600px) {
-        padding: 20px 32px 30px;   
+        padding: 120px 32px 30px;   
     }
     @media(max-width: 480px) {
-        padding: 20px 24px 30px;   
+        padding: 120px 24px 30px;   
     }
 `
 

@@ -1,13 +1,13 @@
 import { Link } from "react-router";
 import styled from "styled-components";
-import { menuItems } from "@/data/sidebar";
-import arrow_close from "@/assets/sidebar/arrow-close.svg";
-import acc_icon from "@/assets/sidebar/acc-icon.png";
+import { sidebarData } from "@/data/sidebarData";
+import arrow_close from "@/assets/arrow-close.svg";
+import acc_icon from "@/assets/acc-icon.png";
 import { usePopupStore } from "@/store/popupStore";
 import { useSidebarStore } from "@/store/sidebarStore";
 
 const Sidebar = () => {
-  const { closePopup } = usePopupStore()
+  const { openPopup, closePopup } = usePopupStore()
   const { 
     activePage, 
     setActivePage, 
@@ -24,13 +24,13 @@ const Sidebar = () => {
   return (
     <SidebarContainer $isSidebarVisible={isSidebarVisible}>
       <SidebarHead $isSidebarVisible={isSidebarVisible}>
-        <SidebarTitle onClick={() => closePopup()}>
+        <SidebarTitle>
           <mark>AI</mark>{isSidebarVisible && 'Post'}
         </SidebarTitle>
         <SidebarClose $isSidebarVisible={isSidebarVisible} src={arrow_close} alt="arrow close" onClick={() => isSidebarVisible ? hideSidebar() : showSidebar()}/>
       </SidebarHead>
       <SidebarNavContainer $isSidebarVisible={isSidebarVisible}>
-        {menuItems.map((section, sectionIndex) => (
+        {sidebarData.map((section, sectionIndex) => (
           <SidebarNav key={sectionIndex}>
             {section.title && <SidebarNavTitle>{section.title}</SidebarNavTitle>}
             <SidebarList>
@@ -42,10 +42,7 @@ const Sidebar = () => {
                   $isSidebarVisible={isSidebarVisible}
                 >
                   <Link to={item.to}>
-                    <img 
-                      src={activePage === item.id ? item.iconActive : item.icon} 
-                      alt={`${item.text} icon`} 
-                    />
+                    {item.icon(activePage === item.id)}
                     {isSidebarVisible && item.text}
                   </Link>
                 </SidebarListItem>
@@ -54,15 +51,14 @@ const Sidebar = () => {
           </SidebarNav>
         ))}
         </SidebarNavContainer>
-
       <SidebarFooter  $isSidebarVisible={isSidebarVisible}>
-        <SidebarFooterTop>
+        <SidebarFooterTop onClick={() => openPopup("profile")}>
           <SidebarAvaContainer>
             <SidebarAva src={acc_icon} alt="accaunt icon" />
           </SidebarAvaContainer>
           {isSidebarVisible && <p>Arseniy P.</p>}
         </SidebarFooterTop>
-        <SidebarFooterBtn>+{isSidebarVisible && 'Пополнить'} </SidebarFooterBtn>
+        <SidebarFooterBtn onClick={() => openPopup("replenish")}>+ {isSidebarVisible && 'Пополнить'} </SidebarFooterBtn>
       </SidebarFooter>
     </SidebarContainer>
   )
@@ -111,7 +107,6 @@ const SidebarTitle = styled.h1`
   gap: 10px;
   font-size: 18px;
   font-weight: 900;
-  cursor: pointer;
 
   mark {
     color:#336CFF;
@@ -175,7 +170,6 @@ const SidebarListItem = styled.li`
 
   &:hover {
     color: #FFFFFF;
-    
   }
 `
 const SidebarFooter = styled.div`
@@ -188,6 +182,7 @@ const SidebarFooter = styled.div`
   padding: 0 ${({ $isSidebarVisible }) => $isSidebarVisible ? '24px' : '40px'};
 `
 const SidebarFooterTop = styled.div`
+  cursor: pointer;
   display: flex;
   align-items: center;
   gap: 24px;

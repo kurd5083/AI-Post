@@ -1,19 +1,35 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
 import arrow from "@/assets/arrow.svg";
 
-const CustomSelect = ({ options, placeholder = "Выберите значение", value, onChange }) => {
+const CustomSelect = ({ options, placeholder = "Выберите значение", value,  fs }) => {
   const [open, setOpen] = useState(false);
-
-  const toggle = () => setOpen(!open);
-
-  const onSelect = (option) => {
-    onChange(option);       
-    setOpen(false);
-  };
+    const [selected, setSelected] = useState("");
+    const selectRef = useRef(null);
+  
+    const toggle = () => setOpen(!open);
+  
+    const onSelect = (value, label) => {
+      setSelected(label);
+      setOpen(false);
+    };
+  
+    useEffect(() => {
+      const handleClickOutside = (event) => {
+        if (selectRef.current && !selectRef.current.contains(event.target)) {
+          setOpen(false);
+        }
+      };
+  
+      document.addEventListener("mousedown", handleClickOutside);
+      
+      return () => {
+        document.removeEventListener("mousedown", handleClickOutside);
+      };
+    }, []);
 
   return (
-    <SelectWrapper>
+    <SelectWrapper ref={selectRef}>
       <SelectHeader onClick={toggle}>
         <span>{value?.label || placeholder}</span>
         <img src={arrow} alt="arrow icon" className={open ? "open" : ""} />
@@ -22,7 +38,10 @@ const CustomSelect = ({ options, placeholder = "Выберите значени�
       {open && (
         <SelectList>
           {options.map((opt) => (
-            <SelectItem key={opt.value} onClick={() => onSelect(opt)}>
+            <SelectItem 
+              key={opt.value} 
+              onClick={() => onSelect(opt.value, opt.label)}
+            >
               {opt.label}
             </SelectItem>
           ))}
@@ -32,11 +51,9 @@ const CustomSelect = ({ options, placeholder = "Выберите значени�
   );
 };
 
-export default CustomSelect;
-
 const SelectWrapper = styled.div`
   position: relative;
-  width: 165px;
+  width: 340px;
   font-weight: 700;
 `;
 
@@ -64,27 +81,37 @@ const SelectHeader = styled.div`
 `;
 
 const SelectList = styled.ul`
+  box-sizing: border-box;
   position: absolute;
   top: calc(100% + 4px);
-  /* bottom: calc(100% + 4px); */
   left: 0;
   width: 100%;
-  background: #191e2d;
-  border: 2px solid #333e59;
-  border-radius: 12px;
+  background: #202638;
+  border-radius: 24px;
   z-index: 20;
   max-height: 200px;
   overflow-y: auto;
   scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
 `;
 
 const SelectItem = styled.li`
-  padding: 14px 20px;
+  padding: 24px;
   cursor: pointer;
   color: #d6dcec;
-  font-size: 14px;
+  font-size: 16px;
+  font-weight: 700;
+  border-bottom: 2px solid #2E3954;
+  
+  &:last-child {
+    border-bottom: 0;
+  }
 
   &:hover {
     background-color: #242b3f;
   }
 `;
+
+export default CustomSelect;

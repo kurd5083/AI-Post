@@ -1,20 +1,23 @@
-import { useEffect, useState } from "react";
 import styled from "styled-components";
-import dir_filled from "@/assets/TableGroups/dir-filled.svg";
-import dir from "@/assets/TableGroups/dir.svg";
-import dir_active from "@/assets/TableGroups/dir-active.svg";
-import show_card from "@/assets/TableGroups/show-card.svg";
-import show_table from "@/assets/TableGroups/show-table.svg";
-import dir_gray from "@/assets/TableGroups/dir-gray.svg";
+import dir_filled from "@/assets/table-groups/dir-filled.svg";
+import dir from "@/assets/table-groups/dir.svg";
+import dir_active from "@/assets/table-groups/dir-active.svg";
+import dir_gray from "@/assets/table-groups/dir-gray.svg";
 import useResolution from "@/lib/useResolution";
 import useSwipeAllowed from "@/lib/useSwipeAllowed";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
+import { usePopupStore } from "@/store/popupStore"
+import { useViewStore } from "@/store/viewStore";
+import GridIcon from "@/icons/GridIcon";
+import ListIcon from "@/icons/ListIcon";
 
 const TableGroups = () => {
+  const { openPopup } = usePopupStore();
 	const { isSwipe } = useSwipeAllowed(768);
-
 	const { isSmall } = useResolution(480);
+  const { viewType, setGridView, setListView } = useViewStore();
+
 	return (
 		<TableGroupsContainer>
 			<TableGroupsHead>
@@ -24,16 +27,20 @@ const TableGroups = () => {
 					slidesPerView="auto"
 					allowTouchMove={isSwipe}
 				>
-					<TableGroupsHeadDir><img src={dir_filled} alt="dir icon" />Создать папку</TableGroupsHeadDir>
+					<TableGroupsHeadDir onClick={() => openPopup("create_folder", "popup_window")}><img src={dir_filled} alt="dir icon"/>Создать папку</TableGroupsHeadDir>
 					<TableGroupsHeadBtn><img src={dir} alt="dir icon" /><p>Основная папка</p> <mark>6</mark></TableGroupsHeadBtn>
 					<TableGroupsHeadBtn><img src={dir_active} alt="dir icon" /><p>Олимпиада 2027</p> <mark>16</mark></TableGroupsHeadBtn>
 				</TableGroupsHeadLeft>
 				<TableGroupsHeadRight>
 					<TableGroupsHeadAdd>{isSmall ? "+ Добавить" : "+ Добавить канал"}</TableGroupsHeadAdd>
-					<TableGroupsHeadShow><img src={show_card} alt="show icon" /></TableGroupsHeadShow>
-					<TableGroupsHeadShow><img src={show_table} alt="show icon" /></TableGroupsHeadShow>
-					<TableGroupsHeadShow><img src={dir_gray} alt="dir icon" /></TableGroupsHeadShow>
-					<TableGroupsHeadShow><img src={show_table} alt=" icon" /></TableGroupsHeadShow>
+					<TableGroupsHeadShow $active={viewType === "grid"} onClick={setGridView}>
+            <GridIcon color={viewType === "grid" ? "#D6DCEC" : "#6A7080"} />
+          </TableGroupsHeadShow>
+					<TableGroupsHeadShow $active={viewType === "list"} onClick={setListView}>
+            <ListIcon color={viewType === "list" ? "#D6DCEC" : "#6A7080"} />
+          </TableGroupsHeadShow>
+					<TableGroupsHeadShow onClick={() => openPopup("create_folder", "popup_window")}><img src={dir_gray} alt="dir icon" /></TableGroupsHeadShow>
+					<TableGroupsHeadShow><ListIcon/></TableGroupsHeadShow>
 				</TableGroupsHeadRight>
 			</TableGroupsHead>
 		</TableGroupsContainer>
@@ -41,7 +48,7 @@ const TableGroups = () => {
 }
 const TableGroupsContainer = styled.section`
   margin-top: 80px;
-	padding: 0 clamp(0px, calc((100vw - 1600px) * 24 / 400), 24px);
+	padding: 0 24px;
   @media (max-width: 1600px) {
     padding: 0 32px;
   }
@@ -81,6 +88,7 @@ const TableGroupsHeadDir = styled(SwiperSlide)`
   font-size: 14px;
   font-weight: 700;
 	width: auto;
+  cursor: pointer;
 	@media(max-width: 480px) {
     display: none;
   }
@@ -144,11 +152,11 @@ const TableGroupsHeadShow = styled.button`
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 2px solid #1F273B;
+  border: 2px solid ${({ $active }) => $active ? 'transporent' : '#1F273B'};
   width: 48px;
   height: 48px;
   border-radius: 12px;
-
+  background-color: ${({ $active }) => $active ? '#232836' : 'transporent'};
   &:nth-child(n+4) {
     display: none;
   }

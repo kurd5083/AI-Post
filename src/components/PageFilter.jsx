@@ -1,45 +1,51 @@
 import styled from "styled-components";
 import BtnBase from "@/shared/BtnBase";
-import search from "@/assets/search.svg";
-import all from "@/assets/media/all.svg";
-import marketing from "@/assets/media/marketing.svg";
-import training from "@/assets/media/training.svg";
-import entertainment from "@/assets/media/entertainment.svg";
-import news from "@/assets/media/news.svg";
-import promo from "@/assets/media/promo.svg";
+import AllIcon from "@/icons/AllIcon";
+import MarketingIcon from "@/icons/MarketingIcon";
+import TrainingIcon from "@/icons/TrainingIcon";
+import EntertainmentIcon from "@/icons/EntertainmentIcon";
+import NewsIcon from "@/icons/NewsIcon";
+import PromotionIcon from "@/icons/PromotionIcon";
+import useSearchStore from "@/store/searchStore";
 
-const PageFilter = ({ activeFilter, setActiveFilter, placeholder }) => {
+const PageFilter = ({ activeFilter, setActiveFilter, placeholder, filter = true }) => {
+  const { searchQuery, setSearchQuery } = useSearchStore();
+    
   const filterButtons = [
-    { id: "all", label: "Все", icon: all },
-    { id: "marketing", label: "Маркетинг", icon: marketing },
-    { id: "education", label: "Обучение", icon: training },
-    { id: "entertainment", label: "Развлечение", icon: entertainment },
-    { id: "news", label: "Новости", icon: news },
-    { id: "promo", label: "Промо", icon: promo }
+    { id: "all", label: "Все", icon: (isActive) => <AllIcon color={isActive ? "#fff" : "#6A7080"}/>, },
+    { id: "marketing", label: "Маркетинг", icon: (isActive) => <MarketingIcon color={isActive ? "#fff" : "#6A7080"}/> },
+    { id: "education", label: "Обучение", icon: (isActive) => <TrainingIcon color={isActive ? "#fff" : "#6A7080"}/> },
+    { id: "entertainment", label: "Развлечение", icon: (isActive) => <EntertainmentIcon color={isActive ? "#fff" : "#6A7080"}/> },
+    { id: "news", label: "Новости", icon: (isActive) => <NewsIcon color={isActive ? "#fff" : "#6A7080"}/> },
+    { id: "promo", label: "Промо", icon: (isActive) => <PromotionIcon color={isActive ? "#fff" : "#6A7080"}/> }
   ];
 
   return (
     <PageFilterContainerWrapper>
-      <PageFilterInput 
-        type="text" 
+      <PageFilterInput
+        type="text"
         placeholder={placeholder}
         style={{ backgroundImage: `url(/src/assets/search.svg)` }}
+        value={searchQuery}
+        onChange={(e) => setSearchQuery(e.target.value)}
       />
-      <PageFilterButtons>
-        {filterButtons.map((button) => (
-          <BtnBase 
-            key={button.id}
-            $padding="16px 24px" 
-            $border={activeFilter === button.id ? false : true} 
-            $bg={activeFilter === button.id ? "#336CFF" : "transparent"}
-            $color={activeFilter === button.id ? "#fff" : "#D6DCEC"}
-            onClick={() => setActiveFilter(button.id)}
-          >
-            <img src={button.icon} alt={`${button.label} icon`} />
-            {button.label}
-          </BtnBase>
-        ))}
-      </PageFilterButtons>
+      {filter && (
+        <PageFilterButtons>
+          {filterButtons.map((button) => (
+            <BtnBase
+              key={button.id}
+              $padding="16px 24px"
+              $border={activeFilter === button.id ? false : true}
+              $bg={activeFilter === button.id ? "#336CFF" : "transparent"}
+              $color={activeFilter === button.id ? "#fff" : "#D6DCEC"}
+              onClick={() => setActiveFilter(button.id)}
+            >
+              {button.icon(activeFilter === button.id)}
+              {button.label}
+            </BtnBase>
+          ))}
+        </PageFilterButtons>
+      )}
     </PageFilterContainerWrapper>
   );
 };
@@ -49,7 +55,7 @@ const PageFilterContainerWrapper = styled.div`
   align-items: center;
   justify-content: space-between;
   gap: 32px;
-  padding: 0 clamp(0px, calc((100vw - 1600px) * 24 / 400), 24px);
+  padding: 0 24px;
   margin-bottom: 48px;
 `;
 

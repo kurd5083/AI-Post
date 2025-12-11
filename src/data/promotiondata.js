@@ -2,7 +2,8 @@ import post from "@/assets/promotion/post.svg";
 import subscriber from "@/assets/promotion/subscriber.svg";
 import reaction from "@/assets/promotion/reaction.svg";
 import boost from "@/assets/promotion/boost.svg";
-export const promotiondata = [
+
+export const promotionData = [
     {
         id: 1,
         title: "Увеличение просмотров постов",

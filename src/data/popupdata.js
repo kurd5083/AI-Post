@@ -14,9 +14,11 @@ import sources from "@/assets/popup/sources.svg";
 import post_style from "@/assets/popup/post-style.svg";
 import advanced from "@/assets/popup/advanced.svg";
 import create_post from "@/assets/popup/create-post.svg";
+import replenish from "@/assets/popup/replenish.svg";
 import bell from "@/assets/bell.svg";
-
-export const popupdata = [
+import choose_post from "@/assets/popup/choose-post.svg";
+import media from "@/assets/media.svg";
+export const popupData = [
     {
         key: "posting",
         name: "Постинг",
@@ -57,7 +59,14 @@ export const popupdata = [
             image: promotion
         }
     },
-
+    {
+        key: "boosts",
+        name: "Продвижение",
+        extra: {
+            background: "#552F43",
+            image: promotion
+        }
+    },
     {
         key: "auto_accepting",
         name: "Автоприём заявок",
@@ -187,6 +196,15 @@ export const popupdata = [
         }
     },
     {
+        key: "create_post_manually",
+        name: "Создать пост вручную",
+        extra: {
+            background: "#5F3C36",
+            image: post_style
+        }
+    },
+    
+    {
         key: "promotion",
         name: "Продвижение",
         extra: {
@@ -202,4 +220,39 @@ export const popupdata = [
             image: bell
         }
     },
+    {
+        key: "replenish",
+        name: "Пополнить",
+        extra: {
+            background: "#5A3732",
+            image: replenish
+        }
+    },
+    {
+        key: "profile",
+        name: "Arseniy Popkov",
+        extra: {
+            image: replenish
+        }
+    },
+    {
+        key: "choose_post",
+        name: "Выбрать пост",
+        extra: {
+            background: "#445837",
+            image: choose_post
+        }
+    },
+    {
+        key: "upload_media",
+        name: "Загрузить медиа",
+        extra: {
+            background: "#1D3168",
+            image: media
+        }
+    },
+    {
+        key: "compilation_upload",
+    },
+   
 ]

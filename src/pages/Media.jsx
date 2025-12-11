@@ -3,14 +3,15 @@ import styled from "styled-components";
 import PageHead from '@/components/PageHead'
 import PageFilter from "@/components/PageFilter";
 import BtnBase from "@/shared/BtnBase";
-import { mediadata } from "@/data/mediadata";
+import { mediaData } from "@/data/mediaData";
 import download from "@/assets/media/download.svg";
 import del from "@/assets/del.svg";
+import { usePopupStore } from "@/store/popupStore";
 
 const Media = () => {
   const [activeFilter, setActiveFilter] = useState("all");
   const [activeCategory, setActiveCategory] = useState("all");
-  
+  const { openPopup } = usePopupStore();
   const categoryButtons = [
     { id: "all", label: "Вся медиа" },
     { id: "images", label: "Изображения" },
@@ -25,6 +26,7 @@ const Media = () => {
           $padding="16px 45px" 
           $bg="#336CFF"
           $color="#FFFFFF"
+          onClick={() => openPopup("upload_media")}
         >
           + Загрузить медиа
         </BtnBase>
@@ -46,7 +48,7 @@ const Media = () => {
         ))}
       </MediaHead>
       <MediaCards>
-        {mediadata.map((item) => (
+        {mediaData.map((item) => (
           <MediaCard key={item.id}>
             <MediaCardImage src={item.image} alt="image" />
             <h4>{item.title}</h4>
@@ -54,7 +56,9 @@ const Media = () => {
               <img src={download} alt="download icon" width={16} height={16} />
               {item.size} MB
             </MediaCardSize>
-            <MediaHash>#{item.hash}</MediaHash>
+            <MediaHash>
+              {item.hash.map((elem) => <li>#{elem}</li>)}
+            </MediaHash>
             <CardActions>
               <LeftActions>
                 <BtnBase $bg="transparent" $color="#fff" $border={true} $padding="13px 24px">
@@ -78,7 +82,7 @@ const MediaHead = styled.div`
   display: flex;
   gap: 32px;
   margin-bottom: 48px;
-  padding: 0 clamp(0px, calc((100vw - 1600px) * 24 / 400), 24px);
+  padding: 0 24px;
 `
 const MediaHeadText = styled.p`
   color: ${({ $active }) => $active ? '#D6DCEC' : '#6A7080'};
@@ -99,7 +103,7 @@ const MediaCards = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(210px, min-content));
   gap: 16px;
-  padding: 0 clamp(0px, calc((100vw - 1600px) * 24 / 400), 24px);
+  padding: 0 24px;
 `
 const MediaCard = styled.div`
   display: flex;
@@ -136,17 +140,26 @@ const MediaCardSize = styled.p`
 	font-weight: 700;
 	color: #6A7080;
 `
-const MediaHash = styled.p`
-	padding: 16px;
-	border-radius: 12px;
-	color: #AC60FD;
-	background-color: #242440;
-	font-size: 14px;
-	font-weight: 700;
+const MediaHash = styled.ul`
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+
+  li {
+    padding: 16px;
+    border-radius: 12px;
+    color: #AC60FD;
+    background-color: #242440;
+    font-size: 14px;
+    font-weight: 700;
+  }
 `
 const CardActions = styled.div`
+flex-grow: 1;
   display: flex;
   flex-direction: column;
+  justify-content: flex-end;
   gap: 12px;
   width: 100%;
 `

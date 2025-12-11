@@ -8,7 +8,7 @@ const CreatePostPopup = () => {
       <img src={create_post} alt="create post icon" width={123} height={113}/>
       <CreatePostTitle>Генерируем пост</CreatePostTitle>
       <CreatePostText>Это может занять несколько минут...</CreatePostText>
-      <BtnBase $color="#AC60FD" $bg="#1F1E38">Отменить генерирование</BtnBase>
+      <BtnBase $color="#AC60FD" $bg="#201F39">Отменить генерирование</BtnBase>
     </CreatePostContainer>
   )
 }

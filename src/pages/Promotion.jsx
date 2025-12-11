@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import PageHead from '@/components/PageHead'
 import CustomSelect from '@/shared/CustomSelect'
-import { promotiondata } from "@/data/promotiondata";
+import { promotionData } from "@/data/promotionData";
 import BtnBase from "@/shared/BtnBase";
 import { Link } from "react-router";
 
@@ -38,7 +38,7 @@ const Promotion = () => {
 				</label>
 			</PromotionFilter>
 			<PromotionCards>
-				{promotiondata.map((item) => (
+				{promotionData.map((item) => (
 					<PromotionCard>
 						<img src={item.icon} alt={`${item.title} icon`} />
 						<PromotionCardInfo>
@@ -57,7 +57,7 @@ const PromotionHead = styled.div`
   display: flex;
   gap: 32px;
   margin-bottom: 48px;
-	padding: 0 clamp(0px, calc((100vw - 1600px) * 24 / 400), 24px);
+	padding: 0 24px;
 `
 const PromotionHeadText = styled.p`
   display: flex;
@@ -78,7 +78,7 @@ const PromotionFilter = styled.div`
   display: flex;
   gap: 32px;
   margin-bottom: 48px;
-	padding: 0 clamp(0px, calc((100vw - 1600px) * 24 / 400), 24px);
+	padding: 0 24px;
 	label {
 		display: flex;
 		flex-direction: column;
@@ -91,7 +91,7 @@ const PromotionCards = styled.div`
 	display: grid;
 	grid-template-columns: repeat(2, minmax(320px, 1fr));
 	gap: 16px;
-	padding: 0 clamp(0px, calc((100vw - 1600px) * 24 / 400), 24px);
+	padding: 0 24px;
 `
 const PromotionCard = styled.div`
 	display: flex;

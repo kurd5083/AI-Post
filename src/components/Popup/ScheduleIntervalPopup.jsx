@@ -42,7 +42,7 @@ const SchedulePopup = () => {
                 </ScheduleKey>
                 <ScheduleButtons>
                     <BtnBase $color="#D6DCEC" $bg="#336CFF">Сохранить</BtnBase>
-                    <BtnBase onClick={goBack} $color="#6A7080" $bg="#191E2D">Отменить</BtnBase>
+                    <BtnBase onClick={goBack} $color="#D6DCEC" $bg="#242A3A">Отменить</BtnBase>
                 </ScheduleButtons>
             </ScheduleContent>
         </div>

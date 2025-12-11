@@ -1,6 +1,6 @@
 import styled from "styled-components";
-import time from "@/assets/time.svg";
 import arrow from "@/assets/arrow.svg";
+import TimeIcons from "@/icons/TimeIcons";
 
 const CardPablish = ({ item, bg }) => {
 	return (
@@ -11,7 +11,7 @@ const CardPablish = ({ item, bg }) => {
 					<p>{item.username}</p>
 				</CardPablishItemName>
 				<CardPablishItemTime>
-					<img src={time} alt="time icon" />
+          <TimeIcons/>
 					{item.time}
 				</CardPablishItemTime>
 			</CardPablishItemHead>

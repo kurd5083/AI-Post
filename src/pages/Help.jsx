@@ -1,11 +1,145 @@
+import { useState, useMemo } from "react";
 import PageHead from '@/components/PageHead'
+import PageFilter from "@/components/PageFilter";
+import styled from "styled-components";
+import arrow from "@/assets/arrow.svg";
+import { helpData } from "@/data/helpData";
+import useSearchStore from "@/store/searchStore";
 
 const Help = () => {
+  const [openIndex, setOpenIndex] = useState(null);
+  const toggle = (index) => {
+    setOpenIndex(openIndex === index ? null : index);
+  };
+
+  const { searchQuery } = useSearchStore();
+
+  const filteredData = useMemo(() => {
+    if (!searchQuery.trim()) return helpData;
+
+    const query = searchQuery.toLowerCase().trim();
+    return helpData.filter(item =>
+      item.q.toLowerCase().includes(query) ||
+      item.a.toLowerCase().includes(query)
+    );
+  }, [helpData, searchQuery]);
+ 
+  const highlightMatches = (text, query) => {
+    if (!query.trim()) return text;
+
+    const regex = new RegExp(`(${query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
+    const parts = text.split(regex);
+
+    return parts.map((part, index) =>
+      regex.test(part) ? (
+        <Highlight key={index}>{part}</Highlight>
+      ) : (
+        part
+      )
+    );
+  };
   return (
     <>
-      <PageHead/>
+      <PageHead />
+      <PageFilter
+        filter={false}
+        placeholder="Поиск по вопросам"
+        searchValue={searchQuery}
+      />
+      <HelpContainer>
+        {filteredData.length > 0 ? (
+          filteredData.map((item, index) => (
+            <HelpItem key={index}>
+              <HelpQuestion onClick={() => toggle(index)}>
+                <QuestionLeft>
+                  <QuestionNum>{index + 1 < 10 ? `0${index + 1}` : index + 1}</QuestionNum>
+                  <p>{highlightMatches(item.q, searchQuery)}</p>
+                </QuestionLeft>
+                <Icon open={openIndex === index}>
+                  <img src={arrow} alt="arrow icon" />
+                </Icon>
+              </HelpQuestion>
+              {openIndex === index && (
+                <Answer>
+                  {highlightMatches(item.a, searchQuery)}
+                </Answer>
+              )}
+            </HelpItem>
+          ))
+        ) : (
+          <NoResults>
+            По запросу "{searchQuery}" ничего не найдено
+          </NoResults>
+        )}
+      </HelpContainer>
     </>
   )
 }
+
+const HelpContainer = styled.div`
+  padding: 0 24px;
+`;
+const HelpItem = styled.div`
+  border-bottom: 1px solid #1f2a3a;
+  padding: 40px 0;
+  border-bottom: 2px solid #1C2438;
+  &:first-child {
+    padding-top: 0;
+  }
+`;
+const HelpQuestion = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+`;
+const QuestionLeft = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 30px;
+  font-weight: 700;
+  font-size: 24px;
+`;
+const QuestionNum = styled.p`
+  color: #336CFF;
+  font-size: 14px;
+`;
+const Answer = styled.div`
+  margin-top: 24px;
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 600;
+  padding-left: 46px;
+  color: #6A7080;
+  white-space: pre-line;
+  max-width: 620px;
+`;
+
+const Icon = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  background-color: ${(props) => (props.open ? "#333E59" : "transporent")};
+  border: 2px solid ${(props) => (props.open ? "transparent" : "#333E59")};
+  transition: transform 0.3s ease;
+  transform: rotate(${(props) => (props.open ? "270deg" : "90deg")});
+`;
+const Highlight = styled.span`
+  background-color: #336CFF33;
+  color: #336CFF;
+  padding: 2px 4px;
+  border-radius: 4px;
+`;
+const NoResults = styled.div`
+  text-align: center;
+  padding: 60px 0;
+  font-size: 16px;
+  color: #6A7080;
+  font-size: 16px;
+  font-weight: 700;
+`;
 
 export default Help

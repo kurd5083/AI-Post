@@ -11,6 +11,7 @@ import Promotion from '@/pages/Promotion';
 import MyOrders from '@/pages/MyOrders';
 import Media from '@/pages/Media';
 import Help from '@/pages/Help';
+import News from '@/pages/News';
 
 export const router = createBrowserRouter([
     {
@@ -81,6 +82,13 @@ export const router = createBrowserRouter([
         element:<OtherLayout />,
         children: [
             { index: true, element: <Help /> }, 
+        ],
+    },
+    {
+        path: '/news/', 
+        element:<OtherLayout />,
+        children: [
+            { path: ':slug', element: <News /> }, 
         ],
     },
 ]);

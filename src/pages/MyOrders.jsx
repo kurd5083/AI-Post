@@ -27,7 +27,7 @@ const PromotionHead = styled.div`
   display: flex;
   gap: 32px;
   margin-bottom: 48px;
-	padding: 0 clamp(0px, calc((100vw - 1600px) * 24 / 400), 24px);
+	padding: 0 24px;
 `
 const PromotionHeadText = styled.p`
   display: flex;

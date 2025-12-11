@@ -3,9 +3,9 @@ import styled from "styled-components";
 import PageHead from '@/components/PageHead'
 import PageFilter from "@/components/PageFilter";
 import BtnBase from "@/shared/BtnBase";
-import { templatesdata } from "@/data/templatesdata";
+import { templatesData } from "@/data/templatesData";
 import uses from "@/assets/templates/uses.svg";
-import copy from "@/assets/templates/copy.svg";
+import copy from "@/assets/copy.svg";
 import edit from "@/assets/templates/edit.svg";
 import icon from "@/assets/templates/icon.svg";
 import star from "@/assets/templates/star.svg";
@@ -30,7 +30,7 @@ const Templates = () => {
 				placeholder="Поиск по шаблонам"
 			/>
 			<TemplatesCards>
-				{templatesdata.map((template) => (
+				{templatesData.map((template) => (
 					<TemplatesCard key={template.id}>
 						<CardRating>
 							<CardArea>{template.category}</CardArea>
@@ -87,7 +87,7 @@ const TemplatesCards = styled.div`
 	display: grid;
   grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
   gap: 16px;
-  padding: 0 clamp(0px, calc((100vw - 1600px) * 24 / 400), 24px);
+  padding: 0 24px;
 `
 const TemplatesCard = styled.div`
 	padding: 32px;

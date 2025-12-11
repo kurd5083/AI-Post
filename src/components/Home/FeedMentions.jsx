@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import { Navigation } from "swiper/modules";
-import { feedmentions } from "@/data/feedmentions";
+import { feedmentionsData } from "@/data/feedmentionsData";
 import tg from "@/assets/feedmentions/tg.svg";
 import arrow from "@/assets/arrow.svg";
 import CardPablish from "@/components/CardPablish";
@@ -20,10 +20,10 @@ const FeedMentions = () => {
         </FeedMentionsTitle>
 
         <FeedMentionsButtons>
-          <FeedMentionsButton className="prev">
+          <FeedMentionsButton className="FeedMentionsPrev">
             <img src={arrow} alt="arrow icon" />
           </FeedMentionsButton>
-          <FeedMentionsButton className="next">
+          <FeedMentionsButton className="FeedMentionsNext">
             <img src={arrow} alt="arrow icon" />
           </FeedMentionsButton>
         </FeedMentionsButtons>
@@ -33,15 +33,15 @@ const FeedMentions = () => {
         fadeVisible={fadeVisible}
         modules={[Navigation]}
         navigation={{
-          nextEl: ".next",
-          prevEl: ".prev",
+          nextEl: ".FeedMentionsNext",
+          prevEl: ".FeedMentionsPrev",
         }}
         spaceBetween={16}
         slidesPerView="auto"
         onReachEnd={() => setFadeVisible(false)}
         onFromEdge={() => setFadeVisible(true)}
       >
-        {feedmentions.map((item, index) => (
+        {feedmentionsData.map((item, index) => (
           <FeedMentionsItem key={index}>
             <CardPablish item={item} />
           </FeedMentionsItem>
@@ -54,7 +54,7 @@ const FeedMentions = () => {
 const FeedMentionsContainer = styled.section`
   position: relative;
   margin-top: 70px;
-  padding: 0 clamp(0px, calc((100vw - 1600px) * 24 / 400), 24px);
+  padding: 0 24px;
   @media (max-width: 1600px) {
     padding: 0 32px;
   }

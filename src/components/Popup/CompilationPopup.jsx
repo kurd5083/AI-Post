@@ -1,18 +1,48 @@
 import styled from "styled-components";
 import arrow from "@/assets/arrow.svg";
 import BtnBase from "@/shared/BtnBase";
+import { usePopupStore } from "@/store/popupStore"
 
 const CompilationPopup = () => {
+  const { changeContent } = usePopupStore()
+  const compilation = [
+    {
+      text: "Спорт",
+      subtext: "Качественные источники для вашего канала с релевантным контентом",
+      sourcesCount: 2
+    },
+    {
+      text: "Новости",
+      subtext: "Актуальные новостные агрегаторы для вашего канала",
+      sourcesCount: 5
+    },
+    {
+      text: "Технологии",
+      subtext: "Свежие статьи и обзоры из мира IT и гаджетов",
+      sourcesCount: 3
+    },
+    {
+      text: "Финансы",
+      subtext: "Курсы валют, биржевые сводки и финансовые аналитика",
+      sourcesCount: 4
+    }
+  ]
+
   return (
     <>
       <CompilationList>
-        <CompilationItem>
-          <CompilationText>IT</CompilationText>
-          <CompilationSubtext>Качественные источники для вашего канала с релевантным контентом</CompilationSubtext>
-          <CompilationOpen>
-            <img src={arrow} alt="arrow icon" />
-          </CompilationOpen>
-        </CompilationItem>
+        {compilation.map((item, index) => (
+          <CompilationItem key={index}>
+            <CompilationText>{item.text}</CompilationText>
+            <CompilationSubtext>{item.subtext}</CompilationSubtext>
+            <CompilationFooter>
+              <p>{item.sourcesCount} источника</p>
+              <CompilationOpen onClick={() => changeContent('compilation_upload', item.text, 'Здесь вы можете добавить свой источник')}>
+                <img src={arrow} alt="arrow icon" />
+              </CompilationOpen>
+            </CompilationFooter>
+          </CompilationItem>
+        ))}
       </CompilationList>
       <BtnBase $margin="64">Сохранить</BtnBase>
     </>
@@ -20,17 +50,27 @@ const CompilationPopup = () => {
 }
 const CompilationList = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, min-content));
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
   grid-template-rows: max-content;
+  gap: 16px;
 `;
+const CompilationFooter = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 24px;
+  p {
+    font-size: 14px;
+    font-weight: 700;
+    color: #336CFF;
+  }
+`
+
 const CompilationOpen = styled.button`
   display: flex;
   align-items: center;
   justify-content: center;
   box-sizing: border-box;
-  position: absolute;
-  bottom: 24px;
-  right: 24px;
   width: 32px;
   height: 32px;
   border-radius: 32px;
@@ -41,14 +81,14 @@ const CompilationItem = styled.div`
   box-sizing: border-box;
   padding: 24px;
   border-radius: 24px;
-  background-color:#181F30;
-  min-height: 176px;
+  background-color:#181E30;
+  /* min-height: 176px; */
 
   &:hover {
-    background-color: #181F30;
+    background-color: #1C2438;
     
     ${CompilationOpen} {
-      background-color: #1C2438;
+      background-color: #336CFF;
 
       svg path {
         stroke: #D6DCEC; 
@@ -68,7 +108,9 @@ const CompilationSubtext = styled.p`
   line-height: 14px;
   font-weight: 600;
   color: #6A7080;
-  max-width: 240px;
+  padding-bottom: 24px;
+  border-bottom: 2px solid #2E3954;
 `
+
 
 export default CompilationPopup

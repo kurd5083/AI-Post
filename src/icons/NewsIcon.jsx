@@ -1,0 +1,20 @@
+const NewsIcon = ({ color = "#6A7080", width = 16, height = 16 }) => {
+  return (
+    <svg
+      width={width}
+      height={height}
+      viewBox="0 0 16 16"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        fillRule="evenodd"
+        clipRule="evenodd"
+        d="M0.00199986 5H15.998C15.986 2.825 15.89 1.647 15.121 0.879C14.243 1.78814e-07 12.828 0 10 0H6C3.172 0 1.757 1.78814e-07 0.879 0.879C0.11 1.647 0.0139999 2.825 0.00199986 5ZM16 7H0V10C0 12.828 1.78814e-07 14.243 0.879 15.121C1.757 16 3.172 16 6 16H10C12.828 16 14.243 16 15.121 15.121C16 14.243 16 12.828 16 10V7Z"
+        fill={color}
+      />
+    </svg>
+  );
+};
+
+export default NewsIcon;

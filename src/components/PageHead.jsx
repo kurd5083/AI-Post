@@ -1,15 +1,15 @@
 import styled from "styled-components";
 import { useLocation } from "react-router";
-import { pagedata } from "@/data/pagedata";
+import { pageData } from "@/data/pageData";
 
 const PageHead = ({children}) => {
   const loacation = useLocation()
-	const foundItem = pagedata.find(elem => elem.path == loacation.pathname)
+	const foundItem = pageData.find(elem => elem.path == loacation.pathname)
 
   return (
     <HeadContainer>
 			<HeadContent>
-      <HeadIcon src={foundItem.image} alt="analytics icon" width={21} height={24}/>
+        <HeadIcon>{foundItem.icon}</HeadIcon>
       <HeadInfo>
         <h2>{foundItem.title}</h2>
         <p>{foundItem.text}</p>
@@ -25,14 +25,14 @@ const HeadContainer = styled.div`
 	justify-content: space-between;
 	align-items: center;
   margin-top: 60px;
-	padding: 0 clamp(0px, calc((100vw - 1600px) * 24 / 400), 24px);
+	padding: 0 24px;
 	margin-bottom: 48px;
 `
 const HeadContent = styled.div`
   display: flex;
   gap: 27px;
 `
-const HeadIcon = styled.img`
+const HeadIcon = styled.div`
   margin-top: 16px;
 `
 const HeadInfo = styled.div`
