@@ -3,7 +3,7 @@ import PageHead from '@/components/PageHead'
 import CustomSelect from '@/shared/CustomSelect'
 import BtnBase from "@/shared/BtnBase";
 import { Link } from "react-router";
-import { promotionData } from "@/data/promotionData";
+import { promotionsData } from "@/data/promotionsData";
 
 const Promotion = () => {
 	return (
@@ -38,7 +38,7 @@ const Promotion = () => {
 				</label>
 			</PromotionFilter>
 			<PromotionCards>
-				{promotionData.map((item) => (
+				{promotionsData.map((item) => (
 					<PromotionCard>
 						<img src={item.icon} alt={`${item.title} icon`} />
 						<PromotionCardInfo>
