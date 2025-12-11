@@ -3,7 +3,7 @@ import styled from "styled-components";
 import PageHead from '@/components/PageHead'
 import PageFilter from "@/components/PageFilter";
 import BtnBase from "@/shared/BtnBase";
-import { mediaData } from "@/data/mediaData";
+import { mediasData } from "@/data/medimediasDataaData";
 import download from "@/assets/media/download.svg";
 import del from "@/assets/del.svg";
 import { usePopupStore } from "@/store/popupStore";
@@ -48,7 +48,7 @@ const Media = () => {
         ))}
       </MediaHead>
       <MediaCards>
-        {mediaData.map((item) => (
+        {mediasData.map((item) => (
           <MediaCard key={item.id}>
             <MediaCardImage src={item.image} alt="image" />
             <h4>{item.title}</h4>
