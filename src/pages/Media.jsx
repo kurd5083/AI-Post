@@ -3,7 +3,7 @@ import styled from "styled-components";
 import PageHead from '@/components/PageHead'
 import PageFilter from "@/components/PageFilter";
 import BtnBase from "@/shared/BtnBase";
-import { mediasData } from "@/data/medimediasDataaData";
+import { mediasData } from "@/data/mediasData";
 import download from "@/assets/media/download.svg";
 import del from "@/assets/del.svg";
 import { usePopupStore } from "@/store/popupStore";
