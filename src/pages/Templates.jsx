@@ -3,12 +3,12 @@ import styled from "styled-components";
 import PageHead from '@/components/PageHead'
 import PageFilter from "@/components/PageFilter";
 import BtnBase from "@/shared/BtnBase";
-import { templatesData } from "@/data/templatesData";
 import uses from "@/assets/templates/uses.svg";
 import copy from "@/assets/copy.svg";
 import edit from "@/assets/templates/edit.svg";
 import icon from "@/assets/templates/icon.svg";
 import star from "@/assets/templates/star.svg";
+import { templatesData } from "@/data/templatesData";
 
 const Templates = () => {
 	const [activeFilter, setActiveFilter] = useState("all");
