@@ -2,7 +2,7 @@ import styled from "styled-components";
 import arrow from "@/assets/arrow.svg";
 import bell_blue from "@/assets/popup/bell-blue.svg";
 
-import { settingsData } from "@/data/settingsData";
+import { settingsDatas } from "@/data/settingsDatas";
 import ToggleSwitch from "@/shared/ToggleSwitch";
 import { usePopupStore } from "@/store/popupStore"
 
@@ -10,7 +10,7 @@ const SettingsPopup = () => {
     const { changeContent } = usePopupStore()
     return (
         <div>
-            {settingsData.sections.map((section) => (
+            {settingsDatas.sections.map((section) => (
                 <PopupNav key={section.key}>
                     <PopupContentTitle>{section.label}</PopupContentTitle>
                     <ul>

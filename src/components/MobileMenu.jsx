@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { Link, useLocation } from "react-router";
 import { useMenuStore } from "@/store/menuStore";
 import styled from "styled-components";
-import { sidebarData } from "@/data/sidebarData";
+import { sidebarDatas } from "@/data/sidebarDatas";
 import { useSidebarStore } from "@/store/sidebarStore";
 
 const MobileMenu = () => {
@@ -23,7 +23,7 @@ const MobileMenu = () => {
 
   return (
     <MenuContainer $visible={menu}>
-      {sidebarData.map((section, sectionIndex) => (
+      {sidebarDatas.map((section, sectionIndex) => (
         <MenuSection key={sectionIndex}>
           {section.title && <SectionTitle>{section.title}</SectionTitle>}
 

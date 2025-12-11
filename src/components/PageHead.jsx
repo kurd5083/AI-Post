@@ -1,10 +1,10 @@
 import styled from "styled-components";
 import { useLocation } from "react-router";
-import { pageData } from "@/data/pageData";
+import { pageDatas } from "@/data/pageDatas";
 
 const PageHead = ({children}) => {
   const loacation = useLocation()
-	const foundItem = pageData.find(elem => elem.path == loacation.pathname)
+	const foundItem = pageDatas.find(elem => elem.path == loacation.pathname)
 
   return (
     <HeadContainer>

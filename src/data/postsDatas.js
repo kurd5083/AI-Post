@@ -1,7 +1,7 @@
 import post from "@/assets/post.png";
 import ava_icon from "@/assets/ava-icon.png";
 
-export const postsData = [
+export const postsDatas = [
   {
     username: "xNnjme",
     title: "Президент Германии брызнул на репортёров во время пресс-конференции",

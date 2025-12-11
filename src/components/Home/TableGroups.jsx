@@ -4,7 +4,7 @@ import del from "@/assets/del.svg";
 import setting from "@/assets/setting.svg";
 import list from "@/assets/table-groups/list.svg";
 import { usePopupStore } from "@/store/popupStore"
-import { tableHomeData } from "@/data/tableHomeData";
+import { tableHomeDatas } from "@/data/tableHomeDatas";
 import useResolution from "@/lib/useResolution";
 
 const TableGroups = () => {
@@ -28,7 +28,7 @@ const TableGroups = () => {
         </tr>
       </TableHead>
       <tbody>
-        {tableHomeData.map((row) => (
+        {tableHomeDatas.map((row) => (
           <TableItem key={row.id}>
             <TableCell>
               <p>

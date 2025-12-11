@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { tableHomeData } from "@/data/tableHomeData";
+import { tableHomeDatas } from "@/data/tableHomeDatas";
 import dir_white from "@/assets/table-groups/dir-white.svg";
 import del from "@/assets/del.svg";
 import setting from "@/assets/setting.svg";
@@ -10,7 +10,7 @@ const GridGroups = () => {
   
   return (
     <GridContainer>
-      {tableHomeData.map((row) => (
+      {tableHomeDatas.map((row) => (
         <GridItem key={row.id}>
           <p>{row.number}</p>
           <GridImg src={row.image} alt="Group" />

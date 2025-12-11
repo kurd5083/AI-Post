@@ -3,7 +3,7 @@ import PageHead from '@/components/PageHead'
 import PageFilter from "@/components/PageFilter";
 import styled from "styled-components";
 import arrow from "@/assets/arrow.svg";
-import { helpData } from "@/data/helpData";
+import { helpDatas } from "@/data/helpDatas";
 import useSearchStore from "@/store/searchStore";
 
 const Help = () => {
@@ -15,14 +15,14 @@ const Help = () => {
   const { searchQuery } = useSearchStore();
 
   const filteredData = useMemo(() => {
-    if (!searchQuery.trim()) return helpData;
+    if (!searchQuery.trim()) return helpDatas;
 
     const query = searchQuery.toLowerCase().trim();
-    return helpData.filter(item =>
+    return helpDatas.filter(item =>
       item.q.toLowerCase().includes(query) ||
       item.a.toLowerCase().includes(query)
     );
-  }, [helpData, searchQuery]);
+  }, [helpDatas, searchQuery]);
  
   const highlightMatches = (text, query) => {
     if (!query.trim()) return text;

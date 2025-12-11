@@ -8,7 +8,7 @@ import PromotionIcon from "@/icons/PromotionIcon";
 import MediaIcon from "@/icons/MediaIcon";
 import HelpIcon from "@/icons/HelpIcon";
 
-export const sidebarData = [
+export const sidebarDatas = [
   {
     title: "ГЛАВНОЕ",
     items: [

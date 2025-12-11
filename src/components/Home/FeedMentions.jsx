@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import { Navigation } from "swiper/modules";
-import { feedmentionsData } from "@/data/feedmentionsData";
+import { feedmentionsDatas } from "@/data/feedmentionsDatas";
 import tg from "@/assets/feedmentions/tg.svg";
 import arrow from "@/assets/arrow.svg";
 import CardPablish from "@/components/CardPablish";
@@ -41,7 +41,7 @@ const FeedMentions = () => {
         onReachEnd={() => setFadeVisible(false)}
         onFromEdge={() => setFadeVisible(true)}
       >
-        {feedmentionsData.map((item, index) => (
+        {feedmentionsDatas.map((item, index) => (
           <FeedMentionsItem key={index}>
             <CardPablish item={item} />
           </FeedMentionsItem>

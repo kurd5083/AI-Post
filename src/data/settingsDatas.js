@@ -14,7 +14,7 @@ import sources from "@/assets/popup/sources.svg";
 import post_style  from "@/assets/popup/post-style.svg";
 import advanced from "@/assets/popup/advanced.svg";
 
-export const settingsData = {
+export const settingsDatass = {
     sections: [
         {
             label: "Основные",

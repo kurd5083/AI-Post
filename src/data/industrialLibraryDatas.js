@@ -1,4 +1,4 @@
-export const industrialLibraryData = [
+export const industrialLibraryDatas = [
   {
     title: "Вовлекающий",
     desc: "Стиль пиксельной графики с четкими пикселями",

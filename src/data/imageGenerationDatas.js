@@ -1,4 +1,4 @@
-export const imageGenerationData = [
+export const imageGenerationDatas = [
   {
     title: "Пиксельный арт",
     desc: "Стиль пиксельной графики с четкими пикселями",

@@ -1,7 +1,7 @@
 import post from "@/assets/post.png";
 import ava_icon from "@/assets/ava-icon.png";
 
-export const publicationsData = [
+export const publicationsDatas = [
   {
     username: "xNnjme Alpha",
     text: "Дизайн интерфейса теперь в тёмной теме",

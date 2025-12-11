@@ -1,6 +1,6 @@
 import image from "@/assets/media/image.png";
 
-export const mediasData = [
+export const mediasDatas = [
     {
         id: 1,
         image: image,

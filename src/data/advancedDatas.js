@@ -4,7 +4,7 @@ import text from "@/assets/popup/text.svg";
 import activate_promotion from "@/assets/popup/activate-promotion.svg";
 
 
-export const advancedData = [
+export const advancedDatas = [
 
   {
     title: "Принудительный постинг",

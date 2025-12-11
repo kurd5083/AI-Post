@@ -3,7 +3,7 @@ import generate_post from "@/assets/popup/generate-post.svg";
 import post_style from "@/assets/popup/post-style.svg";
 import choose_post from "@/assets/popup/choose-post.svg";
 
-export const createPostCommonData = [
+export const createPostCommonDatas = [
     {
         key: "create_post",
         title: "Сгенерировать пост",

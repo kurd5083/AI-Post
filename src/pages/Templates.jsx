@@ -8,7 +8,7 @@ import copy from "@/assets/copy.svg";
 import edit from "@/assets/templates/edit.svg";
 import icon from "@/assets/templates/icon.svg";
 import star from "@/assets/templates/star.svg";
-import { templateData } from "@/data/templateData";
+import { templatesDatas } from "@/data/templatesDatas";
 
 const Templates = () => {
 	const [activeFilter, setActiveFilter] = useState("all");
@@ -30,7 +30,7 @@ const Templates = () => {
 				placeholder="Поиск по шаблонам"
 			/>
 			<TemplatesCards>
-				{templateData.map((template) => (
+				{templatesDatas.map((template) => (
 					<TemplatesCard key={template.id}>
 						<CardRating>
 							<CardArea>{template.category}</CardArea>

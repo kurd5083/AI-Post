@@ -6,7 +6,7 @@ import PromotionIcon from "@/icons/PromotionIcon";
 import MediaIcon from "@/icons/MediaIcon";
 import HelpIcon from "@/icons/HelpIcon";
 
-export const pageData = [
+export const pageDatas = [
   {
     path: "/analytics",
     title: "Аналитика",

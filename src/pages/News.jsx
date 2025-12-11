@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { postsData } from "@/data/postsData";
+import { postsDatas } from "@/data/postsDatas";
 import createSlug from '@/lib/createSlug';
 import fire from "@/assets/tape/fire.svg";
 import TimeIcons from "../icons/TimeIcons";
@@ -14,7 +14,7 @@ const NewsDetail = () => {
 	const [post, setPost] = useState(null);
 
 	useEffect(() => {
-		const foundPost = postsData.find(postItem => {
+		const foundPost = postsDatas.find(postItem => {
 			const postSlug = createSlug(postItem.title);
 			return postSlug === slug;
 		});

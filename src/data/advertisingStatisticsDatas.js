@@ -1,4 +1,4 @@
-export const advertisingStatisticsData = [
+export const advertisingStatisticsDatas = [
     { time: "2025 ноября в 29:21:39", subscribers: "5.081,390", growth: "+ 350" },
     { time: "2025 ноября в 28:15:22", subscribers: "5.081,040", growth: "+ 285" },
     { time: "2025 ноября в 27:10:45", subscribers: "5.080,755", growth: "+ 210" },

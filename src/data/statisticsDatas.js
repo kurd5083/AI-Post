@@ -3,7 +3,7 @@ import views from "@/assets/statistics/views.svg";
 import generated from "@/assets/statistics/generated.svg";
 import mentions from "@/assets/statistics/mentions.svg";
 
-export const statisticsData = [
+export const statisticsDatas = [
   {
     image: channels,
     text: "Подключено каналов",

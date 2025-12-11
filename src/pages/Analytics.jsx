@@ -6,7 +6,7 @@ import copying_forwarding from "@/assets/analytics/copying-forwarding.svg";
 import gender from "@/assets/analytics/gender.svg";
 import forwarding from "@/assets/analytics/forwarding.svg";
 import premium from "@/assets/analytics/premium.svg";
-import { advertisingStatisticsData } from '@/data/advertisingStatisticsData';
+import { advertisingStatisticsDatas } from '@/data/advertisingStatisticsDatas';
 
 const Analytics = () => {
 	return (
@@ -53,7 +53,7 @@ const Analytics = () => {
 								</tr>
 							</TableHead>
 							<TableBody>
-								{advertisingStatisticsData.map((item) => (
+								{advertisingStatisticsDatas.map((item) => (
 									<TableItem key={item.id}>
 										<TableCell>{item.time}</TableCell>
 										<TableCell>{item.subscribers}</TableCell>

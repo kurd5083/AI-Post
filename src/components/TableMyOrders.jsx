@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import del from "@/assets/del.svg";
-import { tableMyOrdersData } from "@/data/tableMyOrdersData";
+import { tableMyOrdersDatas } from "@/data/tableMyOrdersDatas";
 import useResolution from "@/lib/useResolution";
 
 const TableMyOrders = () => {
@@ -36,7 +36,7 @@ const TableMyOrders = () => {
             </tr>
           </TableHead>
           <TableBody>
-            {tableMyOrdersData.map((row) => (
+            {tableMyOrdersDatas.map((row) => (
               <TableItem key={row.id}>
                 <TableCell>
                   <TableCellNum>{row.number}</TableCellNum>

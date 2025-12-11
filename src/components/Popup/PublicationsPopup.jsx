@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import styled from "styled-components";
 import CardPablish from "@/components/CardPablish";
-import { publicationsData } from "@/data/publicationsData";
+import { publicationsDatas } from "@/data/publicationsDatas";
 import useSwipeAllowed from "@/lib/useSwipeAllowed";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
@@ -33,10 +33,10 @@ const PublicationsPopup = () => {
         setCurrentPage(1);
     }, [itemsPerPage]);
 
-    const totalPages = Math.ceil(publicationsData.length / itemsPerPage);
+    const totalPages = Math.ceil(publicationsDatas.length / itemsPerPage);
     const indexOfLast = currentPage * itemsPerPage;
     const indexOfFirst = indexOfLast - itemsPerPage;
-    const currentItems = publicationsData.slice(indexOfFirst, indexOfLast);
+    const currentItems = publicationsDatas.slice(indexOfFirst, indexOfLast);
 
     return (
         <>
@@ -44,7 +44,7 @@ const PublicationsPopup = () => {
                 <PublicationsHead
                     key={isSwipe}
                     spaceBetween={24}
-                    slidesPerView={isSwipe ? "auto" : publicationsData.length}
+                    slidesPerView={isSwipe ? "auto" : publicationsDatas.length}
                     allowTouchMove={isSwipe}
                     breakpoints={{
                         480: {
@@ -52,7 +52,7 @@ const PublicationsPopup = () => {
                         }
                     }}
                 >
-                    <PublicationsFilter>Все <span>{publicationsData.length}</span></PublicationsFilter>
+                    <PublicationsFilter>Все <span>{publicationsDatas.length}</span></PublicationsFilter>
                     <PublicationsFilter>Архив <span>0</span></PublicationsFilter>
                     <PublicationsFilter>По дате</PublicationsFilter>
                 </PublicationsHead>

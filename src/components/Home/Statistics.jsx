@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import rating from "@/assets/statistics/rating.svg";
-import { statisticsData } from "@/data/statisticsData";
+import { statisticsDatas } from "@/data/statisticsDatas";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import useSwipeAllowed from "@/lib/useSwipeAllowed";
@@ -17,10 +17,10 @@ const Statistics = ({ padding }) => {
       <StatisticsList
         key={isSwipe}
         spaceBetween={16}
-        slidesPerView={isSwipe ? "auto" : statisticsData.length}
+        slidesPerView={isSwipe ? "auto" : statisticsDatas.length}
         allowTouchMove={isSwipe}
       >
-        {statisticsData.map((item, index) => (
+        {statisticsDatas.map((item, index) => (
           <StatisticsItem key={index}>
             <StatisticsItemHead>
               <StatisticsItemImg

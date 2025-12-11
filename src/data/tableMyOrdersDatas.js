@@ -1,6 +1,6 @@
 import ava_groups from "@/assets/table-groups/ava-groups.png";
 
-export const tableMyOrdersData = [
+export const tableMyOrdersDatas = [
     { 
         id: 1, 
         number: '#1', 

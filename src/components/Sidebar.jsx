@@ -1,6 +1,6 @@
 import { Link } from "react-router";
 import styled from "styled-components";
-import { sidebarData } from "@/data/sidebarData";
+import { sidebarDatas } from "@/data/sidebarDatas";
 import arrow_close from "@/assets/arrow-close.svg";
 import acc_icon from "@/assets/acc-icon.png";
 import { usePopupStore } from "@/store/popupStore";
@@ -30,7 +30,7 @@ const Sidebar = () => {
         <SidebarClose $isSidebarVisible={isSidebarVisible} src={arrow_close} alt="arrow close" onClick={() => isSidebarVisible ? hideSidebar() : showSidebar()}/>
       </SidebarHead>
       <SidebarNavContainer $isSidebarVisible={isSidebarVisible}>
-        {sidebarData.map((section, sectionIndex) => (
+        {sidebarDatas.map((section, sectionIndex) => (
           <SidebarNav key={sectionIndex}>
             {section.title && <SidebarNavTitle>{section.title}</SidebarNavTitle>}
             <SidebarList>

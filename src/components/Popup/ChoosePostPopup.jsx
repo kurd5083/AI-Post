@@ -1,13 +1,13 @@
 import styled from "styled-components";
 import CardСhoose from "@/components/CardСhoose";
-import { publicationsData } from "@/data/publicationsData";
+import { publicationsDatas } from "@/data/publicationsDatas";
 import BtnBase from "@/shared/BtnBase";
 
 const ChoosePostPopup = () => {
     return (
         <>
             <ChooseList>
-                {publicationsData.map((item, index) => (
+                {publicationsDatas.map((item, index) => (
                     <CardСhoose key={index} item={item} bg={true} />
                 ))}
             </ChooseList>

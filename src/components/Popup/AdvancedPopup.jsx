@@ -1,11 +1,11 @@
 import styled from "styled-components";
-import { advancedData } from "@/data/AdvancedData";
+import { advancedDatas } from "@/data/advancedDatas";
 import Checkbox from "@/shared/Checkbox";
 
 const AdvancedPopup = () => {
 	return (
 		<AdvancedContent>
-			{advancedData.map((item, index) => (
+			{advancedDatas.map((item, index) => (
 				<AdvancedContentItem key={index}>
 					<AdvancedIcon src={item.extra.image} alt={`${item.key} icon`} width={40} height={40} style={{ background: item.extra.background }} />
 					<ItemText>

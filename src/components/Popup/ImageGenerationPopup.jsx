@@ -1,13 +1,13 @@
 import styled from "styled-components";
 import Checkbox from "@/shared/Checkbox";
-import { imageGenerationData } from "@/data/imageGenerationData";
+import { imageGenerationDatas } from "@/data/imageGenerationDatas";
 
 const ImageGenerationPopup = () => {
     return (
         <ImageGenerationContent>
             <ImageGenerationContentTitle>Выберите одну стилистику</ImageGenerationContentTitle>
             <div>
-                {imageGenerationData.map((item, index) => (
+                {imageGenerationDatas.map((item, index) => (
                     <ImageGenerationContentItem key={index}>
                         <Checkbox>
                             <div>

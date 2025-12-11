@@ -1,12 +1,12 @@
 import styled from "styled-components";
-import { notificationsData } from "@/data/notificationsData";
+import { notificationsDatas } from "@/data/notificationsDatas";
 import { usePopupStore } from "@/store/popupStore"
 
 const NotificationsPopup = () => {
     const { changeContent } = usePopupStore()
     return (
         <NotificationsContainer>
-            {notificationsData.map((item, index) => (
+            {notificationsDatas.map((item, index) => (
                 <NotificationsContent key={index}>
                     <NotificationsImg src={item.extra.image} alt={item.title} width={16} height={16} style={{ background: item.extra.background }} />
                     <NotificationsText>

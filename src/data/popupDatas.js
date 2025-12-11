@@ -18,7 +18,7 @@ import replenish from "@/assets/popup/replenish.svg";
 import bell from "@/assets/bell.svg";
 import choose_post from "@/assets/popup/choose-post.svg";
 import media from "@/assets/media.svg";
-export const popupData = [
+export const popupDatas = [
     {
         key: "posting",
         name: "Постинг",

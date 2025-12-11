@@ -2,7 +2,7 @@ import choose_post from "@/assets/popup/choose-post.svg";
 import close_red from "@/assets/popup/close-red.svg";
 import calendar_blue from "@/assets/popup/calendar-blue.svg";
 
-export const notificationsData = [
+export const notificationsDatas = [
     {
         key: "create_post",
         title: "Пост “Сценарий войн” был завершен показами.",

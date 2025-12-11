@@ -4,11 +4,11 @@ import setting from "@/assets/setting.svg";
 import arrow from "@/assets/arrow.svg";
 import close from "@/assets/close.svg";
 import { usePopupStore } from "@/store/popupStore"
-import { popupData } from "@/data/popupData";
+import { popupDatas } from "@/data/popupDatas";
 
 const PopupHead = () => {
     const { popup, closePopup, goBack  } = usePopupStore()
-    const foundItem = popupData.find(elem => elem.key == popup.content)
+    const foundItem = popupDatas.find(elem => elem.key == popup.content)
     return (
         <>
             {popup.content !== 'notifications' && popup.content !== 'replenish' && popup.content !== 'upload_media' && popup.content !== 'profile' && (

@@ -1,7 +1,7 @@
 import { useRef, useState, useEffect } from "react";
 import styled from "styled-components";
 import arrow from "@/assets/arrow.svg";
-import { postsData } from "@/data/postsData";
+import { postsDatas } from "@/data/postsDatas";
 import createSlug from "@/lib/createSlug";
 import useSwipeAllowed from "@/lib/useSwipeAllowed";
 import { Link } from "react-router";
@@ -49,7 +49,7 @@ const TapeList = ({ forceHorizontal = false }) => {
 				prevEl: ".TapePrev",
 			}}
 		>
-			{postsData.map((item, i) => (
+			{postsDatas.map((item, i) => (
 				<TapeItem key={i} $forceHorizontal={forceHorizontal}>
 					<TapeItemContent>
 						<TapeItemHead>
