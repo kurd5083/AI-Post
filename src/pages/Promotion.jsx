@@ -1,9 +1,9 @@
 import styled from "styled-components";
 import PageHead from '@/components/PageHead'
 import CustomSelect from '@/shared/CustomSelect'
-import { promotionData } from "@/data/promotionData";
 import BtnBase from "@/shared/BtnBase";
 import { Link } from "react-router";
+import { promotionData } from "@/data/promotionData";
 
 const Promotion = () => {
 	return (

@@ -1,13 +1,13 @@
 import styled from "styled-components";
-import { createpostcommon } from "@/data/createpostcommon";
 import { usePopupStore } from "@/store/popupStore"
+import { createPostCommonData } from "@/data/createPostCommonData";
 
 const CreatePostСommonPopup = () => {
     const { changeContent } = usePopupStore()
     return (
         <PostСommonContainer>
             <PostСommonSubitle>ОПУБЛИКОВАТЬ 23.09.2026</PostСommonSubitle>
-            {createpostcommon.map((item, index) => (
+            {createPostCommonData.map((item, index) => (
                 <PostСommonContent key={index} onClick={() => changeContent(item.key)}>
                     <PostСommonImg src={item.extra.image} alt={item.title} width={24} height={24} style={{ background: item.extra.background }} />
                     <PostСommonText>

@@ -1,12 +1,12 @@
 import styled from "styled-components";
 import Checkbox from "@/shared/Checkbox";
-import { industriallibrary } from "@/data/industriallibrary";
+import { industrialLibraryData } from "@/data/industrialLibraryData";
 import BtnBase from "@/shared/BtnBase";
 
 const IndustrialLibraryPopup = () => {
     return (
         <IndustrialLibraryContent>
-                {industriallibrary.map((item, index) => (
+                {industrialLibraryData.map((item, index) => (
                     <IndustrialLibraryContentItem key={index}>
                         <Checkbox>
                             <div>
