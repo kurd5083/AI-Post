@@ -147,6 +147,7 @@ const CalendarPopup = () => {
                     value={dayOptions.find(o => o.value === selectedDate.getDate())}
                     onChange={(option) => handleDayChange(option.value)}
                     width="165px"
+										fs="22px"
                 />
                 <CustomSelectSec
                     placeholder="Месяц"
@@ -154,6 +155,7 @@ const CalendarPopup = () => {
                     value={monthOptions.find(o => o.value === selectedDate.getMonth())}
                     onChange={(option) => handleMonthChange(option.value)}
                     width="180px"
+										fs="22px"
                 />
                 <CustomSelectSec
                     placeholder="Год"
@@ -161,6 +163,7 @@ const CalendarPopup = () => {
                     value={yearOptions.find(o => o.value === selectedDate.getFullYear())}
                     onChange={(option) => handleYearChange(option.value)}
                     width="165px"
+										fs="22px"
                 />
             </CalendarHead>
             <CalendarContent>
@@ -203,8 +206,6 @@ const CalendarHead = styled.div`
   display: flex;
   gap: 40px;
   margin-bottom: 48px;
-	overflow-x: auto;
-  scrollbar-width: none;
 	padding: 0 56px;
 
   @media(max-width: 1600px) {
@@ -212,6 +213,9 @@ const CalendarHead = styled.div`
   }
   @media(max-width: 768px) {
     padding: 0 24px;
+  }
+	@media(max-width: 480px) {
+    gap: 16px;
   }
 `;
 const CalendarContent = styled.div`

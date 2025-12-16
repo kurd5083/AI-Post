@@ -74,6 +74,7 @@ const SelectHeader = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 24px;
 `;
 const HeaderArrow = styled.img`
   width: 8px;
