@@ -6,6 +6,7 @@ import TrainingIcon from "@/icons/TrainingIcon";
 import EntertainmentIcon from "@/icons/EntertainmentIcon";
 import NewsIcon from "@/icons/NewsIcon";
 import PromotionIcon from "@/icons/PromotionIcon";
+import search from "@/assets/search.svg";
 import useSearchStore from "@/store/searchStore";
 
 const PageFilter = ({ activeFilter, setActiveFilter, placeholder, filter = true }) => {
@@ -22,12 +23,16 @@ const PageFilter = ({ activeFilter, setActiveFilter, placeholder, filter = true 
 
   return (
     <PageFilterContainerWrapper>
-      <PageFilterInput
-        type="text"
-        placeholder={placeholder}
-        value={searchQuery}
-        onChange={(e) => setSearchQuery(e.target.value)}
-      />
+      <InputContainer>
+        <img src={search} alt="search icon" width={16} height={16}/>
+        <PageFilterInput
+          type="text"
+          placeholder={placeholder}
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+        />
+      </InputContainer>
+      
       {filter && (
         <PageFilterButtons>
           {filterButtons.map((button) => (
@@ -57,31 +62,31 @@ const PageFilterContainerWrapper = styled.div`
   gap: 40px 0;
   margin-bottom: 48px;
 `;
-
-const PageFilterInput = styled.input`
-  background-color: transparent;
+const InputContainer = styled.div`
+  display: flex;
+  gap: 24px;
   max-width: 330px;
   width: 100%;
-  color: #D6DCEC;
-  font-size: 16px;
-  font-weight: 700;
-  padding-bottom: 24px;
-  border: none;
   border-bottom: 2px solid #2E3954;
-  padding-left: 40px;
-  background-repeat: no-repeat;
-  background-position: 0px 4px;
-  background-size: 16px 16px;
+  padding-bottom: 24px;
   margin-left: 56px;
-  background-image: url('/src/assets/search.svg');
-
-
+  img {
+    margin-top: 4px;
+  }
   @media(max-width: 1600px) {
     margin-left: 32px;
   }
   @media(max-width: 768px) {
     margin-left: 24px;
   }
+`;
+
+const PageFilterInput = styled.input`
+  background-color: transparent;
+  color: #D6DCEC;
+  font-size: 16px;
+  font-weight: 700;
+  border: none;
 
   &::placeholder {
     color: #6A7080;
