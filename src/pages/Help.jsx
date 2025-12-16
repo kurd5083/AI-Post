@@ -80,7 +80,7 @@ const Help = () => {
 
 const HelpContainer = styled.div`
   position: relative;
-  height: calc(100vh - 360px); 
+  height: calc(100dvh - 360px); 
   overflow-y: auto;
   scrollbar-width: none;
   padding: 0 56px;

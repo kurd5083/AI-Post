@@ -139,7 +139,7 @@ const IconSettingsMain = styled.img`
   @media(max-width: 480px) {
     width: 24px;
     height: 24px;
-    margin-top: 4px;
+    /* margin-top: 4px; */
   }
 `
 

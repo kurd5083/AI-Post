@@ -87,7 +87,7 @@ const Grid = styled.div`
   gap: 16px 8px;
 	overflow-y: auto;
   scrollbar-width: none;
-  max-height: calc(100vh - 480px);
+  max-height: calc(100dvh - 480px);
 	padding-bottom: 30px;
 
 	&::after {

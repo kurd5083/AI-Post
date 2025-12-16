@@ -237,7 +237,7 @@ const GeneratorList = styled.div`
   grid-row: 2;
   overflow-y: auto;
   scrollbar-width: none;
-  max-height: calc(100vh - 280px);
+  max-height: calc(100dvh - 280px);
   padding-bottom: 30px;
 
   &::after {
