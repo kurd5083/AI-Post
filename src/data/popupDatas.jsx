@@ -101,6 +101,14 @@ export const popupDatas = [
         }
     },
     {
+        key: "my_team_add",
+        name: "Моя команда",
+        extra: {
+            background: "#2F4F6D",
+            image: my_team
+        }
+    },
+    {
         key: "image_generation",
         name: "Генерация изображений",
         extra: {

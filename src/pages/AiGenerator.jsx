@@ -25,7 +25,6 @@ import useFadeOnScroll from "@/lib/useFadeOnScroll";
 const AiGenerator = () => {
   const { fadeVisible, ref } = useFadeOnScroll(20);
   const [collapsed, setCollapsed] = useState(false);
-  const [value, setValue] = useState(null); 
 
   useEffect(() => {
     const handleResize = () => {
@@ -88,11 +87,11 @@ const AiGenerator = () => {
             <ItemText>{post.text}</ItemText>
             <ItemAI>
               <p><img src={create} alt="create icon" />Создать фото с AI</p>
-              <p><AiGeneratorIcon width={24} height={24} />Написать с AI</p>
+              <p><AiGeneratorIcon color="#336CFF"/>Написать с AI</p>
             </ItemAI>
             <ItemActions>
               <ItemActionsAdd>
-                <AiGeneratorIcon width={24} height={24} />
+                <AiGeneratorIcon width={24} height={24} color="#336CFF" />
                 <img src={paper} alt="paper icon" width={14} height={16} />
                 <img src={img} alt="img icon" width={16} height={16} />
                 <img src={comment} alt="comment icon" width={16} height={16} />
@@ -133,8 +132,6 @@ const AiGenerator = () => {
                   width="220px"
                   fs="14px"
                   padding="16px"
-                  value={value}
-                  onChange={setValue}
                 />
                 <PreviewHeadButton>
                   <BtnBase $padding="16px 24px">Telegram</BtnBase>
@@ -180,6 +177,11 @@ const AiGenerator = () => {
             Опубликовать записи
           </BtnBase>
         </PreviewPublish>
+        <AddPost>
+          <BtnBase $padding="21px 24px">
+            + Добавить пост
+          </BtnBase> 
+        </AddPost>
       </GeneratorPreview>
     </GeneratorContainer>
   );
@@ -192,13 +194,16 @@ const GeneratorContainer = styled.section`
   align-items: start;
   gap: 16px;
   padding: 0 56px;
-  margin-top: 30px;
+  margin-top: 24px;
 
   @media(max-width: 1600px) {
     padding: 0 32px;
   }
   @media(max-width: 768px) {
     padding: 0 24px;
+  }
+  @media(max-width: 480px) {
+    margin-top: 0px;
   }
 `;
 const GeneratorHead = styled.div`
@@ -239,7 +244,7 @@ const GeneratorList = styled.div`
   scrollbar-width: none;
   max-height: calc(100dvh - 280px);
   padding-bottom: 30px;
-
+  min-height: 500px;
   &::after {
     content: '';
     position: fixed;
@@ -261,12 +266,18 @@ const GeneratorList = styled.div`
   
   @media(max-width: 1600px) {
     gap: 104px;
-    padding-bottom: 60px;
+    padding-bottom: 100px;
+    max-height: calc(100dvh - 490px);
   } 
   @media(max-width: 1400px) {
     grid-column: 1 /span 5;
     grid-row: 3;
   }
+  @media(max-width: 768px) {
+    gap: 104px;
+    padding-bottom: 100px;
+    max-height: calc(100dvh - 550px);
+  } 
 `;
 const ListItem = styled.div`
   position: relative;
@@ -295,11 +306,16 @@ const ItemText = styled.p`
   font-size: 16px;
   font-weight: 700;
   margin-top: 24px;
+  @media(max-width: 1400px) {
+      height: 120px;
+
+  }
 `
 const ItemAI = styled.div`
   display: flex;
-  align-items: center;  
-  gap: 40px;
+  align-items: center;
+  flex-wrap: wrap;  
+  gap: 24px 40px;
   margin-top: 32px;
   p {
     display: flex;
@@ -327,7 +343,9 @@ const ItemActionsAdd = styled.div`
   display: flex;
   align-items: center;
   gap: 32px;
-
+  @media(max-width: 480px) {
+    gap: 16px;
+  }
   img {
     cursor: pointer;
   }
@@ -370,6 +388,7 @@ const GeneratorPreview = styled.div`
   @media(max-width: 1400px) {
     grid-column: 1 /span 5;
     grid-row: 2;
+    padding-bottom: 0px;
   }
 `;
 const PreviewContent = styled.div`
@@ -483,6 +502,16 @@ const PreviewInfoText = styled.p`
   font-size: 12px;
   line-height: 16px;
   font-weight: 600;
+`
+const AddPost = styled.div`
+  display: none;
+  margin-top: 32px;
+  align-items: center;
+  justify-content: center;
+  
+  @media(max-width: 768px) {
+    display: flex;
+  }
 `
 
 export default AiGenerator;

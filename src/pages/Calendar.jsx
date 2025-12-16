@@ -100,10 +100,10 @@ const CalendarStatistic = styled.div`
   @media(max-width: 1400px) {
     grid-column:  1 / span 5;
     grid-row: 3;
-    padding: 0 32px;
+    padding: 0 32px 30px;
   }
   @media(max-width: 768px) {
-    padding: 0 24px;
+    padding: 0 24px 30px;
   }
 `;
 const StatisticTitle = styled.h2`

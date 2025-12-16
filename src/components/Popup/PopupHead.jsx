@@ -127,7 +127,6 @@ const PopupListHeadContent = styled.div`
 	}
   @media(max-width: 480px) {
     gap: 24px;
-    align-items: center;
 
     h2 {
       font-size: 26px;
@@ -139,7 +138,6 @@ const IconSettingsMain = styled.img`
   @media(max-width: 480px) {
     width: 24px;
     height: 24px;
-    /* margin-top: 4px; */
   }
 `
 

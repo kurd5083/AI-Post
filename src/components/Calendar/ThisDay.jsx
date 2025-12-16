@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import arrow from "@/assets/arrow.svg";
+import ava_icon from "@/assets/ava-icon.png";
 import CustomSelect from "@/shared/CustomSelect";
 import { postsDatas } from "@/data/postsDatas";
 import useFadeOnScroll from "@/lib/useFadeOnScroll";
@@ -18,7 +19,11 @@ const ThisDay = () => {
 
       <ChannelRow>
         <Label>Канал</Label>
-        <CustomSelect/>
+        <CustomSelect
+          options={[
+            { icon: ava_icon, value: "Antropia Digital", label: "Antropia Digital" },
+          ]}
+				/>
       </ChannelRow>
 
       <SectionTitle>Посты в этот день:</SectionTitle>
@@ -67,6 +72,12 @@ const DayNavButton = styled.button`
   width: 40px;
   height: 40px;
   border-radius: 50%;
+	background: #336cff;
+	&:first-child {
+		img {
+			transform: rotate(180deg);
+		}
+	}
 `;
 const ChannelRow = styled.div`
   margin-top: 32px;
@@ -82,6 +93,7 @@ const SectionTitle = styled.h2`
   font-weight: 700;
 `;
 const Grid = styled.div`
+	box-sizing: border-box;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
   gap: 16px 8px;
@@ -89,6 +101,10 @@ const Grid = styled.div`
   scrollbar-width: none;
   max-height: calc(100dvh - 480px);
 	padding-bottom: 30px;
+	
+	@media(max-width: 1400px) {
+    padding-bottom: 0px;
+  }
 
 	&::after {
     content: '';

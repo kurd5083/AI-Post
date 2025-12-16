@@ -2,8 +2,11 @@ import styled from "styled-components";
 import CardСhoose from "@/components/CardСhoose";
 import { publicationsDatas } from "@/data/publicationsDatas";
 import BtnBase from "@/shared/BtnBase";
+import { usePopupStore } from "@/store/popupStore";
 
 const ChoosePostPopup = () => {
+  const { goBack } = usePopupStore()
+
 	return (
 		<ChooseContainer>
 			<ChooseList>
@@ -13,7 +16,7 @@ const ChoosePostPopup = () => {
 			</ChooseList>
 			<ChooseButtons>
 				<BtnBase $color="#D6DCEC" $bg="#336CFF">Опубликовать</BtnBase>
-				<BtnBase $color="#D6DCEC" $bg="#242A3A">Отменить</BtnBase>
+				<BtnBase $color="#D6DCEC" $bg="#242A3A" onClick={goBack}>Отменить</BtnBase>
 			</ChooseButtons>
 		</ChooseContainer>
 	)

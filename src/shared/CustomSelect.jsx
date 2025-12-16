@@ -9,8 +9,8 @@ const CustomSelect = ({ options, placeholder = "Выберите значени�
 
   const toggle = () => setOpen(!open);
 
-  const onSelect = (value, label) => {
-    setSelected(label);
+ const onSelect = (icon, label) => {
+    setSelected({icon, label});
     setOpen(false);
   };
 
@@ -22,17 +22,17 @@ const CustomSelect = ({ options, placeholder = "Выберите значени�
     };
 
     document.addEventListener("mousedown", handleClickOutside);
-    
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
   return (
     <SelectWrapper ref={selectRef}>
       <SelectHeader onClick={toggle}>
-        <span>{selected || placeholder}</span>
-        <img src={arrow} alt="arrow icon" className={open ? "open" : ""} />
+        <HeaderLeft>
+          {selected?.icon && <img src={selected.icon} alt="icon" width={24} height={24}/>}
+          <span>{selected.label || placeholder}</span>
+        </HeaderLeft>
+        <HeaderArrow src={arrow} alt="arrow icon" className={open ? "open" : ""} />
       </SelectHeader>
 
       {open && (
@@ -40,8 +40,9 @@ const CustomSelect = ({ options, placeholder = "Выберите значени�
           {options.map((opt) => (
             <SelectItem 
               key={opt.value} 
-              onClick={() => onSelect(opt.value, opt.label)}
+              onClick={() => onSelect(opt.icon, opt.value, opt.label)}
             >
+              {opt.icon && <img src={opt.icon} alt="icon" width={24} height={24}/>}
               {opt.label}
             </SelectItem>
           ))}
@@ -69,19 +70,25 @@ const SelectHeader = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+`;
+const HeaderArrow = styled.img`
+  width: 8px;
+  height: 16px;
+  transition: transform 0.2s ease;
+  transform: rotate(90deg);
 
-  img {
-    width: 8px;
-    height: 16px;
-    transition: transform 0.2s ease;
-    transform: rotate(90deg);
-  }
-
-  img.open {
+  &.open {
     transform: rotate(270deg);
   }
-`;
-
+`
+const HeaderLeft = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  img {
+    border-radius: 50%;
+  }
+`
 const SelectList = styled.ul`
   box-sizing: border-box;
   position: absolute;
@@ -100,6 +107,9 @@ const SelectList = styled.ul`
 `;
 
 const SelectItem = styled.li`
+  display: flex;
+  align-items: center;
+  gap: 16px;
   padding: 24px;
   cursor: pointer;
   color: #d6dcec;
@@ -113,6 +123,9 @@ const SelectItem = styled.li`
 
   &:hover {
     background-color: #242b3f;
+  }
+  img {
+    border-radius: 24px;
   }
 `;
 export default CustomSelect;

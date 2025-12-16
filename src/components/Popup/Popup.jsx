@@ -5,6 +5,7 @@ import PopupHead from "@/components/Popup/PopupHead";
 import SettingsPopup from "@/components/Popup/SettingsPopup";
 import ModePopup from "@/components/Popup/ModePopup";
 import PublicationsPopup from "@/components/Popup/PublicationsPopup";
+import MyTeamAddPopup from "@/components/Popup/MyTeamAddPopup";
 import MyTeamPopup from "@/components/Popup/MyTeamPopup";
 import ImageGenerationPopup from "@/components/Popup/ImageGenerationPopup";
 import IndustrialLibraryPopup from "@/components/Popup/IndustrialLibraryPopup";
@@ -51,6 +52,8 @@ const Popup = () => {
                 <ModePopup/>
             ) : popup.content == 'publications' ? (
                 <PublicationsPopup/>
+            ) : popup.content == 'my_team_add' ? (
+                <MyTeamAddPopup/>
             ) : popup.content == 'my_team' ? (
                 <MyTeamPopup/>
             ) : popup.content == 'image_generation' ? (

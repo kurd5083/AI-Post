@@ -38,7 +38,7 @@ const TableMyOrders = () => {
           </thead>
           <tbody>
             {tableMyOrdersDatas.map((row) => (
-              <TableItem key={row.id}>
+              <tr key={row.id}>
                 <TableCell>
                   <TableCellNum>{row.number}</TableCellNum>
                 </TableCell>
@@ -67,7 +67,7 @@ const TableMyOrders = () => {
                 <TableCell>
                   <ButtonDel title="Удалить"><img src={del} alt="del icon" width={14} height={16} /></ButtonDel>
                 </TableCell>
-              </TableItem>
+              </tr>
             ))}
           </tbody>
         </Table>
@@ -78,7 +78,6 @@ const TableMyOrders = () => {
 
 const TableContainer = styled.div`
   position: relative;
-  margin-top: 20px;
 `;
 const TableWrapper = styled.div`
   box-sizing: border-box;
@@ -88,6 +87,12 @@ const TableWrapper = styled.div`
   overflow: auto;
   scrollbar-width: none;
   padding: 0 56px;
+  @media(max-width: 1600px) {
+    padding: 0 32px;
+  }
+  @media(max-width: 768px) {
+    padding: 0 24px;
+  }
 `;
 const Table = styled.table`
   width: 100%;
@@ -130,7 +135,6 @@ const Table = styled.table`
     width: 40px;
   }
 `;
-
 const HeaderCell = styled.th`
   text-align: left;
   font-weight: 700;
@@ -143,35 +147,20 @@ const HeaderCell = styled.th`
   padding: 20px 0;
   background-color: #131826;
 `;
-
-const TableItem = styled.tr`
-  transition: background .15s ease;
-  
-  td {
-    padding: 15px 0;
-  }
-
-  &:hover {
-    background-color: #1C2438;
-  }
-`;
-
 const TableCell = styled.td`
   font-size: 14px;
   font-weight: 700;
   color: #6A7080;
+  padding: 15px 0;
 `;
-
 const TableCellNum = styled.span`
   color: #D6DCEC;
 `;
-
 const TableCellName = styled.div`
   display: flex;
   align-items: center;
   margin: 0;
   color: #D6DCEC;
-  
   img {
     margin: 0 24px 0 0;
     width: 40px;
@@ -179,21 +168,17 @@ const TableCellName = styled.div`
     border-radius: 12px;
     object-fit: cover;
   }
-  
   span {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
   }
 `;
-
-
 const TableCellLink = styled.a`
   &:hover {
     text-decoration: underline;
   }
 `;
-
 const TableCellOnline = styled.div`
   display: flex;
   align-items: center;

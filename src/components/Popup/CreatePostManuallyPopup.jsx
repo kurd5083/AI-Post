@@ -16,6 +16,7 @@ import CheckboxCircle from "@/shared/CheckboxCircle";
 import PromotionIcon from "@/icons/PromotionIcon";
 import AiGeneratorIcon from "@/icons/AiGeneratorIcon";
 import TimeIcons from "@/icons/TimeIcons";
+import SourcePost from "@/icons/SourcePost";
 
 const CreatePostManuallyPopup = () => {
   const [post, setPost] = useState("");
@@ -23,7 +24,7 @@ const CreatePostManuallyPopup = () => {
 
   return (
     <PostManually>
-      <PostLeft>
+      <NewPostLeft>
         <PostTitle>Заголовок</PostTitle>
         <PostInput type="text" placeholder="Новый пост"/>
         <PostSetting>
@@ -33,6 +34,8 @@ const CreatePostManuallyPopup = () => {
           </PostSettingTop>
           <BtnBase $color="#6A7080" $bg="transporent" $border={true} onClick={() => openPopup("change_time", "popup_window")} ><TimeIcons/>Изменить время</BtnBase>
         </PostSetting>
+      </NewPostLeft>
+      <PostLeftButtons>
         <PostGenerate>
           <BtnBase $color="#FF7F48" $bg="#28222B"><AiGeneratorIcon color="#FF7F48"/>Перегенерировать пост</BtnBase>
           <BtnBase $color="#FF7F48" $bg="#28222B"><img src={create} alt="create icon" />Сгенерировать изображение</BtnBase>
@@ -41,9 +44,13 @@ const CreatePostManuallyPopup = () => {
           <BtnBase $color="#D6DCEC" $bg="#336CFF">Сохранить</BtnBase>
           <BtnBase onClick={goBack} $color="#D6DCEC" $bg="#242A3A">Отменить</BtnBase>
         </PostButtons>
-      </PostLeft>
+      </PostLeftButtons>
       <PostRight>
         <PostCreate>
+          <PostSource>
+            <p>Источник: <mark>apple.com/home</mark></p>
+            <SourcePost width="16" height="16"/>
+          </PostSource>
           <PostTitle>Описание</PostTitle>
           <PostCreateContainer>
             <PostCreateContainerTitle><CheckboxCircle/>Пост 1</PostCreateContainerTitle>
@@ -85,7 +92,9 @@ const CreatePostManuallyPopup = () => {
 }
 
 const PostManually = styled.div`
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  grid-template-rows: min-content;
   gap: 70px;
   padding: 0 56px;
 
@@ -100,9 +109,30 @@ const PostManually = styled.div`
     padding: 0 24px;
   }
 `
-const PostLeft = styled.div`
+const NewPostLeft = styled.div`
   max-width: 420px;
+  grid-column: 1 /span 3;
+  grid-row: 1;
+
   @media(max-width: 768px) {
+    grid-column: 1 /span 6;
+    grid-row: 1;
+    max-width: 100%;
+    width: 100%;
+  }
+  @media(max-width: 480px) {
+    margin-bottom: 60px;
+  }
+
+`
+const PostLeftButtons = styled.div`
+  max-width: 420px;
+  grid-column: 1 /span 3;
+  grid-row: 2;
+
+  @media(max-width: 768px) {
+    grid-column: 1 /span 6;
+    grid-row: 3;
     max-width: 100%;
     width: 100%;
   }
@@ -127,7 +157,6 @@ const PostGenerate = styled.div`
   display: flex;
   flex-direction: column;
   gap: 16px;
-  margin-top: 70px;
   button {
     justify-content: center;
     width: 100%;
@@ -137,17 +166,51 @@ const PostButtons = styled.div`
   display: flex;
   gap: 8px;
   margin-top: 64px;
-`
 
+  @media(max-width: 480px) {
+    margin-top: 32px;
+  }
+`
 const PostRight = styled.div`
+  grid-column: 4 /span 3;
+  grid-row: 1 / span 2;
   max-width: 470px;
   width: 100%;
+
   @media(max-width: 768px) {
     max-width: 100%;
+    grid-column: 1 /span 6;
+    grid-row: 2;
   }
 `
 const PostCreate = styled.div`
 `
+const PostSource = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-sizing: border-box;
+  border: 2px solid #333E59;
+  padding: 16px 24px;
+  border-radius: 12px;
+  margin-bottom: 48px;
+
+  @media(max-width: 480px) {
+    margin-bottom: 32px;
+  }
+  p {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    font-size: 14px;
+    font-weight: 700;
+    color: #6A7080;
+    mark {
+      color: #336CFF;
+    }
+  }
+`
+
 const PostTitle = styled.h2`
   text-transform: uppercase;
   font-size: 12px;

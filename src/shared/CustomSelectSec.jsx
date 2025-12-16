@@ -6,28 +6,27 @@ const CustomSelect = ({
   options,
   placeholder = "Выберите значение",
   value,
-  onChange,
   fs,
   padding,
   width,
 }) => {
   const [open, setOpen] = useState(false);
+  const [selected, setSelected] = useState("");
   const selectRef = useRef(null);
 
   const toggle = () => setOpen(prev => !prev);
 
-  const onSelect = (option) => {
-    console.log(option)
-    onChange(option); 
+  const onSelect = (icon, label) => {
+    setSelected({icon, label});
     setOpen(false);
   };
 
   useEffect(() => {
-    const handleClickOutside = (e) => {
-      if (selectRef.current && !selectRef.current.contains(e.target)) {
+    const handleClickOutside = (event) => {
+      if (selectRef.current && !selectRef.current.contains(event.target)) {
         setOpen(false);
       }
-    };
+    }
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
@@ -36,8 +35,8 @@ const CustomSelect = ({
     <SelectWrapper ref={selectRef} $width={width}>
       <SelectHeader onClick={toggle} $fs={fs} $padding={padding}>
         <HeaderLeft>
-          {value?.icon && <img src={value.icon} alt="icon" width={16} height={16}/>}
-          <span>{value?.label || placeholder}</span>
+          {selected?.icon && <img src={selected.icon} alt="icon" width={16} height={16}/>}
+          <span>{selected.label || placeholder}</span>
         </HeaderLeft>
         <HeaderArrow src={arrow} alt="arrow icon" className={open ? "open" : ""} />
       </SelectHeader>
@@ -47,7 +46,7 @@ const CustomSelect = ({
           {options.map((opt) => (
             <SelectItem
               key={opt.value}
-              onClick={() => onSelect(opt)}
+              onClick={() => onSelect(opt.icon, opt.value, opt.label)}
             >
               {opt.icon && <img src={opt.icon} alt="icon" />}
               {opt.label}

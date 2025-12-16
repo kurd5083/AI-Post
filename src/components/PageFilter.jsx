@@ -25,7 +25,6 @@ const PageFilter = ({ activeFilter, setActiveFilter, placeholder, filter = true 
       <PageFilterInput
         type="text"
         placeholder={placeholder}
-        style={{ backgroundImage: `url(/src/assets/search.svg)` }}
         value={searchQuery}
         onChange={(e) => setSearchQuery(e.target.value)}
       />
@@ -74,6 +73,8 @@ const PageFilterInput = styled.input`
   background-position: 0px 4px;
   background-size: 16px 16px;
   margin-left: 56px;
+  background-image: url('/src/assets/search.svg');
+
 
   @media(max-width: 1600px) {
     margin-left: 32px;

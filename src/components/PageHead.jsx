@@ -33,6 +33,9 @@ const HeadContainer = styled.div`
   @media(max-width: 768px) {
     padding: 0 24px;
   }
+  @media(max-width: 480px) {
+    margin-top: 0px;
+  }
 `
 const HeadContent = styled.div`
   display: flex;

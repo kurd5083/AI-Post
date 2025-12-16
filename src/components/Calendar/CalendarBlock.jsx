@@ -4,7 +4,6 @@ import arrow from "@/assets/arrow.svg";
 
 const weekDays = ["ПН", "ВТ", "СР", "ЧТ", "ПТ", "СБ", "ВСК"];
 
-
 const CalendarBlock = () => {
 	const [currentDate, setCurrentDate] = useState(
 		new Date(2026, 10, 15)
@@ -129,6 +128,11 @@ const CalendarNavBtn = styled.button`
   height: 40px;
   border-radius: 50%;
   background: #336cff;
+	&:first-child {
+		img {
+			transform: rotate(180deg);
+		}
+	}
 `;
 const GridContainer = styled.div`
   overflow-x: auto;

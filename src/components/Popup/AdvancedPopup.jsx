@@ -3,20 +3,28 @@ import { advancedDatas } from "@/data/advancedDatas";
 import Checkbox from "@/shared/Checkbox";
 
 const AdvancedPopup = () => {
-	return (
-		<AdvancedContainer>
-			{advancedDatas.map((item, index) => (
-				<AdvancedItem key={index}>
-					<AdvancedIcon src={item.extra.image} alt={`${item.key} icon`} width={40} height={40} style={{ background: item.extra.background }} />
-					<ItemText>
-						<h4>{item.title}</h4>
-						<p>{item.desc}</p>
-					</ItemText>
-					<Checkbox color="#FFF980" />
-				</AdvancedItem>
-			))}
-		</AdvancedContainer>
-	)
+  return (
+    <AdvancedContainer>
+      {advancedDatas.map((item, index) => (
+        <AdvancedItem key={index}>
+          <AdvancedIcon $bg={item.extra.background}>
+            {item.extra.image ? (
+              <img src={item.extra.image} alt={`advanced icon`} />
+            ) : (
+              <>
+                {item.extra.icon}
+              </>
+            )}
+          </AdvancedIcon>
+          <ItemText>
+            <h4>{item.title}</h4>
+            <p>{item.desc}</p>
+          </ItemText>
+          <Checkbox color="#FFF980" />
+        </AdvancedItem>
+      ))}
+    </AdvancedContainer>
+  )
 }
 const AdvancedContainer = styled.div`
   display: flex;
@@ -72,16 +80,20 @@ const ItemText = styled.div`
 		}
   }
 `
-const AdvancedIcon = styled.img`
-  object-fit: contain;
-  box-sizing: border-box;
+const AdvancedIcon = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
   border-radius: 8px;
-  padding: 10px;
   margin-top: 6px;
+  background-color: ${({ $bg }) => $bg};
 
   @media(max-width: 480px) {
 		position: absolute;
     margin-top: 0;
   }
+
 `
 export default AdvancedPopup

@@ -1,39 +1,60 @@
-import { useState } from "react";
 import styled from "styled-components";
-import my_team from "@/assets/popup/my-team.svg";
 import BtnBase from "@/shared/BtnBase";
+import { usePopupStore } from "@/store/popupStore"
+import { myTeamDatas } from "@/data/myTeamDatas";
+import del from "@/assets/del.svg";
 
 const MyTeamPopup = () => {
-  const [copied, setCopied] = useState(false);
-  const shareLink = "aipost.com/share/5215ikwad"; 
-
-   const handleCopy = () => {
-    navigator.clipboard.writeText(shareLink);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
-
+  const { changeContent } = usePopupStore()
   return (
     <MyTeamContainer>
-      <img src={my_team} alt="my team icon" width={129} height={113} />
-      <MyTeamTitle>{copied ? "Вы успешно скопировали ссылку" : "Поделитесь вашей командой"}</MyTeamTitle>
       <BtnBase
         $color="#5ABAFF"
         $bg="#1B283C"
-        onClick={handleCopy}
-        style={{ cursor: "pointer" }}
+        onClick={() => changeContent("my_team_add")}
       >
-        {shareLink}
+        Пригласить в команду
       </BtnBase>
+      <TableWrapper>
+        <Table>
+          <colgroup>
+            <col />
+            <col />
+            <col />
+            <col />
+          </colgroup>
+          <thead>
+            <tr>
+              <HeaderCell>Имя</HeaderCell>
+              <HeaderCell>Роль</HeaderCell>
+              <HeaderCell>Дата вступления</HeaderCell>
+              <HeaderCell></HeaderCell>
+            </tr>
+          </thead>
+          <tbody>
+            {myTeamDatas.map((row) => (
+              <TableItem key={row.id}>
+                <TableCell>
+                  <TableCellName>
+                    <img src={row.ava} alt="Group" />
+                    <span>{row.name}</span>
+                  </TableCellName>
+                </TableCell>
+                <TableCell>{row.role}</TableCell>
+                <TableCell>{row.data}</TableCell>
+                <TableCell>
+                  <ButtonDel title="Удалить"><img src={del} alt="del icon" width={14} height={16} /></ButtonDel>
+                </TableCell>
+              </TableItem>
+            ))}
+          </tbody>
+        </Table>
+      </TableWrapper>
     </MyTeamContainer>
   );
 };
 
 const MyTeamContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-top: 165px;
   padding: 0 56px;
 
   @media(max-width: 1600px) {
@@ -42,18 +63,84 @@ const MyTeamContainer = styled.div`
   @media(max-width: 768px) {
     padding: 0 24px;
   }
+`;
+const TableWrapper = styled.div`
+  margin-top: 48px;
+`;
+const Table = styled.table`
+  width: 100%;
+  border-spacing: 0;
 
-  @media(max-width: 480px) {
-    margin-top: 80px;
+  & colgroup col:first-child {
+    width: 25%;
+  }
+  & colgroup col:nth-child(2) {
+    width: 25%;
+  }
+  & colgroup col:nth-child(3) {
+    width: calc(50% - 48px);
+  }
+  & colgroup col:nth-child(4) {
+    width: 48px;
   }
 `;
 
-const MyTeamTitle = styled.h2`
-  font-size: 24px;
-  font-weight: 700;
-  margin: 40px 0 24px;
+const HeaderCell = styled.th`
   text-align: center;
-  transition: all 0.3s ease;
+  font-weight: 700;
+  color: #6A7080;
+  font-size: 12px;
+  text-transform: uppercase;
+  &:first-child {
+    text-align: left;
+  }
+`;
+
+const TableItem = styled.tr`
+  &:last-child {
+    td {
+      border-bottom: none;
+    }
+  }
+`;
+const TableCell = styled.td`
+  text-align: center;
+  font-size: 16px;
+  font-weight: 700;
+  padding: 30px 0;
+  border-bottom: 2px solid #2E3954;
+`;
+const TableCellName = styled.div`
+  display: flex;
+  align-items: center;
+  
+  img {
+    margin: 0 24px 0 0;
+    width: 48px;
+    height: 48px;
+    border-radius: 16px;
+    object-fit: cover;
+  }
+`;
+const ButtonDel = styled.button`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  transition: all 0.2s;
+  border: 2px solid #2F3953;
+
+  @media (max-width: 480px) {
+    width: 40px;
+    height: 40px;
+  }
+
+  &:hover {
+    border: none;
+    background-color: rgba(239, 98, 132, 0.08);
+  }
 `;
 
 export default MyTeamPopup;

@@ -80,10 +80,10 @@ const TapeContainer = styled.section`
   @media(max-width: 1400px) {
     max-width: 100%;
     padding: 32px 0;
-  }
-  @media (max-width: 480px) {
     overflow: visible;
+
   }
+
   &::after {
     content: '';
     position: absolute;
@@ -185,14 +185,9 @@ const FilterWrapper = styled.div`
   overflow-y: auto;
   scrollbar-width: none;
   @media (max-width: 1400px) {
-    right: 162px;
-    top: 110px;
-    left: auto;
-    max-height: 320px;
-    width: 400px;
-  }
-  @media (max-width: 768px) {
-    width: 300px;
+    left: 32px;
+    max-height: 100dvh;
+    width: calc(100% - 64px);
   }
   @media (max-width: 480px) {
     right: auto;
