@@ -45,7 +45,7 @@ const GridContainer = styled.div`
     padding: 0 32px;
     grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
   }
-  @media (max-width: 480px) {
+  @media (max-width: 768px) {
     padding: 0 24px;
   }
 `;

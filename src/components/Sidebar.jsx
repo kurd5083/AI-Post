@@ -36,10 +36,17 @@ const Sidebar = () => {
                   onClick={() => setActivePage(item.id)}
                   $isSidebarVisible={isSidebarVisible}
                 >
-                  <Link to={item.to}>
-                    {item.icon(activePage === item.id)}
-                    {isSidebarVisible && item.text}
-                  </Link>
+                  {item.to ? (
+                    <Link to={item.to}>
+                      {item.icon(activePage === item.id)}
+                      {isSidebarVisible && item.text}
+                    </Link>
+                  ) : (
+                    <p onClick={() => openPopup(item.popup)}>
+                      {item.icon(activePage === item.id)}
+                      {isSidebarVisible && item.text}
+                    </p>
+                  )}
                 </SidebarListItem>
               ))}
             </SidebarList>
@@ -155,7 +162,7 @@ const SidebarListItem = styled.li`
     }
   `}
 
-  a {
+  a, p {
     display: flex;
     align-items: center;
     gap: 14px;

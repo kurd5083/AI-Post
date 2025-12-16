@@ -106,11 +106,13 @@ const TapeHead = styled.div`
   @media (max-width: 1400px) {
     padding: 0 32px;
   }
+  @media (max-width: 768px) {
+    padding: 0 24px;
+  }
   @media (max-width: 480px) {
     flex-direction: column;
     align-items: center;
     gap: 24px;
-    padding: 0 24px;
   }
 `;
 

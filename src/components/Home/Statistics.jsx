@@ -61,7 +61,7 @@ const StatisticsTitle = styled.h2`
   @media (max-width: 1400px) {
     padding: 0 32px;
   }
-  @media (max-width: 480px) {
+  @media (max-width: 768px) {
     padding: 0 24px;
   }
 `
@@ -73,7 +73,7 @@ const StatisticsList = styled(Swiper)`
   @media (max-width: 1400px) {
     padding: 0 32px;
   }
-  @media (max-width: 480px) {
+  @media (max-width: 768px) {
     padding: 0 24px;
   }
 `

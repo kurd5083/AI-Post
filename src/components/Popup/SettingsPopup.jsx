@@ -53,7 +53,7 @@ const SettingsContainer = styled.div`
     @media(max-width: 1600px) {
         padding: 0 32px;
     }
-    @media(max-width: 480px) {
+    @media(max-width: 768px) {
         padding: 0 24px;
     }
 `

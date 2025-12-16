@@ -77,9 +77,9 @@ const Table = styled.table`
       width: 32%;
     }
 		@media(max-width: 768px) {
-			width: calc(100% - 250px);
+			width: calc(100% - 238px);
   	}
-		@media(max-width: 480px) {
+    @media(max-width: 480px) {
 			width: calc(100% - 195px);
   	}
   }
@@ -116,9 +116,9 @@ const Table = styled.table`
       width: 170px;
     }
 		@media(max-width: 768px) {
-			width: 250px;
+			width: 238px;
   	}
-		@media(max-width: 480px) {
+    @media(max-width: 480px) {
 			width: 195px;
   	}
   }
@@ -141,10 +141,10 @@ const TableHead = styled.thead`
   }
 	@media(max-width: 768px) {
     th:first-child {
-      padding-left: 32px;
+      padding-left: 24px;
     }
     th:last-child {
-      padding-right: 32px;
+      padding-right: 24px;
     }
   }
 
@@ -200,10 +200,9 @@ const TableItem = styled.tr`
       padding-left: 8px;
   	}
 		@media(max-width: 768px) {
-			padding-left: 32px;
+			padding-left: 24px;
 		}
 		@media(max-width: 480px) {
-			padding-left: 24px;
 			span {
 				white-space: nowrap;
 				overflow: hidden;
@@ -219,9 +218,6 @@ const TableItem = styled.tr`
       padding-right: 8px;
   	}
 		@media(max-width: 768px) {
-			padding-right: 32px;
-		}
-		@media(max-width: 480px) {
 			padding-right: 24px;
 		}
   }

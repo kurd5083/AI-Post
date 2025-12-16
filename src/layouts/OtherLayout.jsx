@@ -36,7 +36,7 @@ const OtherLayout = () => {
 const OtherContainer = styled.section`
   position: relative;
   display: flex;
-  max-height: 100svh;
+  max-height: 100dvh;
 
   @media(max-width: 1400px) {
     flex-direction: column;

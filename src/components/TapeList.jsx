@@ -75,7 +75,7 @@ const TapeContainer = styled(Swiper)`
   margin-top: 32px;
   overflow-y: auto;
   scrollbar-width: none;  
-  max-height: calc(100svh - 215px);
+  max-height: calc(100dvh - 215px);
   padding: ${({$padding}) => $padding && "0 52px"};
   padding-bottom: 20px;
   
@@ -86,7 +86,7 @@ const TapeContainer = styled(Swiper)`
     padding: 0 32px ;
     max-height: fit-content;
   }
-  @media (max-width: 480px) {
+  @media (max-width: 768px) {
     padding: 0 24px;
   }
 

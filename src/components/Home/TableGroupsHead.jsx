@@ -71,11 +71,9 @@ const TableGroupsHeadLeft = styled(Swiper)`
   flex-wrap: wrap;
 	margin: 0;
   @media (max-width: 768px) {
-    padding: 0 32px;
-  }
-	@media (max-width: 480px) {
     padding: 0 24px;
   }
+
 `
 const TableGroupsHeadDir = styled(SwiperSlide)`
   box-sizing: border-box;
@@ -125,10 +123,9 @@ const TableGroupsHeadRight = styled.div`
   align-items: center;
   gap: 8px;
 	@media (max-width: 768px) {
-    padding: 0 32px;
+    padding: 0 24px;
   }
 	@media(max-width: 480px) {
-    padding: 0 24px;
     flex-direction: row-reverse
 	}
 `

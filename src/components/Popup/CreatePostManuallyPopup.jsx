@@ -17,10 +17,12 @@ import PromotionIcon from "@/icons/PromotionIcon";
 import AiGeneratorIcon from "@/icons/AiGeneratorIcon";
 import TimeIcons from "@/icons/TimeIcons";
 import SourcePost from "@/icons/SourcePost";
+import useResolution from "@/lib/useResolution";
 
 const CreatePostManuallyPopup = () => {
   const [post, setPost] = useState("");
   const { openPopup, goBack } = usePopupStore()
+  const { isSmall } = useResolution(480);
 
   return (
     <PostManually>
@@ -30,7 +32,7 @@ const CreatePostManuallyPopup = () => {
         <PostSetting>
           <PostSettingTop>
             <BtnBase $color="#EF6284" $bg="#26202F" $padding="21px 24px">Настройки</BtnBase>
-            <BtnBase $color="#336CFF" $bg="#161F37" $padding="21px 24px"><PromotionIcon color="#336CFF"/>Опубликовать сейчас</BtnBase>
+            <BtnBase $color="#336CFF" $bg="#161F37" $padding="21px 24px"><PromotionIcon color="#336CFF"/>{!isSmall ? 'Опубликовать сейчас' : 'Опубликовать'}</BtnBase>
           </PostSettingTop>
           <BtnBase $color="#6A7080" $bg="transporent" $border={true} onClick={() => openPopup("change_time", "popup_window")} ><TimeIcons/>Изменить время</BtnBase>
         </PostSetting>

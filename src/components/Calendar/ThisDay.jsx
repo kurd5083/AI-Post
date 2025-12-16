@@ -100,6 +100,7 @@ const Grid = styled.div`
 	overflow-y: auto;
   scrollbar-width: none;
   max-height: calc(100dvh - 480px);
+	min-height: 600px;
 	padding-bottom: 30px;
 	
 	@media(max-width: 1400px) {

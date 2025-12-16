@@ -51,7 +51,8 @@ export const sidebarDatas = [
         id: 6, 
         icon: (isActive) => <AccountIcon color={isActive ? "#336CFF" : "#6A7080"} />,
         text: "Аккаунт", 
-        to: "/account" 
+        to: "" ,
+        popup: 'profile'
       },
       { 
         id: 7, 

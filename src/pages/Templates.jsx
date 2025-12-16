@@ -82,10 +82,10 @@ const TemplatesCards = styled.div`
 	padding-bottom: 30px;
 	
 	@media(max-width: 1600px) {
-    padding: 0 32px;
+    padding: 0 32px 30px;
   }
   @media(max-width: 768px) {
-    padding: 0 24px;
+    padding: 0 24px 30px;
   }
 
 	@media(max-width: 560px) {

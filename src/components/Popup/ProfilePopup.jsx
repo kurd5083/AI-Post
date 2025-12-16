@@ -52,13 +52,9 @@ const ProfileHead = styled.div`
   @media(max-width: 1600px) {
     padding: 0 32px;
   }
-  @media(max-width: 768px) {
-    padding: 0 24px;
+  @media(max-width: 1400px) {
+    display: none;
   }
-  @media (max-width: 480px) {
-    margin-bottom: 24px;
-  }
-
 `
 const ProfileLeft = styled.div`
   display: flex;
@@ -97,9 +93,7 @@ const ProfileName = styled.h1`
   }
 `
 const ButtonAcc = styled.div`
-  @media(max-width: 768px) {
-    display: none;
-  }
+  
 `
 const ProfileBalance = styled.div`
   display: flex;
@@ -184,8 +178,10 @@ const ButtonAccMobile = styled.div`
   @media(max-width: 1600px) {
     padding: 0 32px;
   }
-  @media(max-width: 768px) {
+  @media(max-width: 1400px) {
     display: block;
+  }
+  @media(max-width: 768px) {
     padding: 0 24px;
   }
 `
