@@ -7,7 +7,7 @@ import { usePopupStore } from "@/store/popupStore";
 import { useSidebarStore } from "@/store/sidebarStore";
 
 const Sidebar = () => {
-  const { openPopup, closePopup } = usePopupStore()
+  const { openPopup } = usePopupStore()
   const { 
     activePage, 
     setActivePage, 
@@ -15,11 +15,6 @@ const Sidebar = () => {
     hideSidebar,
     showSidebar
   } = useSidebarStore();
-  
-  const handleItemClick = (index) => {
-    setActivePage(index);
-    closePopup();
-  };
   
   return (
     <SidebarContainer $isSidebarVisible={isSidebarVisible}>
@@ -38,7 +33,7 @@ const Sidebar = () => {
                 <SidebarListItem
                   key={item.id}
                   $isActive={activePage === item.id}
-                  onClick={() => handleItemClick(item.id)}
+                  onClick={() => setActivePage(item.id)}
                   $isSidebarVisible={isSidebarVisible}
                 >
                   <Link to={item.to}>

@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { usePopupStore } from "@/store/popupStore"
 
 export const useMenuStore = create((set) => ({
     menu: false,
@@ -9,7 +10,12 @@ export const useMenuStore = create((set) => ({
     },
 
     closeMenu: () => {
-        document.body.style.overflowY = 'scroll';
+        const popupState = usePopupStore.getState();
+        
         set({ menu: false });
+        
+        if (!popupState.popup) {
+            document.body.style.overflowY = 'scroll';
+        }
     },
 }));

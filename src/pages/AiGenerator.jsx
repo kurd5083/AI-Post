@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 import create from "@/assets/create.svg";
 import BtnBase from "@/shared/BtnBase";
@@ -14,35 +15,55 @@ import eye_blue from "@/assets/eye-blue.svg";
 import publish from "@/assets/ai-generator/publish.svg";
 import PreviewBG from "@/assets/ai-generator/PreviewBG.png";
 import copy from "@/assets/copy.svg";
+import tg from "@/assets/feedmentions/tg.svg";
+import arrow from "@/assets/arrow.svg";
 import CheckboxCircle from "@/shared/CheckboxCircle";
 import CustomSelect from "@/shared/CustomSelectSec";
 import AiGeneratorIcon from "@/icons/AiGeneratorIcon";
+import useFadeOnScroll from "@/lib/useFadeOnScroll";
 
 const AiGenerator = () => {
+  const { fadeVisible, ref } = useFadeOnScroll(20);
+  const [collapsed, setCollapsed] = useState(false);
+  const [value, setValue] = useState(null); 
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth > 1400) {
+        setCollapsed(false);
+      }
+    };
+
+    handleResize();
+    window.addEventListener("resize", handleResize);
+
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   const posts = [
     {
       id: 1,
       title: "Пост 1",
       progress: "325 / 1029",
-      text: "Текст публикации о новых технологиях в маркетинге..."
+      text: "Текст публикации..."
     },
     {
       id: 2,
       title: "Пост 2",
       progress: "780 / 1500",
-      text: "Аналитика продаж за последний квартал показывает рост на 15%..."
+      text: "Текст публикации..."
     },
     {
       id: 3,
       title: "Пост 3",
       progress: "1024 / 1024",
-      text: "Новый продукт компании: революционный подход к автоматизации..."
+      text: "Текст публикации..."
     },
     {
       id: 4,
       title: "Пост 4",
       progress: "128 / 500",
-      text: "Отзывы клиентов о нашем сервисе и планы на будущее развитие..."
+      text: "Текст публикации..."
     }
   ];
 
@@ -50,14 +71,14 @@ const AiGenerator = () => {
     <GeneratorContainer>
       <GeneratorHead>
         <h2>
-          <AiGeneratorIcon width={24} height={24}/>
+          <AiGeneratorIcon width={24} height={24} />
           AI Генератор
         </h2>
         <BtnBase $padding="21px 24px">
           + Добавить пост
         </BtnBase>
       </GeneratorHead>
-      <GeneratorList>
+      <GeneratorList $fadeVisible={fadeVisible} ref={ref}>
         {posts.map((post) => (
           <ListItem key={post.id}>
             <ItemHead>
@@ -67,11 +88,11 @@ const AiGenerator = () => {
             <ItemText>{post.text}</ItemText>
             <ItemAI>
               <p><img src={create} alt="create icon" />Создать фото с AI</p>
-              <p><AiGeneratorIcon width={24} height={24}/>Написать с AI</p>
+              <p><AiGeneratorIcon width={24} height={24} />Написать с AI</p>
             </ItemAI>
             <ItemActions>
               <ItemActionsAdd>
-                <AiGeneratorIcon width={24} height={24}/>
+                <AiGeneratorIcon width={24} height={24} />
                 <img src={paper} alt="paper icon" width={14} height={16} />
                 <img src={img} alt="img icon" width={16} height={16} />
                 <img src={comment} alt="comment icon" width={16} height={16} />
@@ -95,51 +116,63 @@ const AiGenerator = () => {
           </ListItem>
         ))}
       </GeneratorList>
-      <GeneratorPreview>
+      <GeneratorPreview $collapsed={collapsed}>
         <PreviewContent>
-          <PreviewHead><img src={eye_blue} alt="eye icon" />Лайв превью</PreviewHead>
-          <PreviewSelect>
-            <CustomSelect
-              placeholder="Все платформы"
-              options={[
-                { value: "Telegram", label: "Telegram" },
-              ]}
-              width="220px"
-              fs="14px"
-            />
-            <BtnBase $padding="16px 24px">Telegram</BtnBase>
-          </PreviewSelect>
-          <PreviewInfo>
-            <PreviewInfoBG src={PreviewBG} alt="bg" />
-            <PreviewInfoContent>
-              <PreviewInfoText>
-                🎯 Breaking: Sustainable<br /><br />
-                Technology reaches new milestone! We're
-                excited to share this incredible
-                achievement with our community. This
-                wouldn't be possible without your continued
-                support and feedback.<br /><br />
-                🔥 What's next? • Enhanced features • Expanded
-                capabilities • Even better user experience Stay
-                tuned for more updates! 🚀
-              </PreviewInfoText>
-              <BtnBase $padding="17px" $bg="#243D56" $color="#D6DCEC">🚀 Начать</BtnBase>
-            </PreviewInfoContent>
-          </PreviewInfo>
-          <PreviewButtons>
-            <ButtonBlock>
-              <PreviewButton><img src={text} alt="text icon" width={24} height={17} /></PreviewButton>
-              <p>EDIT TEXT</p>
-            </ButtonBlock>
-            <ButtonBlock>
-              <PreviewButton><img src={img} alt="img icon" width={14} height={16} /></PreviewButton>
-              <p>EDIT IMAGE</p>
-            </ButtonBlock>
-            <ButtonBlock>
-              <PreviewButton><img src={copy} alt="copy icon" width={24} height={17} /></PreviewButton>
-              <p>COPY TEXT</p>
-            </ButtonBlock>
-          </PreviewButtons>
+          <PreviewHead>
+            <HeadLeft><img src={eye_blue} alt="eye icon" />Лайв превью</HeadLeft>
+            <HeadArrow src={arrow} alt="arrow icon" onClick={() => setCollapsed(prev => !prev)} $collapsed={collapsed} />
+          </PreviewHead>
+          {!collapsed && (
+            <>
+              <PreviewSelect>
+                <CustomSelect
+                  placeholder="Все платформы"
+                  options={[
+                    { icon: tg, value: "Telegram", label: "Telegram" },
+                  ]}
+                  width="220px"
+                  fs="14px"
+                  padding="16px"
+                  value={value}
+                  onChange={setValue}
+                />
+                <PreviewHeadButton>
+                  <BtnBase $padding="16px 24px">Telegram</BtnBase>
+                </PreviewHeadButton>
+              </PreviewSelect>
+              <PreviewInfo>
+                <PreviewInfoBG src={PreviewBG} alt="bg" />
+                <PreviewInfoContent>
+                  <PreviewInfoText>
+                    🎯 Breaking: Sustainable<br /><br />
+                    Technology reaches new milestone! We're
+                    excited to share this incredible
+                    achievement with our community. This
+                    wouldn't be possible without your continued
+                    support and feedback.<br /><br />
+                    🔥 What's next? • Enhanced features • Expanded
+                    capabilities • Even better user experience Stay
+                    tuned for more updates! 🚀
+                  </PreviewInfoText>
+                  <BtnBase $padding="17px" $bg="#243D56" $color="#D6DCEC">🚀 Начать</BtnBase>
+                </PreviewInfoContent>
+              </PreviewInfo>
+              <PreviewButtons>
+                <ButtonBlock>
+                  <PreviewButton><img src={text} alt="text icon" width={24} height={17} /></PreviewButton>
+                  <p>EDIT TEXT</p>
+                </ButtonBlock>
+                <ButtonBlock>
+                  <PreviewButton><img src={img} alt="img icon" width={14} height={16} /></PreviewButton>
+                  <p>EDIT IMAGE</p>
+                </ButtonBlock>
+                <ButtonBlock>
+                  <PreviewButton><img src={copy} alt="copy icon" width={24} height={17} /></PreviewButton>
+                  <p>COPY TEXT</p>
+                </ButtonBlock>
+              </PreviewButtons>
+            </>
+          )}
         </PreviewContent>
         <PreviewPublish>
           <BtnBase $padding="32px" $bg="#336CFF" $color="#D6DCEC">
@@ -151,13 +184,22 @@ const AiGenerator = () => {
     </GeneratorContainer>
   );
 };
+
 const GeneratorContainer = styled.section`
   display: grid;
   grid-template-columns: repeat(5, 1fr);
-  grid-template-rows: 120px auto;
+  grid-template-rows: min-content;
+  align-items: start;
   gap: 16px;
-  padding: 0 24px;
-  margin-top: 50px;
+  padding: 0 56px;
+  margin-top: 30px;
+
+  @media(max-width: 1600px) {
+    padding: 0 32px;
+  }
+  @media(max-width: 768px) {
+    padding: 0 24px;
+  }
 `;
 const GeneratorHead = styled.div`
   display: flex;
@@ -166,7 +208,16 @@ const GeneratorHead = styled.div`
   padding: 32px;
   background-color: #181E30;
   border-radius: 24px;
-  grid-column: span 3 / span 3;
+  grid-column: 1 /span 3;
+  grid-row: 1;
+  @media(max-width: 1400px) {
+    grid-column: 1 /span 5;
+  }
+  @media(max-width: 768px) {
+    button {
+      display: none;
+    }
+  }
   h2 {
     display: flex;
     align-items: center;
@@ -177,15 +228,48 @@ const GeneratorHead = styled.div`
   }
 `;
 const GeneratorList = styled.div`
+  position: relative;
+  box-sizing: border-box;
   display: flex;
   flex-direction: column;
   gap: 16px;
-  grid-column: span 3 / span 3;
+  grid-column:  1 / span 3;
+  grid-row: 2;
   overflow-y: auto;
   scrollbar-width: none;
-  max-height: calc(100vh - 240px);
+  max-height: calc(100vh - 280px);
+  padding-bottom: 30px;
+
+  &::after {
+    content: '';
+    position: fixed;
+    bottom: 0;
+    margin-left: -24px;
+    height: 135px;
+    width: 100%;
+    background: linear-gradient(to top, #131826, transparent);
+    backdrop-filter: blur(8px);
+    mask-image: linear-gradient(to top, black 50%, transparent);
+    transition: opacity 0.2s;
+    opacity: ${({ $fadeVisible }) => $fadeVisible ? 1 : 0};
+    pointer-events: none;
+		z-index: 1;
+    @media(max-width: 1400px) {
+      display: none;
+    }
+  }
+  
+  @media(max-width: 1600px) {
+    gap: 104px;
+    padding-bottom: 60px;
+  } 
+  @media(max-width: 1400px) {
+    grid-column: 1 /span 5;
+    grid-row: 3;
+  }
 `;
 const ListItem = styled.div`
+  position: relative;
   padding: 32px;
   border-radius: 24px;
   border: 2px solid #252D43;
@@ -205,46 +289,6 @@ const ItemHead = styled.div`
     font-weight: 700;
     color: #6A7080;
   }
-`
-const PreviewSelect = styled.div`
-  margin-top: 28px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-`
-const PreviewInfo = styled.div`
-  position: relative;
-  margin-top: 32px;
-`
-const PreviewInfoBG = styled.img`
-  border-radius: 24px;
-  width: 100%;
-  max-height: 320px;
-  height: auto;
-  object-fit: cover;
-`
-const PreviewInfoContent = styled.div`
-  width: calc(100% - 104px);
-  position: absolute;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  top: 23px;
-  left: 52px;
-  button {
-    display: flex;
-    justify-content: center;
-    width: 100%;
-  }
-`
-const PreviewInfoText = styled.p`
-  box-sizing: border-box;
-  padding: 24px;
-  background-color: #131C22;
-  border-radius: 24px;
-  font-size: 12px;
-  line-height: 16px;
-  font-weight: 600;
 `
 const ItemText = styled.p`
   color: #6A7080;
@@ -275,6 +319,9 @@ const ItemActions = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
+  @media(max-width: 1600px) {
+    margin-top: 32px;
+  } 
 `
 const ItemActionsAdd = styled.div`
   display: flex;
@@ -288,6 +335,11 @@ const ItemActionsAdd = styled.div`
 const Buttons = styled.div`
   display: flex;
   gap: 16px;
+  @media(max-width: 1600px) {
+    position: absolute;
+    bottom: -72px;
+    right: 0;
+  } 
 `;
 const BaseButton = styled.button`
   display: flex;
@@ -311,26 +363,47 @@ const DeleteButton = styled(BaseButton)`
   }
 `
 const GeneratorPreview = styled.div`
-  grid-column: span 2 / span 2;
-  grid-column-start: 4;
-  grid-row-start: 1;
+  padding-bottom: 30px;
+  grid-column: 4 / span 2;
+  grid-row: 1 / span 2;
+
+  @media(max-width: 1400px) {
+    grid-column: 1 /span 5;
+    grid-row: 2;
+  }
 `;
 const PreviewContent = styled.div`
   background-color: #181E30;
   border-radius: 24px;
   padding: 32px;
 `;
-const PreviewHead = styled.h2`
+const PreviewHead = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+`
+const HeadLeft = styled.h2`
   display: flex;
   align-items: center;
   gap: 16px;
   font-size: 24px;
   font-weight: 800;
 `
+const HeadArrow = styled.img`
+  display: none;
+  transform: rotate(90deg);
+  cursor: pointer;
+  transition: transform 0.3s ease;
+  ${({ $collapsed }) => $collapsed && `transform: rotate(270deg);`}
+  @media(max-width: 1400px) {
+    display: block;
+  }
+`
 const PreviewButtons = styled.div`
   display: flex;
   justify-content: space-around;
-  margin-top: 32px;
+  margin-top: 55px;
 `;
 const ButtonBlock = styled.div`
   display: flex;
@@ -344,11 +417,9 @@ const ButtonBlock = styled.div`
     text-transform: uppercase;
   }
 `;
-
 const PreviewButton = styled(BaseButton)`
   border: 2px solid #2D3241;
 `;
-
 const PreviewPublish = styled.div`
   display: flex;
   align-items: center;
@@ -362,6 +433,56 @@ const PreviewPublish = styled.div`
     width: 100%;
     text-align: center;
   }
+`
+const PreviewSelect = styled.div`
+  margin-top: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+`
+const PreviewHeadButton = styled.div`
+  @media(max-width: 480px) {
+    display: none;
+  }
+`
+const PreviewInfo = styled.div`
+  position: relative;
+  margin-top: 55px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`
+const PreviewInfoBG = styled.img`
+  position: absolute;
+  border-radius: 24px;
+  width: 100%;
+  height: calc(100% + 46px);
+  object-fit: cover;
+`
+const PreviewInfoContent = styled.div`
+  position: relative;
+  width: calc(100% - 104px);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  z-index: 1;
+  button {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+  }
+  @media(max-width: 1600px) {
+    width: calc(100% - 28px);
+  } 
+`
+const PreviewInfoText = styled.p`
+  box-sizing: border-box;
+  padding: 24px;
+  background-color: #131C22;
+  border-radius: 24px;
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: 600;
 `
 
 export default AiGenerator;

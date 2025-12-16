@@ -54,8 +54,8 @@ const PageFilterContainerWrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 32px;
-  padding: 0 24px;
+  flex-wrap: wrap;
+  gap: 40px 0;
   margin-bottom: 48px;
 `;
 
@@ -73,6 +73,14 @@ const PageFilterInput = styled.input`
   background-repeat: no-repeat;
   background-position: 0px 4px;
   background-size: 16px 16px;
+  margin-left: 56px;
+
+  @media(max-width: 1600px) {
+    margin-left: 32px;
+  }
+  @media(max-width: 768px) {
+    margin-left: 24px;
+  }
 
   &::placeholder {
     color: #6A7080;
@@ -82,7 +90,15 @@ const PageFilterInput = styled.input`
 const PageFilterButtons = styled.div`
   display: flex;
   gap: 8px;
-  flex-wrap: wrap;
+  overflow-x: auto;
+  scrollbar-width: none;
+  padding: 0 56px;
+  @media(max-width: 1600px) {
+    padding: 0 32px;
+  }
+  @media(max-width: 768px) {
+    padding: 0 24px;
+  }
 `;
 
 export default PageFilter;

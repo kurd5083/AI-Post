@@ -4,7 +4,7 @@ export const usePopupStore = create((set, get) => ({
     popup: null,
 
     openPopup: (content = 'settings', view = 'popup') => {
-        window.scrollTo({ top: 0, behavior: "smooth" });
+        window.scrollTo({ top: 0, behavior: "auto" });
         document.body.style.overflow = "hidden";
         set({ 
             popup: { 

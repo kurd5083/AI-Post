@@ -1,32 +1,23 @@
-import { useRef, useState } from "react";
 import styled from 'styled-components';
+import useFadeOnScroll from "@/lib/useFadeOnScroll";
 
-const СhannelContainer = ({children}) => {
-    const wrapperRef = useRef(null);
-    const [fadeVisible, setFadeVisible] = useState(true);
-    const handleScroll = () => {
-        const el = wrapperRef.current;
-        if (!el) return;
+const СhannelContainer = ({ children }) => {
+  const { fadeVisible, ref } = useFadeOnScroll(20);
 
-        const isEnd = el.scrollTop + el.clientHeight >= el.scrollHeight - 50;
-        setFadeVisible(!isEnd);
-    };
-
-    return (
-        <TableContainer fadeVisible={fadeVisible}>
-            <TableWrapper ref={wrapperRef} onScroll={handleScroll}>
-                {children}
-            </TableWrapper>
-        </TableContainer>
-    )
+  return (
+    <TableContainer $fadeVisible={fadeVisible}>
+      <TableWrapper ref={ref}>
+        {children}
+      </TableWrapper>
+    </TableContainer>
+  )
 }
 const TableContainer = styled.div`
   position: relative;
   margin-top: 20px;
-  @media (max-width: 1600px) {
-    padding: 0 32px;
-  }
-    @media (max-width: 768px) {
+  padding: 0 32px;
+
+  @media (max-width: 768px) {
     padding: 0;
   }
   
@@ -40,7 +31,7 @@ const TableContainer = styled.div`
     backdrop-filter: blur(8px);
     mask-image: linear-gradient(to top, black 50%, transparent);
     transition: opacity 0.2s;
-    opacity: ${props => props.fadeVisible ? 1 : 0};
+    opacity: ${({$fadeVisible}) => $fadeVisible ? 1 : 0};
     pointer-events: none;
 
     @media(max-width: 1400px) {
@@ -55,6 +46,7 @@ const TableWrapper = styled.div`
   min-height: 400px;
   overflow-y: auto;
   scrollbar-width: none;
+  padding-bottom: 20px;
 `;
 
 export default СhannelContainer

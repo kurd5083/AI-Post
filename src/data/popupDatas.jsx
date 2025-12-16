@@ -13,11 +13,12 @@ import schedule from "@/assets/popup/schedule.svg";
 import sources from "@/assets/popup/sources.svg";
 import post_style from "@/assets/popup/post-style.svg";
 import advanced from "@/assets/popup/advanced.svg";
-import create_post from "@/assets/popup/create-post.svg";
 import replenish from "@/assets/popup/replenish.svg";
 import bell from "@/assets/bell.svg";
 import choose_post from "@/assets/popup/choose-post.svg";
 import media from "@/assets/media.svg";
+import PlusIcon from "@/icons/PlusIcon";
+
 export const popupDatas = [
     {
         key: "posting",
@@ -184,7 +185,8 @@ export const popupDatas = [
         name: "Создать пост",
         extra: {
             background: "#44336D",
-            image: create_post
+            image: '',
+            svg: <PlusIcon color="#D6DCEC"/>
         }
     },
     {
@@ -192,7 +194,8 @@ export const popupDatas = [
         name: "Создать пост",
         extra: {
             background: "#44336D",
-            image: create_post
+            image: '',
+            svg: <PlusIcon color="#D6DCEC"/>
         }
     },
     {
@@ -201,15 +204,6 @@ export const popupDatas = [
         extra: {
             background: "#5F3C36",
             image: post_style
-        }
-    },
-    
-    {
-        key: "promotion",
-        name: "Продвижение",
-        extra: {
-            background: "#552F43",
-            image: create_post
         }
     },
     {

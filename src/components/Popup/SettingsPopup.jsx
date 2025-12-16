@@ -9,7 +9,7 @@ import { usePopupStore } from "@/store/popupStore"
 const SettingsPopup = () => {
     const { changeContent } = usePopupStore()
     return (
-        <div>
+        <SettingsContainer>
             {settingsDatas.sections.map((section) => (
                 <PopupNav key={section.key}>
                     <PopupContentTitle>{section.label}</PopupContentTitle>
@@ -45,10 +45,18 @@ const SettingsPopup = () => {
                     </ul>
                 </PopupNav>
             ))}
-        </div>
+        </SettingsContainer>
     )
 }
-
+const SettingsContainer = styled.div`
+    padding: 0 56px;
+    @media(max-width: 1600px) {
+        padding: 0 32px;
+    }
+    @media(max-width: 480px) {
+        padding: 0 24px;
+    }
+`
 const PopupNav = styled.nav`
     margin-top: 40px;
     display: flex;

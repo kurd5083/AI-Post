@@ -1,9 +1,9 @@
 import styled from "styled-components";
 import BtnBase from "@/shared/BtnBase";
 import { usePopupStore } from "@/store/popupStore";
-import close from "@/assets/close.svg";
 import dir_active from "@/assets/table-groups/dir-active.svg";
 import CheckboxCircle from "@/shared/CheckboxCircle";
+import CloseIcon from "@/icons/CloseIcon";
 
 const MoveChannelPopup = () => {
 	const { closePopup } = usePopupStore();
@@ -12,11 +12,7 @@ const MoveChannelPopup = () => {
 		<div>
 			<MoveChannelHead>
 				<HeadTitle>Переместить канал в папку</HeadTitle>
-				<img
-					src={close}
-					alt="close icon"
-					onClick={closePopup}
-				/>
+				<CloseIcon color="#336CFF" onClick={closePopup}/>
 			</MoveChannelHead>
 			<MoveChannelSubtitle>Выберите папку для канала “Все о криптовалюте”</MoveChannelSubtitle>
 			<MoveChannelUl>
@@ -38,8 +34,8 @@ const MoveChannelPopup = () => {
 				</ChannelItem>
 			</MoveChannelUl>
 			<MoveChannelButtons>
-				<BtnBase $color="#D6DCEC" $bg="#336CFF">Переместить</BtnBase>
-				<BtnBase onClick={closePopup} $color="#D6DCEC" $bg="#242A3A">
+				<BtnBase $color="#D6DCEC" $bg="#336CFF" $padding="21px">Переместить</BtnBase>
+				<BtnBase onClick={closePopup} $color="#D6DCEC" $bg="#242A3A" $padding="21px">
 					Отменить
 				</BtnBase>
 			</MoveChannelButtons>
@@ -51,6 +47,8 @@ const MoveChannelHead = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
+	gap: 20px;
+	
   img {
     cursor: pointer;
   }
@@ -60,6 +58,10 @@ const HeadTitle = styled.h2`
   font-size: 32px;
   line-height: 32px;
   font-weight: 700;
+	@media(max-width: 480px) {
+    font-size: 24px;
+    line-height: 24px;
+  }
 `;
 
 const MoveChannelSubtitle = styled.p`

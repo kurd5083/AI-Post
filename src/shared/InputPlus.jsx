@@ -1,14 +1,15 @@
 import styled from "styled-components";
-import plus_crimson from "@/assets/popup/plus-crimson.svg";
-import plus_blue from "@/assets/popup/plus-blue.svg";
+import PlusIcon from "@/icons/PlusIcon";
 
-const InputPlus = ({title, placeholder, img}) => {
+const InputPlus = ({title, placeholder, bg, color, fs, padding}) => {
     return (
         <>
             <InputPlusTitle>{title}</InputPlusTitle>
             <InputPlusContainer>
-                <InputPlusInput type="text" placeholder={placeholder} />
-                <InputPlusImg $color={img} src={img == 'crimson' ? plus_crimson : plus_blue} alt="plus icon" width={16} height={16} />
+                <InputPlusInput type="text" placeholder={placeholder} $fs={fs} $padding={padding}/>
+                <PlusBtn $bg={bg}>
+                    <PlusIcon color={color}/>
+                </PlusBtn>
             </InputPlusContainer>
         </>
     )
@@ -22,6 +23,7 @@ const InputPlusTitle = styled.h2`
 `
 const InputPlusContainer = styled.div`
     display: flex;
+    align-items: center;
     gap: 24px;
 `
 const InputPlusInput = styled.input`
@@ -29,9 +31,9 @@ const InputPlusInput = styled.input`
     max-width: 340px;
     width: 100%;
     color: #D6DCEC;
-    font-size: 24px;
+    font-size: ${({$fs}) => $fs ? $fs : '24px'};
     font-weight: 700;
-    padding-bottom: 24px;
+    padding-bottom: ${({$padding}) => $padding ? $padding : '24px'};
     border: none;
     border-bottom: 2px solid #2E3954;
 
@@ -42,11 +44,12 @@ const InputPlusInput = styled.input`
         font-size: 16px;
     }
 `
-const InputPlusImg = styled.img`
+const PlusBtn = styled.button`
+    display: flex;
+    align-items: center;
+    justify-content: center;
     padding: 12px;
-    background-color: ${({$color}) => $color == 'crimson' ? '#2D2740' : '#142136'} ;
+    background-color: ${({$bg}) => $bg} ;
     border-radius: 50%;
-    cursor: pointer;
-
 `
 export default InputPlus

@@ -2,6 +2,7 @@ import posting from "@/assets/popup/posting.svg";
 import image_generation from "@/assets/popup/image-generation.svg";
 import text from "@/assets/popup/text.svg";
 import activate_promotion from "@/assets/popup/activate-promotion.svg";
+import source_post from "@/assets/popup/source-post.svg";
 
 
 export const advancedDatas = [
@@ -42,8 +43,8 @@ export const advancedDatas = [
     title: "Добавить источник в пост",
     desc: "В посте будет указан сайт исходной статьи",
     extra: {
-      background: "#1F326B",
-      image: activate_promotion
+      background: "#2F5F62",
+      image: source_post
     }
   },
 ];

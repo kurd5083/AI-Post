@@ -27,7 +27,7 @@ const PopupContainer = styled.section`
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
     box-sizing: border-box;
     position: absolute;
     top: 0px;
@@ -49,11 +49,16 @@ const PopupContainer = styled.section`
     }
 `
 const PopupContent = styled.div`
+    margin-top: 50px;
     box-sizing: border-box;
     max-width: 520px;
     width: 100%;
     background: #1c243860;
     border-radius: 32px;
     padding: 48px;
+    @media(max-width: 480px) {
+        margin-top: 30px;
+        padding: 32px 24px;   
+    }
 `
 export default PopupWindow

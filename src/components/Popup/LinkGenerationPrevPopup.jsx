@@ -14,11 +14,21 @@ const LinkGenerationPrevPopup = () => {
     </LinkGenerationContainer>
   )
 }
+
 const LinkGenerationContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
   margin-top: 165px;
+  padding: 0 56px;
+
+  @media(max-width: 1600px) {
+    padding: 0 32px;
+  }
+  @media(max-width: 768px) {
+    padding: 0 24px;
+  }
+  
   @media(max-width: 480px) {
     margin-top: 80px;
   }

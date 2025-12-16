@@ -33,6 +33,14 @@ const ModeContent = styled.div`
     display: flex;
     flex-direction: column;
     gap: 32px;
+    padding: 0 56px;
+
+    @media(max-width: 1600px) {
+        padding: 0 32px;
+    }
+    @media(max-width: 768px) {
+        padding: 0 24px;
+    }
 `
 const ModeContentTitle = styled.h3`
     font-size: 12px;

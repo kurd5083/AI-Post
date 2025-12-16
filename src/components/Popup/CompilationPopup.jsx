@@ -29,7 +29,7 @@ const CompilationPopup = () => {
   ]
 
   return (
-    <>
+    <CompilationContainer>
       <CompilationList>
         {compilation.map((item, index) => (
           <CompilationItem key={index}>
@@ -45,9 +45,20 @@ const CompilationPopup = () => {
         ))}
       </CompilationList>
       <BtnBase $margin="64">Сохранить</BtnBase>
-    </>
+    </CompilationContainer>
   )
 }
+
+const CompilationContainer = styled.div`
+  padding: 0 56px;
+
+  @media(max-width: 1600px) {
+    padding: 0 32px;
+  }
+  @media(max-width: 768px) {
+    padding: 0 24px;
+  }
+`;
 const CompilationList = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
@@ -65,7 +76,6 @@ const CompilationFooter = styled.div`
     color: #336CFF;
   }
 `
-
 const CompilationOpen = styled.button`
   display: flex;
   align-items: center;
@@ -82,7 +92,6 @@ const CompilationItem = styled.div`
   padding: 24px;
   border-radius: 24px;
   background-color:#181E30;
-  /* min-height: 176px; */
 
   &:hover {
     background-color: #1C2438;
@@ -111,6 +120,5 @@ const CompilationSubtext = styled.p`
   padding-bottom: 24px;
   border-bottom: 2px solid #2E3954;
 `
-
 
 export default CompilationPopup

@@ -11,14 +11,16 @@ const ProfilePopup = () => {
     <div>
       <ProfileHead>
         <ProfileLeft>
-        <ProfileAvaContainer>
-          <ProfileAva src={acc_icon} alt="accaunt icon" />
-        </ProfileAvaContainer>
-        <ProfileName>Arseniy Popkov</ProfileName>
+          <ProfileAvaContainer>
+            <ProfileAva src={acc_icon} alt="accaunt icon" />
+          </ProfileAvaContainer>
+          <ProfileName>Arseniy Popkov</ProfileName>
         </ProfileLeft>
-        <BtnBase $padding="17px 24px" $bg="#37273F" $color="#EF6284">Выйти из аккаунта</BtnBase>
+        <ButtonAcc>
+          <BtnBase $padding="17px 24px" $bg="#37273F" $color="#EF6284">Выйти из аккаунта</BtnBase>
+        </ButtonAcc>
       </ProfileHead>
-      <Statistics padding={false} />
+      <Statistics />
       <ProfileBalance>
         <h2>Ваш баланс:</h2>
         <p>15.500<mark>,48</mark> руб.</p>
@@ -34,18 +36,34 @@ const ProfilePopup = () => {
           <p>Создано постов за все время</p>
         </ProfileInfo>
       </ProfileInfos>
+      <ButtonAccMobile>
+        <BtnBase $padding="17px 24px" $bg="#37273F" $color="#EF6284">Выйти из аккаунта</BtnBase>
+      </ButtonAccMobile>
     </div>
   )
 }
-
+  
 const ProfileHead = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding: 0 56px;
+
+  @media(max-width: 1600px) {
+    padding: 0 32px;
+  }
+  @media(max-width: 768px) {
+    padding: 0 24px;
+  }
+  @media (max-width: 480px) {
+    margin-bottom: 24px;
+  }
+
 `
 const ProfileLeft = styled.div`
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   gap: 30px;
 `
 const ProfileAvaContainer = styled.div`
@@ -73,23 +91,44 @@ const ProfileName = styled.h1`
   font-size: 48px;
   line-height: 48px;
   font-weight: 700;
+  @media(max-width: 480px) {
+    font-size: 32px;
+    line-height: 32px;
+  }
 `
-
+const ButtonAcc = styled.div`
+  @media(max-width: 768px) {
+    display: none;
+  }
+`
 const ProfileBalance = styled.div`
   display: flex;
   flex-direction: column;
   gap: 32px;
   margin-top: 48px;
+  padding: 0 56px;
+
+  @media(max-width: 1600px) {
+    padding: 0 32px;
+  }
+  @media(max-width: 768px) {
+    padding: 0 24px;
+  }
 
   h2 {
     font-size: 24px;
     line-height: 24px;
     font-weight: 700;
+    
   }
   p {
     font-size: 48px;
     line-height: 48px;
     font-weight: 700;
+    @media(max-width: 480px) {
+      font-size: 40px;
+      line-height: 40px;
+    }
     mark {
       color: #6A7080;
     }
@@ -97,8 +136,17 @@ const ProfileBalance = styled.div`
 `
 const ProfileInfos = styled.div`
   display: flex;
-  gap: 64px;
+  flex-wrap: wrap;
+  gap: 48px 64px;
   margin-top: 50px;
+  padding: 0 56px;
+
+  @media(max-width: 1600px) {
+    padding: 0 32px;
+  }
+  @media(max-width: 768px) {
+    padding: 0 24px;
+  }
 `
 const ProfileInfo = styled.div`
   display: flex;
@@ -126,6 +174,19 @@ const ProfileInfo = styled.div`
       height: 2px;
       background-color: #336CFF;
     }
+  }
+`
+const ButtonAccMobile = styled.div`
+  display: none;
+  margin-top: 48px;
+  padding: 0 56px;
+
+  @media(max-width: 1600px) {
+    padding: 0 32px;
+  }
+  @media(max-width: 768px) {
+    display: block;
+    padding: 0 24px;
   }
 `
 export default ProfilePopup

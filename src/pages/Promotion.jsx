@@ -7,7 +7,7 @@ import { promotionsDatas } from "@/data/promotionsDatas";
 
 const Promotion = () => {
 	return (
-		<>
+		<PromotionContainer>
 			<PageHead />
 			<PromotionHead>
 				<PromotionHeadText $active={true}>Продвижение</PromotionHeadText>
@@ -45,19 +45,32 @@ const Promotion = () => {
 							<PromotionCardArea>{item.area}</PromotionCardArea>
 							<h3>{item.title}</h3>
 							<PromotionCardDesc>{item.description}</PromotionCardDesc>
-							<BtnBase $color="#fff" $bg="#336CFF" $margin="32" $padding="17px 80px">Заказать</BtnBase>
+							<BtnBase $color="#fff" $bg="#336CFF" $padding="17px 80px">Заказать</BtnBase>
 						</PromotionCardInfo>
 					</PromotionCard>
 				))}
 			</PromotionCards>
-		</>
+		</PromotionContainer>
 	)
 }
+
+const PromotionContainer = styled.div`
+  padding-bottom: 30px;
+`
 const PromotionHead = styled.div`
   display: flex;
   gap: 32px;
   margin-bottom: 48px;
-	padding: 0 24px;
+	padding: 0 56px;
+	overflow-x: auto;
+  scrollbar-width: none;
+
+	@media(max-width: 1600px) {
+    padding: 0 32px;
+  }
+  @media(max-width: 768px) {
+    padding: 0 24px;
+  }
 `
 const PromotionHeadText = styled.p`
   display: flex;
@@ -76,9 +89,18 @@ const PromotionHeadText = styled.p`
 `
 const PromotionFilter = styled.div`
   display: flex;
+	flex-wrap: wrap;
   gap: 32px;
   margin-bottom: 48px;
-	padding: 0 24px;
+	padding: 0 56px;
+
+	@media(max-width: 1600px) {
+    padding: 0 32px;
+  }
+  @media(max-width: 768px) {
+    padding: 0 24px;
+  }
+
 	label {
 		display: flex;
 		flex-direction: column;
@@ -89,9 +111,23 @@ const PromotionFilter = styled.div`
 `
 const PromotionCards = styled.div`
 	display: grid;
-	grid-template-columns: repeat(2, minmax(320px, 1fr));
+	grid-template-columns: repeat(2, minmax(400px, 1fr));
 	gap: 16px;
-	padding: 0 24px;
+	padding: 0 56px;
+
+	@media(max-width: 1600px) {
+    padding: 0 32px;
+  }
+  @media(max-width: 768px) {
+    padding: 0 24px;
+  }
+
+	@media(max-width: 991px) {
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  }
+	@media(max-width: 480px) {
+ 		grid-template-columns: 1fr;
+  }
 `
 const PromotionCard = styled.div`
 	display: flex;
@@ -100,6 +136,10 @@ const PromotionCard = styled.div`
 	background-color: #181F30;
 	padding: 32px;
 	border-radius: 32px;
+	@media(max-width: 480px) {
+ 		gap: 24px;
+		padding: 24px;
+  }
 	img {
 		margin-top: 24px;
 	}
@@ -124,5 +164,10 @@ const PromotionCardDesc = styled.p`
 	font-weight: 600;
 	color: #6A7080;
 	max-width: 350px;
+	margin-bottom: 32px;
+	
+	@media(max-width: 480px) {
+ 		margin-bottom: 24px;
+  }
 `
 export default Promotion

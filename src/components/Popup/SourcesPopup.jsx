@@ -8,30 +8,36 @@ const SourcesPopup = () => {
   const { changeContent } = usePopupStore()
 
   return (
-    <div>
-      <SourcesText>
-        Здесь вы можете добавить источник, откуда сервис<br />
-        будет брать посты. Отображается <mark>имя и URL.</mark>
-      </SourcesText>
-
+    <SourcesContainer>
+      <SourcesText>Здесь вы можете добавить источник, откуда сервис будет брать посты. Отображается <mark>имя и URL.</mark></SourcesText>
       <SourcesKey>
         <SourcesKeyTitle>Мои источники:</SourcesKeyTitle>
-        <InputPlus title="Введите источник" img="blue" />
-        <BlocksItems items={['apple.com', 'Citilink.ru', 'dns.shop']} color="#2B89ED" />
+        <InputPlus title="Введите источник" bg="#142136" color="#2B89ED"  fs="14px" />
+        <BlocksItems items={[{value: 'apple.com'}, {value: 'Citilink.ru'}, {value: 'dns.shop'}]} color="#2B89ED" />
       </SourcesKey>
       <SourcesButtons>
         <BtnBase $margin="40" onClick={() => changeContent("compilation")} $color="#D6DCEC" $bg="#2B89ED">Подборки источников</BtnBase>
         <BtnBase $margin="64">Сохранить</BtnBase>
       </SourcesButtons>
-    </div>
+    </SourcesContainer>
   )
 }
+const SourcesContainer = styled.div`
+  padding: 0 56px;
 
+  @media(max-width: 1600px) {
+    padding: 0 32px;
+  }
+  @media(max-width: 768px) {
+    padding: 0 24px;
+  }
+`
 const SourcesText = styled.p`
   color: #6A7080;
   font-weight: 600;
   font-size: 14px;
   line-height: 24px;
+  max-width: 400px;
 
   mark {
     color: #D6DCEC;

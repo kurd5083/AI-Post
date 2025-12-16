@@ -12,7 +12,7 @@ const GridGroups = () => {
     <GridContainer>
       {tableHomeDatas.map((row) => (
         <GridItem key={row.id}>
-          <p>{row.number}</p>
+          <GridItemNum>{row.number}</GridItemNum>
           <GridImg src={row.image} alt="Group" />
           <span>{row.name}</span>
           <GridOnline $online={row.online}>
@@ -36,6 +36,18 @@ const GridContainer = styled.div`
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 16px;
   padding-bottom: 30px;
+  padding: 0 24px;
+  @media (max-width: 1600px) {
+    padding: 0;
+  }
+  @media (max-width: 768px) {
+    gap: 8px;
+    padding: 0 32px;
+    grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  }
+  @media (max-width: 480px) {
+    padding: 0 24px;
+  }
 `;
 const GridItem = styled.div`
   display: flex;
@@ -46,7 +58,15 @@ const GridItem = styled.div`
   background-color: #1C2438;
   border-radius: 16px;
   text-align: center;
+  @media (max-width: 768px) {
+    padding: 16px 8px;
+  }
 `;
+const GridItemNum = styled.p`
+  font-size: 14px;
+  font-weight: 600;
+`;
+
 const GridImg = styled.img`
   width: 40px;
   height: 40px;
@@ -57,10 +77,13 @@ const GridStatus = styled.button`
   padding: 18px 24px;
   border-radius: 12px;
   color: #6A7080;
-  border: 2px solid #1F273B;
+  border: 2px solid #2A344C;
   font-size: 14px;
   font-weight: 700;
   background: transparent;
+  @media (max-width: 768px) {
+    padding: 18px 20px;
+  }
   &:hover {
     background-color: #336CFF;
     color: #fff;
@@ -105,7 +128,6 @@ const BaseButton = styled.button`
 `;
 const ButtonDir = styled(BaseButton)`
   border: 2px solid #336CFF;
-  
 
   &:hover {
     background-color: #336CFF;
@@ -123,7 +145,7 @@ const ButtonSetting = styled(BaseButton)`
 
 const ButtonDel = styled(BaseButton)`
   border: 2px solid #2F3953;
-
+  margin-right: 0;
   &:hover {
     border: none;
     background-color: rgba(239, 98, 132, 0.08);

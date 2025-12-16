@@ -13,7 +13,7 @@ const Header = () => {
 	return (
 		<HeaderContainer>
 			<HeaderContent>
-				<HeaderAvaContainer>
+				<HeaderAvaContainer onClick={() => openPopup("profile")}>
 					<HeaderAva src={acc_icon} alt="accaunt icon" />
 				</HeaderAvaContainer>
 				<HeaderBalanceImg src={money} alt="money icon" />
@@ -39,7 +39,7 @@ const HeaderContainer = styled.header`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 24px;
+  padding: 24px 56px;
   z-index: 1000;
   background-color: #131826;
     

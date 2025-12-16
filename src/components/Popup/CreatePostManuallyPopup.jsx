@@ -28,8 +28,8 @@ const CreatePostManuallyPopup = () => {
         <PostInput type="text" placeholder="Новый пост"/>
         <PostSetting>
           <PostSettingTop>
-            <BtnBase $color="#EF6284" $bg="#26202F" $paddung="21px 24px">Настройки</BtnBase>
-            <BtnBase $color="#336CFF" $bg="#161F37" $paddung="21px 24px"><PromotionIcon color="#336CFF"/>Опубликовать сейчас</BtnBase>
+            <BtnBase $color="#EF6284" $bg="#26202F" $padding="21px 24px">Настройки</BtnBase>
+            <BtnBase $color="#336CFF" $bg="#161F37" $padding="21px 24px"><PromotionIcon color="#336CFF"/>Опубликовать сейчас</BtnBase>
           </PostSettingTop>
           <BtnBase $color="#6A7080" $bg="transporent" $border={true} onClick={() => openPopup("change_time", "popup_window")} ><TimeIcons/>Изменить время</BtnBase>
         </PostSetting>
@@ -80,7 +80,6 @@ const CreatePostManuallyPopup = () => {
           </BtnBase>
         </Buttons>
       </PostRight>
-
     </PostManually>
   )
 }
@@ -88,9 +87,25 @@ const CreatePostManuallyPopup = () => {
 const PostManually = styled.div`
   display: flex;
   gap: 70px;
+  padding: 0 56px;
+
+  @media(max-width: 1600px) {
+    padding: 0 32px;
+  }
+  @media(max-width: 991px) {
+    gap: 30px;
+  }
+  @media(max-width: 768px) {
+    flex-wrap: wrap;
+    padding: 0 24px;
+  }
 `
 const PostLeft = styled.div`
   max-width: 420px;
+  @media(max-width: 768px) {
+    max-width: 100%;
+    width: 100%;
+  }
 `
 const PostSetting = styled.div`
   display: flex;
@@ -127,6 +142,9 @@ const PostButtons = styled.div`
 const PostRight = styled.div`
   max-width: 470px;
   width: 100%;
+  @media(max-width: 768px) {
+    max-width: 100%;
+  }
 `
 const PostCreate = styled.div`
 `
@@ -183,7 +201,8 @@ const PostCreateContainerTitle = styled.h3`
 const CreateAI = styled.div`
   display: flex;
   align-items: center;  
-  gap: 40px;
+  flex-wrap: wrap;
+  gap: 24px 40px;
   margin-top: 20px;
   p {
     display: flex;
@@ -202,6 +221,7 @@ const CreateAI = styled.div`
 const CreateActionsAdd = styled.div`
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   gap: 32px;
   margin-top: 32px;
 
@@ -236,4 +256,5 @@ const DeleteButton = styled(BaseButton)`
     background-color: rgba(239, 98, 132, 0.08);
   }
 `
+
 export default CreatePostManuallyPopup

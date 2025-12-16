@@ -5,11 +5,11 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import useSwipeAllowed from "@/lib/useSwipeAllowed";
 
-const Statistics = ({ padding }) => {
+const Statistics = () => {
   const { isSwipe } = useSwipeAllowed(1600);
 
   return (
-    <StatisticsContainer $padding={padding}>
+    <StatisticsContainer>
       <StatisticsTitle>
         <img src={rating} alt="rating icon" />Статистика
       </StatisticsTitle>
@@ -23,11 +23,12 @@ const Statistics = ({ padding }) => {
         {statisticsDatas.map((item, index) => (
           <StatisticsItem key={index}>
             <StatisticsItemHead>
-              <StatisticsItemImg
-                src={item.image}
-                alt={item.text}
-                $bgColor={item.bgColor}
-              />
+              <StatisticsItemImg $bgColor={item.bgColor}>
+                <img
+                  src={item.image}
+                  alt={item.text}
+                />
+              </StatisticsItemImg>
               <p>{item.number}</p>
             </StatisticsItemHead>
             <StatisticsText>{item.text}</StatisticsText>
@@ -39,19 +40,19 @@ const Statistics = ({ padding }) => {
 };
 
 const StatisticsContainer = styled.section`
-  margin-top: 32px;
-
-  ${({$padding}) => $padding && `
-    padding: 0 24px;
+  margin-top: 24px;
+  padding: 0 56px;
     
-    @media (max-width: 1600px) {
-      padding: 0 32px;
-    }
+  @media (max-width: 1600px) {
+    padding: 0 32px;
+  }
     
-    @media (max-width: 1400px) {
-      padding: 0;
-    }
-  `}
+  @media (max-width: 1400px) {
+    padding: 0;
+  }
+  @media (max-width: 480px) {
+    margin-top: 0px;
+  }
 `
 const StatisticsTitle = styled.h2`
   display: flex;
@@ -106,10 +107,14 @@ const StatisticsItemHead = styled.div`
   line-height: 36px;
   font-weight: 800;
 `
-const StatisticsItemImg = styled.img`
+const StatisticsItemImg = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
   background-color: ${props => props.$bgColor};
-  width: 16px;
-  height: 16px;
+  width: 32px;
+  height: 32px;
   padding: 8px;
   border-radius: 8px;
 `

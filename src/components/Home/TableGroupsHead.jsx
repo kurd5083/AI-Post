@@ -3,6 +3,7 @@ import dir_filled from "@/assets/table-groups/dir-filled.svg";
 import dir from "@/assets/table-groups/dir.svg";
 import dir_active from "@/assets/table-groups/dir-active.svg";
 import dir_gray from "@/assets/table-groups/dir-gray.svg";
+import refresh from "@/assets/table-groups/refresh.svg";
 import useResolution from "@/lib/useResolution";
 import useSwipeAllowed from "@/lib/useSwipeAllowed";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -40,7 +41,7 @@ const TableGroups = () => {
             <ListIcon color={viewType === "list" ? "#D6DCEC" : "#6A7080"} />
           </TableGroupsHeadShow>
 					<TableGroupsHeadShow onClick={() => openPopup("create_folder", "popup_window")}><img src={dir_gray} alt="dir icon" /></TableGroupsHeadShow>
-					<TableGroupsHeadShow><ListIcon/></TableGroupsHeadShow>
+					<TableGroupsHeadShow><img src={refresh} alt="refresh icon" /></TableGroupsHeadShow>
 				</TableGroupsHeadRight>
 			</TableGroupsHead>
 		</TableGroupsContainer>
@@ -48,7 +49,7 @@ const TableGroups = () => {
 }
 const TableGroupsContainer = styled.section`
   margin-top: 80px;
-	padding: 0 24px;
+	padding: 0 56px;
   @media (max-width: 1600px) {
     padding: 0 32px;
   }

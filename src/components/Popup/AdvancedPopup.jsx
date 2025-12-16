@@ -4,25 +4,33 @@ import Checkbox from "@/shared/Checkbox";
 
 const AdvancedPopup = () => {
 	return (
-		<AdvancedContent>
+		<AdvancedContainer>
 			{advancedDatas.map((item, index) => (
-				<AdvancedContentItem key={index}>
+				<AdvancedItem key={index}>
 					<AdvancedIcon src={item.extra.image} alt={`${item.key} icon`} width={40} height={40} style={{ background: item.extra.background }} />
 					<ItemText>
 						<h4>{item.title}</h4>
 						<p>{item.desc}</p>
 					</ItemText>
 					<Checkbox color="#FFF980" />
-				</AdvancedContentItem>
+				</AdvancedItem>
 			))}
-		</AdvancedContent>
+		</AdvancedContainer>
 	)
 }
-const AdvancedContent = styled.div`
+const AdvancedContainer = styled.div`
   display: flex;
   flex-direction: column;
+  padding: 0 56px;
+
+  @media(max-width: 1600px) {
+    padding: 0 32px;
+  }
+  @media(max-width: 768px) {
+    padding: 0 24px;
+  }
 `
-const AdvancedContentItem = styled.div`
+const AdvancedItem = styled.div`
   display: flex;
   gap: 24px;
   padding: 24px 0;
@@ -65,6 +73,7 @@ const ItemText = styled.div`
   }
 `
 const AdvancedIcon = styled.img`
+  object-fit: contain;
   box-sizing: border-box;
   border-radius: 8px;
   padding: 10px;

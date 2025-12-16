@@ -7,7 +7,7 @@ import { usePopupStore } from "@/store/popupStore"
 const PromotionPopup = () => {
     const { changeContent } = usePopupStore()
     return (
-        <div>
+        <PromotionContainer>
             <PromotionHead>
                 <PromotionHeadText $active={true}>Просмотр</PromotionHeadText>
                 <PromotionHeadText onClick={() => changeContent("boosts")}>Бусты</PromotionHeadText>
@@ -25,7 +25,7 @@ const PromotionPopup = () => {
             </ViewsPost>
             <PromotePost>
                 <PostTitle>Продвинуть пост</PostTitle>
-                <PromoteText>Введите ссылку на пост и количество просмотров<br/>для ручного продвижения</PromoteText>
+                <PromoteText>Введите ссылку на пост и количество просмотров для ручного продвижения</PromoteText>
                 <PostContainer>
                     <CounterContainer>
                         <CounterTitle>Ссылка на пост:</CounterTitle>
@@ -36,13 +36,23 @@ const PromotionPopup = () => {
                         <Counter placeholder=""/>
                     </CounterContainer>
                 </PostContainer>
+                <BtnBase  $margin="8" $padding="21px 24px" $color="#EF6284" $bg="#241F31">Начать продвижение</BtnBase>
             </PromotePost>
             <BtnBase  $margin="64">Сохранить</BtnBase>
-        </div>
+        </PromotionContainer>
 
     )
 }
+const PromotionContainer = styled.div`
+    padding: 0 56px;
 
+    @media(max-width: 1600px) {
+        padding: 0 32px;
+    }
+    @media(max-width: 768px) {
+        padding: 0 24px;
+    }
+`
 const PromotionHead = styled.div`
     display: flex;
     gap: 32px;
@@ -65,13 +75,13 @@ const PromotionViews = styled.div`
     display: flex;
     gap: 32px;
     margin-top: 40px;
+    @media(max-width: 480px) {
+        align-items: flex-start;
+    }
 `
 const PostTitle = styled.h2`
     font-size: 24px;
     font-weight: 700;
-    @media(max-width: 480px) {
-        font-size: 16px;
-    }
 `
 const PostContainer = styled.div`
     display: flex;
@@ -100,6 +110,7 @@ const PromoteText = styled.p`
     font-size: 14px;
     font-weight: 600;
     color: #6A7080;
+    max-width: 400px;
 `
 const CounterContainer  = styled.div`
     display: flex;
@@ -110,6 +121,9 @@ const CounterContainer  = styled.div`
 const CounterTitle  = styled.p`
     font-weight: 700;
     font-size: 14px;
+    @media(max-width: 768px) {
+        max-width: 75px;
+    }
 `
 const PostInput  = styled.input`
     border: 2px solid #333E59;

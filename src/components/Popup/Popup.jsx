@@ -38,7 +38,7 @@ const Popup = () => {
         if (containerRef.current) {
             containerRef.current.scrollTo({
                 top: 0,
-                behavior: "smooth"
+                behavior: "auto"
             });
         }
     }, [popup.content]);
@@ -112,7 +112,7 @@ const PopupListContainer = styled.section`
     position: absolute;
     top: 0;
     left: 0;
-    padding: 120px 56px 30px;
+    padding: 120px 0 30px;
     background-color: #121726ad;
     backdrop-filter: blur(30px);
     width: 100%;
@@ -121,12 +121,6 @@ const PopupListContainer = styled.section`
     max-height: 100dvh;
     height: 100%;
     z-index: 10;
-    @media(max-width: 1600px) {
-        padding: 120px 32px 30px;   
-    }
-    @media(max-width: 480px) {
-        padding: 120px 24px 30px;   
-    }
 `
 
 export default Popup

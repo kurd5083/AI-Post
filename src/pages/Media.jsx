@@ -20,7 +20,7 @@ const Media = () => {
   ];
 
   return (
-    <>
+    <MediaContainer>
       <PageHead>
 				<BtnBase 
           $padding="16px 45px" 
@@ -57,7 +57,7 @@ const Media = () => {
               {item.size} MB
             </MediaCardSize>
             <MediaHash>
-              {item.hash.map((elem) => <li>#{elem}</li>)}
+              {item.hash.map((elem, index) => <li key={index}>#{elem}</li>)}
             </MediaHash>
             <CardActions>
               <LeftActions>
@@ -75,14 +75,27 @@ const Media = () => {
           </MediaCard>
         ))}
       </MediaCards>
-    </>
+    </MediaContainer>
   )
 }
+
+const MediaContainer = styled.div`
+  padding-bottom: 30px;
+`
 const MediaHead = styled.div`
   display: flex;
   gap: 32px;
   margin-bottom: 48px;
-  padding: 0 24px;
+  padding: 0 56px;
+  overflow-x: auto;
+  scrollbar-width: none;
+
+  @media(max-width: 1600px) {
+    padding: 0 32px;
+  }
+  @media(max-width: 768px) {
+    padding: 0 24px;
+  }
 `
 const MediaHeadText = styled.p`
   color: ${({ $active }) => $active ? '#D6DCEC' : '#6A7080'};
@@ -101,9 +114,16 @@ const MediaHeadText = styled.p`
 `
 const MediaCards = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(210px, min-content));
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: 16px;
-  padding: 0 24px;
+  padding: 0 56px;
+  
+  @media(max-width: 1600px) {
+    padding: 0 32px;
+  }
+  @media(max-width: 768px) {
+    padding: 0 24px;
+  }
 `
 const MediaCard = styled.div`
   display: flex;
@@ -131,6 +151,10 @@ const MediaCardImage = styled.img`
   object-fit: cover;
   width: 170px;
   height: 170px;
+  @media(max-width: 480px) {
+    width: 290px;
+    height: 210px;
+  }
 `
 const MediaCardSize = styled.p`
 	display: flex;
@@ -156,12 +180,16 @@ const MediaHash = styled.ul`
   }
 `
 const CardActions = styled.div`
-flex-grow: 1;
+  flex-grow: 1;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
   gap: 12px;
   width: 100%;
+  button {
+    width: 100%;
+    justify-content: center;
+  }
 `
 const LeftActions = styled.div`
   display: flex;
@@ -172,12 +200,11 @@ const DeleteButton = styled.button`
 	display: flex;
   align-items: center;
   justify-content: center;
-  width: 48px;
+  width: 48px !important;
   height: 48px;
   border-radius: 12px;
   flex-shrink: 0;
   transition: all 0.2s;
-	margin-right: 8px;
 	border: 2px solid #2F3953;
 
 	&:hover {

@@ -30,7 +30,7 @@ const FeedMentions = () => {
       </FeedMentionsHead>
 
       <FeedMentionsList
-        fadeVisible={fadeVisible}
+        $fadeVisible={fadeVisible}
         modules={[Navigation]}
         navigation={{
           nextEl: ".FeedMentionsNext",
@@ -54,7 +54,8 @@ const FeedMentions = () => {
 const FeedMentionsContainer = styled.section`
   position: relative;
   margin-top: 70px;
-  padding: 0 24px;
+  padding: 0 56px;
+  
   @media (max-width: 1600px) {
     padding: 0 32px;
   }
@@ -133,7 +134,7 @@ const FeedMentionsList = styled(Swiper)`
     mask-image: linear-gradient(to left, black 50%, transparent);
     z-index: 1;
     transition: opacity 0.25s ease;
-    opacity: ${(props) => (props.fadeVisible ? 1 : 0)};
+    opacity: ${({$fadeVisible}) => $fadeVisible ? 1 : 0};
     pointer-events: none;
     @media (max-width: 480px) {
       display: none;

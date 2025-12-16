@@ -11,7 +11,7 @@ const Home = () => {
 
   return (
     <>
-      <Statistics padding={true}/>
+      <Statistics />
       <FeedMentions/>
       <TableGroupsHead/>
       <СhannelContainer>

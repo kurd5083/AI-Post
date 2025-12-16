@@ -27,7 +27,16 @@ const PromotionHead = styled.div`
   display: flex;
   gap: 32px;
   margin-bottom: 48px;
-	padding: 0 24px;
+  overflow-x: auto;
+  scrollbar-width: none;
+	padding: 0 56px;
+
+  @media(max-width: 1600px) {
+    padding: 0 32px;
+  }
+  @media(max-width: 768px) {
+    padding: 0 24px;
+  }
 `
 const PromotionHeadText = styled.p`
   display: flex;

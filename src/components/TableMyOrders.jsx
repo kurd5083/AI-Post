@@ -22,7 +22,7 @@ const TableMyOrders = () => {
             <col />
             <col />
           </colgroup>
-          <TableHead>
+          <thead>
             <tr>
               <HeaderCell>ID</HeaderCell>
               <HeaderCell>Название</HeaderCell>
@@ -33,9 +33,10 @@ const TableMyOrders = () => {
               <HeaderCell>Кол-во</HeaderCell>
               <HeaderCell>Статус</HeaderCell>
               <HeaderCell>Осталось</HeaderCell>
+              <HeaderCell></HeaderCell>
             </tr>
-          </TableHead>
-          <TableBody>
+          </thead>
+          <tbody>
             {tableMyOrdersDatas.map((row) => (
               <TableItem key={row.id}>
                 <TableCell>
@@ -68,28 +69,26 @@ const TableMyOrders = () => {
                 </TableCell>
               </TableItem>
             ))}
-          </TableBody>
+          </tbody>
         </Table>
       </TableWrapper>
     </TableContainer>
   );
 };
 
-
 const TableContainer = styled.div`
   position: relative;
   margin-top: 20px;
-  padding: 0 24px;
 `;
-
 const TableWrapper = styled.div`
+  box-sizing: border-box;
   width: 100%;
   max-height: calc(100svh - 400px); 
   min-height: 400px;
-  overflow-y: auto;
+  overflow: auto;
   scrollbar-width: none;
+  padding: 0 56px;
 `;
-
 const Table = styled.table`
   width: 100%;
   border-collapse: separate;
@@ -101,39 +100,35 @@ const Table = styled.table`
   }
 
   & colgroup col:first-child {
-    width: 50px;
+    width: 58px;
   }
   & colgroup col:nth-child(2) {
-    width: calc(20% - 50px);
+    width: 276px;
   }
   & colgroup col:nth-child(3) {
-    width: 11%;
+    width: 163px;
   }
   & colgroup col:nth-child(4) {
-    width: 11%;
+    width: 209px;
   }
   & colgroup col:nth-child(5) {
-    width: 11%;
+    width: 152px;
   }
   & colgroup col:nth-child(6) {
-    width: 11%;
+    width: 176px;
   }
   & colgroup col:nth-child(7) {
-    width: 11%;
+    width: 143px;
   }
   & colgroup col:nth-child(8) {
-    width: 15%;
+    width: 180px;
   }
   & colgroup col:nth-child(9) {
-    width: calc(10% - 48px);
+   width: 134px;
   }
   & colgroup col:last-child {
-    width: 48px;
+    width: 40px;
   }
-`;
-
-const TableHead = styled.thead`
-
 `;
 
 const HeaderCell = styled.th`
@@ -147,14 +142,7 @@ const HeaderCell = styled.th`
   z-index: 2;
   padding: 20px 0;
   background-color: #131826;
-  @media(max-width: 768px) {
-    &:nth-child(2), &:nth-child(3) {
-      display: none;
-    }
-  }
 `;
-
-const TableBody = styled.tbody``;
 
 const TableItem = styled.tr`
   transition: background .15s ease;
@@ -239,4 +227,5 @@ const ButtonDel = styled.button`
     background-color: rgba(239, 98, 132, 0.08);
   }
 `;
+
 export default TableMyOrders;

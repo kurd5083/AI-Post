@@ -266,7 +266,7 @@ const TableCellStatus = styled.button`
   padding: 18px 24px;
   border-radius: 12px;
   color: #6A7080;
-  border: 2px solid #1F273B;
+  border: 2px solid #2A344C;
   font-size: 14px;
   font-weight: 700;
   background: transparent;

@@ -62,7 +62,14 @@ const LinkGenerationPopup = () => {
   )
 }
 const LinkGenerationContainer = styled.div`
+  padding: 0 56px;
 
+  @media(max-width: 1600px) {
+    padding: 0 32px;
+  }
+  @media(max-width: 768px) {
+    padding: 0 24px;
+  }
 `
 const LinkGenerationTitle = styled.h2`
   color: #6A7080;

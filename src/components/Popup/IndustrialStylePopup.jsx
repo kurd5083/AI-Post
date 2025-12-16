@@ -1,9 +1,9 @@
 import { useState } from "react";
 import styled from "styled-components";
 import { usePopupStore } from "@/store/popupStore"
-import plus_blue from "@/assets/popup/plus-blue.svg";
 import Drag from "@/shared/Drag";
 import BtnBase from "@/shared/BtnBase";
+import PlusIcon from "@/icons/PlusIcon";
 
 const MAX_PROMPT_LENGTH = 100;
 
@@ -20,12 +20,12 @@ const IndustrialStylePopup = () => {
     console.log("Тестирование промпта:", prompt);
   };
   return (
-    <>
-      <IndustrialStyleContainer>
+    <IndustrialStyleContainer>
+      <IndustrialStyleContent>
         <IndustrialStyleLeft>
           <BtnBase onClick={() => changeContent("industrial_library")} $color="#D6DCEC" $bg="#2B89ED">Библиотека промптов</BtnBase>
           <IndustrialStyleTitle>Промпт</IndustrialStyleTitle>
-          <IndustrialStyleContent>
+          <IndustrialStyleInfo>
             <div>
               <textarea
                 placeholder="Введите промпт..."
@@ -40,12 +40,14 @@ const IndustrialStylePopup = () => {
               Тест
             </button>
             <p>{prompt.length} / {MAX_PROMPT_LENGTH}</p>
-          </IndustrialStyleContent>
+          </IndustrialStyleInfo>
           <IndustrialStyleDesc>Введите промпт — это задание для генерации поста. <mark>Чем точнее формулировка, тем лучше результат.</mark></IndustrialStyleDesc>
           <IndustrialStyleTitle>Подпись</IndustrialStyleTitle>
           <IndustrialStyleInputContainer>
             <IndustrialStyleInput type="text" placeholder="Описание канала" />
-            <IndustrialStyleImg src={plus_blue} alt="plus icon" width={16} height={16} />
+            <IndustrialStyleBtn>
+              <PlusIcon color="#2B89ED"/>
+            </IndustrialStyleBtn>
           </IndustrialStyleInputContainer>
           <IndustrialStyleDesc>Подпись будет добавлена в <mark>конец каждого поста.</mark> Например: ссылка или призыв подписаться.</IndustrialStyleDesc>
         </IndustrialStyleLeft>
@@ -57,24 +59,40 @@ const IndustrialStylePopup = () => {
             Высокие значения <mark>увеличивают</mark> вариативность, что
             может привести к менее предсказуемым результатам</IndustrialStyleDesc>
         </IndustrialStyleRight>
-      </IndustrialStyleContainer>
-      <BtnBase $margin="64">Сохранить</BtnBase>
-    </>
+      </IndustrialStyleContent>
+      <IndustrialStyleButton>
+        <BtnBase>Сохранить</BtnBase>
+      </IndustrialStyleButton>
+    </IndustrialStyleContainer>
   )
 }
 const IndustrialStyleContainer = styled.div`
-    display: flex;
-    flex-wrap: wrap;
-    gap: 40px 80px;
+  padding: 0 56px;
+
+  @media(max-width: 1600px) {
+    padding: 0 32px;
+  }
+  @media(max-width: 768px) {
+    padding: 0 24px;
+  }
+`
+const IndustrialStyleContent = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 40px 80px;
 `
 const IndustrialStyleLeft = styled.div`
- h2 {
+  h2 {
     margin-top: 40px;
- }
+    
+    @media (max-width: 480px) {
+			margin-top: 32px;
+		}
+  }
 `
-
 const IndustrialStyleInputContainer = styled.div`
   display: flex;
+  align-items: center;
   gap: 24px;
 `
 const IndustrialStyleTitle = styled.h2`
@@ -96,54 +114,65 @@ const IndustrialStyleDesc = styled.p`
     color: #FF7F48;
   }
 `
-const IndustrialStyleContent = styled.div`
-    position: relative;
+const IndustrialStyleInfo = styled.div`
+  position: relative;
 
-    div {
-        background-color: #1C2336;
-        box-sizing: border-box;
-        padding: 32px 32px 60px;
-        width: 470px;
-				
-        border-radius: 24px;
-        min-height: 170px;
-				@media (max-width: 768px) {
-					width: 100%;
-				}
-        &::placeholder {
-            color: #6A7080;
-        }
+  div {
+    background-color: #1C2336;
+    box-sizing: border-box;
+    padding: 32px;
+    width: 470px;
+    border-radius: 24px;
+    min-height: 170px;
+		@media (max-width: 768px) {
+			width: 100%;
+		}
+    @media (max-width: 480px) {
+			padding: 24px;
+		}
+    &::placeholder {
+      color: #6A7080;
     }
-    textarea {
-        background-color: #1C2336;
-        border: none;
-        outline: none;
-        color: #6A7080;
-        resize: none;
-        width: 100%;
-        font-size: 14px;
-        line-height: 24px;
-        font-weight: 600;
-        scrollbar-width: none;
-    }
-    button {
-        position: absolute;
-        bottom: 32px;
-        left: 32px;
-        padding: 10px 24px 12px;
-        font-size: 14px;
-        font-weight: 700;
-        color: #D6DCEC;
-        border-radius: 12px;
-        border: 2px solid #333E59;
-    }
-    p {
-        position: absolute;
-        bottom: 44px;
-        right: 32px;
-        font-size: 12px;
-        font-weight: 700;
-    }
+  }
+  textarea {
+    background-color: #1C2336;
+    border: none;
+    outline: none;
+    color: #6A7080;
+    resize: none;
+    width: 100%;
+    font-size: 14px;
+    line-height: 24px;
+    font-weight: 600;
+    scrollbar-width: none;
+  }
+  button {
+    position: absolute;
+    bottom: 32px;
+    left: 32px;
+    padding: 10px 24px 12px;
+    font-size: 14px;
+    font-weight: 700;
+    color: #D6DCEC;
+    border-radius: 12px;
+    border: 2px solid #333E59;
+
+    @media (max-width: 480px) {
+			bottom: 24px;
+      left: 24px;
+		}
+  }
+  p {
+    position: absolute;
+    bottom: 44px;
+    right: 32px;
+    font-size: 12px;
+    font-weight: 700;
+    @media (max-width: 480px) {
+			bottom: 36px;
+      right: 24px;
+		}
+  }
 `
 
 const IndustrialStyleInput = styled.input`
@@ -163,16 +192,25 @@ const IndustrialStyleInput = styled.input`
     color: #D6DCEC;
   }
 `
-const IndustrialStyleImg = styled.img`
+const IndustrialStyleBtn = styled.button`
+  display: flex;
+  align-items: center;
+  justify-content: center;
   padding: 12px;
-  background-color: #142036;
+  background-color: #162238;
   border-radius: 50%;
-  cursor: pointer;
 `
 const IndustrialStyleRight = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+`
+const IndustrialStyleButton = styled.div`
+  margin-top: 64px;
+
+  @media(max-width: 480px) {
+    margin-top: 40px;
+  }
 `
 
 export default IndustrialStylePopup

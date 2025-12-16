@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import BtnBase from "@/shared/BtnBase";
 import { usePopupStore } from "@/store/popupStore";
-import close from "@/assets/close.svg";
+import CloseIcon from "@/icons/CloseIcon";
 
 const CreateFolderPopup = () => {
   const { closePopup } = usePopupStore();
@@ -22,11 +22,7 @@ const CreateFolderPopup = () => {
     <div>
       <CreateFolderHead>
         <HeadTitle>Создать папку</HeadTitle>
-        <img
-          src={close}
-          alt="close icon"
-          onClick={closePopup}
-        />
+        <CloseIcon color="#336CFF" onClick={closePopup}/>
       </CreateFolderHead>
       <CreateFolderSubtitle>
         Используйте папки для удобства управления каналами

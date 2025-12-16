@@ -1,5 +1,5 @@
 import choose_post from "@/assets/popup/choose-post.svg";
-import close_red from "@/assets/popup/close-red.svg";
+import CloseIcon from "@/icons/CloseIcon";
 import calendar_blue from "@/assets/popup/calendar-blue.svg";
 
 export const notificationsDatas = [
@@ -16,7 +16,8 @@ export const notificationsDatas = [
         title: "Пост “Сценарий войн” был отменён.",
         extra: {
             background: "#41293C",
-            image: close_red
+            image: '',
+            svg: <CloseIcon color="#EF6284"/>
         }
     },
     {

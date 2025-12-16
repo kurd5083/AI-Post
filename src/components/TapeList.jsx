@@ -1,4 +1,3 @@
-import { useRef, useState, useEffect } from "react";
 import styled from "styled-components";
 import arrow from "@/assets/arrow.svg";
 import { postsDatas } from "@/data/postsDatas";
@@ -9,40 +8,24 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
 import "swiper/css";
 import TimeIcons from "@/icons/TimeIcons";
+import useFadeOnScroll from "@/lib/useFadeOnScroll";
 
-const TapeList = ({ forceHorizontal = false }) => {
+const TapeList = ({ forceHorizontal = false, padding }) => {
+  const { fadeVisible, ref } = useFadeOnScroll(20);
 	const { isSwipe } = useSwipeAllowed(1400);
-	const [fadeVisible, setFadeVisible] = useState(true);
-	const listRef = useRef(null);
 
 	const direction = forceHorizontal ? "horizontal" : (isSwipe ? "horizontal" : "vertical");
 
-	const handleScroll = () => {
-		if (!listRef.current) return;
-		const el = listRef.current;
-		const isEnd = el.scrollTop + el.clientHeight >= el.scrollHeight - 20;
-		setFadeVisible(!isEnd);
-	};
-
-	useEffect(() => {
-		const el = listRef.current;
-		if (!el) return;
-
-		el.addEventListener("scroll", handleScroll);
-		handleScroll();
-
-		return () => el.removeEventListener("scroll", handleScroll);
-	}, []);
-
 	return (
 		<TapeContainer
-			ref={listRef}
+			ref={ref}
 			key={isSwipe}
 			spaceBetween={16}
 			direction={direction}
 			slidesPerView="auto"
 			allowTouchMove={forceHorizontal || isSwipe}
-			fadeVisible={fadeVisible}
+			$fadeVisible={fadeVisible}
+      $padding={padding}
 			modules={[Navigation]}
 			navigation={{
 				nextEl: ".TapeNext",
@@ -92,17 +75,21 @@ const TapeContainer = styled(Swiper)`
   margin-top: 32px;
   overflow-y: auto;
   scrollbar-width: none;  
-  max-height: calc(100svh - 195px);
+  max-height: calc(100svh - 215px);
+  padding: ${({$padding}) => $padding && "0 52px"};
   padding-bottom: 20px;
+  
+  @media (max-width: 1600px) {
+    padding: ${({$padding}) => $padding && "0 32px 30px"};
+  }
   @media (max-width: 1400px) {
-    padding: 0 32px;
+    padding: 0 32px ;
     max-height: fit-content;
   }
   @media (max-width: 480px) {
     padding: 0 24px;
   }
 
-    
   &::after {
     content: '';
     position: fixed;
@@ -113,7 +100,7 @@ const TapeContainer = styled(Swiper)`
     backdrop-filter: blur(8px);
     mask-image: linear-gradient(to top, black 50%, transparent);
     transition: opacity 0.2s;
-    opacity: ${(props) => (props.fadeVisible ? 1 : 0)};
+    opacity: ${({$fadeVisible}) => $fadeVisible ? 1 : 0};
     pointer-events: none;
 		z-index: 1;
     @media(max-width: 1400px) {
@@ -199,7 +186,7 @@ const TapePostImg = styled.img`
 const TapePostButton = styled.button`
 	position: absolute;
 	top: 50%;
-  right: 16px;
+  right: 32px;
 	transform: translateY(-50%);
   align-items: center;
   justify-content: center;
@@ -208,7 +195,9 @@ const TapePostButton = styled.button`
   border-radius: 50%;
   background-color: #1C2438;
   z-index: 2;
-
+  @media (max-width: 1400px) {
+   right: 16px;
+  }
 	@media (max-width: 480px) {
     width: 32px;
     height: 32px;
@@ -216,7 +205,10 @@ const TapePostButton = styled.button`
 	
   &:first-child {
     transform: rotate(180deg) translateY(50%);
-		left: 16px;
+		left: 32px;
+    @media (max-width: 1400px) {
+      left: 16px;
+    }
   }
 `
 export default TapeList

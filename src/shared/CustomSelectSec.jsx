@@ -2,46 +2,54 @@ import { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
 import arrow from "@/assets/arrow.svg";
 
-const CustomSelect = ({ options, placeholder = "Выберите значение", value,  fs }) => {
+const CustomSelect = ({
+  options,
+  placeholder = "Выберите значение",
+  value,
+  onChange,
+  fs,
+  padding,
+  width,
+}) => {
   const [open, setOpen] = useState(false);
-    const [selected, setSelected] = useState("");
-    const selectRef = useRef(null);
-  
-    const toggle = () => setOpen(!open);
-  
-    const onSelect = (value, label) => {
-      setSelected(label);
-      setOpen(false);
+  const selectRef = useRef(null);
+
+  const toggle = () => setOpen(prev => !prev);
+
+  const onSelect = (option) => {
+    console.log(option)
+    onChange(option); 
+    setOpen(false);
+  };
+
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (selectRef.current && !selectRef.current.contains(e.target)) {
+        setOpen(false);
+      }
     };
-  
-    useEffect(() => {
-      const handleClickOutside = (event) => {
-        if (selectRef.current && !selectRef.current.contains(event.target)) {
-          setOpen(false);
-        }
-      };
-  
-      document.addEventListener("mousedown", handleClickOutside);
-      
-      return () => {
-        document.removeEventListener("mousedown", handleClickOutside);
-      };
-    }, []);
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   return (
-    <SelectWrapper ref={selectRef}>
-      <SelectHeader onClick={toggle}>
-        <span>{value?.label || placeholder}</span>
-        <img src={arrow} alt="arrow icon" className={open ? "open" : ""} />
+    <SelectWrapper ref={selectRef} $width={width}>
+      <SelectHeader onClick={toggle} $fs={fs} $padding={padding}>
+        <HeaderLeft>
+          {value?.icon && <img src={value.icon} alt="icon" width={16} height={16}/>}
+          <span>{value?.label || placeholder}</span>
+        </HeaderLeft>
+        <HeaderArrow src={arrow} alt="arrow icon" className={open ? "open" : ""} />
       </SelectHeader>
 
       {open && (
         <SelectList>
           {options.map((opt) => (
-            <SelectItem 
-              key={opt.value} 
-              onClick={() => onSelect(opt.value, opt.label)}
+            <SelectItem
+              key={opt.value}
+              onClick={() => onSelect(opt)}
             >
+              {opt.icon && <img src={opt.icon} alt="icon" />}
               {opt.label}
             </SelectItem>
           ))}
@@ -53,33 +61,36 @@ const CustomSelect = ({ options, placeholder = "Выберите значени�
 
 const SelectWrapper = styled.div`
   position: relative;
-  width: 340px;
+  max-width: ${({$width}) => $width ? $width : '340px'};
+  width: 100%;
   font-weight: 700;
 `;
-
 const SelectHeader = styled.div`
   box-sizing: border-box;
   border-bottom: 2px solid #333e59;
-  padding-bottom: 32px;
+  padding-bottom: ${({$padding}) => $padding ? $padding : '32px'};
   color: #d6dcec;
-  font-size: 24px;
+  font-size: ${({$fs}) => $fs ? $fs : '24px'};
   cursor: pointer;
   display: flex;
   justify-content: space-between;
   align-items: center;
+`;
+const HeaderArrow = styled.img`
+  width: 8px;
+  height: 16px;
+  transition: transform 0.2s ease;
+  transform: rotate(90deg);
 
-  img {
-    width: 8px;
-    height: 16px;
-    transition: transform 0.2s ease;
-    transform: rotate(90deg);
-  }
-
-  img.open {
+  &.open {
     transform: rotate(270deg);
   }
-`;
-
+`
+const HeaderLeft = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 16px;
+`
 const SelectList = styled.ul`
   box-sizing: border-box;
   position: absolute;
@@ -98,6 +109,9 @@ const SelectList = styled.ul`
 `;
 
 const SelectItem = styled.li`
+  display: flex;
+  align-items: center;
+  gap: 20px;
   padding: 24px;
   cursor: pointer;
   color: #d6dcec;

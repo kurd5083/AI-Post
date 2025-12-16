@@ -5,8 +5,10 @@ import styled from "styled-components";
 import arrow from "@/assets/arrow.svg";
 import { helpDatas } from "@/data/helpDatas";
 import useSearchStore from "@/store/searchStore";
+import useFadeOnScroll from "@/lib/useFadeOnScroll";
 
 const Help = () => {
+  const { fadeVisible, ref } = useFadeOnScroll(20);
   const [openIndex, setOpenIndex] = useState(null);
   const toggle = (index) => {
     setOpenIndex(openIndex === index ? null : index);
@@ -46,7 +48,7 @@ const Help = () => {
         placeholder="Поиск по вопросам"
         searchValue={searchQuery}
       />
-      <HelpContainer>
+      <HelpContainer $fadeVisible={fadeVisible} ref={ref}>
         {filteredData.length > 0 ? (
           filteredData.map((item, index) => (
             <HelpItem key={index}>
@@ -77,7 +79,34 @@ const Help = () => {
 }
 
 const HelpContainer = styled.div`
-  padding: 0 24px;
+  position: relative;
+  height: calc(100vh - 360px); 
+  overflow-y: auto;
+  scrollbar-width: none;
+  padding: 0 56px;
+
+	@media(max-width: 1600px) {
+    padding: 0 32px;
+  }
+  @media(max-width: 768px) {
+    padding: 0 24px;
+  }
+  
+  &::after {
+    content: '';
+    position: fixed;
+    bottom: 0;
+    margin-left: -24px;
+    height: 135px;
+    width: 100%;
+    background: linear-gradient(to top, #131826, transparent);
+    backdrop-filter: blur(8px);
+    mask-image: linear-gradient(to top, black 50%, transparent);
+    transition: opacity 0.2s;
+    opacity: ${({$fadeVisible}) => $fadeVisible ? 1 : 0};
+    pointer-events: none;
+		z-index: 1;
+  }
 `;
 const HelpItem = styled.div`
   border-bottom: 1px solid #1f2a3a;
@@ -86,12 +115,18 @@ const HelpItem = styled.div`
   &:first-child {
     padding-top: 0;
   }
+  &:last-child {
+    border-bottom: none;
+  }
 `;
 const HelpQuestion = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
   cursor: pointer;
+  @media (max-width: 480px) {
+    align-items: flex-start;
+  }
 `;
 const QuestionLeft = styled.div`
   display: flex;
@@ -99,6 +134,10 @@ const QuestionLeft = styled.div`
   gap: 30px;
   font-weight: 700;
   font-size: 24px;
+  @media (max-width: 480px) {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 `;
 const QuestionNum = styled.p`
   color: #336CFF;
@@ -113,6 +152,9 @@ const Answer = styled.div`
   color: #6A7080;
   white-space: pre-line;
   max-width: 620px;
+  @media (max-width: 480px) {
+    padding-left: 0px;
+  }
 `;
 
 const Icon = styled.div`
@@ -122,6 +164,7 @@ const Icon = styled.div`
   border-radius: 50%;
   width: 40px;
   height: 40px;
+  flex-shrink: 0;
   background-color: ${(props) => (props.open ? "#333E59" : "transporent")};
   border: 2px solid ${(props) => (props.open ? "transparent" : "#333E59")};
   transition: transform 0.3s ease;

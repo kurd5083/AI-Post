@@ -119,44 +119,4 @@ export const templatesDatas = [
         },
         hashtags: ["#email", "#маркетинг", "#рассылка"]
     },
-    {
-        id: 7,
-        category: "Обучение",
-        rating: 4.4,
-        icon: "@/assets/templates/education-icon.svg",
-        title: "Учебный материал",
-        uses: 23,
-        content: {
-            intro: "📖 Новый учебный материал: {material_title}!",
-            description: "🎯 Основные темы:",
-            benefits: [
-                "{lesson_1}",
-                "{lesson_2}",
-                "{lesson_3}"
-            ],
-            offer: "📥 Скачать: {download_link} 📚 Страниц: {page_count}",
-            hashtags: "#обучение #материал #{subject}"
-        },
-        hashtags: ["#учеба", "#материал", "#образование"]
-    },
-    {
-        id: 8,
-        category: "Промо",
-        rating: 4.7,
-        icon: "@/assets/templates/promo-icon.svg",
-        title: "Скидочный промокод",
-        uses: 62,
-        content: {
-            intro: "💎 Специальное предложение для вас!",
-            description: "🎁 Ваш промокод:",
-            benefits: [
-                "Код: {promo_code}",
-                "Скидка: {discount}",
-                "Срок: {valid_until}"
-            ],
-            offer: "🔗 Использовать: {link} 💰 Минимум: {min_order}",
-            hashtags: "#скидка #промокод #{store_name}"
-        },
-        hashtags: ["#промокод", "#скидка", "#экономия"]
-    }
 ];

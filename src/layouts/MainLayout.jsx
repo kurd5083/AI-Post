@@ -1,3 +1,5 @@
+import { useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import { Outlet } from "react-router"
 import styled from "styled-components";
 import Sidebar from "@/components/Sidebar"
@@ -8,8 +10,15 @@ import PopupWindow from '@/components/PopupWindow/PopupWindow';
 import MobileMenu from "@/components/MobileMenu";
 import { usePopupStore } from "@/store/popupStore";
 
+
 const MainLayout = () => {
-  const { popup } = usePopupStore();
+  const { popup, closePopup } = usePopupStore();
+  const location = useLocation();
+
+  useEffect(() => {
+    closePopup();
+  }, [location.pathname]);
+
   return (
     <MainContainer>
       <Sidebar />
@@ -42,7 +51,6 @@ const Main = styled.main`
   background-color: #131826;
   flex: 1;
   min-width: 0;
-  padding: 0 32px;
   z-index: 1;
   overflow-y: ${({ $blocked }) => ($blocked ? "clip" : "auto")};
   scrollbar-width: none;
