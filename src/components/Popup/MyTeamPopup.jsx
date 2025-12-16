@@ -37,7 +37,10 @@ const MyTeamPopup = () => {
                 <TableCell>
                   <TableCellName>
                     <img src={row.ava} alt="Group" />
-                    <span>{row.name}</span>
+                    <NameBlock>
+                      <p>{row.name}</p>
+                      <span>{row.data}</span>
+                    </NameBlock>
                   </TableCellName>
                 </TableCell>
                 <TableCell>{row.role}</TableCell>
@@ -65,7 +68,11 @@ const MyTeamContainer = styled.div`
   }
 `;
 const TableWrapper = styled.div`
+
   margin-top: 48px;
+  @media (max-width: 480px) {
+    margin-top: 24px;
+  }
 `;
 const Table = styled.table`
   width: 100%;
@@ -73,18 +80,29 @@ const Table = styled.table`
 
   & colgroup col:first-child {
     width: 25%;
+    @media (max-width: 768px) {
+      width: calc(50% - 24px);
+    }
   }
   & colgroup col:nth-child(2) {
     width: 25%;
+    @media (max-width: 768px) {
+      width: calc(50% - 24px);
+    }
   }
   & colgroup col:nth-child(3) {
     width: calc(50% - 48px);
+    @media (max-width: 768px) {
+      display: none;
+    }
   }
   & colgroup col:nth-child(4) {
     width: 48px;
+    @media (max-width: 480px) {
+      width: 40px;
+    }
   }
 `;
-
 const HeaderCell = styled.th`
   text-align: center;
   font-weight: 700;
@@ -93,6 +111,14 @@ const HeaderCell = styled.th`
   text-transform: uppercase;
   &:first-child {
     text-align: left;
+  }
+  @media (max-width: 768px) {
+    &:nth-child(2) {
+      text-align: left;
+    }
+    &:nth-child(3) {
+      display: none;
+    }
   }
 `;
 
@@ -109,6 +135,14 @@ const TableCell = styled.td`
   font-weight: 700;
   padding: 30px 0;
   border-bottom: 2px solid #2E3954;
+  @media (max-width: 768px) {
+    &:nth-child(2) {
+      text-align: left;
+    }
+    &:nth-child(3) {
+      display: none;
+    }
+  }
 `;
 const TableCellName = styled.div`
   display: flex;
@@ -122,6 +156,21 @@ const TableCellName = styled.div`
     object-fit: cover;
   }
 `;
+const NameBlock = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+
+  span {
+    display: none;
+    color: #6A7080;
+    @media (max-width: 768px) {
+      display: block;
+    }
+  }
+`;
+
 const ButtonDel = styled.button`
   display: flex;
   align-items: center;
