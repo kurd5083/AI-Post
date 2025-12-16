@@ -6,7 +6,6 @@ import Analytics from '@/pages/Analytics';
 import AiGenerator from '@/pages/AiGenerator';
 import Templates from '@/pages/Templates';
 import Calendar from '@/pages/Calendar';
-import Account from '@/pages/Account';
 import Promotion from '@/pages/Promotion';
 import MyOrders from '@/pages/MyOrders';
 import Media from '@/pages/Media';
@@ -47,13 +46,6 @@ export const router = createBrowserRouter([
         element: <OtherLayout />,
         children: [
             { index: true, element: <Calendar /> }, 
-        ],
-    },
-    {
-        path: '/account', 
-        element: <OtherLayout />,
-        children: [
-            { index: true, element: <Account /> }, 
         ],
     },
     {
