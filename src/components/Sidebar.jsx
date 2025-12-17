@@ -6,8 +6,9 @@ import arrow_close from "@/assets/arrow-close.svg";
 import acc_icon from "@/assets/acc-icon.png";
 import { usePopupStore } from "@/store/popupStore";
 import { useSidebarStore } from "@/store/sidebarStore";
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { telegramAuth as telegramAuthApi } from '@/api/telegramAuth'; 
+import { getUserById } from "@/api/getUserById";
 
 const Sidebar = () => {
   const { openPopup } = usePopupStore()
@@ -18,12 +19,22 @@ const Sidebar = () => {
     hideSidebar,
     showSidebar
   } = useSidebarStore();
+  
+  const userId = localStorage.getItem("userId");
+  const { data: user} = useQuery({
+    queryKey: ['user', userId],
+    queryFn: () => getUserById(userId),
+    enabled: !!userId,
+  });
 
   const telegramAuthMutation = useMutation({
     mutationFn: (userData) => telegramAuthApi(userData),
     onSuccess: (data) => {
       localStorage.setItem("accessToken", data.accessToken);
       localStorage.setItem("refreshToken", data.refreshToken);
+
+      localStorage.setItem("userId", data.userId);
+
       console.log("Авторизация успешна", data);
     },
     onError: (error) => {
@@ -100,9 +111,9 @@ const Sidebar = () => {
         {localStorage.getItem("accessToken") ? (
           <SidebarFooterTop onClick={() => openPopup("profile")}>
             <SidebarAvaContainer>
-              <SidebarAva src={acc_icon} alt="account icon" />
+              <SidebarAva src={user?.photo_url || acc_icon} alt={user?.username || 'account icon'} />
             </SidebarAvaContainer>
-            {isSidebarVisible && <p>Arseniy P.</p>}
+            {isSidebarVisible && <p>{user?.first_name} {user?.last_name}</p>}
           </SidebarFooterTop>
         ) : (
           <div id="telegram-button"></div>
