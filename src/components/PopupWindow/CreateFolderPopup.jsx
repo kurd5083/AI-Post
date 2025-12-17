@@ -37,7 +37,7 @@ const CreateFolderPopup = () => {
         unifiedPostingSettings: false,
         unifiedScheduleSettings: false,
         individualPromotionSettings: true,
-        ownerTelegramId: localStorage.getItem("userId"),
+        ownerTelegramId: String(localStorage.getItem("userId"))
       },
       {
         onSuccess: () => closePopup(),
