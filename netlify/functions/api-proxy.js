@@ -3,8 +3,13 @@ import fetch from 'node-fetch';
 export async function handler(event, context) {
   try {
     // Получаем путь после /api
-    const path = event.path.replace(/^\/.netlify\/functions\/api-proxy/, '');
+    let path = event.path.replace(/^\/.netlify\/functions\/api-proxy/, '');
     
+    // Если путь начинается с /api, убираем его
+    if (path.startsWith('/api')) {
+      path = path.replace(/^\/api/, '');
+    }
+
     // Собираем полный URL к API
     const apiUrl = `http://77.37.65.40:3000/api/v1${path}${event.queryStringParameters ? '?' + new URLSearchParams(event.queryStringParameters) : ''}`;
 
