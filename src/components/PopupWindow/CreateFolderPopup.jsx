@@ -8,7 +8,7 @@ import { useCreateChannelFolder } from "@/lib/useCreateChannelFolder";
 const CreateFolderPopup = () => {
   const { closePopup } = usePopupStore();
   const { mutate: createFolder, isLoading } = useCreateChannelFolder();
-
+  
   const [folderName, setFolderName] = useState("");
   const [folderDescription, setFolderDescription] = useState("");
   const [selectedColor, setSelectedColor] = useState("#264780");

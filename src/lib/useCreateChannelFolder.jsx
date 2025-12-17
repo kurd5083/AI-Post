@@ -3,7 +3,7 @@ import { createChannelFolder } from "@/api/createChannelFolder";
 
 export const useCreateChannelFolder = () => {
   return useMutation({
-    mutationFn: createChannelFolder,
+    mutationFn: (folderData) => createChannelFolder(folderData),
     onSuccess: (data) => {
       console.log("Папка успешно создана:", data);
     },
