@@ -18,6 +18,7 @@ const Sidebar = () => {
     hideSidebar,
     showSidebar
   } = useSidebarStore();
+
   const telegramAuthMutation = useMutation({
     mutationFn: (userData) => telegramAuthApi(userData),
     onSuccess: (data) => {
@@ -29,15 +30,9 @@ const Sidebar = () => {
       console.error("Ошибка авторизации:", error.message);
     },
   });
+
   const handleTelegramResponse = (user) => {
-    const { id, first_name, last_name, username, photo_url } = user;
-
-    console.log("ID:", id);
-    console.log("Имя:", first_name);
-    console.log("Фамилия:", last_name);
-    console.log("Username:", username);
-    console.log("Фото:", photo_url);
-
+    console.log(user)
     telegramAuthMutation.mutate(user);
   };
 
@@ -53,6 +48,7 @@ const Sidebar = () => {
     script.setAttribute("data-size", "large");
     script.setAttribute("data-onauth", "onTelegramAuth(user)");
     script.setAttribute("data-request-access", "write");
+    script.setAttribute("data-userpic", "false");
 
     const telegramButton = document.getElementById("telegram-button");
     telegramButton.appendChild(script);
@@ -101,15 +97,18 @@ const Sidebar = () => {
         ))}
       </SidebarNavContainer>
       <SidebarFooter $isSidebarVisible={isSidebarVisible}>
-        <SidebarFooterTop onClick={() => openPopup("profile")}>
-          <SidebarAvaContainer>
-            <SidebarAva src={acc_icon} alt="accaunt icon" />
-          </SidebarAvaContainer>
-          {isSidebarVisible && <p>Arseniy P.</p>}
-        </SidebarFooterTop>
-        <TelegramLoginButton>
-          <div id="telegram-button"></div>
-        </TelegramLoginButton>
+        {localStorage.getItem("accessToken") ? (
+          <SidebarFooterTop onClick={() => openPopup("profile")}>
+            <SidebarAvaContainer>
+              <SidebarAva src={acc_icon} alt="account icon" />
+            </SidebarAvaContainer>
+            {isSidebarVisible && <p>Arseniy P.</p>}
+          </SidebarFooterTop>
+        ) : (
+          <TelegramLoginButton>
+            <div id="telegram-button"></div>
+          </TelegramLoginButton>
+        )}
         <SidebarFooterBtn onClick={() => openPopup("replenish")}>+ {isSidebarVisible && 'Пополнить'} </SidebarFooterBtn>
       </SidebarFooter>
     </SidebarContainer>
@@ -255,15 +254,6 @@ const SidebarAvaContainer = styled.div`
     top: 0;
     right: 0;
     border-radius: 50%;
-  }
-`
-const TelegramLoginButton = styled.div`
-  margin-left: 12px;
-  display: flex;
-  align-items: center;
-
-  & > script {
-    display: block;
   }
 `
 const SidebarAva = styled.img`
