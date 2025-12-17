@@ -11,11 +11,9 @@ const TableGroups = () => {
   const { openPopup } = usePopupStore();
   const { isSmall } = useResolution();
   const { channels } = useChannelsGroupedByFolders();
-  if (!channels) {
-  console.log("Данные ещё загружаются");
-} else {
-  console.log(channels); // данные уже пришли
-}
+  if (channels) {
+   console.log(channels); // данные уже пришли
+  }
   return (
     <Table>
       <colgroup>
