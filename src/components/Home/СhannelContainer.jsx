@@ -39,7 +39,6 @@ const TableContainer = styled.div`
     }
   }
 `;
-
 const TableWrapper = styled.div`
   width: 100%;
   max-height: calc(100dvh - 600px); 

@@ -3,11 +3,13 @@ import Statistics from "@/components/Home/Statistics"
 import BtnBase from "@/shared/BtnBase";
 import { usePopupStore } from "@/store/popupStore"
 import { useUser } from "@/lib/useUser";
+import { useUserBalance } from "@/lib/useUserBalance";
 
 const ProfilePopup = () => {
   const { changeContent } = usePopupStore();
   const { user } = useUser();
-
+  const { balance } = useUserBalance();
+  
   return (
     <div>
       <ProfileHead>
@@ -24,7 +26,9 @@ const ProfilePopup = () => {
       <Statistics />
       <ProfileBalance>
         <h2>Ваш баланс:</h2>
-        <p>15.500<mark>,48</mark> руб.</p>
+        <p>{balance}
+          {/* <mark>,48</mark> */}
+        руб.</p>
         <BtnBase $padding="21px 24px" onClick={() => changeContent("replenish")}>+ Пополнить кошелек</BtnBase>
       </ProfileBalance>
       <ProfileInfos>

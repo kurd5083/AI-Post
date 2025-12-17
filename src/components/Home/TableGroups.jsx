@@ -6,11 +6,13 @@ import list from "@/assets/table-groups/list.svg";
 import { usePopupStore } from "@/store/popupStore"
 import { tableHomeDatas } from "@/data/tableHomeDatas";
 import useResolution from "@/lib/useResolution";
+import { useChannelsGroupedByFolders } from '@/lib/useChannelsGroupedByFolders';
 
 const TableGroups = () => {
   const { openPopup } = usePopupStore();
   const { isSmall } = useResolution();
- 
+  const { channels } = useChannelsGroupedByFolders();
+  console.log(channels)
   return (
     <Table>
       <colgroup>
@@ -28,7 +30,7 @@ const TableGroups = () => {
         </tr>
       </TableHead>
       <tbody>
-        {tableHomeDatas.map((row) => (
+        {channels.map((row) => (
           <TableItem key={row.id}>
             <TableCell>
               <p>
