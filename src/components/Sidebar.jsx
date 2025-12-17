@@ -7,7 +7,7 @@ import acc_icon from "@/assets/acc-icon.png";
 import { usePopupStore } from "@/store/popupStore";
 import { useSidebarStore } from "@/store/sidebarStore";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { postTelegramAuth } from '@/api/telegramAuth'; 
+import { postTelegramAuth } from '@/api/postTelegramAuth'; 
 import { getUserById } from "@/api/getUserById";
 
 const Sidebar = () => {
