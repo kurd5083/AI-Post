@@ -7,7 +7,7 @@ import acc_icon from "@/assets/acc-icon.png";
 import { usePopupStore } from "@/store/popupStore";
 import { useSidebarStore } from "@/store/sidebarStore";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { telegramAuth as telegramAuthApi } from '@/api/telegramAuth'; 
+import { postTelegramAuth } from '@/api/telegramAuth'; 
 import { getUserById } from "@/api/getUserById";
 
 const Sidebar = () => {
@@ -19,7 +19,7 @@ const Sidebar = () => {
     hideSidebar,
     showSidebar
   } = useSidebarStore();
-  
+
   const userId = localStorage.getItem("userId");
   const { data: user} = useQuery({
     queryKey: ['user', userId],
@@ -28,7 +28,7 @@ const Sidebar = () => {
   });
 
   const telegramAuthMutation = useMutation({
-    mutationFn: (userData) => telegramAuthApi(userData),
+    mutationFn: (userData) => console.log(userData),
     onSuccess: (data) => {
       localStorage.setItem("accessToken", data.accessToken);
       localStorage.setItem("refreshToken", data.refreshToken);
@@ -42,15 +42,10 @@ const Sidebar = () => {
     },
   });
 
-  const handleTelegramResponse = (user) => {
-    console.log(user)
-    telegramAuthMutation.mutate(user);
-  };
-
   useEffect(() => {
     window.onTelegramAuth = (user) => {
       console.log("Telegram user:", user);
-      handleTelegramResponse(user);
+      telegramAuthMutation.mutate(user);
     };
     const script = document.createElement("script");
     script.src = "https://telegram.org/js/telegram-widget.js?22";
