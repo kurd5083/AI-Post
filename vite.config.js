@@ -18,13 +18,4 @@ export default defineConfig({
       '@/api': path.resolve(__dirname, 'src/api'),
     },
   },
-  server: {
-    proxy: {
-      '/api': {
-        target: 'http://77.37.65.40:3000/api/v1',
-        changeOrigin: true,
-        rewrite: path => path.replace(/^\/api/, ''), 
-      },
-    },
-  },
 })

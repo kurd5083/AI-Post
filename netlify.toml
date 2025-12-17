@@ -1,0 +1,9 @@
+[build]
+  publish = "dist"               # Папка с билдом Vite
+  functions = "netlify/functions" # Папка с функциями
+
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/api-proxy/:splat"
+  status = 200
+  force = true
