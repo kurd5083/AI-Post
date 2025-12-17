@@ -26,7 +26,7 @@ const Sidebar = () => {
     queryFn: () => getUserById(userId),
     enabled: !!userId,
   });
-
+  console.log(user)
   const telegramAuthMutation = useMutation({
     mutationFn: (userData) => postTelegramAuth(userData),
     onSuccess: (data) => {
@@ -43,26 +43,29 @@ const Sidebar = () => {
   });
 
   useEffect(() => {
-    window.onTelegramAuth = (user) => {
-      console.log("Telegram user:", user);
-      telegramAuthMutation.mutate(user);
-    };
-    const script = document.createElement("script");
-    script.src = "https://telegram.org/js/telegram-widget.js?22";
-    script.async = true;
-    script.setAttribute("data-telegram-login", "LOGINAIPOSTINGBOT");
-    script.setAttribute("data-size", "large");
-    script.setAttribute("data-onauth", "onTelegramAuth(user)");
-    script.setAttribute("data-request-access", "write");
-    script.setAttribute("data-userpic", "false");
+    if (!localStorage.getItem("accessToken")) {
+      window.onTelegramAuth = (user) => {
+        console.log("Telegram user:", user);
+        telegramAuthMutation.mutate(user);
+      };
 
-    const telegramButton = document.getElementById("telegram-button");
-    telegramButton.appendChild(script);
+      const script = document.createElement("script");
+      script.src = "https://telegram.org/js/telegram-widget.js?22";
+      script.async = true;
+      script.setAttribute("data-telegram-login", "LOGINAIPOSTINGBOT");
+      script.setAttribute("data-size", "large");
+      script.setAttribute("data-onauth", "onTelegramAuth(user)");
+      script.setAttribute("data-request-access", "write");
+      script.setAttribute("data-userpic", "false");
 
-    return () => {
-      telegramButton.innerHTML = "";
-      delete window.onTelegramAuth;
-    };
+      const telegramButton = document.getElementById("telegram-button");
+      telegramButton?.appendChild(script);
+
+      return () => {
+        telegramButton && (telegramButton.innerHTML = "");
+        delete window.onTelegramAuth;
+      };
+    }
   }, []);
 
   return (
