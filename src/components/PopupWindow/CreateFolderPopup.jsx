@@ -4,9 +4,11 @@ import BtnBase from "@/shared/BtnBase";
 import { usePopupStore } from "@/store/popupStore";
 import CloseIcon from "@/icons/CloseIcon";
 import { useCreateChannelFolder } from "@/lib/useCreateChannelFolder";
+import { useUser } from "@/lib/useUser";
 
 const CreateFolderPopup = () => {
   const { closePopup } = usePopupStore();
+  const { user } = useUser();
   const { mutate: createFolder, isLoading } = useCreateChannelFolder();
   
   const [folderName, setFolderName] = useState("");
@@ -37,7 +39,7 @@ const CreateFolderPopup = () => {
         unifiedPostingSettings: false,
         unifiedScheduleSettings: false,
         individualPromotionSettings: true,
-        ownerTelegramId: String(localStorage.getItem("userId"))
+        ownerTelegramId: user.telegramId
       },
       {
         onSuccess: () => closePopup(),
