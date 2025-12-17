@@ -6,43 +6,50 @@ import arrow_close from "@/assets/arrow-close.svg";
 import acc_icon from "@/assets/acc-icon.png";
 import { usePopupStore } from "@/store/popupStore";
 import { useSidebarStore } from "@/store/sidebarStore";
-import useTelegramAuth from "@/api/telegramAuth";
+import { useMutation } from '@tanstack/react-query';
+import { telegramAuth as telegramAuthApi } from '@/api/telegramAuth'; 
 
 const Sidebar = () => {
   const { openPopup } = usePopupStore()
-  const { 
-    activePage, 
-    setActivePage, 
-    isSidebarVisible, 
+  const {
+    activePage,
+    setActivePage,
+    isSidebarVisible,
     hideSidebar,
     showSidebar
   } = useSidebarStore();
+  const telegramAuthMutation = useMutation({
+  mutationFn: (userData) => telegramAuthApi(userData),
+  onSuccess: (data) => {
+    localStorage.setItem("accessToken", data.accessToken);
+    localStorage.setItem("refreshToken", data.refreshToken);
+    console.log("Авторизация успешна", data);
+  },
+  onError: (error) => {
+    console.error("Ошибка авторизации:", error.message);
+  },
+});
+  const handleTelegramResponse = (user) => {
+    const { id, first_name, last_name, username, photo_url } = user;
 
-  const telegramAuth = useTelegramAuth();
+    console.log("ID:", id);
+    console.log("Имя:", first_name);
+    console.log("Фамилия:", last_name);
+    console.log("Username:", username);
+    console.log("Фото:", photo_url);
 
-  const handleTelegramResponse = (userData) => {
-    telegramAuth.mutate(userData, {
-      onSuccess: (data) => {
-          console.log("Авторизация успешна", data);
-          localStorage.setItem("accessToken", data.accessToken);
-          localStorage.setItem("refreshToken", data.refreshToken);
-        },
-        onError: (error) => {
-          console.error("Ошибка при авторизации:", error.message);
-        },
-      });
+    telegramAuthMutation.mutate(user);
+  };
+
+  useEffect(() => {
+    window.onTelegramAuth = (user) => {
+      console.log("Telegram user:", user);
+      handleTelegramResponse(user);
     };
-
-    useEffect(() => {
-    window.onTelegramAuth = (userData) => {
-      console.log("Telegram user:", userData);
-      handleTelegramResponse(userData);
-    };
-
     const script = document.createElement("script");
     script.src = "https://telegram.org/js/telegram-widget.js?22";
     script.async = true;
-    script.setAttribute("data-telegram-login", "BEEPOSTING_BOT"); 
+    script.setAttribute("data-telegram-login", "LOGINAIPOSTINGBOT");
     script.setAttribute("data-size", "large");
     script.setAttribute("data-onauth", "onTelegramAuth(user)");
     script.setAttribute("data-request-access", "write");
@@ -62,7 +69,7 @@ const Sidebar = () => {
         <SidebarTitle>
           <mark>AI</mark>{isSidebarVisible && 'Post'}
         </SidebarTitle>
-        <SidebarClose $isSidebarVisible={isSidebarVisible} src={arrow_close} alt="arrow close" onClick={() => isSidebarVisible ? hideSidebar() : showSidebar()}/>
+        <SidebarClose $isSidebarVisible={isSidebarVisible} src={arrow_close} alt="arrow close" onClick={() => isSidebarVisible ? hideSidebar() : showSidebar()} />
       </SidebarHead>
       <SidebarNavContainer $isSidebarVisible={isSidebarVisible}>
         {sidebarDatas.map((section, sectionIndex) => (
@@ -92,17 +99,17 @@ const Sidebar = () => {
             </SidebarList>
           </SidebarNav>
         ))}
-        </SidebarNavContainer>
-      <SidebarFooter  $isSidebarVisible={isSidebarVisible}>
+      </SidebarNavContainer>
+      <SidebarFooter $isSidebarVisible={isSidebarVisible}>
         <SidebarFooterTop onClick={() => openPopup("profile")}>
           <SidebarAvaContainer>
             <SidebarAva src={acc_icon} alt="accaunt icon" />
           </SidebarAvaContainer>
           {isSidebarVisible && <p>Arseniy P.</p>}
         </SidebarFooterTop>
-          <TelegramLoginButton>
-              <div id="telegram-button"></div>
-            </TelegramLoginButton>
+        <TelegramLoginButton>
+          <div id="telegram-button"></div>
+        </TelegramLoginButton>
         <SidebarFooterBtn onClick={() => openPopup("replenish")}>+ {isSidebarVisible && 'Пополнить'} </SidebarFooterBtn>
       </SidebarFooter>
     </SidebarContainer>
