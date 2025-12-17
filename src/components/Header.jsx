@@ -5,12 +5,14 @@ import burger from "@/assets/header/burger.svg";
 import { usePopupStore } from "@/store/popupStore"
 import { useMenuStore } from "@/store/menuStore";
 import { useUser } from "@/lib/useUser";
+import { useUserBalance } from "@/lib/useUserBalance";
 
 const Header = () => {
 	const { openPopup } = usePopupStore();
 	const { menu, openMenu, closeMenu } = useMenuStore();
 	const { user } = useUser();
-
+	const { balance } = useUserBalance();
+	
 	return (
 		<HeaderContainer>
 			<HeaderContent>
@@ -22,7 +24,7 @@ const Header = () => {
 					<h3>{user?.firstName} {user?.lastName}</h3>
 					<HeaderBalanceContent>
 						<HeaderSubtext>Баланс:</HeaderSubtext>
-						<HeaderBalance>1, 876 <mark>₽</mark></HeaderBalance>
+						<HeaderBalance>{balance} <mark>₽</mark></HeaderBalance>
 					</HeaderBalanceContent>
 				</HeaderBalanceContainer>
 				<HeaderBtnAdd onClick={() => openPopup("replenish")}>+ Пополнить</HeaderBtnAdd>
