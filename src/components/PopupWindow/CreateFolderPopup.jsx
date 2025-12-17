@@ -1,10 +1,17 @@
+import { useState } from "react";
 import styled from "styled-components";
 import BtnBase from "@/shared/BtnBase";
 import { usePopupStore } from "@/store/popupStore";
 import CloseIcon from "@/icons/CloseIcon";
+import { useCreateChannelFolder } from "@/lib/useCreateChannelFolder";
 
 const CreateFolderPopup = () => {
   const { closePopup } = usePopupStore();
+  const { mutate: createFolder, isLoading } = useCreateChannelFolder();
+
+  const [folderName, setFolderName] = useState("");
+  const [folderDescription, setFolderDescription] = useState("");
+  const [selectedColor, setSelectedColor] = useState("#264780");
 
   const colorOptions = [
     "#264780",
@@ -18,31 +25,73 @@ const CreateFolderPopup = () => {
     "#69315B",
   ];
 
+  const handleCreate = () => {
+    if (!folderName) return alert("Введите название папки");
+
+    createFolder(
+      {
+        name: folderName,
+        description: folderDescription,
+        color: selectedColor,
+        icon: "📁",
+        unifiedPostingSettings: false,
+        unifiedScheduleSettings: false,
+        individualPromotionSettings: true,
+        ownerTelegramId: localStorage.getItem("userId"),
+      },
+      {
+        onSuccess: () => closePopup(),
+      }
+    );
+  };
+
   return (
     <div>
       <CreateFolderHead>
         <HeadTitle>Создать папку</HeadTitle>
-        <CloseIcon color="#336CFF" onClick={closePopup}/>
+        <CloseIcon color="#336CFF" onClick={closePopup} />
       </CreateFolderHead>
       <CreateFolderSubtitle>
         Используйте папки для удобства управления каналами
       </CreateFolderSubtitle>
 
       <CreateFolderTitle>Название папки</CreateFolderTitle>
-      <CreateFolderInput type="text" placeholder="Введите название папки" />
+      <CreateFolderInput
+        type="text"
+        placeholder="Введите название папки"
+        value={folderName}
+        onChange={(e) => setFolderName(e.target.value)}
+      />
 
       <CreateFolderTitle>Описание папки</CreateFolderTitle>
-      <CreateFolderInput type="text" placeholder="Добавьте описание" />
+      <CreateFolderInput
+        type="text"
+        placeholder="Добавьте описание"
+        value={folderDescription}
+        onChange={(e) => setFolderDescription(e.target.value)}
+      />
 
       <CreateFolderTitle>Цвет</CreateFolderTitle>
       <CreateFolderUl>
-        {colorOptions.map((color, index) => (
-          <ColorItem key={index} $color={color} />
+        {colorOptions.map((color) => (
+          <ColorItem
+            key={color}
+            $color={color}
+            $selected={selectedColor === color}
+            onClick={() => setSelectedColor(color)}
+          />
         ))}
       </CreateFolderUl>
 
       <CreateFolderButtons>
-        <BtnBase $color="#D6DCEC" $bg="#336CFF">Создать</BtnBase>
+        <BtnBase
+          $color="#D6DCEC"
+          $bg="#336CFF"
+          onClick={handleCreate}
+          disabled={isLoading}
+        >
+          {isLoading ? "Создание..." : "Создать"}
+        </BtnBase>
         <BtnBase onClick={closePopup} $color="#D6DCEC" $bg="#242A3A">
           Отменить
         </BtnBase>
@@ -82,6 +131,7 @@ const CreateFolderTitle = styled.h2`
   margin: 48px 0 26px;
   border: none;
 `;
+
 const CreateFolderInput = styled.input`
   background-color: transparent;
   width: 100%;
@@ -91,13 +141,11 @@ const CreateFolderInput = styled.input`
   padding-bottom: 24px;
   border: none;
   border-bottom: 2px solid #2e3954;
-  &:first-child {
-    font-size: 24px !important;
-  }
   &::placeholder {
     color: #d6dcec;
   }
 `;
+
 const CreateFolderUl = styled.ul`
   display: flex;
   gap: 8px;
@@ -110,7 +158,9 @@ const ColorItem = styled.li`
   height: 40px;
   background-color: ${(props) => props.$color};
   cursor: pointer;
+  border: ${(props) => (props.$selected ? "3px solid #336CFF" : "none")};
 `;
+
 const CreateFolderButtons = styled.div`
   display: flex;
   gap: 8px;
