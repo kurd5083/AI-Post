@@ -105,9 +105,7 @@ const Sidebar = () => {
             {isSidebarVisible && <p>Arseniy P.</p>}
           </SidebarFooterTop>
         ) : (
-          <TelegramLoginButton>
-            <div id="telegram-button"></div>
-          </TelegramLoginButton>
+          <div id="telegram-button"></div>
         )}
         <SidebarFooterBtn onClick={() => openPopup("replenish")}>+ {isSidebarVisible && 'Пополнить'} </SidebarFooterBtn>
       </SidebarFooter>
