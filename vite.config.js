@@ -18,5 +18,14 @@ export default defineConfig({
       '@/icons': path.resolve(__dirname, 'src/icons'),
       '@/api': path.resolve(__dirname, 'src/api'),
     },
+  },
+  server: {
+    proxy: {
+      '/api': {
+        target: 'http://77.37.65.40:3000',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, '/api'),
+      },
+    },
   }
 })
