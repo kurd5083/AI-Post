@@ -21,7 +21,7 @@ const Sidebar = () => {
   } = useSidebarStore();
 
   const userId = localStorage.getItem("userId");
-  
+
   const { data: user} = useQuery({
     queryKey: ['user', userId],
     queryFn: () => getUserById(userId),
@@ -109,9 +109,9 @@ const Sidebar = () => {
         {localStorage.getItem("accessToken") ? (
           <SidebarFooterTop onClick={() => openPopup("profile")}>
             <SidebarAvaContainer>
-              <SidebarAva src={user?.photo_url} alt={user?.username} />
+              <SidebarAva src={user?.avatarUrl} alt={user?.username} />
             </SidebarAvaContainer>
-            {isSidebarVisible && <p>{user?.first_name} {user?.last_name}</p>}
+            {isSidebarVisible && <p>{user?.firstName} {user?.lastName}</p>}
           </SidebarFooterTop>
         ) : (
           <div id="telegram-button"></div>
