@@ -1,14 +1,7 @@
-import fetch from 'node-fetch';
-
 export async function handler(event, context) {
   try {
-    // Получаем путь после функции
-    let path = event.path.replace(/^\/.netlify\/functions\/api-proxy/, ''); // "/api/users/auth/telegram"
-
-    // Убираем ведущий /api, если есть
-    if (path.startsWith('/api')) {
-      path = path.replace(/^\/api/, ''); // теперь "/users/auth/telegram"
-    }
+    let path = event.path.replace(/^\/.netlify\/functions\/api-proxy/, '');
+    if (path.startsWith('/api')) path = path.replace(/^\/api/, '');
 
     const apiUrl = `http://77.37.65.40:3000/api/v1${path}${event.queryStringParameters ? '?' + new URLSearchParams(event.queryStringParameters) : ''}`;
 
