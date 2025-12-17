@@ -28,7 +28,7 @@ const Sidebar = () => {
   });
 
   const telegramAuthMutation = useMutation({
-    mutationFn: (userData) => console.log(userData),
+    mutationFn: (userData) => postTelegramAuth(userData),
     onSuccess: (data) => {
       localStorage.setItem("accessToken", data.accessToken);
       localStorage.setItem("refreshToken", data.refreshToken);
