@@ -21,20 +21,20 @@ const Sidebar = () => {
   } = useSidebarStore();
 
   const userId = localStorage.getItem("userId");
+  
   const { data: user} = useQuery({
     queryKey: ['user', userId],
     queryFn: () => getUserById(userId),
     enabled: !!userId,
   });
+
   console.log(user)
   const telegramAuthMutation = useMutation({
     mutationFn: (userData) => postTelegramAuth(userData),
     onSuccess: (data) => {
       localStorage.setItem("accessToken", data.accessToken);
       localStorage.setItem("refreshToken", data.refreshToken);
-
-      localStorage.setItem("userId", data.userId);
-
+      localStorage.setItem("userId", data.user.id);
       console.log("Авторизация успешна", data);
     },
     onError: (error) => {
@@ -109,7 +109,7 @@ const Sidebar = () => {
         {localStorage.getItem("accessToken") ? (
           <SidebarFooterTop onClick={() => openPopup("profile")}>
             <SidebarAvaContainer>
-              <SidebarAva src={user?.photo_url || acc_icon} alt={user?.username || 'account icon'} />
+              <SidebarAva src={user?.photo_url} alt={user?.username} />
             </SidebarAvaContainer>
             {isSidebarVisible && <p>{user?.first_name} {user?.last_name}</p>}
           </SidebarFooterTop>
