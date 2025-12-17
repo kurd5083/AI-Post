@@ -4,7 +4,6 @@ import del from "@/assets/del.svg";
 import setting from "@/assets/setting.svg";
 import list from "@/assets/table-groups/list.svg";
 import { usePopupStore } from "@/store/popupStore"
-import { tableHomeDatas } from "@/data/tableHomeDatas";
 import useResolution from "@/lib/useResolution";
 import { useChannelsGroupedByFolders } from '@/lib/useChannelsGroupedByFolders';
 
@@ -12,7 +11,11 @@ const TableGroups = () => {
   const { openPopup } = usePopupStore();
   const { isSmall } = useResolution();
   const { channels } = useChannelsGroupedByFolders();
-  console.log(channels)
+  if (!channels) {
+  console.log("Данные ещё загружаются");
+} else {
+  console.log(channels); // данные уже пришли
+}
   return (
     <Table>
       <colgroup>
