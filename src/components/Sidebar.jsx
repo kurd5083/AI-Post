@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { Link } from "react-router";
 import styled from "styled-components";
 import { sidebarDatas } from "@/data/sidebarDatas";
@@ -5,6 +6,7 @@ import arrow_close from "@/assets/arrow-close.svg";
 import acc_icon from "@/assets/acc-icon.png";
 import { usePopupStore } from "@/store/popupStore";
 import { useSidebarStore } from "@/store/sidebarStore";
+import useTelegramAuth from "@/api/telegramAuth";
 
 const Sidebar = () => {
   const { openPopup } = usePopupStore()
@@ -15,7 +17,45 @@ const Sidebar = () => {
     hideSidebar,
     showSidebar
   } = useSidebarStore();
-  
+
+  const telegramAuth = useTelegramAuth();
+
+  const handleTelegramResponse = (userData) => {
+    telegramAuth.mutate(userData, {
+      onSuccess: (data) => {
+          console.log("Авторизация успешна", data);
+          localStorage.setItem("accessToken", data.accessToken);
+          localStorage.setItem("refreshToken", data.refreshToken);
+        },
+        onError: (error) => {
+          console.error("Ошибка при авторизации:", error.message);
+        },
+      });
+    };
+
+    useEffect(() => {
+    window.onTelegramAuth = (userData) => {
+      console.log("Telegram user:", userData);
+      handleTelegramResponse(userData);
+    };
+
+    const script = document.createElement("script");
+    script.src = "https://telegram.org/js/telegram-widget.js?22";
+    script.async = true;
+    script.setAttribute("data-telegram-login", "aaaaaaaaaaaaaaaaaaa1_bot"); 
+    script.setAttribute("data-size", "large");
+    script.setAttribute("data-onauth", "onTelegramAuth(user)");
+    script.setAttribute("data-request-access", "write");
+
+    const telegramButton = document.getElementById("telegram-button");
+    telegramButton.appendChild(script);
+
+    return () => {
+      telegramButton.innerHTML = "";
+      delete window.onTelegramAuth;
+    };
+  }, []);
+
   return (
     <SidebarContainer $isSidebarVisible={isSidebarVisible}>
       <SidebarHead $isSidebarVisible={isSidebarVisible}>
@@ -60,6 +100,9 @@ const Sidebar = () => {
           </SidebarAvaContainer>
           {isSidebarVisible && <p>Arseniy P.</p>}
         </SidebarFooterTop>
+          <TelegramLoginButton>
+              <div id="telegram-button"></div>
+            </TelegramLoginButton>
         <SidebarFooterBtn onClick={() => openPopup("replenish")}>+ {isSidebarVisible && 'Пополнить'} </SidebarFooterBtn>
       </SidebarFooter>
     </SidebarContainer>
@@ -205,6 +248,15 @@ const SidebarAvaContainer = styled.div`
     top: 0;
     right: 0;
     border-radius: 50%;
+  }
+`
+const TelegramLoginButton = styled.div`
+  margin-left: 12px;
+  display: flex;
+  align-items: center;
+
+  & > script {
+    display: block;
   }
 `
 const SidebarAva = styled.img`

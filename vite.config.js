@@ -16,6 +16,7 @@ export default defineConfig({
       '@/shared': path.resolve(__dirname, 'src/shared'),
       '@/lib': path.resolve(__dirname, 'src/lib'),
       '@/icons': path.resolve(__dirname, 'src/icons'),
+      '@/api': path.resolve(__dirname, 'src/api'),
     },
   }
 })
