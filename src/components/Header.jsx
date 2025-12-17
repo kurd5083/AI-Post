@@ -1,24 +1,25 @@
 import styled from "styled-components";
 import money from "@/assets/header/money.svg";
 import bell from "@/assets/bell.svg";
-import acc_icon from "@/assets/acc-icon.png";
 import burger from "@/assets/header/burger.svg";
 import { usePopupStore } from "@/store/popupStore"
 import { useMenuStore } from "@/store/menuStore";
+import { useUser } from "@/lib/useUser";
 
 const Header = () => {
 	const { openPopup } = usePopupStore();
 	const { menu, openMenu, closeMenu } = useMenuStore();
+	const { user } = useUser();
 
 	return (
 		<HeaderContainer>
 			<HeaderContent>
 				<HeaderAvaContainer onClick={() => openPopup("profile")}>
-					<HeaderAva src={acc_icon} alt="accaunt icon" />
+					<HeaderAva src={user?.avatarUrl} alt={user?.username} />
 				</HeaderAvaContainer>
 				<HeaderBalanceImg src={money} alt="money icon" />
 				<HeaderBalanceContainer>
-					<h3>Arseniy P.</h3>
+					<h3>{user?.firstName} {user?.lastName}</h3>
 					<HeaderBalanceContent>
 						<HeaderSubtext>Баланс:</HeaderSubtext>
 						<HeaderBalance>1, 876 <mark>₽</mark></HeaderBalance>

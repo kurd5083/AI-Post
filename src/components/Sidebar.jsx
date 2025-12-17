@@ -3,15 +3,15 @@ import { Link } from "react-router";
 import styled from "styled-components";
 import { sidebarDatas } from "@/data/sidebarDatas";
 import arrow_close from "@/assets/arrow-close.svg";
-import acc_icon from "@/assets/acc-icon.png";
 import { usePopupStore } from "@/store/popupStore";
 import { useSidebarStore } from "@/store/sidebarStore";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { postTelegramAuth } from '@/api/postTelegramAuth'; 
-import { getUserById } from "@/api/getUserById";
+import { useUser } from "@/lib/useUser";
 
 const Sidebar = () => {
   const { openPopup } = usePopupStore()
+  const { user } = useUser();
   const {
     activePage,
     setActivePage,
@@ -20,15 +20,6 @@ const Sidebar = () => {
     showSidebar
   } = useSidebarStore();
 
-  const userId = localStorage.getItem("userId");
-
-  const { data: user} = useQuery({
-    queryKey: ['user', userId],
-    queryFn: () => getUserById(userId),
-    enabled: !!userId,
-  });
-
-  console.log(user)
   const telegramAuthMutation = useMutation({
     mutationFn: (userData) => postTelegramAuth(userData),
     onSuccess: (data) => {

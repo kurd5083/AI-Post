@@ -2,19 +2,20 @@ import styled from "styled-components";
 import Statistics from "@/components/Home/Statistics"
 import BtnBase from "@/shared/BtnBase";
 import { usePopupStore } from "@/store/popupStore"
-import acc_icon from "@/assets/acc-icon.png";
+import { useUser } from "@/lib/useUser";
 
 const ProfilePopup = () => {
   const { changeContent } = usePopupStore();
+  const { user } = useUser();
 
   return (
     <div>
       <ProfileHead>
         <ProfileLeft>
           <ProfileAvaContainer>
-            <ProfileAva src={acc_icon} alt="accaunt icon" />
+            <ProfileAva src={user?.avatarUrl} alt={user?.username} />
           </ProfileAvaContainer>
-          <ProfileName>Arseniy Popkov</ProfileName>
+          <ProfileName>{user?.firstName} {user?.lastName}</ProfileName>
         </ProfileLeft>
         <ButtonAcc>
           <BtnBase $padding="17px 24px" $bg="#37273F" $color="#EF6284">Выйти из аккаунта</BtnBase>
