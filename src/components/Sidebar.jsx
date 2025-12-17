@@ -19,16 +19,16 @@ const Sidebar = () => {
     showSidebar
   } = useSidebarStore();
   const telegramAuthMutation = useMutation({
-  mutationFn: (userData) => telegramAuthApi(userData),
-  onSuccess: (data) => {
-    localStorage.setItem("accessToken", data.accessToken);
-    localStorage.setItem("refreshToken", data.refreshToken);
-    console.log("Авторизация успешна", data);
-  },
-  onError: (error) => {
-    console.error("Ошибка авторизации:", error.message);
-  },
-});
+    mutationFn: (userData) => telegramAuthApi(userData),
+    onSuccess: (data) => {
+      localStorage.setItem("accessToken", data.accessToken);
+      localStorage.setItem("refreshToken", data.refreshToken);
+      console.log("Авторизация успешна", data);
+    },
+    onError: (error) => {
+      console.error("Ошибка авторизации:", error.message);
+    },
+  });
   const handleTelegramResponse = (user) => {
     const { id, first_name, last_name, username, photo_url } = user;
 
