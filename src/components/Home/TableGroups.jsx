@@ -11,7 +11,7 @@ const TableGroups = () => {
   const { openPopup } = usePopupStore();
   const { isSmall } = useResolution();
   const { channels } = useChannelsGroupedByFolders();
-
+  console.log(channels)
   return (
     <Table>
       <colgroup>
