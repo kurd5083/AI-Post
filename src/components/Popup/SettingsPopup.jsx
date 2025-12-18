@@ -19,7 +19,7 @@ const SettingsPopup = () => {
 					<PopupContentTitle>{section.label}</PopupContentTitle>
 					<ul>
 						{section.items.map((item, index) => (
-							<PopupContentItem key={index} onClick={item.right !== 'switch' ? () => changeContent(item.key, { channelId: channelId }) : undefined}>
+							<PopupContentItem key={index} onClick={item.right !== 'switch' ? () => changeContent(item.key, '', '', { channelId: channelId }) : undefined}>
 								<PopupContentLeft>
 									<img src={item.extra.image} alt={item.name} style={{ background: item.extra.background }} width={40} height={40} />
 									<PopupContentInfo $place={item.place} $size={item.size} $publications={item.key}>
@@ -59,28 +59,28 @@ const SettingsPopup = () => {
 	)
 }
 const SettingsContainer = styled.div`
-    padding: 0 56px;
-    @media(max-width: 1600px) {
-        padding: 0 32px;
-    }
-    @media(max-width: 768px) {
-        padding: 0 24px;
-    }
+  padding: 0 56px;
+  @media(max-width: 1600px) {
+    padding: 0 32px;
+  }
+  @media(max-width: 768px) {
+    padding: 0 24px;
+  }
 `
 const PopupNav = styled.nav`
-    margin-top: 40px;
-    display: flex;
-    flex-direction: column;
-    gap: 33px;
-    &:first-child {
-        margin-top: 0;
-    }
+  margin-top: 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 33px;
+  &:first-child {
+    margin-top: 0;
+  }
 `
 const PopupContentTitle = styled.h2`
-    color: #6A7080;
-    font-size: 12px;
-    font-weight: 700;
-    text-transform: uppercase;
+  color: #6A7080;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
 `
 const PopupContentItem = styled.li`
   display: flex;
