@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { getChannelFolders } from "@/api/getChannelFolders";
-import { useUser } from "@/hooks/useUser";
+import { useUser } from "@/lib/useUser";
 
 export const useChannelFolders = () => {
   const { user } = useUser();
