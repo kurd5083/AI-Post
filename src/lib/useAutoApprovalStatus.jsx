@@ -11,7 +11,7 @@ export const useAutoApprovalStatus = (channelId) => {
   });
 
   const { mutate: setAutoApprovalStatus} = useMutation({
-    mutationFn: updateAutoApprovalStatus,
+    mutationFn: (channelId) => updateAutoApprovalStatus(channelId),
     onSuccess: (updatedData) => {
       queryClient.setQueryData(["autoApprovalStatus", channelId], updatedData);
     },
