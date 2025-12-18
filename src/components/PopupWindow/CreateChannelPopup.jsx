@@ -117,6 +117,9 @@ const CreateChannelPopup = () => {
 				placeholder="Без папки"
 				value={folderId || ""}
 				onChange={(e) => setFolderId(Number(e.target.value) || null)}
+				width="100%"
+				fs="16px"
+				padding="24px"
 				options={
 					channelsFolders
 						? channelsFolders.map((folder) => ({
