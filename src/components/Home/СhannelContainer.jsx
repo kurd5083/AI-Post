@@ -8,7 +8,7 @@ const СhannelContainer = ({ children }) => {
   const { fadeVisible, ref } = useFadeOnScroll(20);
   const { initChannels } = useChannelsStore();
   const { channels } = useChannelsGroupedByFolders();
-
+  console.log(channels)
   useEffect(() => {
     if (channels) initChannels(channels);
   }, [channels, initChannels]);

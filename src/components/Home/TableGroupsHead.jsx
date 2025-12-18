@@ -53,7 +53,6 @@ const TableGroups = () => {
               key={folder.id} 
               onClick={() => handleFolderClick(folder.id, folder.channels)}
               $active={selectedFolderId === folder.id}
-              
             >
               <img src={dir} alt="dir icon" /><p>{folder.name}</p> <mark>{folder.channels.length}</mark>
               <DeleteFolderButton src={del} alt="del icon" onClick={(e) => {
