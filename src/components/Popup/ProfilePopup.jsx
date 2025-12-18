@@ -26,9 +26,9 @@ const ProfilePopup = () => {
       <Statistics />
       <ProfileBalance>
         <h2>Ваш баланс:</h2>
-        <p>{balance.balanceRubles}
+        {/* <p>{balance.balanceRubles} */}
           {/* <mark>,48</mark> */}
-        руб.</p>
+        {/* руб.</p> */}
         <BtnBase $padding="21px 24px" onClick={() => changeContent("replenish")}>+ Пополнить кошелек</BtnBase>
       </ProfileBalance>
       <ProfileInfos>

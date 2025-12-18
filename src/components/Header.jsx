@@ -12,7 +12,7 @@ const Header = () => {
 	const { menu, openMenu, closeMenu } = useMenuStore();
 	const { user } = useUser();
 	const { balance } = useUserBalance();
-	
+	console.log(balance)
 	return (
 		<HeaderContainer>
 			<HeaderContent>
@@ -24,7 +24,7 @@ const Header = () => {
 					<h3>{user?.firstName} {user?.lastName}</h3>
 					<HeaderBalanceContent>
 						<HeaderSubtext>Баланс:</HeaderSubtext>
-						<HeaderBalance>{balance.balanceRubles} <mark>₽</mark></HeaderBalance>
+						{/* <HeaderBalance>{balance.balanceRubles} <mark>₽</mark></HeaderBalance> */}
 					</HeaderBalanceContent>
 				</HeaderBalanceContainer>
 				<HeaderBtnAdd onClick={() => openPopup("replenish")}>+ Пополнить</HeaderBtnAdd>
