@@ -1,11 +1,11 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { createChannelFolder } from "@/api/createChannelFolder";
+import { createFolder } from "@/api/createFolder";
 
-export const useCreateChannelFolder = () => {
+export const usecreateFolder = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (folderData) => createChannelFolder(folderData),
+    mutationFn: (folderData) => createFolder(folderData),
     onSuccess: (data) => {
       queryClient.invalidateQueries(["channelsGroupedByFolders"]);
       console.log("Папка успешно создана:", data);

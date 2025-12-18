@@ -3,14 +3,13 @@ import styled from "styled-components";
 import BtnBase from "@/shared/BtnBase";
 import { usePopupStore } from "@/store/popupStore";
 import CloseIcon from "@/icons/CloseIcon";
-import { useCreateChannelFolder } from "@/lib/useCreateChannelFolder";
+import { useCreateFolder } from "@/lib/useCreateFolder";
 import { useUser } from "@/lib/useUser";
 
 const CreateFolderPopup = () => {
   const { closePopup } = usePopupStore();
   const { user } = useUser();
-  const { mutate: createFolder, isLoading } = useCreateChannelFolder();
-  
+  const { mutate: createFolder, isLoading } = useCreateFolder();
   const [folderName, setFolderName] = useState("");
   const [folderDescription, setFolderDescription] = useState("");
   const [selectedColor, setSelectedColor] = useState("#264780");

@@ -5,15 +5,13 @@ import { usePopupStore } from "@/store/popupStore";
 import CloseIcon from "@/icons/CloseIcon";
 import { useUser } from "@/lib/useUser";
 import { useCreateChannel } from "@/lib/useCreateChannel";
-import { useEmptyChannelFolders } from "@/lib/useEmptyChannelFolders";
 import CustomSelect from "@/shared/CustomSelectSec";
+import { useChannelsGroupedByFolders } from "@/lib/useChannelsGroupedByFolders";
 
 const CreateChannelPopup = () => {
 	const { closePopup } = usePopupStore();
 	const { user } = useUser();
-	const { folders } = useEmptyChannelFolders();
 	const { mutate: createChannel } = useCreateChannel();
-
 	const [channelName, setChannelName] = useState("");
 	const [channelId, setChannelId] = useState("");
 	const [subscribersCount, setSubscribersCount] = useState(0);
@@ -23,7 +21,8 @@ const CreateChannelPopup = () => {
 	const [folderId, setFolderId] = useState(null);
 	const [keywords, setKeywords] = useState([]);
 	const [stopWords, setStopWords] = useState([]);
-	console.log(folderId)
+	const { channels } = useChannelsGroupedByFolders();
+
 	const handleCreate = () => {
 		if (!channelName || !channelId) return alert("Введите название и ID канала");
 
@@ -121,8 +120,8 @@ const CreateChannelPopup = () => {
 				fs="16px"
 				padding="24px"
 				options={
-					folders
-						? folders.map((folder) => ({
+					channels.folders
+						? channels.folders.map((folder) => ({
 							icon: folder.icon || "📁",
 							value: folder.id,
 							label: folder.name,
