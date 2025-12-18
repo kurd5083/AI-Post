@@ -21,10 +21,34 @@ import CheckboxCircle from "@/shared/CheckboxCircle";
 import CustomSelect from "@/shared/CustomSelectSec";
 import AiGeneratorIcon from "@/icons/AiGeneratorIcon";
 import useFadeOnScroll from "@/lib/useFadeOnScroll";
+import { useCreatePost } from "@/lib/useCreatePost";
 
 const AiGenerator = () => {
-  const { fadeVisible, ref } = useFadeOnScroll(20);
   const [collapsed, setCollapsed] = useState(false);
+  const [posts, setPosts] = useState([]);
+  const { mutate: createPost } = useCreatePost();
+
+  const { fadeVisible, ref } = useFadeOnScroll(20);
+
+  const handleAddPost = () => {
+    const newPost = {
+      id: Date.now(),
+      title: `Новый пост ${posts.length + 1}`,
+      progress: "0 / 1024",
+      text: "Текст публикации...",
+    };
+    setPosts([newPost, ...posts]);
+  };
+
+  // Публикация поста
+  const handlePublishPost = (post) => {
+    createPost({
+      text: post.text,
+      channelId: 1, // пример ID канала
+      title: post.title,
+      summary: post.text.slice(0, 100),
+    });
+  };
 
   useEffect(() => {
     const handleResize = () => {
@@ -39,33 +63,6 @@ const AiGenerator = () => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  const posts = [
-    {
-      id: 1,
-      title: "Пост 1",
-      progress: "325 / 1029",
-      text: "Текст публикации..."
-    },
-    {
-      id: 2,
-      title: "Пост 2",
-      progress: "780 / 1500",
-      text: "Текст публикации..."
-    },
-    {
-      id: 3,
-      title: "Пост 3",
-      progress: "1024 / 1024",
-      text: "Текст публикации..."
-    },
-    {
-      id: 4,
-      title: "Пост 4",
-      progress: "128 / 500",
-      text: "Текст публикации..."
-    }
-  ];
-
   return (
     <GeneratorContainer>
       <GeneratorHead>
@@ -73,7 +70,7 @@ const AiGenerator = () => {
           <AiGeneratorIcon width={24} height={24} />
           AI Генератор
         </h2>
-        <BtnBase $padding="21px 24px">
+        <BtnBase $padding="21px 24px" onClick={handleAddPost}>
           + Добавить пост
         </BtnBase>
       </GeneratorHead>
@@ -107,7 +104,7 @@ const AiGenerator = () => {
                 <DeleteButton>
                   <img src={del} alt="del icon" width={14} height={16} />
                 </DeleteButton>
-                <BtnBase $padding="19px 46px">
+                <BtnBase $padding="19px 46px"  onClick={() => handlePublishPost(post)}>
                   Сохранить
                 </BtnBase>
               </Buttons>
