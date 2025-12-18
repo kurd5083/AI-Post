@@ -116,7 +116,7 @@ const CreateChannelPopup = () => {
 			<CustomSelect
 				placeholder="Без папки"
 				value={folderId}
-				onChange={(e) => setFolderId(Number(e.target.value))}
+				onChange={(option) => setFolderId(option.value)}
 				width="100%"
 				fs="16px"
 				padding="24px"
