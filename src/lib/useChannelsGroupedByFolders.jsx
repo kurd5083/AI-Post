@@ -2,14 +2,12 @@ import { useQuery } from "@tanstack/react-query";
 import { getChannelsGroupedByFolders } from "@/api/getChannelsGroupedByFolders";
 
 export const useChannelsGroupedByFolders = () => {
-  // const accessToken = localStorage.getItem("accessToken");
-
   const { data: channels } = useQuery({
     queryKey: ["channelsGroupedByFolders"],
     queryFn: getChannelsGroupedByFolders,
-    // enabled: !!accessToken,
+    enabled: !!localStorage.getItem('accessToken'),
   });
 
-  return { channels: channels };
+  return { channels };
 };
 
