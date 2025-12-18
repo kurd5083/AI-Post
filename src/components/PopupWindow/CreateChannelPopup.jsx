@@ -46,7 +46,7 @@ const CreateChannelPopup = () => {
 				ownerTelegramId: Number(user.telegramId),
 				sources: [],
 				theme,
-				folderId,
+				folderId: folderId,
 				autoApprovalEnabled: false,
 			},
 			{
@@ -115,8 +115,8 @@ const CreateChannelPopup = () => {
 			<PopupTitle>Папка</PopupTitle>
 			<CustomSelect
 				placeholder="Без папки"
-				value={folderId || ""}
-				onChange={(e) => setFolderId(Number(e.target.value) || 15)}
+				value={folderId}
+				onChange={(e) => setFolderId(Number(e.target.value))}
 				width="100%"
 				fs="16px"
 				padding="24px"
