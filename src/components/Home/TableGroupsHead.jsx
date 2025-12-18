@@ -32,10 +32,8 @@ const TableGroups = () => {
 				>
 					<TableGroupsHeadDir onClick={() => openPopup("create_folder", "popup_window")}><img src={dir_filled} alt="dir icon"/>Создать папку</TableGroupsHeadDir>
 					{folders?.map((folder) => (
-           
             <TableGroupsHeadBtn><img src={dir} alt="dir icon" /><p>{folder.name}</p> <mark>6</mark></TableGroupsHeadBtn>
           ))}
-
 				</TableGroupsHeadLeft>
 				<TableGroupsHeadRight>
 					<TableGroupsHeadAdd  onClick={() => openPopup("create_channel", "popup_window")}>{isSmall ? "+ Добавить" : "+ Добавить канал"}</TableGroupsHeadAdd>
