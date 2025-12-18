@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createFolder } from "@/api/createFolder";
 
-export const usecreateFolder = () => {
+export const useCreateFolder = () => {
   const queryClient = useQueryClient();
 
   return useMutation({

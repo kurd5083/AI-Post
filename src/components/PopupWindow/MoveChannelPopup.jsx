@@ -5,18 +5,15 @@ import dir_active from "@/assets/table-groups/dir-active.svg";
 import CheckboxCircle from "@/shared/CheckboxCircle";
 import CloseIcon from "@/icons/CloseIcon";
 import { useMoveChannelToFolder } from "@/lib/useMoveChannelToFolder";
+import { useChannelsGroupedByFolders } from "@/lib/useChannelsGroupedByFolders";
 
 const MoveChannelPopup = () => {
 	const { closePopup } = usePopupStore();
 	const { mutate: moveChannel, isPending } = useMoveChannelToFolder();
+	const { channels } = useChannelsGroupedByFolders();
 
-	const handleMove = (folderId, channelId) => {
-		moveChannel({
-			channelId,
-			folderId,
-			ownerTelegramId: String(user.telegramId),
-		});
-	};
+	const handleMove = (folderId, channelId) => moveChannel({channelId, });
+
 	return (
 		<div>
 			<MoveChannelHead>
@@ -25,14 +22,17 @@ const MoveChannelPopup = () => {
 			</MoveChannelHead>
 			<MoveChannelSubtitle>Выберите папку для канала “Все о криптовалюте”</MoveChannelSubtitle>
 			<MoveChannelUl>
-				<ChannelItem>
+				{channels?.folders.map((folder) => (
+					<ChannelItem>
 					<img src={dir_active} alt="dir icon" width={31} height={21} />
 					<ItemContent>
-						<h3>Крипта</h3>
-						<p>2 канала</p>
+						<h3>{folder.item}</h3>
+						<p>{folder.channels.length} канала</p>
 					</ItemContent>
 					<CheckboxCircle />
 				</ChannelItem>
+				))}
+				
 				<ChannelItem>
 					<img src={dir_active} alt="dir icon" width={31} height={21} />
 					<ItemContent>
