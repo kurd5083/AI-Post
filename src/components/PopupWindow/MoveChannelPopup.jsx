@@ -4,10 +4,19 @@ import { usePopupStore } from "@/store/popupStore";
 import dir_active from "@/assets/table-groups/dir-active.svg";
 import CheckboxCircle from "@/shared/CheckboxCircle";
 import CloseIcon from "@/icons/CloseIcon";
+import { useMoveChannelToFolder } from "@/lib/useMoveChannelToFolder";
 
 const MoveChannelPopup = () => {
 	const { closePopup } = usePopupStore();
-	
+	const { mutate: moveChannel, isPending } = useMoveChannelToFolder();
+
+	const handleMove = (folderId, channelId) => {
+		moveChannel({
+			channelId,
+			folderId,
+			ownerTelegramId: String(user.telegramId),
+		});
+	};
 	return (
 		<div>
 			<MoveChannelHead>
@@ -34,7 +43,9 @@ const MoveChannelPopup = () => {
 				</ChannelItem>
 			</MoveChannelUl>
 			<MoveChannelButtons>
-				<BtnBase $color="#D6DCEC" $bg="#336CFF" $padding="21px">Переместить</BtnBase>
+				<BtnBase $color="#D6DCEC" $bg="#336CFF" $padding="21px"onClick={() => handleMove("123", channel.id)} disabled={isPending}>
+					{isPending ? "Перемещение..." : "Переместить"}
+				</BtnBase>
 				<BtnBase onClick={closePopup} $color="#D6DCEC" $bg="#242A3A" $padding="21px">
 					Отменить
 				</BtnBase>

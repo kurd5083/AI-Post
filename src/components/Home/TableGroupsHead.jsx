@@ -21,10 +21,10 @@ const TableGroups = () => {
   const { viewType, setGridView, setListView } = useViewStore();
   const { folders, isLoading, isError } = useChannelFolders();
 
-  if (isLoading) return <p>Загрузка...</p>;
-  if (isError) return <p>Ошибка загрузки папок</p>;
+  // if (isLoading) return <p>Загрузка...</p>;
+  // if (isError) return <p>Ошибка загрузки папок</p>;
 
-  console.log(folders);
+  // console.log(folders);
 	return (
 		<TableGroupsContainer>
 			<TableGroupsHead>
@@ -40,7 +40,7 @@ const TableGroups = () => {
 					<TableGroupsHeadBtn><img src={dir_active} alt="dir icon" /><p>Олимпиада 2027</p> <mark>16</mark></TableGroupsHeadBtn>
 				</TableGroupsHeadLeft>
 				<TableGroupsHeadRight>
-					<TableGroupsHeadAdd>{isSmall ? "+ Добавить" : "+ Добавить канал"}</TableGroupsHeadAdd>
+					<TableGroupsHeadAdd  onClick={() => openPopup("create_channel", "popup_window")}>{isSmall ? "+ Добавить" : "+ Добавить канал"}</TableGroupsHeadAdd>
 					<TableGroupsHeadShow $active={viewType === "grid"} onClick={setGridView}>
             <GridIcon color={viewType === "grid" ? "#D6DCEC" : "#6A7080"} />
           </TableGroupsHeadShow>

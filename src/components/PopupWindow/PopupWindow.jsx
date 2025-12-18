@@ -3,6 +3,7 @@ import { usePopupStore } from "@/store/popupStore"
 import CreateFolderPopup from "@/components/PopupWindow/CreateFolderPopup";
 import MoveChannelPopup from "@/components/PopupWindow/MoveChannelPopup";
 import ChangeTimePopup from "@/components/PopupWindow/ChangeTimePopup";
+import CreateChannelPopup from "@/components/PopupWindow/CreateChannelPopup";
 
 const PopupWindow = () => {
     const { popup } = usePopupStore()
@@ -16,6 +17,8 @@ const PopupWindow = () => {
                     <MoveChannelPopup />
                 ) : popup.content == 'change_time' ? (
                     <ChangeTimePopup />
+                ) : popup.content == 'create_channel' ?(
+                    <CreateChannelPopup />
                 ) : (
                     2
                 )}
