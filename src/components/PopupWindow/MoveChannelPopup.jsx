@@ -7,14 +7,16 @@ import CheckboxCircle from "@/shared/CheckboxCircle";
 import CloseIcon from "@/icons/CloseIcon";
 import { useMoveChannelToFolder } from "@/lib/useMoveChannelToFolder";
 import { useChannelsGroupedByFolders } from "@/lib/useChannelsGroupedByFolders";
+import { useUser } from "@/lib/useUser";
 
 const MoveChannelPopup = () => {
 	const { popup, closePopup } = usePopupStore();
-	console.log(popup)
 	const { mutate: moveChannel, isPending } = useMoveChannelToFolder();
 	const { channels } = useChannelsGroupedByFolders();
 	const [selectedFolderId, setSelectedFolderId] = useState(null);
-	const handleMove = (folderId, channelId) => moveChannel({ folderId, channelId });
+	const { user } = useUser();
+
+	const handleMove = (folderId, channelId) => moveChannel({ folderId, channelId, ownerTelegramId: String(user.telegramId), });
 
 	return (
 		<div>
