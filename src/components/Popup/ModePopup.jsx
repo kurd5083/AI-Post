@@ -24,7 +24,10 @@ const ModePopup = () => {
             <ModeContentTitle>Выберите один режим работы</ModeContentTitle>
             <div>
                 <ModeContentItem onClick={() => handleSelectMode("AUTOPOSTING")}>
-                    <Checkbox checked={selectedMode === "AUTOPOSTING"}>
+                    <Checkbox 
+                        checked={selectedMode === "AUTOPOSTING"}
+                        onChange={() => handleSelectMode("AUTOPOSTING")}
+                    >
                         <div>
                             <h4>Автопостинг</h4>
                             <p>Сервис будет автоматически осуществлять публикации в ваш канал или группу в
@@ -33,7 +36,10 @@ const ModePopup = () => {
                     </Checkbox>
                 </ModeContentItem>
                 <ModeContentItem onClick={() => handleSelectMode("PREMODERATION")}>
-                    <Checkbox checked={selectedMode === "PREMODERATION"}>
+                    <Checkbox  
+                        checked={selectedMode === "PREMODERATION"} 
+                        onChange={() => handleSelectMode("PREMODERATION")}
+                    >
                         <div>
                             <h4>Премодерация</h4>
                             <p>Наш бот будет отправлять вам посты на предварительную модерацию за указанное
