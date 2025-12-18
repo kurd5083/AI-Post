@@ -12,15 +12,15 @@ import { usePopupStore } from "@/store/popupStore"
 import { useViewStore } from "@/store/viewStore";
 import GridIcon from "@/icons/GridIcon";
 import ListIcon from "@/icons/ListIcon";
-import { useEmptyChannelFolders } from "@/lib/useEmptyChannelFolders";
+import { useChannelsGroupedByFolders } from "@/lib/useChannelsGroupedByFolders";
 
 const TableGroups = () => {
   const { openPopup } = usePopupStore();
 	const { isSwipe } = useSwipeAllowed(768);
 	const { isSmall } = useResolution(480);
   const { viewType, setGridView, setListView } = useViewStore();
-  const { folders } = useEmptyChannelFolders();
-
+  const { channels } = useChannelsGroupedByFolders();
+  
 	return (
 		<TableGroupsContainer>
 			<TableGroupsHead>
@@ -30,9 +30,15 @@ const TableGroups = () => {
 					slidesPerView="auto"
 					allowTouchMove={isSwipe}
 				>
-					<TableGroupsHeadDir onClick={() => openPopup("create_folder", "popup_window")}><img src={dir_filled} alt="dir icon"/>Создать папку</TableGroupsHeadDir>
-					{folders?.map((folder) => (
-            <TableGroupsHeadBtn><img src={dir} alt="dir icon" /><p>{folder.name}</p> <mark>6</mark></TableGroupsHeadBtn>
+				  <TableGroupsHeadDir onClick={() => openPopup("create_folder", "popup_window")}><img src={dir_filled} alt="dir icon"/>Создать папку</TableGroupsHeadDir>
+          <TableGroupsHeadBtn>
+            <img src={dir} alt="dir icon" />
+            <p>Без папки</p>
+            <mark>{channels.totalChannelsWithoutFolder}</mark>
+          </TableGroupsHeadBtn>
+
+          {channels.folders?.map((folder) => (
+            <TableGroupsHeadBtn><img src={dir} alt="dir icon" /><p>{folder.name}</p> <mark>{folder.channels.length}</mark></TableGroupsHeadBtn>
           ))}
 				</TableGroupsHeadLeft>
 				<TableGroupsHeadRight>
