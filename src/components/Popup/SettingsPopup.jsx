@@ -1,40 +1,18 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import styled from "styled-components";
 import arrow from "@/assets/arrow.svg";
 import bell_blue from "@/assets/popup/bell-blue.svg";
 import { settingsDatas } from "@/data/settingsDatas";
 import ToggleSwitch from "@/shared/ToggleSwitch";
 import { usePopupStore } from "@/store/popupStore"
-import { useToggleSwitch } from "@/lib/useToggleSwitch";
+import { useAutoApprovalStatus } from "@/lib/useAutoApprovalStatus";
 
 const SettingsPopup = () => {
-	const { changeContent } = usePopupStore()
-  const { popup } = usePopupStore();
-
+	const { changeContent, popup } = usePopupStore();
   const channelId = popup?.data?.channelId;
   
-  const [autoApprovalEnabled, setAutoApprovalEnabled] = useState(false);
-  const [promotionEnabled, setPromotionEnabled] = useState(false);
+  const { autoApprovalStatus } = useAutoApprovalStatus(channelId);
 
-  const autoApprovalMutation = useToggleSwitch(channelId, "autoApproval");
-  const promotionMutation = useToggleSwitch(channelId, "promotion");
-
-  const handleSwitchToggle = (item, checked) => {
-    if (!channelId) return;
-
-    if (item.key === "auto_accepting") {
-      autoApprovalMutation.mutate(checked, {
-        onSuccess: () => setAutoApprovalEnabled(checked),
-        onError: (err) => console.error(err),
-      });
-    } else if (item.key === "activate_promotion") {
-      promotionMutation.mutate(checked, {
-        onSuccess: () => setPromotionEnabled(checked),
-        onError: (err) => console.error(err),
-      });
-    }
-  };
-    
 	return (
 		<SettingsContainer>
 			{settingsDatas.sections.map((section) => (
@@ -47,15 +25,7 @@ const SettingsPopup = () => {
 									<img src={item.extra.image} alt={item.name} style={{ background: item.extra.background }} width={40} height={40} />
 									<PopupContentInfo $place={item.place} $size={item.size} $publications={item.key}>
 										<h3>{item.name}</h3>
-										{item.status && 
-                      <span>
-                        {item.key === "auto_accepting"
-                          ? autoApprovalEnabled ? "Включено" : "Выключено"
-                          : item.key === "activate_promotion"
-                          ? promotionEnabled ? "Включено" : "Выключено"
-                          : item.status}
-                      </span>
-                    }
+										{item.status && <span>{item.status}</span>}
 									</PopupContentInfo>
 								</PopupContentLeft>
 								{item.right == 'arrow' ? (
@@ -63,10 +33,6 @@ const SettingsPopup = () => {
 								) : item.right == 'switch' ? (
 									<ToggleSwitch 
                     bg="#FF9C55" 
-                    checked={
-                      item.key === "auto_accepting" ? autoApprovalEnabled : promotionEnabled
-                    }
-                    onChange={(checked) => handleSwitchToggle(item, checked)}
                   />
 								) : item.right == 'textarrow' ? (
 									<PopupContentRight>
