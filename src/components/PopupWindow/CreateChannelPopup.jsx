@@ -23,7 +23,7 @@ const CreateChannelPopup = () => {
 	const [folderId, setFolderId] = useState(null);
 	const [keywords, setKeywords] = useState([]);
 	const [stopWords, setStopWords] = useState([]);
-
+	console.log(folderId)
 	const handleCreate = () => {
 		if (!channelName || !channelId) return alert("Введите название и ID канала");
 
