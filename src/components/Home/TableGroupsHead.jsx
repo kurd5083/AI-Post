@@ -153,7 +153,6 @@ const TableGroupsHeadBtn = styled(SwiperSlide)`
 const DeleteFolderButton = styled.img`
   cursor: pointer;
   width: 12px;
-  margin-top: -6px;
 `;
 const TableGroupsHeadRight = styled.div`
   display: flex;

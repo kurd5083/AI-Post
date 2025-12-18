@@ -13,7 +13,7 @@ const GridGroups = () => {
 
   return (
     <GridContainer>
-      {selectedChannels.map((channel,index) => (
+      {selectedChannels && selectedChannels.length > 0 ? (
         <GridItem key={channel.id}>
           <GridItemNum>#{index++}</GridItemNum>
           <GridImg src={channel.avatarUrl} alt="Group" />
@@ -29,7 +29,11 @@ const GridGroups = () => {
             <ButtonDel onClick={() => deleteChannel(channel.id)} title="Удалить"><img src={del} alt="del icon" width={14} height={16} /></ButtonDel>
           </ButtonsWrap>
         </GridItem>
-      ))}
+      ) : (
+        <GridItem>
+          <NoChannels colSpan={4}>Каналы отсутствуют</NoChannels>
+        </GridItem>
+      )}
     </GridContainer>
   );
 };
@@ -154,4 +158,13 @@ const ButtonDel = styled(BaseButton)`
     background-color: rgba(239, 98, 132, 0.08);
   }
 `;
+const NoChannels = styled.td`
+  border-radius: 24px !important;
+  text-align: center;
+  color: #6A7080;
+  padding: 24px 0 !important;
+  font-weight: 600;
+  background-color: #1C2438;
+`;
+
 export default GridGroups;

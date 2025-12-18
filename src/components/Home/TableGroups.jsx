@@ -32,7 +32,7 @@ const TableGroups = () => {
         </tr>
       </TableHead>
       <tbody>
-        {selectedChannels?.map((channel,index) => (
+        {selectedChannels && selectedChannels.length > 0 ? (
           <TableItem key={channel.id}>
             <TableCell>
               <p>
@@ -59,7 +59,11 @@ const TableGroups = () => {
               </ButtonsWrap>
             </TableCell>
           </TableItem>
-        ))}
+        ) : (
+          <TableItem>
+              <NoChannels colSpan={4}>Каналы отсутствуют</NoChannels> 
+          </TableItem>
+        )}
       </tbody>
     </Table>
   );
@@ -315,7 +319,6 @@ const BaseButton = styled.button`
 const ButtonDir = styled(BaseButton)`
   border: 2px solid #336CFF;
   
-
   &:hover {
     background-color: #336CFF;
   }
@@ -337,7 +340,6 @@ const ButtonSetting = styled(BaseButton)`
     margin-right: 8px;
   }
 `;
-
 const ButtonDel = styled(BaseButton)`
   border: 2px solid #2F3953;
 
@@ -346,4 +348,13 @@ const ButtonDel = styled(BaseButton)`
     background-color: rgba(239, 98, 132, 0.08);
   }
 `;
+const NoChannels = styled.td`
+  border-radius: 24px !important;
+  text-align: center;
+  color: #6A7080;
+  padding: 40px 0 !important;
+  font-weight: 600;
+  background-color: #1C2438;
+`;
+
 export default TableGroups;
