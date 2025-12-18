@@ -5,117 +5,143 @@ import { usePopupStore } from "@/store/popupStore";
 import CloseIcon from "@/icons/CloseIcon";
 import { useUser } from "@/lib/useUser";
 import { useCreateChannel } from "@/lib/useCreateChannel";
+import { useChannelFolders } from "@/lib/useChannelFolders";
+import CustomSelect from "@/shared/CustomSelectSec";
 
 const CreateChannelPopup = () => {
-  const { closePopup } = usePopupStore();
-  const { user } = useUser();
-  const { mutate: createChannel, isLoading } = useCreateChannel();
+	const { closePopup } = usePopupStore();
+	const { user } = useUser();
+	const { channelsFolders } = useChannelFolders();
+	const { mutate: createChannel, isLoading } = useCreateChannel();
 
-  const [channelName, setChannelName] = useState("");
-  const [channelId, setChannelId] = useState("");
-  const [subscribersCount, setSubscribersCount] = useState(0);
-  const [avatarUrl, setAvatarUrl] = useState("");
-  const [theme, setTheme] = useState("IT");
-  const [caption, setCaption] = useState("");
-  const [folderId, setFolderId] = useState(null);
-  const [keywords, setKeywords] = useState([]);
-  const [stopWords, setStopWords] = useState([]);
+	const [channelName, setChannelName] = useState("");
+	const [channelId, setChannelId] = useState("");
+	const [subscribersCount, setSubscribersCount] = useState(0);
+	const [avatarUrl, setAvatarUrl] = useState("");
+	const [theme, setTheme] = useState("IT");
+	const [caption, setCaption] = useState("");
+	const [folderId, setFolderId] = useState(null);
+	const [keywords, setKeywords] = useState([]);
+	const [stopWords, setStopWords] = useState([]);
 
-  const handleCreate = () => {
-    if (!channelName || !channelId) return alert("Введите название и ID канала");
+	const handleCreate = () => {
+		if (!channelName || !channelId) return alert("Введите название и ID канала");
 
-    createChannel(
-      {
-        channelId,
-        name: channelName,
-        subscribersCount,
-        avatarUrl,
-        workMode: "AUTOPOSTING",
-        premoderationMinutes: 30,
-        canPublishWithoutApproval: false,
-        keywords,
-        stopWords,
-        includeSourceLink: true,
-        disableMedia: false,
-        preserveOriginalText: false,
-        forcePosting: false,
-        caption,
-        ownerTelegramId: Number(user.telegramId),
-        sources: [],
-        theme,
-        folderId,
-        autoApprovalEnabled: false,
-      },
-      {
-        onSuccess: () => closePopup(),
-      }
-    );
-  };
+		createChannel(
+			{
+				channelId,
+				name: channelName,
+				subscribersCount,
+				avatarUrl,
+				workMode: "AUTOPOSTING",
+				premoderationMinutes: 30,
+				canPublishWithoutApproval: false,
+				keywords,
+				stopWords,
+				includeSourceLink: true,
+				disableMedia: false,
+				preserveOriginalText: false,
+				forcePosting: false,
+				caption,
+				ownerTelegramId: Number(user.telegramId),
+				sources: [],
+				theme,
+				folderId,
+				autoApprovalEnabled: false,
+			},
+			{
+				onSuccess: () => closePopup(),
+			}
+		);
+	};
 
-  return (
-    <div>
-      <PopupHead>
-        <HeadTitle>Создать канал</HeadTitle>
-        <CloseIcon color="#336CFF" onClick={closePopup} />
-      </PopupHead>
-      <PopupSubtitle>Заполните данные нового канала</PopupSubtitle>
-      <PopupTitle>Название канала</PopupTitle>
-      <PopupInput
-        type="text"
-        placeholder="Введите название"
-        value={channelName}
-        onChange={(e) => setChannelName(e.target.value)}
-      />
-      <PopupTitle>ID канала</PopupTitle>
-      <PopupInput
-        type="text"
-        placeholder="@my_channel"
-        value={channelId}
-        onChange={(e) => setChannelId(e.target.value)}
-      />
-      <PopupTitle>Количество подписчиков</PopupTitle>
-      <PopupInput
-        type="number"
-        placeholder="1000"
-        value={subscribersCount}
-        onChange={(e) => setSubscribersCount(Number(e.target.value))}
-      />
-      <PopupTitle>Avatar URL</PopupTitle>
-      <PopupInput
-        type="text"
-        placeholder="https://t.me/i/channelpic/320/channel.jpg"
-        value={avatarUrl}
-        onChange={(e) => setAvatarUrl(e.target.value)}
-      />
-      <PopupTitle>Тема</PopupTitle>
-      <PopupInput
-        type="text"
-        placeholder="IT"
-        value={theme}
-        onChange={(e) => setTheme(e.target.value)}
-      />
-      <PopupTitle>Подпись (Caption)</PopupTitle>
-      <PopupInput
-        type="text"
-        placeholder="Подпишитесь на наш канал!"
-        value={caption}
-        onChange={(e) => setCaption(e.target.value)}
-      />
-      <CreateButtons>
-        <BtnBase
-          $color="#D6DCEC"
-          $bg="#336CFF"
-          onClick={handleCreate}
-          disabled={isLoading}
-        >
-          {isLoading ? "Создание..." : "Создать"}
-        </BtnBase>
-        <BtnBase onClick={closePopup} $color="#D6DCEC" $bg="#242A3A">
-          Отменить
-        </BtnBase>
-      </CreateButtons>
-    </div>
-  );
+	return (
+		<div>
+			<PopupHead>
+				<HeadTitle>Создать канал</HeadTitle>
+				<CloseIcon color="#336CFF" onClick={closePopup} />
+			</PopupHead>
+
+			<PopupSubtitle>Заполните данные нового канала</PopupSubtitle>
+
+			<PopupTitle>Название канала</PopupTitle>
+			<PopupInput
+				type="text"
+				placeholder="Введите название"
+				value={channelName}
+				onChange={(e) => setChannelName(e.target.value)}
+			/>
+
+			<PopupTitle>ID канала</PopupTitle>
+			<PopupInput
+				type="text"
+				placeholder="@my_channel"
+				value={channelId}
+				onChange={(e) => setChannelId(e.target.value)}
+			/>
+
+			<PopupTitle>Количество подписчиков</PopupTitle>
+			<PopupInput
+				type="number"
+				placeholder="1000"
+				value={subscribersCount}
+				onChange={(e) => setSubscribersCount(Number(e.target.value))}
+			/>
+
+			<PopupTitle>Avatar URL</PopupTitle>
+			<PopupInput
+				type="text"
+				placeholder="https://t.me/i/channelpic/320/channel.jpg"
+				value={avatarUrl}
+				onChange={(e) => setAvatarUrl(e.target.value)}
+			/>
+
+			<PopupTitle>Тема</PopupTitle>
+			<PopupInput
+				type="text"
+				placeholder="IT"
+				value={theme}
+				onChange={(e) => setTheme(e.target.value)}
+			/>
+
+			<PopupTitle>Подпись (Caption)</PopupTitle>
+			<PopupInput
+				type="text"
+				placeholder="Подпишитесь на наш канал!"
+				value={caption}
+				onChange={(e) => setCaption(e.target.value)}
+			/>
+
+			<PopupTitle>Папка</PopupTitle>
+			<CustomSelect
+				placeholder="Без папки"
+				value={folderId || ""}
+				onChange={(e) => setFolderId(Number(e.target.value) || null)}
+				options={
+					channelsFolders
+						? channelsFolders.map((folder) => ({
+							icon: folder.icon || "📁",
+							value: folder.id,
+							label: folder.name,
+						}))
+						: []
+				}
+			/>
+			<CreateButtons>
+				<BtnBase
+					$color="#D6DCEC"
+					$bg="#336CFF"
+					onClick={handleCreate}
+					disabled={isLoading}
+				>
+					{isLoading ? "Создание..." : "Создать"}
+				</BtnBase>
+				<BtnBase onClick={closePopup} $color="#D6DCEC" $bg="#242A3A">
+					Отменить
+				</BtnBase>
+			</CreateButtons>
+		</div>
+	);
 };
 
 const PopupHead = styled.div`
@@ -163,6 +189,7 @@ const PopupInput = styled.input`
     color: #d6dcec;
   }
 `;
+
 const CreateButtons = styled.div`
   display: flex;
   gap: 8px;
