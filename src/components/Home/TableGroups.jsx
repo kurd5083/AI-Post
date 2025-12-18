@@ -5,12 +5,13 @@ import setting from "@/assets/setting.svg";
 import list from "@/assets/table-groups/list.svg";
 import { usePopupStore } from "@/store/popupStore"
 import useResolution from "@/lib/useResolution";
-import { useChannelsGroupedByFolders } from '@/lib/useChannelsGroupedByFolders';
-
+// import { useChannelsGroupedByFolders } from '@/lib/useChannelsGroupedByFolders';
+import { useChannelsUser } from '@/lib/useChannelsUser';
 const TableGroups = () => {
   const { openPopup } = usePopupStore();
   const { isSmall } = useResolution();
-  const { channels } = useChannelsGroupedByFolders();
+  // const { channels } = useChannelsGroupedByFolders();
+  const { channels } = useChannelsUser();
   console.log(channels)
   return (
     <Table>

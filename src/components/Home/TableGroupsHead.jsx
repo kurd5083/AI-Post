@@ -20,7 +20,7 @@ const TableGroups = () => {
 	const { isSmall } = useResolution(480);
   const { viewType, setGridView, setListView } = useViewStore();
   const { channels } = useChannelsGroupedByFolders();
-  console.log('1', channels)
+  
 	return (
 		<TableGroupsContainer>
 			<TableGroupsHead>
