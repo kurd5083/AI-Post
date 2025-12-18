@@ -20,7 +20,7 @@ const TableGroups = () => {
 	const { isSmall } = useResolution(480);
   const { viewType, setGridView, setListView } = useViewStore();
   const { channels } = useChannelsGroupedByFolders();
-  
+  console.log(channels)
 	return (
 		<TableGroupsContainer>
 			<TableGroupsHead>
@@ -34,7 +34,7 @@ const TableGroups = () => {
           <TableGroupsHeadBtn>
             <img src={dir} alt="dir icon" />
             <p>Без папки</p>
-            <mark>{channels.totalChannelsWithoutFolder}</mark>
+            {/* <mark>{channels.totalChannelsWithoutFolder}</mark> */}
           </TableGroupsHeadBtn>
 
           {channels.folders?.map((folder) => (
