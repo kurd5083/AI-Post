@@ -11,7 +11,7 @@ const SettingsPopup = () => {
   const channelId = popup?.data?.channelId;
 
   const { autoApprovalStatus, setAutoApprovalStatus } = useAutoApprovalStatus(channelId);
-  console.log(channelId)
+  console.log(channelId, autoApprovalStatus)
 	return (
 		<SettingsContainer>
 			{settingsDatas.sections.map((section) => (
@@ -33,7 +33,7 @@ const SettingsPopup = () => {
 									<ToggleSwitch 
                     bg="#FF9C55" 
                     checked={autoApprovalStatus} 
-                    onChange={() => setAutoApprovalStatus(Number(channelId))} 
+                    onChange={() => setAutoApprovalStatus(channelId)} 
                   />
 								) : item.right == 'textarrow' ? (
 									<PopupContentRight>
