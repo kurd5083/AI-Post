@@ -1,14 +1,30 @@
+import { useState } from "react";
 import styled from "styled-components";
 import Checkbox from "@/shared/Checkbox";
+import { useUpdateWorkMode } from "@/lib/useUpdateWorkMode";
+import { usePopupStore } from "@/store/popupStore"
 
 const ModePopup = () => {
+	const { popup } = usePopupStore();
+    const channelId = popup?.data?.channelId;
 
+    const { mutate: setWorkMode } = useUpdateWorkMode(channelId);
+    const [selectedMode, setSelectedMode] = useState("AUTOPOSTING");
+
+    const handleSelectMode = (mode) => {
+        setSelectedMode(mode);
+        if (mode === "PREMODERATION") {
+            setWorkMode({ workMode: mode, premoderationMinutes });
+        } else {
+            setWorkMode({ workMode: mode });
+        }
+    };
     return (
         <ModeContent>
             <ModeContentTitle>Выберите один режим работы</ModeContentTitle>
             <div>
-                <ModeContentItem>
-                    <Checkbox>
+                <ModeContentItem onClick={() => handleSelectMode("AUTOPOSTING")}>
+                    <Checkbox checked={selectedMode === "AUTOPOSTING"}>
                         <div>
                             <h4>Автопостинг</h4>
                             <p>Сервис будет автоматически осуществлять публикации в ваш канал или группу в
@@ -16,8 +32,8 @@ const ModePopup = () => {
                         </div>
                     </Checkbox>
                 </ModeContentItem>
-                <ModeContentItem>
-                    <Checkbox>
+                <ModeContentItem onClick={() => handleSelectMode("PREMODERATION")}>
+                    <Checkbox checked={selectedMode === "PREMODERATION"}>
                         <div>
                             <h4>Премодерация</h4>
                             <p>Наш бот будет отправлять вам посты на предварительную модерацию за указанное

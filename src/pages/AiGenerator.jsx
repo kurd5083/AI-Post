@@ -77,7 +77,7 @@ const AiGenerator = () => {
         {posts.map((post) => (
           <ListItem key={post.id}>
             <ItemHead>
-              <CheckboxCircle><h3>{post.title}</h3></CheckboxCircle>
+              <CheckboxCircle><input value={post.title}/></CheckboxCircle>
               <p>{post.progress}</p>
             </ItemHead>
             <ItemText>{post.text}</ItemText>
@@ -297,7 +297,7 @@ const ItemHead = styled.div`
     color: #6A7080;
   }
 `
-const ItemText = styled.p`
+const ItemText = styled.input`
   color: #6A7080;
   font-size: 16px;
   font-weight: 700;

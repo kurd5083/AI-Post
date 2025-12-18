@@ -8,7 +8,6 @@ export const useCreatePost = () => {
     mutationFn: createPost,
     onSuccess: (data) => {
       console.log("Пост успешно создан:", data);
-      // Если используешь кэш для списка постов, можно сразу обновить
       queryClient.invalidateQueries(["posts", 
         // data.channelId
     ]);
