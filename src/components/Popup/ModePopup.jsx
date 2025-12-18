@@ -14,7 +14,7 @@ const ModePopup = () => {
     const handleSelectMode = (mode) => {
         setSelectedMode(mode);
         if (mode === "PREMODERATION") {
-            setWorkMode({ workMode: mode, premoderationMinutes });
+            setWorkMode({ workMode: mode });
         } else {
             setWorkMode({ workMode: mode });
         }
