@@ -40,7 +40,7 @@ const CreateChannelPopup = () => {
         preserveOriginalText: false,
         forcePosting: false,
         caption,
-        ownerTelegramId: user.telegramId,
+        ownerTelegramId: Number(user.telegramId),
         sources: [],
         theme,
         folderId,
