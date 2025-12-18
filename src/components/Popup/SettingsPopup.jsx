@@ -5,6 +5,7 @@ import bell_blue from "@/assets/popup/bell-blue.svg";
 import { settingsDatas } from "@/data/settingsDatas";
 import ToggleSwitch from "@/shared/ToggleSwitch";
 import { usePopupStore } from "@/store/popupStore"
+import { useToggleSwitch } from "@/lib/useToggleSwitch";
 
 const SettingsPopup = () => {
 	const { changeContent } = usePopupStore()
