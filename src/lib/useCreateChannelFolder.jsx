@@ -7,7 +7,7 @@ export const useCreateChannelFolder = () => {
   return useMutation({
     mutationFn: (folderData) => createChannelFolder(folderData),
     onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ["channelFolders"] });
+      queryClient.invalidateQueries(["channelsGroupedByFolders"]);
       console.log("Папка успешно создана:", data);
     },
     onError: (error) => {
