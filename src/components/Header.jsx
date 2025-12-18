@@ -12,7 +12,7 @@ const Header = () => {
 	const { menu, openMenu, closeMenu } = useMenuStore();
 	const { user } = useUser();
 	const { balance } = useUserBalance();
-	console.log(balance)
+
 	return (
 		<HeaderContainer>
 			<HeaderContent>
