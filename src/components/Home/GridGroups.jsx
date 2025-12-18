@@ -48,7 +48,7 @@ const GridGroups = () => {
             <GridStatus>Премодерация</GridStatus>
             <ButtonsWrap>
               <ButtonDir onClick={() => openPopup("move_channel", "popup_window", { channelId: channel.id })} title="Перейти"><img src={dir_white} alt="dir icon" width={16} height={13} /></ButtonDir>
-              <ButtonSetting onClick={() => openPopup()} title="Настройки"><img src={setting} alt="setting icon" width={16} height={16} /></ButtonSetting>
+              <ButtonSetting onClick={() => openPopup({ channelId: channel.id })} title="Настройки"><img src={setting} alt="setting icon" width={16} height={16} /></ButtonSetting>
               <ButtonDel onClick={() => deleteChannel(channel.id)} title="Удалить"><img src={del} alt="del icon" width={14} height={16} /></ButtonDel>
             </ButtonsWrap>
           </GridItem>
