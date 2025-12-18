@@ -6,19 +6,21 @@ const CustomSelect = ({
   options,
   placeholder = "Выберите значение",
   value,
+  onChange,
   fs,
   padding,
   width,
 }) => {
   const [open, setOpen] = useState(false);
-  const [selected, setSelected] = useState("");
+  const [selected, setSelected] = useState(null);
   const selectRef = useRef(null);
 
   const toggle = () => setOpen(prev => !prev);
 
-  const onSelect = (icon, label) => {
-    setSelected({icon, label});
+  const handleSelect = (option) => {
+    setSelected(option);
     setOpen(false);
+    if (onChange) onChange(option);
   };
 
   useEffect(() => {
@@ -26,17 +28,25 @@ const CustomSelect = ({
       if (selectRef.current && !selectRef.current.contains(event.target)) {
         setOpen(false);
       }
-    }
+    };
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+
+  // Обновляем selected при изменении value извне
+  useEffect(() => {
+    if (value !== undefined && options) {
+      const sel = options.find(opt => opt.value === value);
+      setSelected(sel || null);
+    }
+  }, [value, options]);
 
   return (
     <SelectWrapper ref={selectRef} $width={width}>
       <SelectHeader onClick={toggle} $fs={fs} $padding={padding}>
         <HeaderLeft>
-          {selected?.icon && <img src={selected.icon} alt="icon" width={16} height={16}/>}
-          <span>{selected.label || placeholder}</span>
+          {selected?.icon && <img src={selected.icon} alt="icon" width={16} height={16} />}
+          <span>{selected?.label || placeholder}</span>
         </HeaderLeft>
         <HeaderArrow src={arrow} alt="arrow icon" className={open ? "open" : ""} />
       </SelectHeader>
@@ -46,7 +56,7 @@ const CustomSelect = ({
           {options.map((opt) => (
             <SelectItem
               key={opt.value}
-              onClick={() => onSelect(opt.icon, opt.value, opt.label)}
+              onClick={() => handleSelect(opt)}
             >
               {opt.icon && <img src={opt.icon} alt="icon" />}
               {opt.label}
@@ -85,12 +95,12 @@ const HeaderArrow = styled.img`
   &.open {
     transform: rotate(270deg);
   }
-`
+`;
 const HeaderLeft = styled.div`
   display: flex;
   align-items: center;
   gap: 16px;
-`
+`;
 const SelectList = styled.ul`
   box-sizing: border-box;
   position: absolute;
