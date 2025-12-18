@@ -37,9 +37,9 @@ const TableGroups = () => {
             {/* <mark>{channels.totalChannelsWithoutFolder}</mark> */}
           </TableGroupsHeadBtn>
 
-          {channels.folders?.map((folder) => (
+          {/* {channels.folders?.map((folder) => (
             <TableGroupsHeadBtn><img src={dir} alt="dir icon" /><p>{folder.name}</p> <mark>{folder.channels.length}</mark></TableGroupsHeadBtn>
-          ))}
+          ))} */}
 				</TableGroupsHeadLeft>
 				<TableGroupsHeadRight>
 					<TableGroupsHeadAdd  onClick={() => openPopup("create_channel", "popup_window")}>{isSmall ? "+ Добавить" : "+ Добавить канал"}</TableGroupsHeadAdd>
