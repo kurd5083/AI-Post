@@ -5,7 +5,7 @@ export const useUpdateWorkMode = (channelId) => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ workMode }) => updateWorkMode({ channelId, workMode }),
+    mutationFn: ({ workMode, premoderationMinutes }) =>updateWorkMode({ channelId, workMode, premoderationMinutes }),
     onSuccess: (data) => {
       queryClient.invalidateQueries(["channel", channelId]);
     },

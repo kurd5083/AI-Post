@@ -3,6 +3,7 @@ import styled from "styled-components";
 import Checkbox from "@/shared/Checkbox";
 import { useUpdateWorkMode } from "@/lib/useUpdateWorkMode";
 import { usePopupStore } from "@/store/popupStore"
+import { useAutoApprovalStatus } from "@/lib/useAutoApprovalStatus";
 
 const ModePopup = () => {
 	const { popup } = usePopupStore();
@@ -10,11 +11,12 @@ const ModePopup = () => {
 
     const { mutate: setWorkMode } = useUpdateWorkMode(channelId);
     const [selectedMode, setSelectedMode] = useState("AUTOPOSTING");
-
+    const [premoderationMinutes, setPremoderationMinutes] = useState(30);
+    
     const handleSelectMode = (mode) => {
         setSelectedMode(mode);
         if (mode === "PREMODERATION") {
-            setWorkMode({ workMode: mode });
+            setWorkMode({ workMode: mode, premoderationMinutes });
         } else {
             setWorkMode({ workMode: mode });
         }
