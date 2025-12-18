@@ -24,7 +24,7 @@ const TableGroups = () => {
   // if (isLoading) return <p>Загрузка...</p>;
   // if (isError) return <p>Ошибка загрузки папок</p>;
 
-  // console.log(folders);
+  console.log(folders);
 	return (
 		<TableGroupsContainer>
 			<TableGroupsHead>

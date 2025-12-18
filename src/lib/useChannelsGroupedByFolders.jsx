@@ -1,16 +1,15 @@
 import { useQuery } from "@tanstack/react-query";
 import { getChannelsGroupedByFolders } from "@/api/getChannelsGroupedByFolders";
-import { useUser } from "@/lib/useUser";
 
 export const useChannelsGroupedByFolders = () => {
-  const { user } = useUser();
-  
-  const { data } = useQuery({
-    queryKey: ["channelsGroupedByFolders", user?.telegramId],
-    queryFn: () => getChannelsGroupedByFolders(user.telegramId),
-    enabled: !!user?.telegramId,
+  // const accessToken = localStorage.getItem("accessToken");
+
+  const { data: channels } = useQuery({
+    queryKey: ["channelsGroupedByFolders"],
+    queryFn: getChannelsGroupedByFolders,
+    // enabled: !!accessToken,
   });
 
-  return { folders: data?.folders || [], };
+  return { channels: channels };
 };
 
