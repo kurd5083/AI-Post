@@ -33,7 +33,9 @@ const SettingsPopup = () => {
 									<ToggleSwitch 
                     bg="#FF9C55" 
                     checked={autoApprovalStatus?.autoApprovalEnabled} 
-                    onChange={() => setAutoApprovalStatus(channelId)} 
+                    onChange={(newChecked) =>
+                      setAutoApprovalStatus({ channelId, autoApprovalEnabled: newChecked })
+                    }
                   />
 								) : item.right == 'textarrow' ? (
 									<PopupContentRight>

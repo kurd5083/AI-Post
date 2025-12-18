@@ -5,10 +5,10 @@ export const getAutoApprovalStatus = async (channelId) => {
   const response = await apiClient.get(`/channels/auto-approval/status/${channelId}`);
   return response.data;
 };
-export const updateAutoApprovalStatus = async (channelId) => {
+export const updateAutoApprovalStatus = async (channelId, autoApprovalEnabled) => {
   console.log(channelId, '123123123')
   const response = await apiClient.put(`/channels/auto-approval/status/${channelId}`, {
-      autoApprovalEnabled: true 
+      autoApprovalEnabled: autoApprovalEnabled 
   });
   return response.data;
 };
