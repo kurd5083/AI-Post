@@ -14,21 +14,23 @@ const GridGroups = () => {
   return (
     <GridContainer>
       {selectedChannels && selectedChannels.length > 0 ? (
-        <GridItem key={channel.id}>
-          <GridItemNum>#{index++}</GridItemNum>
-          <GridImg src={channel.avatarUrl} alt="Group" />
-          <span>{channel.name}</span>
-          {/* <GridOnline $online={channel.online}>
-            <StatusIndicator $online={channel.online} />
-            {channel.online ? 'Онлайн' : 'Ошибка'}
-          </GridOnline> */}
-          <GridStatus>Премодерация</GridStatus>
-          <ButtonsWrap>
-            <ButtonDir onClick={() => openPopup("move_channel", "popup_window")} title="Перейти"><img src={dir_white} alt="dir icon" width={16} height={13} /></ButtonDir>
-            <ButtonSetting onClick={() => openPopup()} title="Настройки"><img src={setting} alt="setting icon" width={16} height={16} /></ButtonSetting>
-            <ButtonDel onClick={() => deleteChannel(channel.id)} title="Удалить"><img src={del} alt="del icon" width={14} height={16} /></ButtonDel>
-          </ButtonsWrap>
-        </GridItem>
+        selectedChannels.map((channel, index) => (
+          <GridItem key={channel.id}>
+            <GridItemNum>#{index++}</GridItemNum>
+            <GridImg src={channel.avatarUrl} alt="Group" />
+            <span>{channel.name}</span>
+            {/* <GridOnline $online={channel.online}>
+              <StatusIndicator $online={channel.online} />
+              {channel.online ? 'Онлайн' : 'Ошибка'}
+            </GridOnline> */}
+            <GridStatus>Премодерация</GridStatus>
+            <ButtonsWrap>
+              <ButtonDir onClick={() => openPopup("move_channel", "popup_window")} title="Перейти"><img src={dir_white} alt="dir icon" width={16} height={13} /></ButtonDir>
+              <ButtonSetting onClick={() => openPopup()} title="Настройки"><img src={setting} alt="setting icon" width={16} height={16} /></ButtonSetting>
+              <ButtonDel onClick={() => deleteChannel(channel.id)} title="Удалить"><img src={del} alt="del icon" width={14} height={16} /></ButtonDel>
+            </ButtonsWrap>
+          </GridItem>
+        ))
       ) : (
         <GridItem>
           <NoChannels colSpan={4}>Каналы отсутствуют</NoChannels>

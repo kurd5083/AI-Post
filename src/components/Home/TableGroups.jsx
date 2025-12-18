@@ -33,35 +33,37 @@ const TableGroups = () => {
       </TableHead>
       <tbody>
         {selectedChannels && selectedChannels.length > 0 ? (
-          <TableItem key={channel.id}>
-            <TableCell>
-              <p>
-                <TableCellNum>#{index++}</TableCellNum>
-                <img src={channel.avatarUrl} alt="Group" />
-                <span>{channel.name}</span>
-              </p>
-            </TableCell>
-            <TableCell>
-              <TableCellStatus>{isSmall ? 'Премодерация' : 'Премодерация постов'}</TableCellStatus>
-            </TableCell>
-            <TableCell>
-              {/* <TableCellOnline $online={channel.online}>
+          selectedChannels.map((channel, index) => (
+            <TableItem key={channel.id}>
+              <TableCell>
+                <p>
+                  <TableCellNum>#{index++}</TableCellNum>
+                  <img src={channel.avatarUrl} alt="Group" />
+                  <span>{channel.name}</span>
+                </p>
+              </TableCell>
+              <TableCell>
+                <TableCellStatus>{isSmall ? 'Премодерация' : 'Премодерация постов'}</TableCellStatus>
+              </TableCell>
+              <TableCell>
+                {/* <TableCellOnline $online={channel.online}>
                 <StatusIndicator $online={channel.online} />
                 {channel.online ? 'Онлайн' : 'Ошибка'}
               </TableCellOnline> */}
-            </TableCell>
-            <TableCell>
-              <ButtonsWrap>
-                <ButtonList title="Список"><img src={list} alt="list icon" width={16} height={16} /></ButtonList>
-                <ButtonDir onClick={() => openPopup("move_channel", "popup_window")} title="Перейти"><img src={dir_white} alt="dir icon" width={16} height={13} /></ButtonDir>
-                <ButtonSetting onClick={() => openPopup()} title="Настройки"><img src={setting} alt="setting icon" width={16} height={16} /></ButtonSetting>
-                <ButtonDel onClick={() => deleteChannel(channel.id)} title="Удалить"><img src={del} alt="del icon" width={14} height={16} /></ButtonDel>
-              </ButtonsWrap>
-            </TableCell>
-          </TableItem>
+              </TableCell>
+              <TableCell>
+                <ButtonsWrap>
+                  <ButtonList title="Список"><img src={list} alt="list icon" width={16} height={16} /></ButtonList>
+                  <ButtonDir onClick={() => openPopup("move_channel", "popup_window")} title="Перейти"><img src={dir_white} alt="dir icon" width={16} height={13} /></ButtonDir>
+                  <ButtonSetting onClick={() => openPopup()} title="Настройки"><img src={setting} alt="setting icon" width={16} height={16} /></ButtonSetting>
+                  <ButtonDel onClick={() => deleteChannel(channel.id)} title="Удалить"><img src={del} alt="del icon" width={14} height={16} /></ButtonDel>
+                </ButtonsWrap>
+              </TableCell>
+            </TableItem>
+          ))
         ) : (
           <TableItem>
-              <NoChannels colSpan={4}>Каналы отсутствуют</NoChannels> 
+            <NoChannels colSpan={4}>Каналы отсутствуют</NoChannels>
           </TableItem>
         )}
       </tbody>
