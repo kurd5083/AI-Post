@@ -1,21 +1,14 @@
-import { useState } from "react";
 import styled from "styled-components";
 
-const ToggleSwitch = ({ bg }) => {
-    const [isOn, setIsOn] = useState(false);
-
-    const handleToggle = () => {
-      setIsOn(prev => !prev);
-    };
-
-    return (
-        <SwitchContainer>
-            <SwitchLabel>
-                <SwitchInput type="checkbox" checked={isOn} onChange={handleToggle} bg={bg}/>
-                <Slider />
-            </SwitchLabel>
-        </SwitchContainer>
-    )
+const ToggleSwitch = ({ checked, onChange, bg }) => {
+  return (
+    <SwitchContainer>
+      <SwitchLabel>
+        <SwitchInput type="checkbox" checked={checked} onChange={onChange} bg={bg} />
+        <Slider />
+      </SwitchLabel>
+    </SwitchContainer>
+  )
 }
 
 const SwitchContainer = styled.div`

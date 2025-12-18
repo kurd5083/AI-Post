@@ -64,6 +64,11 @@ export const settingsDatas = {
                     extra: {
                         background: "#445838",
                         image: activate_promotion
+                    }, 
+                    
+                    onToggle: () => {
+                        
+                 
                     }
                 },
                 {
@@ -87,6 +92,8 @@ export const settingsDatas = {
                     extra: {
                         background: "#2E5E5F",
                         image: auto_accepting
+                    },
+                    onSwitch: () => {
                     }
                 },
                 {
