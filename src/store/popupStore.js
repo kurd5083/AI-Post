@@ -1,55 +1,57 @@
 import { create } from 'zustand';
 
 export const usePopupStore = create((set, get) => ({
-    popup: null,
+  popup: null,
 
-    openPopup: (content = 'settings', view = 'popup') => {
-        window.scrollTo({ top: 0, behavior: "auto" });
-        document.body.style.overflow = "hidden";
-        set({ 
-            popup: { 
-                view: view,
-                status: true, 
-                content: content, 
-                previousPage: [] 
-            } 
-        });
-    },
+  openPopup: (content = 'settings', view = 'popup', data = null) => {
+    window.scrollTo({ top: 0, behavior: "auto" });
+    document.body.style.overflow = "hidden";
 
-    closePopup: () => {
-        document.body.style.overflow = "";
-        set({ popup: null });
-    },
+    set({
+      popup: {
+        view,
+        status: true,
+        content,
+        data,
+        previousPage: [],
+      },
+    });
+  },
 
-    changeContent: (popupDatas, popupName, popupText) => {
-        const currentPopup = get().popup;
+  closePopup: () => {
+    document.body.style.overflow = "";
+    set({ popup: null });
+  },
 
-        set({
-            popup: {
-                status: true,
-                content: popupDatas,
-                name: popupName,
-                text: popupText,
-                previousPage: currentPopup
-                    ? [...(currentPopup.previousPage || []), currentPopup.content]
-                    : [],
-            },
-        });
-    },
+  changeContent: (content, name, text, data = null) => {
+    const currentPopup = get().popup;
 
-    goBack: () => {
-        const currentPopup = get().popup;
-        if (!currentPopup || !currentPopup.previousPage?.length) return;
+    set({
+      popup: {
+        status: true,
+        content,
+        name,
+        text,
+        data,      
+        previousPage: currentPopup
+          ? [...(currentPopup.previousPage || []), currentPopup]
+          : [],
+      },
+    });
+  },
 
-        const previousPages = [...currentPopup.previousPage];
-        const lastPage = previousPages.pop();
+  goBack: () => {
+    const currentPopup = get().popup;
+    if (!currentPopup || !currentPopup.previousPage?.length) return;
 
-        set({
-            popup: {
-                status: true,
-                content: lastPage,
-                previousPage: previousPages,
-            },
-        });
-    },
+    const previousPages = [...currentPopup.previousPage];
+    const lastPage = previousPages.pop();
+
+    set({
+      popup: {
+        ...lastPage, 
+        previousPage: previousPages,
+      },
+    });
+  },
 }));

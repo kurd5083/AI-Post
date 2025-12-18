@@ -8,10 +8,10 @@ import { useMoveChannelToFolder } from "@/lib/useMoveChannelToFolder";
 import { useChannelsGroupedByFolders } from "@/lib/useChannelsGroupedByFolders";
 
 const MoveChannelPopup = () => {
-	const { closePopup } = usePopupStore();
+	const { popup, closePopup } = usePopupStore();
 	const { mutate: moveChannel, isPending } = useMoveChannelToFolder();
 	const { channels } = useChannelsGroupedByFolders();
-
+	const [selectedFolderId, setSelectedFolderId] = useState(null);
 	const handleMove = (folderId, channelId) => moveChannel({channelId, });
 
 	return (
@@ -23,27 +23,26 @@ const MoveChannelPopup = () => {
 			<MoveChannelSubtitle>Выберите папку для канала “Все о криптовалюте”</MoveChannelSubtitle>
 			<MoveChannelUl>
 				{channels?.folders.map((folder) => (
-					<ChannelItem>
-					<img src={dir_active} alt="dir icon" width={31} height={21} />
-					<ItemContent>
-						<h3>{folder.item}</h3>
-						<p>{folder.channels.length} канала</p>
-					</ItemContent>
-					<CheckboxCircle />
-				</ChannelItem>
-				))}
-				
-				<ChannelItem>
-					<img src={dir_active} alt="dir icon" width={31} height={21} />
-					<ItemContent>
-						<h3>Крипта</h3>
-						<p>2 канала</p>
-					</ItemContent>
-					<CheckboxCircle />
-				</ChannelItem>
+  <ChannelItem
+    key={folder.id}
+    onClick={() => setSelectedFolderId(folder.id)}
+  >
+    <img src={dir_active} alt="dir icon" width={31} height={21} />
+    <ItemContent>
+      <h3>{folder.name}</h3>
+      <p>{folder.channels.length} канала</p>
+    </ItemContent>
+
+    <CheckboxCircle
+      checked={selectedFolderId === folder.id}
+      onChange={() => setSelectedFolderId(folder.id)}
+    />
+  </ChannelItem>
+))}
+
 			</MoveChannelUl>
 			<MoveChannelButtons>
-				<BtnBase $color="#D6DCEC" $bg="#336CFF" $padding="21px"onClick={() => handleMove("123", channel.id)} disabled={isPending}>
+				<BtnBase $color="#D6DCEC" $bg="#336CFF" $padding="21px"onClick={() => handleMove("123", popup?.data?.channelId)} disabled={isPending}>
 					{isPending ? "Перемещение..." : "Переместить"}
 				</BtnBase>
 				<BtnBase onClick={closePopup} $color="#D6DCEC" $bg="#242A3A" $padding="21px">

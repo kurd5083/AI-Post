@@ -54,7 +54,7 @@ const TableGroups = () => {
               </TableItem>
             );
           }
-          
+
           return currentChannels.map((channel, index) => (
             <TableItem key={channel.id}>
               <TableCell>
@@ -76,7 +76,7 @@ const TableGroups = () => {
               <TableCell>
                 <ButtonsWrap>
                   <ButtonList title="Список"><img src={list} alt="list icon" width={16} height={16} /></ButtonList>
-                  <ButtonDir onClick={() => openPopup("move_channel", "popup_window")} title="Перейти"><img src={dir_white} alt="dir icon" width={16} height={13} /></ButtonDir>
+                  <ButtonDir onClick={() => openPopup("move_channel", "popup_window", { channelId: channel.id })} title="Перейти"><img src={dir_white} alt="dir icon" width={16} height={13} /></ButtonDir>
                   <ButtonSetting onClick={() => openPopup()} title="Настройки"><img src={setting} alt="setting icon" width={16} height={16} /></ButtonSetting>
                   <ButtonDel onClick={() => deleteChannel(channel.id)} title="Удалить"><img src={del} alt="del icon" width={14} height={16} /></ButtonDel>
                 </ButtonsWrap>
