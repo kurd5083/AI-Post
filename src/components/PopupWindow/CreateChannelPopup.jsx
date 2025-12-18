@@ -11,8 +11,8 @@ import CustomSelect from "@/shared/CustomSelectSec";
 const CreateChannelPopup = () => {
 	const { closePopup } = usePopupStore();
 	const { user } = useUser();
-	const { channelsFolders } = useChannelFolders();
-	const { mutate: createChannel, isLoading } = useCreateChannel();
+	const { folders } = useChannelFolders();
+	const { mutate: createChannel } = useCreateChannel();
 
 	const [channelName, setChannelName] = useState("");
 	const [channelId, setChannelId] = useState("");
@@ -121,8 +121,8 @@ const CreateChannelPopup = () => {
 				fs="16px"
 				padding="24px"
 				options={
-					channelsFolders
-						? channelsFolders.map((folder) => ({
+					folders
+						? folders.map((folder) => ({
 							icon: folder.icon || "📁",
 							value: folder.id,
 							label: folder.name,
@@ -135,9 +135,8 @@ const CreateChannelPopup = () => {
 					$color="#D6DCEC"
 					$bg="#336CFF"
 					onClick={handleCreate}
-					disabled={isLoading}
 				>
-					{isLoading ? "Создание..." : "Создать"}
+					Создать
 				</BtnBase>
 				<BtnBase onClick={closePopup} $color="#D6DCEC" $bg="#242A3A">
 					Отменить
