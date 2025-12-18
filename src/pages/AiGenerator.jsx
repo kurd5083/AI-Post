@@ -40,11 +40,10 @@ const AiGenerator = () => {
     setPosts([newPost, ...posts]);
   };
 
-  // Публикация поста
   const handlePublishPost = (post) => {
     createPost({
       text: post.text,
-      channelId: 1, // пример ID канала
+      channelId: 1,
       title: post.title,
       summary: post.text.slice(0, 100),
     });
