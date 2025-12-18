@@ -34,10 +34,7 @@ const MoveChannelPopup = () => {
 							<p>{folder.channels.length} канала</p>
 						</ItemContent>
 
-						<CheckboxCircle
-							checked={selectedFolderId === folder.id}
-							onChange={() => setSelectedFolderId(folder.id)}
-						/>
+						<CheckboxCircle checked={selectedFolderId === folder.id}/>
 					</ChannelItem>
 				))}
 			</MoveChannelUl>
