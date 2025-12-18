@@ -67,7 +67,6 @@ const SettingsPopup = () => {
                     }
                     onChange={(checked) => handleSwitchToggle(item, checked)}
                   />
-                  />
 								) : item.right == 'textarrow' ? (
 									<PopupContentRight>
 										<span>Премодерация</span>
