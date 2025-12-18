@@ -1,4 +1,3 @@
-import { useState, useEffect } from "react";
 import styled from "styled-components";
 import arrow from "@/assets/arrow.svg";
 import bell_blue from "@/assets/popup/bell-blue.svg";
@@ -33,7 +32,7 @@ const SettingsPopup = () => {
 								) : item.right == 'switch' ? (
 									<ToggleSwitch 
                     bg="#FF9C55" 
-                    checked={autoApprovalStatus.enabled} 
+                    checked={autoApprovalStatus} 
                     onChange={() => setAutoApprovalStatus({ channelId })} 
                   />
 								) : item.right == 'textarrow' ? (
