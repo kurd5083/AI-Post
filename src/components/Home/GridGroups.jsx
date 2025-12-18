@@ -4,10 +4,12 @@ import del from "@/assets/del.svg";
 import setting from "@/assets/setting.svg";
 import { usePopupStore } from "@/store/popupStore"
 import { useChannelsStore } from "@/store/channelsStore";
+import { useDeleteChannel } from "@/lib/useDeleteChannel";
 
 const GridGroups = () => {
   const { openPopup } = usePopupStore();
   const { selectedChannels } = useChannelsStore();
+  const { mutate: deleteChannel } = useDeleteChannel();
 
   return (
     <GridContainer>
@@ -24,7 +26,7 @@ const GridGroups = () => {
           <ButtonsWrap>
             <ButtonDir onClick={() => openPopup("move_channel", "popup_window")} title="Перейти"><img src={dir_white} alt="dir icon" width={16} height={13} /></ButtonDir>
             <ButtonSetting onClick={() => openPopup()} title="Настройки"><img src={setting} alt="setting icon" width={16} height={16} /></ButtonSetting>
-            <ButtonDel title="Удалить"><img src={del} alt="del icon" width={14} height={16} /></ButtonDel>
+            <ButtonDel onClick={() => deleteChannel(channel.id)} title="Удалить"><img src={del} alt="del icon" width={14} height={16} /></ButtonDel>
           </ButtonsWrap>
         </GridItem>
       ))}

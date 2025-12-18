@@ -4,6 +4,7 @@ import dir from "@/assets/table-groups/dir.svg";
 import dir_active from "@/assets/table-groups/dir-active.svg";
 import dir_gray from "@/assets/table-groups/dir-gray.svg";
 import refresh from "@/assets/table-groups/refresh.svg";
+import del from "@/assets/del.svg";
 import useResolution from "@/lib/useResolution";
 import useSwipeAllowed from "@/lib/useSwipeAllowed";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -14,6 +15,7 @@ import GridIcon from "@/icons/GridIcon";
 import ListIcon from "@/icons/ListIcon";
 import { useChannelsGroupedByFolders } from "@/lib/useChannelsGroupedByFolders";
 import { useChannelsStore } from "@/store/channelsStore";
+import { useDeleteFolder } from "@/lib/useDeleteFolder";
 
 const TableGroups = () => {
   const { openPopup } = usePopupStore();
@@ -22,6 +24,7 @@ const TableGroups = () => {
   const { viewType, setGridView, setListView } = useViewStore();
   const { selectedFolderId, setSelectedFolder } = useChannelsStore();
   const { channels } = useChannelsGroupedByFolders();
+  const { mutate: deleteFolder } = useDeleteFolder();
 
   const handleFolderClick = (folderId, folderChannels) => {
     setSelectedFolder(folderId, folderChannels);
@@ -50,8 +53,13 @@ const TableGroups = () => {
               key={folder.id} 
               onClick={() => handleFolderClick(folder.id, folder.channels)}
               $active={selectedFolderId === folder.id}
+              
             >
               <img src={dir} alt="dir icon" /><p>{folder.name}</p> <mark>{folder.channels.length}</mark>
+              <DeleteFolderButton onClick={(e) => {
+                e.stopPropagation();
+                deleteFolder(folder.id);
+              }}><img src={del} alt="del icon"/></DeleteFolderButton>
             </TableGroupsHeadBtn>
           ))}
 				</TableGroupsHeadLeft>
@@ -142,6 +150,18 @@ const TableGroupsHeadBtn = styled(SwiperSlide)`
     }
   }
 `
+const DeleteFolderButton = styled.button`
+  background: transparent;
+  border: none;
+  margin-left: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  color: #FF5C5C;
+
+  &:hover {
+    color: #ff0000;
+  }
+`;
 const TableGroupsHeadRight = styled.div`
   display: flex;
   align-items: center;
