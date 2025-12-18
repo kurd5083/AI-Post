@@ -12,7 +12,8 @@ const GridGroups = () => {
   const { selectedId } = useChannelsStore();
   const { channels } = useChannelsGroupedByFolders();
   const { mutate: deleteChannel } = useDeleteChannel();
-
+  console.log(channels)
+  
   return (
     <GridContainer>
       {(() => {
