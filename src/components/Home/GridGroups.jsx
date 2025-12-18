@@ -1,24 +1,24 @@
 import styled from 'styled-components';
-import { tableHomeDatas } from "@/data/tableHomeDatas";
 import dir_white from "@/assets/table-groups/dir-white.svg";
 import del from "@/assets/del.svg";
 import setting from "@/assets/setting.svg";
 import { usePopupStore } from "@/store/popupStore"
+import { useChannelsStore } from "@/store/channelsStore";
 
 const GridGroups = () => {
   const { openPopup } = usePopupStore();
-  
+  const { selectedChannels } = useChannelsStore();
   return (
     <GridContainer>
-      {tableHomeDatas.map((row) => (
-        <GridItem key={row.id}>
-          <GridItemNum>{row.number}</GridItemNum>
-          <GridImg src={row.image} alt="Group" />
-          <span>{row.name}</span>
-          <GridOnline $online={row.online}>
-            <StatusIndicator $online={row.online} />
-            {row.online ? 'Онлайн' : 'Ошибка'}
-          </GridOnline>
+      {selectedChannels.map((channel,index) => (
+        <GridItem key={channel.id}>
+          <GridItemNum>{index}</GridItemNum>
+          <GridImg src={channel.avatarUrl} alt="Group" />
+          <span>{channel.name}</span>
+          {/* <GridOnline $online={channel.online}>
+            <StatusIndicator $online={channel.online} />
+            {channel.online ? 'Онлайн' : 'Ошибка'}
+          </GridOnline> */}
           <GridStatus>Премодерация</GridStatus>
           <ButtonsWrap>
             <ButtonDir onClick={() => openPopup("move_channel", "popup_window")} title="Перейти"><img src={dir_white} alt="dir icon" width={16} height={13} /></ButtonDir>

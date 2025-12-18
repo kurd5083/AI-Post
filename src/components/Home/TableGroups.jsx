@@ -33,7 +33,7 @@ const TableGroups = () => {
           <TableItem key={channel.id}>
             <TableCell>
               <p>
-                <TableCellNum>{channel.index}</TableCellNum>
+                <TableCellNum>{index}</TableCellNum>
                 <img src={channel.avatarUrl} alt="Group" />
                 <span>{channel.name}</span>
               </p>

@@ -119,6 +119,7 @@ const TableGroupsHeadBtn = styled(SwiperSlide)`
   font-size: 14px;
   font-weight: 700;
 	width: auto;
+  cursor: pointer;
 
   mark {
     color: #6A7080;
