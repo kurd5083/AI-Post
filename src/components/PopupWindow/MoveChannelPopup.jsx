@@ -1,3 +1,4 @@
+import { useState } from "react";
 import styled from "styled-components";
 import BtnBase from "@/shared/BtnBase";
 import { usePopupStore } from "@/store/popupStore";
@@ -12,37 +13,36 @@ const MoveChannelPopup = () => {
 	const { mutate: moveChannel, isPending } = useMoveChannelToFolder();
 	const { channels } = useChannelsGroupedByFolders();
 	const [selectedFolderId, setSelectedFolderId] = useState(null);
-	const handleMove = (folderId, channelId) => moveChannel({channelId, });
+	const handleMove = (folderId, channelId) => moveChannel({ folderId, channelId, });
 
 	return (
 		<div>
 			<MoveChannelHead>
 				<HeadTitle>Переместить канал в папку</HeadTitle>
-				<CloseIcon color="#336CFF" onClick={closePopup}/>
+				<CloseIcon color="#336CFF" onClick={closePopup} />
 			</MoveChannelHead>
 			<MoveChannelSubtitle>Выберите папку для канала “Все о криптовалюте”</MoveChannelSubtitle>
 			<MoveChannelUl>
 				{channels?.folders.map((folder) => (
-  <ChannelItem
-    key={folder.id}
-    onClick={() => setSelectedFolderId(folder.id)}
-  >
-    <img src={dir_active} alt="dir icon" width={31} height={21} />
-    <ItemContent>
-      <h3>{folder.name}</h3>
-      <p>{folder.channels.length} канала</p>
-    </ItemContent>
+					<ChannelItem
+						key={folder.id}
+						onClick={() => setSelectedFolderId(folder.id)}
+					>
+						<img src={dir_active} alt="dir icon" width={31} height={21} />
+						<ItemContent>
+							<h3>{folder.name}</h3>
+							<p>{folder.channels.length} канала</p>
+						</ItemContent>
 
-    <CheckboxCircle
-      checked={selectedFolderId === folder.id}
-      onChange={() => setSelectedFolderId(folder.id)}
-    />
-  </ChannelItem>
-))}
-
+						<CheckboxCircle
+							checked={selectedFolderId === folder.id}
+							onChange={() => setSelectedFolderId(folder.id)}
+						/>
+					</ChannelItem>
+				))}
 			</MoveChannelUl>
 			<MoveChannelButtons>
-				<BtnBase $color="#D6DCEC" $bg="#336CFF" $padding="21px"onClick={() => handleMove("123", popup?.data?.channelId)} disabled={isPending}>
+				<BtnBase $color="#D6DCEC" $bg="#336CFF" $padding="21px" onClick={() => handleMove(selectedFolderId, popup?.data?.channelId)} disabled={isPending}>
 					{isPending ? "Перемещение..." : "Переместить"}
 				</BtnBase>
 				<BtnBase onClick={closePopup} $color="#D6DCEC" $bg="#242A3A" $padding="21px">
@@ -63,7 +63,6 @@ const MoveChannelHead = styled.div`
     cursor: pointer;
   }
 `;
-
 const HeadTitle = styled.h2`
   font-size: 32px;
   line-height: 32px;
@@ -73,7 +72,6 @@ const HeadTitle = styled.h2`
     line-height: 24px;
   }
 `;
-
 const MoveChannelSubtitle = styled.p`
   color: #6a7080;
   font-size: 14px;
@@ -86,7 +84,6 @@ const MoveChannelUl = styled.ul`
 	flex-direction: column;
 	margin-top: 40px;
 `;
-
 const ChannelItem = styled.li`
 	display: flex;
 	justify-content: space-between;
