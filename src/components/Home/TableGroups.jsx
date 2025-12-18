@@ -5,14 +5,13 @@ import setting from "@/assets/setting.svg";
 import list from "@/assets/table-groups/list.svg";
 import { usePopupStore } from "@/store/popupStore"
 import useResolution from "@/lib/useResolution";
-// import { useChannelsGroupedByFolders } from '@/lib/useChannelsGroupedByFolders';
-import { useChannelsUser } from '@/lib/useChannelsUser';
+import { useChannelsStore } from "@/store/channelsStore";
+
 const TableGroups = () => {
   const { openPopup } = usePopupStore();
   const { isSmall } = useResolution();
-  // const { channels } = useChannelsGroupedByFolders();
-  const { channels } = useChannelsUser();
-  console.log(channels)
+  const { selectedChannels } = useChannelsStore();
+
   return (
     <Table>
       <colgroup>
@@ -30,23 +29,23 @@ const TableGroups = () => {
         </tr>
       </TableHead>
       <tbody>
-        {/* {channels.map((row) => (
-          <TableItem key={row.id}>
+        {selectedChannels?.map((channel,index) => (
+          <TableItem key={channel.id}>
             <TableCell>
               <p>
-                <TableCellNum>{row.number}</TableCellNum>
-                <img src={row.image} alt="Group" />
-                <span>{row.name}</span>
+                <TableCellNum>{channel.index}</TableCellNum>
+                <img src={channel.avatarUrl} alt="Group" />
+                <span>{channel.name}</span>
               </p>
             </TableCell>
             <TableCell>
-              <TableCellStatus>{isSmall ? 'Премодерация' : row.status}</TableCellStatus>
+              <TableCellStatus>{isSmall ? 'Премодерация' : 'Премодерация постов'}</TableCellStatus>
             </TableCell>
             <TableCell>
-              <TableCellOnline $online={row.online}>
-                <StatusIndicator $online={row.online} />
-                {row.online ? 'Онлайн' : 'Ошибка'}
-              </TableCellOnline>
+              {/* <TableCellOnline $online={channel.online}>
+                <StatusIndicator $online={channel.online} />
+                {channel.online ? 'Онлайн' : 'Ошибка'}
+              </TableCellOnline> */}
             </TableCell>
             <TableCell>
               <ButtonsWrap>
@@ -57,7 +56,7 @@ const TableGroups = () => {
               </ButtonsWrap>
             </TableCell>
           </TableItem>
-        ))} */}
+        ))}
       </tbody>
     </Table>
   );
