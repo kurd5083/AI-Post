@@ -56,10 +56,10 @@ const TableGroups = () => {
               
             >
               <img src={dir} alt="dir icon" /><p>{folder.name}</p> <mark>{folder.channels.length}</mark>
-              <DeleteFolderButton onClick={(e) => {
+              <DeleteFolderButton src={del} alt="del icon" onClick={(e) => {
                 e.stopPropagation();
                 deleteFolder(folder.id);
-              }}><img src={del} alt="del icon"/></DeleteFolderButton>
+              }}/>
             </TableGroupsHeadBtn>
           ))}
 				</TableGroupsHeadLeft>
@@ -150,17 +150,10 @@ const TableGroupsHeadBtn = styled(SwiperSlide)`
     }
   }
 `
-const DeleteFolderButton = styled.button`
-  background: transparent;
-  border: none;
-  margin-left: 8px;
+const DeleteFolderButton = styled.img`
   cursor: pointer;
-  font-size: 16px;
-  color: #FF5C5C;
-
-  &:hover {
-    color: #ff0000;
-  }
+  width: 12px;
+  margin-top: -6px;
 `;
 const TableGroupsHeadRight = styled.div`
   display: flex;
