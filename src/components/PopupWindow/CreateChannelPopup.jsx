@@ -120,13 +120,11 @@ const CreateChannelPopup = () => {
 				fs="16px"
 				padding="24px"
 				options={
-					channels.folders
-						? channels.folders.map((folder) => ({
-							icon: folder.icon || "📁",
-							value: folder.id,
-							label: folder.name,
-						}))
-						: []
+					channels?.folders.map((folder) => ({
+						icon: folder.icon || "📁",
+						value: folder.id,
+						label: folder.name,
+					}))
 				}
 			/>
 			<CreateButtons>
