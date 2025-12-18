@@ -5,13 +5,13 @@ import { usePopupStore } from "@/store/popupStore";
 import CloseIcon from "@/icons/CloseIcon";
 import { useUser } from "@/lib/useUser";
 import { useCreateChannel } from "@/lib/useCreateChannel";
-import { useChannelFolders } from "@/lib/useChannelFolders";
+import { useEmptyChannelFolders } from "@/lib/useEmptyChannelFolders";
 import CustomSelect from "@/shared/CustomSelectSec";
 
 const CreateChannelPopup = () => {
 	const { closePopup } = usePopupStore();
 	const { user } = useUser();
-	const { folders } = useChannelFolders();
+	const { folders } = useEmptyChannelFolders();
 	const { mutate: createChannel } = useCreateChannel();
 
 	const [channelName, setChannelName] = useState("");

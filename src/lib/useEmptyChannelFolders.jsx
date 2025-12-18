@@ -1,8 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
-import { getChannelFolders } from "@/api/getChannelFolders";
+import { getEmptyChannelFolders } from "@/api/getEmptyChannelFolders";
 import { useUser } from "@/lib/useUser";
 
-export const useChannelFolders = () => {
+export const useEmptyChannelFolders = () => {
   const { user } = useUser();
   const telegramId = user?.telegramId;
 
@@ -12,7 +12,7 @@ export const useChannelFolders = () => {
     isError
   } = useQuery({
     queryKey: ["channelFolders", telegramId],
-    queryFn: () => getChannelFolders(telegramId),
+    queryFn: () => getEmptyChannelFolders(telegramId),
     enabled: !!telegramId, 
   });
 

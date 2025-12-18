@@ -12,14 +12,14 @@ import { usePopupStore } from "@/store/popupStore"
 import { useViewStore } from "@/store/viewStore";
 import GridIcon from "@/icons/GridIcon";
 import ListIcon from "@/icons/ListIcon";
-import { useChannelFolders } from "@/lib/useChannelFolders";
+import { useEmptyChannelFolders } from "@/lib/useEmptyChannelFolders";
 
 const TableGroups = () => {
   const { openPopup } = usePopupStore();
 	const { isSwipe } = useSwipeAllowed(768);
 	const { isSmall } = useResolution(480);
   const { viewType, setGridView, setListView } = useViewStore();
-  const { folders, isLoading, isError } = useChannelFolders();
+  const { folders } = useEmptyChannelFolders();
 
   // if (isLoading) return <p>Загрузка...</p>;
   // if (isError) return <p>Ошибка загрузки папок</p>;
