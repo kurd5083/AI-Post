@@ -4,13 +4,16 @@ import del from "@/assets/del.svg";
 import setting from "@/assets/setting.svg";
 import list from "@/assets/table-groups/list.svg";
 import { usePopupStore } from "@/store/popupStore"
-import useResolution from "@/lib/useResolution";
 import { useChannelsStore } from "@/store/channelsStore";
+import { useDeleteChannel } from "@/lib/useDeleteChannel";
+import useResolution from "@/lib/useResolution";
+
 
 const TableGroups = () => {
   const { openPopup } = usePopupStore();
   const { isSmall } = useResolution();
   const { selectedChannels } = useChannelsStore();
+  const { mutate: deleteChannel } = useDeleteChannel();
 
   return (
     <Table>
@@ -52,7 +55,7 @@ const TableGroups = () => {
                 <ButtonList title="Список"><img src={list} alt="list icon" width={16} height={16} /></ButtonList>
                 <ButtonDir onClick={() => openPopup("move_channel", "popup_window")} title="Перейти"><img src={dir_white} alt="dir icon" width={16} height={13} /></ButtonDir>
                 <ButtonSetting onClick={() => openPopup()} title="Настройки"><img src={setting} alt="setting icon" width={16} height={16} /></ButtonSetting>
-                <ButtonDel title="Удалить"><img src={del} alt="del icon" width={14} height={16} /></ButtonDel>
+                <ButtonDel onClick={() => deleteChannel(channel.id)} title="Удалить"><img src={del} alt="del icon" width={14} height={16} /></ButtonDel>
               </ButtonsWrap>
             </TableCell>
           </TableItem>
