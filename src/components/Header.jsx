@@ -24,7 +24,7 @@ const Header = () => {
 					<h3>{user?.firstName} {user?.lastName}</h3>
 					<HeaderBalanceContent>
 						<HeaderSubtext>Баланс:</HeaderSubtext>
-						<HeaderBalance>{balance} <mark>₽</mark></HeaderBalance>
+						<HeaderBalance>{balance.balanceRubles} <mark>₽</mark></HeaderBalance>
 					</HeaderBalanceContent>
 				</HeaderBalanceContainer>
 				<HeaderBtnAdd onClick={() => openPopup("replenish")}>+ Пополнить</HeaderBtnAdd>
