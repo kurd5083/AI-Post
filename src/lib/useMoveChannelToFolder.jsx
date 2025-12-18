@@ -1,8 +1,9 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { moveChannelToFolder } from "@/api/moveChannelToFolder";
-
+import { usePopupStore } from "../store/popupStore";
 export const useMoveChannelToFolder = () => {
   const queryClient = useQueryClient();
+  const { closePopup } = usePopupStore();
 
   return useMutation({
     mutationFn: moveChannelToFolder,
@@ -11,6 +12,7 @@ export const useMoveChannelToFolder = () => {
       console.log("Канал успешно перемещён:", data);
       queryClient.invalidateQueries({ queryKey: ["channelFolders"] });
       queryClient.invalidateQueries({ queryKey: ["channelsGroupedByFolders"] });
+      closePopup();
     },
 
     onError: (error) => {
