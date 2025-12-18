@@ -29,7 +29,7 @@ const TableGroups = () => {
         </tr>
       </TableHead>
       <tbody>
-        {channels.map((row) => (
+        {/* {channels.map((row) => (
           <TableItem key={row.id}>
             <TableCell>
               <p>
@@ -56,7 +56,7 @@ const TableGroups = () => {
               </ButtonsWrap>
             </TableCell>
           </TableItem>
-        ))}
+        ))} */}
       </tbody>
     </Table>
   );
