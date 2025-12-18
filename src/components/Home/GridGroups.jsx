@@ -8,12 +8,6 @@ import { useChannelsStore } from "@/store/channelsStore";
 const GridGroups = () => {
   const { openPopup } = usePopupStore();
   const { selectedChannels } = useChannelsStore();
-  
-  useEffect(() => {
-    if (channels && selectedFolderId === null) {
-      setSelectedFolder(null, channels.channelsWithoutFolder || []);
-    }
-  }, [channels, selectedFolderId, setSelectedFolder]);
 
   return (
     <GridContainer>

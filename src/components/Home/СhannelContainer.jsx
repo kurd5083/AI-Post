@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import styled from 'styled-components';
 import useFadeOnScroll from "@/lib/useFadeOnScroll";
 import { useChannelsGroupedByFolders } from "@/lib/useChannelsGroupedByFolders";
@@ -11,7 +12,7 @@ const СhannelContainer = ({ children }) => {
   useEffect(() => {
     if (channels) initChannels(channels);
   }, [channels, initChannels]);
-  
+
   return (
     <TableContainer $fadeVisible={fadeVisible}>
       <TableWrapper ref={ref}>
