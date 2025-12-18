@@ -1,9 +1,17 @@
 import styled from 'styled-components';
 import useFadeOnScroll from "@/lib/useFadeOnScroll";
+import { useChannelsGroupedByFolders } from "@/lib/useChannelsGroupedByFolders";
+import { useChannelsStore } from "@/store/channelsStore";
 
 const СhannelContainer = ({ children }) => {
   const { fadeVisible, ref } = useFadeOnScroll(20);
+  const { initChannels } = useChannelsStore();
+  const { channels } = useChannelsGroupedByFolders();
 
+  useEffect(() => {
+    if (channels) initChannels(channels);
+  }, [channels, initChannels]);
+  
   return (
     <TableContainer $fadeVisible={fadeVisible}>
       <TableWrapper ref={ref}>

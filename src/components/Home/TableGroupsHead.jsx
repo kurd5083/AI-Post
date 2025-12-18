@@ -20,9 +20,9 @@ const TableGroups = () => {
 	const { isSwipe } = useSwipeAllowed(768);
 	const { isSmall } = useResolution(480);
   const { viewType, setGridView, setListView } = useViewStore();
+  const { selectedFolderId, setSelectedFolder } = useChannelsStore();
   const { channels } = useChannelsGroupedByFolders();
-  const { setSelectedFolder } = useChannelsStore();
-  console.log(channels)
+
   const handleFolderClick = (folderId, folderChannels) => {
     setSelectedFolder(folderId, folderChannels);
   };
@@ -37,13 +37,20 @@ const TableGroups = () => {
 					allowTouchMove={isSwipe}
 				>
 				  <TableGroupsHeadDir onClick={() => openPopup("create_folder", "popup_window")}><img src={dir_filled} alt="dir icon"/>Создать папку</TableGroupsHeadDir>
-          <TableGroupsHeadBtn onClick={() => handleFolderClick(null, channels?.channelsWithoutFolder)}>
+          <TableGroupsHeadBtn 
+            onClick={() => handleFolderClick(null, channels?.channelsWithoutFolder)} 
+            $active={selectedFolderId === null}
+          >
             <img src={dir} alt="dir icon" />
             <p>Без папки</p>
             <mark>{channels?.totalChannelsWithoutFolder}</mark>
           </TableGroupsHeadBtn>
           {channels?.folders?.map((folder) => (
-            <TableGroupsHeadBtn key={folder.id} onClick={() => handleFolderClick(folder.id, folder.channels)}>
+            <TableGroupsHeadBtn 
+              key={folder.id} 
+              onClick={() => handleFolderClick(folder.id, folder.channels)}
+              $active={selectedFolderId === folder.id}
+            >
               <img src={dir} alt="dir icon" /><p>{folder.name}</p> <mark>{folder.channels.length}</mark>
             </TableGroupsHeadBtn>
           ))}
@@ -114,7 +121,7 @@ const TableGroupsHeadBtn = styled(SwiperSlide)`
   align-items: center;
   gap: 16px;
   border-bottom: 2px solid #1F273B;
-  color: #6A7080;
+  color: ${({ $active }) => ($active ? "#FFFFFF" : "#6A7080")};
   padding-bottom: 18px;
   font-size: 14px;
   font-weight: 700;
