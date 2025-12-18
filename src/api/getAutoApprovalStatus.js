@@ -8,7 +8,7 @@ export const getAutoApprovalStatus = async (channelId) => {
 export const updateAutoApprovalStatus = async (channelId, autoApprovalEnabled) => {
   console.log(channelId, '123123123')
   const response = await apiClient.put(`/channels/auto-approval/status/${channelId}`, {
-    autoApprovalEnabled: false,
+      autoApprovalEnabled 
   });
   return response.data;
 };

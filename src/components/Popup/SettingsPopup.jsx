@@ -34,7 +34,7 @@ const SettingsPopup = () => {
                     bg="#FF9C55" 
                     checked={autoApprovalStatus?.autoApprovalEnabled || false} 
                     onChange={(newChecked) =>
-                      setAutoApprovalStatus({ channelId, autoApprovalEnabled: newChecked })
+                      setAutoApprovalStatus({ channelId, autoApprovalEnabled: false })
                     }
                   />
 								) : item.right == 'textarrow' ? (
