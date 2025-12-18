@@ -10,6 +10,7 @@ import { useChannelsGroupedByFolders } from "@/lib/useChannelsGroupedByFolders";
 
 const MoveChannelPopup = () => {
 	const { popup, closePopup } = usePopupStore();
+	console.log(popup)
 	const { mutate: moveChannel, isPending } = useMoveChannelToFolder();
 	const { channels } = useChannelsGroupedByFolders();
 	const [selectedFolderId, setSelectedFolderId] = useState(null);
