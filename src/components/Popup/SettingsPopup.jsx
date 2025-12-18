@@ -19,7 +19,7 @@ const SettingsPopup = () => {
 					<PopupContentTitle>{section.label}</PopupContentTitle>
 					<ul>
 						{section.items.map((item, index) => (
-							<PopupContentItem key={index} onClick={item.right !== 'switch' ? () => changeContent(item.key, data={ channelId: channelId }) : undefined}>
+							<PopupContentItem key={index} onClick={item.right !== 'switch' ? () => changeContent(item.key, '', '', { channelId: channelId }) : undefined}>
 								<PopupContentLeft>
 									<img src={item.extra.image} alt={item.name} style={{ background: item.extra.background }} width={40} height={40} />
 									<PopupContentInfo $place={item.place} $size={item.size} $publications={item.key}>
