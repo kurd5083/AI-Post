@@ -4,7 +4,11 @@ const ToggleSwitch = ({ checked, onChange, bg }) => {
   return (
     <SwitchContainer>
       <SwitchLabel>
-        <SwitchInput type="checkbox" checked={checked} onChange={onChange} bg={bg} />
+        <SwitchInput 
+          type="checkbox" 
+          checked={checked} 
+          onChange={(e) => onChange(e.target.checked)} 
+          bg={bg} />
         <Slider />
       </SwitchLabel>
     </SwitchContainer>
