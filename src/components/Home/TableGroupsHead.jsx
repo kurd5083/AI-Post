@@ -21,10 +21,6 @@ const TableGroups = () => {
   const { viewType, setGridView, setListView } = useViewStore();
   const { folders } = useEmptyChannelFolders();
 
-  // if (isLoading) return <p>Загрузка...</p>;
-  // if (isError) return <p>Ошибка загрузки папок</p>;
-
-  console.log(folders);
 	return (
 		<TableGroupsContainer>
 			<TableGroupsHead>
@@ -35,9 +31,11 @@ const TableGroups = () => {
 					allowTouchMove={isSwipe}
 				>
 					<TableGroupsHeadDir onClick={() => openPopup("create_folder", "popup_window")}><img src={dir_filled} alt="dir icon"/>Создать папку</TableGroupsHeadDir>
-					
-          <TableGroupsHeadBtn><img src={dir} alt="dir icon" /><p>Основная папка</p> <mark>6</mark></TableGroupsHeadBtn>
-					<TableGroupsHeadBtn><img src={dir_active} alt="dir icon" /><p>Олимпиада 2027</p> <mark>16</mark></TableGroupsHeadBtn>
+					{folders?.map((folder) => (
+           
+            <TableGroupsHeadBtn><img src={dir} alt="dir icon" /><p>{folder.name}</p> <mark>6</mark></TableGroupsHeadBtn>
+          ))}
+
 				</TableGroupsHeadLeft>
 				<TableGroupsHeadRight>
 					<TableGroupsHeadAdd  onClick={() => openPopup("create_channel", "popup_window")}>{isSmall ? "+ Добавить" : "+ Добавить канал"}</TableGroupsHeadAdd>
