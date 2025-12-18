@@ -13,7 +13,7 @@ const MoveChannelPopup = () => {
 	const { mutate: moveChannel, isPending } = useMoveChannelToFolder();
 	const { channels } = useChannelsGroupedByFolders();
 	const [selectedFolderId, setSelectedFolderId] = useState(null);
-	const handleMove = (folderId, channelId) => moveChannel({ folderId, channelId, });
+	const handleMove = (folderId, channelId) => moveChannel({ folderId, channelId });
 
 	return (
 		<div>
@@ -23,6 +23,14 @@ const MoveChannelPopup = () => {
 			</MoveChannelHead>
 			<MoveChannelSubtitle>Выберите папку для канала “Все о криптовалюте”</MoveChannelSubtitle>
 			<MoveChannelUl>
+				<ChannelItem onClick={() => setSelectedFolderId(null)}>
+					<img src={dir_active} alt="dir icon" width={31} height={21} />
+					<ItemContent>
+						<h3>Без папки</h3>
+						<p>{channels.channelsWithoutFolder.length} канала</p>
+					</ItemContent>
+					<CheckboxCircle checked={selectedFolderId === null}/>
+				</ChannelItem>
 				{channels?.folders.map((folder) => (
 					<ChannelItem
 						key={folder.id}
