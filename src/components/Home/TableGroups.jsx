@@ -5,6 +5,7 @@ import setting from "@/assets/setting.svg";
 import list from "@/assets/table-groups/list.svg";
 import { usePopupStore } from "@/store/popupStore"
 import { useChannelsStore } from "@/store/channelsStore";
+import { useChannelsGroupedByFolders } from "@/lib/useChannelsGroupedByFolders";
 import { useDeleteChannel } from "@/lib/useDeleteChannel";
 import useResolution from "@/lib/useResolution";
 
@@ -12,7 +13,8 @@ import useResolution from "@/lib/useResolution";
 const TableGroups = () => {
   const { openPopup } = usePopupStore();
   const { isSmall } = useResolution();
-  const { selectedChannels } = useChannelsStore();
+  const { selectedId } = useChannelsStore();
+  const { channels } = useChannelsGroupedByFolders();
   const { mutate: deleteChannel } = useDeleteChannel();
 
   return (
@@ -32,12 +34,32 @@ const TableGroups = () => {
         </tr>
       </TableHead>
       <tbody>
-        {selectedChannels && selectedChannels.length > 0 ? (
-          selectedChannels.map((channel, index) => (
+        {(() => {
+          let currentChannels = [];
+          let isEmpty = true;
+
+          if (selectedId === null) {
+            currentChannels = channels?.channelsWithoutFolder || [];
+            isEmpty = currentChannels.length === 0;
+          } else {
+            const selectedFolder = channels?.folders?.find(folder => folder.id == selectedId);
+            currentChannels = selectedFolder?.channels || [];
+            isEmpty = currentChannels.length === 0;
+          }
+
+          if (isEmpty) {
+            return (
+              <TableItem>
+                <NoChannels colSpan={4}>Каналы отсутствуют</NoChannels>
+              </TableItem>
+            );
+          }
+          
+          return currentChannels.map((channel, index) => (
             <TableItem key={channel.id}>
               <TableCell>
                 <p>
-                  <TableCellNum>#{index++}</TableCellNum>
+                  <TableCellNum>#{index + 1}</TableCellNum>
                   <img src={channel.avatarUrl} alt="Group" />
                   <span>{channel.name}</span>
                 </p>
@@ -47,9 +69,9 @@ const TableGroups = () => {
               </TableCell>
               <TableCell>
                 {/* <TableCellOnline $online={channel.online}>
-                <StatusIndicator $online={channel.online} />
-                {channel.online ? 'Онлайн' : 'Ошибка'}
-              </TableCellOnline> */}
+                  <StatusIndicator $online={channel.online} />
+                  {channel.online ? 'Онлайн' : 'Ошибка'}
+                </TableCellOnline> */}
               </TableCell>
               <TableCell>
                 <ButtonsWrap>
@@ -60,12 +82,8 @@ const TableGroups = () => {
                 </ButtonsWrap>
               </TableCell>
             </TableItem>
-          ))
-        ) : (
-          <TableItem>
-            <NoChannels colSpan={4}>Каналы отсутствуют</NoChannels>
-          </TableItem>
-        )}
+          ));
+        })()}
       </tbody>
     </Table>
   );

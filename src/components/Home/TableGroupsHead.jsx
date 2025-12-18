@@ -22,13 +22,9 @@ const TableGroups = () => {
 	const { isSwipe } = useSwipeAllowed(768);
 	const { isSmall } = useResolution(480);
   const { viewType, setGridView, setListView } = useViewStore();
-  const { selectedFolderId, setSelectedFolder } = useChannelsStore();
+  const { selectedId, setId } = useChannelsStore();
   const { channels } = useChannelsGroupedByFolders();
   const { mutate: deleteFolder } = useDeleteFolder();
-
-  const handleFolderClick = (folderId, folderChannels) => {
-    setSelectedFolder(folderId, folderChannels);
-  };
 
 	return (
 		<TableGroupsContainer>
@@ -41,8 +37,8 @@ const TableGroups = () => {
 				>
 				  <TableGroupsHeadDir onClick={() => openPopup("create_folder", "popup_window")}><img src={dir_filled} alt="dir icon"/>Создать папку</TableGroupsHeadDir>
           <TableGroupsHeadBtn 
-            onClick={() => handleFolderClick(null, channels?.channelsWithoutFolder)} 
-            $active={selectedFolderId === null}
+            onClick={() => setId(null)} 
+            $active={selectedId === null}
           >
             <img src={dir} alt="dir icon" />
             <p>Без папки</p>
@@ -51,8 +47,8 @@ const TableGroups = () => {
           {channels?.folders?.map((folder) => (
             <TableGroupsHeadBtn 
               key={folder.id} 
-              onClick={() => handleFolderClick(folder.id, folder.channels)}
-              $active={selectedFolderId === folder.id}
+              onClick={() => setId(folder.id)}
+              $active={selectedId === folder.id}
             >
               <img src={dir} alt="dir icon" /><p>{folder.name}</p> <mark>{folder.channels.length}</mark>
               <DeleteFolderButton src={del} alt="del icon" onClick={(e) => {

@@ -5,16 +5,37 @@ import setting from "@/assets/setting.svg";
 import { usePopupStore } from "@/store/popupStore"
 import { useChannelsStore } from "@/store/channelsStore";
 import { useDeleteChannel } from "@/lib/useDeleteChannel";
+import { useChannelsGroupedByFolders } from "@/lib/useChannelsGroupedByFolders";
 
 const GridGroups = () => {
   const { openPopup } = usePopupStore();
-  const { selectedChannels } = useChannelsStore();
+  const { selectedId } = useChannelsStore();
+  const { channels } = useChannelsGroupedByFolders();
   const { mutate: deleteChannel } = useDeleteChannel();
 
   return (
     <GridContainer>
-      {selectedChannels && selectedChannels.length > 0 ? (
-        selectedChannels.map((channel, index) => (
+      {(() => {
+        let currentChannels = [];
+        let isEmpty = true;
+
+        if (selectedId === null) {
+          currentChannels = channels?.channelsWithoutFolder || [];
+          isEmpty = currentChannels.length === 0;
+        } else {
+          const selectedFolder = channels?.folders?.find(folder => folder.id == selectedId);
+          currentChannels = selectedFolder?.channels || [];
+          isEmpty = currentChannels.length === 0;
+        }
+
+        if (isEmpty) {
+          return (
+            <GridItem>
+              <NoChannels colSpan={4}>Каналы отсутствуют</NoChannels>
+            </GridItem>
+          );
+        }
+        return currentChannels.map((channel, index) => (
           <GridItem key={channel.id}>
             <GridItemNum>#{index++}</GridItemNum>
             <GridImg src={channel.avatarUrl} alt="Group" />
@@ -30,12 +51,8 @@ const GridGroups = () => {
               <ButtonDel onClick={() => deleteChannel(channel.id)} title="Удалить"><img src={del} alt="del icon" width={14} height={16} /></ButtonDel>
             </ButtonsWrap>
           </GridItem>
-        ))
-      ) : (
-        <GridItem>
-          <NoChannels colSpan={4}>Каналы отсутствуют</NoChannels>
-        </GridItem>
-      )}
+        ));
+      })()}
     </GridContainer>
   );
 };
