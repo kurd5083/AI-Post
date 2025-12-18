@@ -65,11 +65,6 @@ export const settingsDatas = {
                         background: "#445838",
                         image: activate_promotion
                     }, 
-                    
-                    onToggle: () => {
-                        
-                 
-                    }
                 },
                 {
                     key: "promotion",
@@ -93,8 +88,6 @@ export const settingsDatas = {
                         background: "#2E5E5F",
                         image: auto_accepting
                     },
-                    onSwitch: () => {
-                    }
                 },
                 {
                     key: "link_generation_prev",
