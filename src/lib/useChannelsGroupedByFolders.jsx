@@ -10,5 +10,5 @@ export const useChannelsGroupedByFolders = () => {
     enabled: !!accessToken,
   });
 
-  return { channels: channels || [], isLoading, isError, error };
+  return { channels: channels, isLoading, isError, error };
 };

@@ -12,13 +12,19 @@ import { usePopupStore } from "@/store/popupStore"
 import { useViewStore } from "@/store/viewStore";
 import GridIcon from "@/icons/GridIcon";
 import ListIcon from "@/icons/ListIcon";
+import { useChannelFolders } from "@/lib/useChannelFolders";
 
 const TableGroups = () => {
   const { openPopup } = usePopupStore();
 	const { isSwipe } = useSwipeAllowed(768);
 	const { isSmall } = useResolution(480);
   const { viewType, setGridView, setListView } = useViewStore();
+  const { folders, isLoading, isError } = useChannelFolders();
 
+  if (isLoading) return <p>Загрузка...</p>;
+  if (isError) return <p>Ошибка загрузки папок</p>;
+
+  console.log(folders);
 	return (
 		<TableGroupsContainer>
 			<TableGroupsHead>
@@ -29,7 +35,8 @@ const TableGroups = () => {
 					allowTouchMove={isSwipe}
 				>
 					<TableGroupsHeadDir onClick={() => openPopup("create_folder", "popup_window")}><img src={dir_filled} alt="dir icon"/>Создать папку</TableGroupsHeadDir>
-					<TableGroupsHeadBtn><img src={dir} alt="dir icon" /><p>Основная папка</p> <mark>6</mark></TableGroupsHeadBtn>
+					
+          <TableGroupsHeadBtn><img src={dir} alt="dir icon" /><p>Основная папка</p> <mark>6</mark></TableGroupsHeadBtn>
 					<TableGroupsHeadBtn><img src={dir_active} alt="dir icon" /><p>Олимпиада 2027</p> <mark>16</mark></TableGroupsHeadBtn>
 				</TableGroupsHeadLeft>
 				<TableGroupsHeadRight>
