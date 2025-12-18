@@ -10,8 +10,8 @@ import { useAutoApprovalStatus } from "@/lib/useAutoApprovalStatus";
 const SettingsPopup = () => {
 	const { changeContent, popup } = usePopupStore();
   const channelId = popup?.data?.channelId;
-  
-  const { autoApprovalStatus } = useAutoApprovalStatus(channelId);
+
+  const { autoApprovalStatus, setAutoApprovalStatus } = useAutoApprovalStatus(channelId);
 
 	return (
 		<SettingsContainer>
@@ -33,6 +33,8 @@ const SettingsPopup = () => {
 								) : item.right == 'switch' ? (
 									<ToggleSwitch 
                     bg="#FF9C55" 
+                    checked={autoApprovalStatus.enabled} 
+                    onChange={() => setAutoApprovalStatus({ channelId })} 
                   />
 								) : item.right == 'textarrow' ? (
 									<PopupContentRight>
