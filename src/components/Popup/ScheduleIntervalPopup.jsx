@@ -13,6 +13,7 @@ const SchedulePopup = () => {
   const channelId = popup?.data?.channelId;
   const { channelInterval } = useChannelInterval(channelId);
   console.log(channelInterval, 'dsgdfhdf', popup)
+
   const [intervalMinutes, setIntervalMinutes] = useState(60);
   const [isEnabled, setIsEnabled] = useState(false);
   const [avoidNight, setAvoidNight] = useState(false);
@@ -89,7 +90,7 @@ const SchedulePopup = () => {
 					<BtnBase
             $color="#D6DCEC"
             $bg="#336CFF"
-            onClick={handleSave}
+            onClick={() => handleSave()}
             disabled={isLoading}
           >
             {isLoading ? "Сохраняем..." : "Сохранить"}
