@@ -9,6 +9,16 @@ import BlocksItems from "@/shared/BlocksItems";
 import PlusIcon from "@/icons/PlusIcon";
 import { useCreateChannelSchedule } from "@/lib/channels/useCreateChannelSchedule";
 
+const DAYS = [
+  { label: "Понедельник", value: "MONDAY" },
+  { label: "Вторник", value: "TUESDAY" },
+  { label: "Среда", value: "WEDNESDAY" },
+  { label: "Четверг", value: "THURSDAY" },
+  { label: "Пятница", value: "FRIDAY" },
+  { label: "Суббота", value: "SATURDAY" },
+  { label: "Воскресенье", value: "SUNDAY" },
+];
+
 const SchedulePopup = () => {
   const { popup, changeContent } = usePopupStore();
   const channelId = popup?.data?.channelId;
@@ -79,14 +89,14 @@ const SchedulePopup = () => {
         <ScheduleKey>
           <ScheduleKeyTitle>ДНИ НЕДЕЛИ</ScheduleKeyTitle>
           <ScheduleDays>
-            {["MONDAY","TUESDAY","WEDNESDAY","THURSDAY","FRIDAY","SATURDAY","SUNDAY"].map(day => (
+            {DAYS.map(day => (
               <Checkbox
-                key={day}
+                key={day.value}
                 color="#FFF980"
-                checked={selectedDays.includes(day)}
-                onChange={() => toggleDay(day)}
+                checked={selectedDays.includes(day.value)}
+                onChange={() => toggleDay(day.value)}
               >
-                <h4>{day}</h4>
+                <h4>{day.label}</h4>
               </Checkbox>
             ))}
           </ScheduleDays>
