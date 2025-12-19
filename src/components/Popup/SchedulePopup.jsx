@@ -25,7 +25,7 @@ const SchedulePopup = () => {
   const channelId = popup?.data?.channelId;
 
   const { channelSchedule } = useChannelSchedule(channelId);
-  const scheduleId = schedule?.id;
+  const scheduleId = channelSchedule?.id;
   const updateSchedule = useUpdateChannelSchedule(scheduleId, channelId);
 
   const [timezone, setTimezone] = useState(null);
