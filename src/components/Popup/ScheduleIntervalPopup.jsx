@@ -112,14 +112,14 @@ const SchedulePopup = () => {
           <ScheduleInputContainer>
             <div>
               <TimeInput 
-                hours={startHours}
+                hours={startHour}
                 onChange={(h) => setActiveStartHour(h)}
               />
             </div>
             <p>-</p>
             <div>
               <TimeInput 
-                hours={endHours}
+                hours={endHour}
                 onChange={(h) => setActiveEndHour(h)}
               />
             </div>
