@@ -93,19 +93,15 @@ const LinkGenerationPopup = () => {
           <CustomSelect
             placeholder="Лимит участников"
             options={[
-              { value: null, label: "Не ограничено" },
               { value: "1", label: "1" },
               { value: "10", label: "10" },
               { value: "50", label: "50" },
               { value: "100", label: "100" },
             ]}
-            value={
-              memberLimit === null
-                ? { value: null, label: "Не ограничено" }
-                : { value: memberLimit, label: memberLimit }
-            }
+            value={memberLimit}
             onChange={(option) => setMemberLimit(option.value)}
           />
+
 
         </LinkGenerationItem>
 
