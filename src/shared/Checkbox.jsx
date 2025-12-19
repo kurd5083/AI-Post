@@ -1,8 +1,8 @@
 import styled from "styled-components";
 
-const Checkbox = ({ checked, onChange, color, children }) => {
+const Checkbox = ({ checked, change, color, children }) => {
   return (
-    <CheckboxContainer onClick={onChange}>
+    <CheckboxContainer onClick={change}>
       <HiddenCheckbox type="checkbox" checked={checked} readOnly />
       <StyledCheckbox $color={color} checked={checked} />
       {children}
