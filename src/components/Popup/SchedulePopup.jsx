@@ -6,14 +6,13 @@ import { usePopupStore } from "@/store/popupStore"
 import BtnBase from "@/shared/BtnBase";
 import BlocksItems from "@/shared/BlocksItems";
 import PlusIcon from "@/icons/PlusIcon";
-
 const SchedulePopup = () => {
-	const { changeContent } = usePopupStore()
+	const { popup, changeContent } = usePopupStore()
 	return (
 		<ScheduleContainer>
 			<ScheduleHead>
 				<ScheduleHeadText $active={true}>Расписание</ScheduleHeadText>
-				<ScheduleHeadText onClick={() => changeContent("schedule_interval")}>Интервал</ScheduleHeadText>
+				<ScheduleHeadText onClick={() => changeContent("schedule_interval", { channelId: popup?.data?.channelId })}>Интервал</ScheduleHeadText>
 			</ScheduleHead>
 			<ScheduleContent>
 				<ScheduleTitle>Часовой пояс</ScheduleTitle>
