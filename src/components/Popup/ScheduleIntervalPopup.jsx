@@ -93,7 +93,7 @@ const SchedulePopup = () => {
             // onClick={() => handleSave()}
             // disabled={isLoading}
           >
-            {isLoading ? "Сохраняем..." : "Сохранить"}
+            {/* {isLoading ? "Сохраняем..." : "Сохранить"} */}
           </BtnBase>
 					<BtnBase onClick={goBack} $color="#D6DCEC" $bg="#242A3A">Отменить</BtnBase>
 				</ScheduleButtons>
