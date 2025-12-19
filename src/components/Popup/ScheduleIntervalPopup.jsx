@@ -11,12 +11,12 @@ import { useUpdateChannelInterval } from "@/lib/channels/useUpdateChannelInterva
 const SchedulePopup = () => {
 	const { popup, changeContent, goBack } = usePopupStore()
   const channelId = popup?.data?.channelId;
-  const { channelInterval } = useChannelInterval(channelId);
+  // const { channelInterval } = useChannelInterval(channelId);
 
   const [intervalMinutes, setIntervalMinutes] = useState(60);
   const [isEnabled, setIsEnabled] = useState(false);
   const [avoidNight, setAvoidNight] = useState(false);
-  const { mutate: saveInterval, isLoading } = useUpdateChannelInterval(channelId);
+  // const { mutate: saveInterval, isLoading } = useUpdateChannelInterval(channelId);
   
   // useEffect(() => {
   //   if (channelInterval) {
@@ -26,18 +26,18 @@ const SchedulePopup = () => {
   //   }
   // }, [channelInterval]);
 
-  const handleSave = () => {
-    const activeStartHour = avoidNight ? 7 : 0;
-    const activeEndHour = 23;
+  // const handleSave = () => {
+  //   const activeStartHour = avoidNight ? 7 : 0;
+  //   const activeEndHour = 23;
 
-    saveInterval({
-      intervalMinutes,
-      isEnabled,
-      avoidNight,
-      activeStartHour,
-      activeEndHour,
-    });
-  };
+  //   saveInterval({
+  //     intervalMinutes,
+  //     isEnabled,
+  //     avoidNight,
+  //     activeStartHour,
+  //     activeEndHour,
+  //   });
+  // };
 
   const hours = Math.floor(intervalMinutes / 60);
   const minutes = intervalMinutes % 60;
@@ -90,8 +90,8 @@ const SchedulePopup = () => {
 					<BtnBase
             $color="#D6DCEC"
             $bg="#336CFF"
-            onClick={() => handleSave()}
-            disabled={isLoading}
+            // onClick={() => handleSave()}
+            // disabled={isLoading}
           >
             {isLoading ? "Сохраняем..." : "Сохранить"}
           </BtnBase>
