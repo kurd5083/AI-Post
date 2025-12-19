@@ -113,7 +113,7 @@ const SchedulePopup = () => {
                 onChange={(h) => setActiveStartHour(h)}
               />
             </div>
-            <Dash>-</Dash>
+            <Dash/>
             <div>
               <TimeInput 
                 hours={endHour}
@@ -127,7 +127,7 @@ const SchedulePopup = () => {
           {showResultActiveTime && (
             <ScheduleResult>
               Активное время:{" "}
-              <mark>{startHour}</mark> — 
+              <mark>{startHour}</mark> - {" "}
               <mark>{endHour}</mark>
             </ScheduleResult>
           )}
@@ -235,11 +235,11 @@ const ScheduleResult = styled.p`
   }
 `
 const Dash = styled.span`
-  width: 30px;
-  height: 3px;
+  margin-top: -20px;
+  width: 16px;
+  height: 2px;
   background-color: #D6DCEC;
 `
-
 const ScheduleBtn = styled.button`
   display: flex;
   align-items: center;
