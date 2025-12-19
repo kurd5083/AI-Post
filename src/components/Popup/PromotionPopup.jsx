@@ -1,6 +1,6 @@
 import { useState } from "react";
 import styled from "styled-components";
-import ToggleSwitch from "@/shared/ToggleSwitch";
+// import ToggleSwitch from "@/shared/ToggleSwitch";
 import Counter from "@/shared/Counter";
 import BtnBase from "@/shared/BtnBase";
 import { usePopupStore } from "@/store/popupStore";
@@ -10,18 +10,18 @@ const PromotionPopup = () => {
 	const { changeContent } = usePopupStore();
 	const createViewsOrder = useCreateViewsOrder();
 
-	const [autoViews, setAutoViews] = useState(false);
-	const [minViews, setMinViews] = useState(100);
-	const [maxViews, setMaxViews] = useState(1000);
+	// const [autoViews, setAutoViews] = useState(false);
+	const [minViews, setMinViews] = useState(null);
+	const [maxViews, setMaxViews] = useState(null);
 	const [postLink, setPostLink] = useState("");
-	const [postViews, setPostViews] = useState(100);
+	// const [postViews, setPostViews] = useState(100);
 
 	const handleStartPromotion = () => {
 		createViewsOrder.mutate({
 			link: postLink,
-			username: "mychannel", // заменить на актуальный username
-			min: postViews,
-			max: postViews,
+			username: "mychannel",
+			min: minViews,
+			max: maxViews,
 		});
 	};
 
@@ -32,12 +32,12 @@ const PromotionPopup = () => {
 				<PromotionHeadText onClick={() => changeContent("boosts")}>Бусты</PromotionHeadText>
 			</PromotionHead>
 
-			<PromotionViews>
+			{/* <PromotionViews>
 				<ToggleSwitch bg="#EF6283" value={autoViews} onChange={() => setAutoViews(!autoViews)} />
 				<PostTitle>
 					Просмотры на новый пост<br /> и автозакупка после публикации
 				</PostTitle>
-			</PromotionViews>
+			</PromotionViews> */}
 
 			<ViewsPost>
 				<PostTitle>Просмотры на пост</PostTitle>
@@ -50,7 +50,8 @@ const PromotionPopup = () => {
 			<PromotePost>
 				<PostTitle>Продвинуть пост</PostTitle>
 				<PromoteText>
-					Введите ссылку на пост и количество просмотров для ручного продвижения
+					Введите ссылку на пост
+					 {/* и количество просмотров для ручного продвижения */}
 				</PromoteText>
 				<PostContainer>
 					<CounterContainer>
@@ -61,10 +62,10 @@ const PromotionPopup = () => {
 							onChange={(e) => setPostLink(e.target.value)}
 						/>
 					</CounterContainer>
-					<CounterContainer>
+					{/* <CounterContainer>
 						<CounterTitle>Количество просмотров</CounterTitle>
 						<Counter placeholder="" value={postViews} onChange={setPostViews} />
-					</CounterContainer>
+					</CounterContainer> */}
 				</PostContainer>
 				<BtnBase
 					$margin="8"
@@ -102,13 +103,13 @@ const PromotionHeadText = styled.p`
   cursor: pointer;
   @media(max-width: 480px) { padding-right: 0; }
 `;
-const PromotionViews = styled.div`
-  display: flex;
-  gap: 32px;
-  margin-top: 40px;
-  @media(max-width: 480px) { align-items: flex-start; }
-`;
-const PostTitle = styled.h2` font-size: 24px; font-weight: 700; `;
+// const PromotionViews = styled.div`
+//   display: flex;
+//   gap: 32px;
+//   margin-top: 40px;
+//   @media(max-width: 480px) { align-items: flex-start; }
+// `;
+// const PostTitle = styled.h2` font-size: 24px; font-weight: 700; `;
 const PostContainer = styled.div` display: flex; gap: 16px; `;
 const ViewsPost = styled.div`
   margin-top: 64px;
