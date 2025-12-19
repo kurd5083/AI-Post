@@ -23,7 +23,7 @@ const DAYS = [
 const SchedulePopup = () => {
   const { popup, changeContent } = usePopupStore();
   const channelId = popup?.data?.channelId;
-  
+
   const { data: schedule } = useChannelSchedule(channelId);
 
   const [timezone, setTimezone] = useState("GMT");
@@ -77,9 +77,8 @@ const SchedulePopup = () => {
         <ScheduleTitle>Часовой пояс</ScheduleTitle>
         <CustomSelect
           options={[
-            { value: "GMT", label: "GMT" },
-            { value: "PST", label: "PST" },
-            { value: "WAT", label: "WAT" },
+            { value: "UTC", label: "UTC" },
+            { value: "Europe/Moscow", label: "Европа/Москва" },
           ]}
           value={timezone}
           onChange={(option) => setTimezone(option.value)}
