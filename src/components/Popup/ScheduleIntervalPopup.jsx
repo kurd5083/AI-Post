@@ -41,9 +41,9 @@ const SchedulePopup = () => {
 
   const handleSelectCheckbox = (name) => {
     if (name === "isEnabled") {
-      setIsEnabled(prev => !prev);
+      setIsEnabled(!isEnabled);
     } else if (name === "avoidNight") {
-      setAvoidNight(prev => !prev); 
+      setAvoidNight(!avoidNight); 
     }
   };
   
