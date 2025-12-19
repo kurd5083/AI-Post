@@ -17,14 +17,6 @@ const TimeInput = ({ hours, minutes, onChange }) => {
     onChange(+hours, +val);
   };
 
-  const handleHoursBlur = () => {
-    onChange(String(hours).padStart(2, '0'), minutes);
-  };
-
-  const handleMinutesBlur = () => {
-    onChange(hours, String(minutes).padStart(2, '0'));
-  };
-
   return (
     <TimeInputContainer>
       <TimeSection>
@@ -32,7 +24,6 @@ const TimeInput = ({ hours, minutes, onChange }) => {
           type="text"
           value={String(hours)}
           onChange={handleHoursChange}
-          onBlur={handleHoursBlur}
           maxLength={2}
         />
         <TimeLabel>ЧАСЫ</TimeLabel>
@@ -43,7 +34,6 @@ const TimeInput = ({ hours, minutes, onChange }) => {
           type="text"
           value={String(minutes)}
           onChange={handleMinutesChange}
-          onBlur={handleMinutesBlur}
           maxLength={2}
         />
         <TimeLabel>МИНУТЫ</TimeLabel>
