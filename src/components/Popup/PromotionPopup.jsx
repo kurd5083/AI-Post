@@ -1,15 +1,18 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import styled from "styled-components";
 import ToggleSwitch from "@/shared/ToggleSwitch";
 import Counter from "@/shared/Counter";
 import BtnBase from "@/shared/BtnBase";
 import { usePopupStore } from "@/store/popupStore";
 import { useСreateConfigСhannel } from "@/lib/channels/useСreateConfigСhannel";
+import { useGetChannelPromotionConfig } from "@/lib/channels/useGetChannelPromotionConfig";
 
 const PromotionPopup = () => {
   const { popup, changeContent } = usePopupStore();
-	const channelId = popup?.data?.channelId;
+  const channelId = popup?.data?.channelId;
+
   const createConfigСhannel = useСreateConfigСhannel();
+  const { data: configData, isLoading: isLoadingConfig } = useGetChannelPromotionConfig(channelId);
 
   const [autoViews, setAutoViews] = useState(false);
   const [minViews, setMinViews] = useState(null);
@@ -17,9 +20,17 @@ const PromotionPopup = () => {
   const [postLink, setPostLink] = useState("");
   const [postViews, setPostViews] = useState(null);
 
+  useEffect(() => {
+    if (configData) {
+      setAutoViews(configData.viewsOnNewPostEnabled || false);
+      setMinViews(configData.minViews || null);
+      setMaxViews(configData.maxViews || null);
+    }
+  }, [configData]);
+
   const handleSave = () => {
     createConfigСhannel.mutate({
-			channelId: channelId,
+      channelId: channelId,
       isEnabled: autoViews,
       allowedServiceIds: [272],
       viewsOnNewPostEnabled: autoViews,
@@ -29,6 +40,8 @@ const PromotionPopup = () => {
       maxViews,
     });
   };
+
+  if (isLoadingConfig) return <p>Загрузка конфигурации...</p>;
 
   return (
     <PromotionContainer>
@@ -81,20 +94,19 @@ const PromotionPopup = () => {
         </BtnBase>
       </PromotePost>
 
-      <BtnBase 
-				$margin="64"
-			 	onClick={handleSave}
+      <BtnBase
+        $margin="64"
+        onClick={handleSave}
         disabled={createConfigСhannel.isLoading}
-			>
-				{createConfigСhannel.isLoading ? "Сохраняем..." : "Сохранить"}
-			</BtnBase>
+      >
+        {createConfigСhannel.isLoading ? "Сохраняем..." : "Сохранить"}
+      </BtnBase>
     </PromotionContainer>
   );
 };
 
 const PromotionContainer = styled.div`
   padding: 0 56px;
-
   @media(max-width: 1600px) { padding: 0 32px; }
   @media(max-width: 768px) { padding: 0 24px; }
 `;
