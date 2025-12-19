@@ -5,21 +5,23 @@ import { settingsDatas } from "@/data/settingsDatas";
 import ToggleSwitch from "@/shared/ToggleSwitch";
 import { usePopupStore } from "@/store/popupStore"
 import { useAutoApprovalStatus } from "@/lib/useAutoApprovalStatus";
+import { useChannelsGroupedByFolders } from "@/lib/useChannelsGroupedByFolders";
 
 const SettingsPopup = () => {
 	const { changeContent, popup } = usePopupStore();
   const channelId = popup?.data?.channelId;
-
+  const { channels } = useChannelsGroupedByFolders();
   const { autoApprovalStatus, setAutoApprovalStatus } = useAutoApprovalStatus(channelId);
-  console.log(channelId, autoApprovalStatus)
-	return (
+  const findChannel = channels.find((channel) => channel.id == channelId)
+
+  return (
 		<SettingsContainer>
 			{settingsDatas.sections.map((section) => (
 				<PopupNav key={section.key}>
 					<PopupContentTitle>{section.label}</PopupContentTitle>
 					<ul>
 						{section.items.map((item, index) => (
-							<PopupContentItem key={index} onClick={item.right !== 'switch' ? () => changeContent(item.key, { channelId: channelId }) : undefined}>
+							<PopupContentItem key={index} onClick={item.right !== 'switch' ? () => changeContent(item.key, { channelId: channelId, workMode: findChannel.workMode }) : undefined}>
 								<PopupContentLeft>
 									<img src={item.extra.image} alt={item.name} style={{ background: item.extra.background }} width={40} height={40} />
 									<PopupContentInfo $place={item.place} $size={item.size} $publications={item.key}>
