@@ -109,7 +109,7 @@ const PromotionHeadText = styled.p`
 //   margin-top: 40px;
 //   @media(max-width: 480px) { align-items: flex-start; }
 // `;
-// const PostTitle = styled.h2` font-size: 24px; font-weight: 700; `;
+const PostTitle = styled.h2` font-size: 24px; font-weight: 700; `;
 const PostContainer = styled.div` display: flex; gap: 16px; `;
 const ViewsPost = styled.div`
   margin-top: 64px;
