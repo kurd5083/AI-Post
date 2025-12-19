@@ -12,8 +12,8 @@ const SchedulePopup = () => {
   const { popup, changeContent, goBack } = usePopupStore()
   const channelId = popup?.data?.channelId;
   const { channelInterval } = useChannelInterval(channelId);
-  const [showResult, setShowResult] = useState(false);
-
+  const [showResultInterval, setShowResultInterval] = useState(false);
+  const [showResultActiveTime, setShowResultActiveTime] = useState(false);
   const [intervalMinutes, setIntervalMinutes] = useState(null);
   const [finalMinutes, setFinalMinutes] = useState(null);
   const [activeStartHour, setActiveStartHour] = useState(null); 
@@ -59,9 +59,12 @@ const SchedulePopup = () => {
   const hours = Math.floor((finalMinutes ?? 0) / 60);
   const minutes = (finalMinutes ?? 0) % 60;
 
-  const handleShowResult = () => {
-    setShowResult(true);
+  const handleShowResultInterval = () => {
+    setShowResultInterval(true);
     setFinalMinutes(intervalMinutes);
+  };
+  const handleShowResultActiveTime = () => {
+    setShowResultActiveTime(true);
   };
   return (
     <ScheduleContainer>
@@ -85,11 +88,11 @@ const SchedulePopup = () => {
                 setIntervalMinutes(newHours * 60 + newMinutes);
               }}
             />
-            <ScheduleBtn onClick={handleShowResult}>
+            <ScheduleBtn onClick={handleShowResultInterval}>
               <PlusIcon color="#FFF980" />
             </ScheduleBtn>
           </ScheduleInputContainer>
-          {showResult && finalMinutes !== null && (
+          {showResultInterval && finalMinutes !== null && (
             <ScheduleResult>
               Будет публиковаться каждые{" "}
               <mark>
@@ -119,10 +122,15 @@ const SchedulePopup = () => {
                 onChange={(h, m) => setActiveEndHour(h * 60 + m)}
               />
             </div>
-            <ScheduleBtn onClick={() => console.log("Активное время:", activeStartHour, activeEndHour)}>
+            <ScheduleBtn onClick={handleShowResultActiveTime}>
               <PlusIcon color="#FFF980" />
             </ScheduleBtn>
           </ScheduleInputContainer>
+          {showResultActiveTime && (
+            <ScheduleResult>
+              Активное время: <mark>{startHours}:{startMinutes.toString().padStart(2,'0')}</mark> — <mark>{endHours}:{endMinutes.toString().padStart(2,'0')}</mark>
+            </ScheduleResult>
+          )}
         </ScheduleKey>
         <ScheduleKey>
           <ScheduleKeyTitle>Дополнительно</ScheduleKeyTitle>
