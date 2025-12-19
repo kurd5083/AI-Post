@@ -11,7 +11,7 @@ import { useUpdateChannelInterval } from "@/lib/channels/useUpdateChannelInterva
 const SchedulePopup = () => {
 	const { popup, changeContent, goBack } = usePopupStore()
   const channelId = popup?.data?.channelId;
-  // const { channelInterval } = useChannelInterval(channelId);
+  const { channelInterval } = useChannelInterval(channelId);
 
   const [intervalMinutes, setIntervalMinutes] = useState(60);
   const [finalMinutes, setFinalMinutes] = useState(null);
