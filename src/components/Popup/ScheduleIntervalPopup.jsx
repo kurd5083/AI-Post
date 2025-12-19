@@ -85,12 +85,12 @@ const SchedulePopup = () => {
 				<ScheduleKey>
 					<ScheduleKeyTitle>Дополнительно</ScheduleKeyTitle>
 					<ScheduleKeyItem>
-						<Checkbox checked={isEnabled} change={handleSelectCheckbox("isEnabled", !isEnabled)}>
+						<Checkbox checked={isEnabled} onChange={() => handleSelectCheckbox("isEnabled", !isEnabled)}>
               <h4>Активировать интервальную публ.</h4>
             </Checkbox>
 					</ScheduleKeyItem>
 					<ScheduleKeyItem>
-						<Checkbox checked={avoidNight} change={handleSelectCheckbox("avoidNight", !avoidNight)}>
+						<Checkbox checked={avoidNight} onChange={() => handleSelectCheckbox("avoidNight", !avoidNight)}>
               <h4>Не публиковать в ночное время</h4>
             </Checkbox>
 					</ScheduleKeyItem>
