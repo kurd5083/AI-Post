@@ -20,13 +20,13 @@ const SchedulePopup = () => {
   const [avoidNight, setAvoidNight] = useState(false);
   const { mutate: saveInterval, isLoading } = useUpdateChannelInterval(channelId);
   
-  // useEffect(() => {
-  //   if (channelInterval) {
-  //     setIntervalMinutes(channelInterval.intervalMinutes);
-  //     setIsEnabled(channelInterval.isEnabled);
-  //     setAvoidNight(channelInterval.avoidNight);
-  //   }
-  // }, [channelInterval]);
+  useEffect(() => {
+    if (channelInterval) {
+      setIntervalMinutes(channelInterval.intervalMinutes);
+      setIsEnabled(channelInterval.isEnabled);
+      setAvoidNight(channelInterval.avoidNight);
+    }
+  }, [channelInterval]);
 
   const handleSave = () => {
     const activeStartHour = 1;
