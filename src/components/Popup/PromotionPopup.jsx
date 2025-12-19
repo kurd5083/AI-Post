@@ -20,11 +20,12 @@ const PromotionPopup = () => {
   const [postLink, setPostLink] = useState("");
   const [postViews, setPostViews] = useState(null);
 
+	console.log(promotionConfig)
   useEffect(() => {
     if (promotionConfig) {
       setAutoViews(promotionConfig.viewsOnNewPostEnabled || false);
-      setMinViews(promotionConfig.minViews || null);
-      setMaxViews(promotionConfig.maxViews || null);
+      setMinViews(promotionConfig.minViews);
+      setMaxViews(promotionConfig.maxViews);
     }
   }, [promotionConfig]);
 
