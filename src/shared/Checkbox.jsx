@@ -10,7 +10,7 @@ const Checkbox = ({ checked, onChange, color, children }) => {
   );
 };
 
-const CheckboxContainer = styled.label`
+const CheckboxContainer = styled.div`
   display: flex;
   gap: 24px;
   position: relative;
