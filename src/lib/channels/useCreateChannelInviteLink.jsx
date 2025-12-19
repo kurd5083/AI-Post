@@ -5,10 +5,12 @@ export const useCreateChannelInviteLink = (channelId) => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (id, name, memberLimit, expirePeriod, customExpireDate, createsJoinRequest,) => 
-        createChannelInviteLink(channelId, id, {name, memberLimit, expirePeriod, customExpireDate, createsJoinRequest}),
+    mutationFn: (data) => createChannelInviteLink(channelId, data),
     onSuccess: () => {
-      queryClient.invalidateQueries(["channel-invite-links", channelId]);
+      queryClient.invalidateQueries([
+        "channel-invite-links",
+        channelId,
+      ]);
     },
   });
 };

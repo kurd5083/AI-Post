@@ -16,7 +16,7 @@ const LinkGenerationPopup = () => {
   const [name, setName] = useState("");
   const [memberLimit, setMemberLimit] = useState(null);
   const [expirePeriod, setExpirePeriod] = useState("UNLIMITED");
-
+  console.log(memberLimit, expirePeriod)
   const handleCreate = () => {
     createInviteLink.mutate({
       name: name || null,
@@ -81,8 +81,14 @@ const LinkGenerationPopup = () => {
               { value: "50", label: "50" },
               { value: "100", label: "100" },
             ]}
+            value={
+              memberLimit === null
+                ? { value: null, label: "Не ограничено" }
+                : { value: memberLimit, label: memberLimit }
+            }
             onChange={(option) => setMemberLimit(option.value)}
           />
+
         </LinkGenerationItem>
 
         <LinkGenerationItem>

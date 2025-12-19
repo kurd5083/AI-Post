@@ -29,9 +29,7 @@ const CustomSelect = ({ options, value, onChange, placeholder = "Выберит�
   return (
     <SelectWrapper ref={selectRef}>
       <SelectHeader onClick={toggle}>
-        <span>{selectedOption?.label
-        //  || placeholder
-         }</span>
+        <span>{selectedOption?.label || placeholder}</span>
         <HeaderArrow src={arrow} alt="arrow" className={open ? "open" : ""} />
       </SelectHeader>
 
