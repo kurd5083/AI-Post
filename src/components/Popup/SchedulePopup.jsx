@@ -32,7 +32,7 @@ const SchedulePopup = () => {
   const [selectedDays, setSelectedDays] = useState([]);
   
   const createSchedule = useCreateChannelSchedule(channelId);
-  
+  console.log(schedule)
   useEffect(() => {
     if (schedule) {
       setTimezone(schedule?.timezone);
