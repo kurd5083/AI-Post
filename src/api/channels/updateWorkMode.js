@@ -1,7 +1,6 @@
 import apiClient from "@/api/apiClient";
 
 export const updateWorkMode = async ({ channelId, workMode, premoderationMinutes }) => {
-    console.log(channelId, workMode, premoderationMinutes)
   const body = { workMode };
   if (workMode === "PREMODERATION" && premoderationMinutes != null) {
     body.premoderationMinutes = premoderationMinutes;

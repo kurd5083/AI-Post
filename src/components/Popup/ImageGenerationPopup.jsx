@@ -1,8 +1,11 @@
 import styled from "styled-components";
 import Checkbox from "@/shared/Checkbox";
 import { imageGenerationDatas } from "@/data/imageGenerationDatas";
+import { useImagePresets } from "@/lib/useImagePresets";
 
 const ImageGenerationPopup = () => {
+  const { imagePresets } = useImagePresets();
+  console.log(imagePresets)
 	return (
 		<ImageGenerationContent>
 			<ImageGenerationContentTitle>Выберите одну стилистику</ImageGenerationContentTitle>
