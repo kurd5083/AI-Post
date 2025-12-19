@@ -44,7 +44,10 @@ const SettingsPopup = () => {
                   />
 								) : item.right == 'textarrow' ? (
 									<PopupContentRight>
-										<span>{findChannel.workMode}</span>
+										<span>
+                      {findChannel.workMode === "PREMODERATION" && "Предмодерация"}
+                      {findChannel.workMode === "AUTOPOSTING" && "Автопостинг"}
+                    </span>
 										<img src={arrow} alt="arrow icon" height={12} width={6} />
 									</PopupContentRight>
 								) : item.right == 'imgarrow' ? (
