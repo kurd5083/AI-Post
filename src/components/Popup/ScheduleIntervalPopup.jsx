@@ -9,16 +9,16 @@ import { usePopupStore } from "@/store/popupStore"
 import { useUpdateChannelInterval } from "@/lib/channels/useUpdateChannelInterval";
 
 const SchedulePopup = () => {
-	const { popup, changeContent, goBack } = usePopupStore()
+  const { popup, changeContent, goBack } = usePopupStore()
   const channelId = popup?.data?.channelId;
   const { channelInterval } = useChannelInterval(channelId);
   const [intervalMinutes, setIntervalMinutes] = useState(null);
   const [finalMinutes, setFinalMinutes] = useState(null);
-  const [showResult, setShowResult] = useState(false); 
+  const [showResult, setShowResult] = useState(false);
   const [isEnabled, setIsEnabled] = useState(false);
   const [avoidNight, setAvoidNight] = useState(false);
   const { mutate: saveInterval, isLoading } = useUpdateChannelInterval(channelId);
-  
+
   useEffect(() => {
     if (channelInterval) {
       setFinalMinutes(channelInterval.intervalMinutes);
@@ -46,10 +46,10 @@ const SchedulePopup = () => {
     if (name === "isEnabled") {
       setIsEnabled(value);
     } else if (name === "avoidNight") {
-      setAvoidNight(value); 
+      setAvoidNight(value);
     }
   };
-  
+
   const hours = Math.floor((finalMinutes ?? 0) / 60);
   const minutes = (finalMinutes ?? 0) % 60;
 
@@ -57,33 +57,33 @@ const SchedulePopup = () => {
     setShowResult(true);
     setFinalMinutes(intervalMinutes);
   };
-	return (
-		<ScheduleContainer>
-			<ScheduleHead>  
-				<ScheduleHeadText onClick={() => changeContent("schedule")}>Расписание</ScheduleHeadText>
-				<ScheduleHeadText $active={true}>Интервал</ScheduleHeadText>
-			</ScheduleHead>
-			<ScheduleContent>
-				<ScheduleTitle>Интервал публикаций</ScheduleTitle>
-				<ScheduleDesc>Установите периодичность, с которой система будет отправлять посты.<br />
-					Интервал применяется поверх расписания и очереди.<br />
-					Для равномерного охвата выбирайте разумные значения.
-				</ScheduleDesc>
-				<ScheduleKey>
-					<ScheduleKeyTitle>Выберите интервал</ScheduleKeyTitle>
-					<ScheduleInputContainer>
-						<TimeInput 
+  return (
+    <ScheduleContainer>
+      <ScheduleHead>
+        <ScheduleHeadText onClick={() => changeContent("schedule")}>Расписание</ScheduleHeadText>
+        <ScheduleHeadText $active={true}>Интервал</ScheduleHeadText>
+      </ScheduleHead>
+      <ScheduleContent>
+        <ScheduleTitle>Интервал публикаций</ScheduleTitle>
+        <ScheduleDesc>Установите периодичность, с которой система будет отправлять посты.<br />
+          Интервал применяется поверх расписания и очереди.<br />
+          Для равномерного охвата выбирайте разумные значения.
+        </ScheduleDesc>
+        <ScheduleKey>
+          <ScheduleKeyTitle>Выберите интервал</ScheduleKeyTitle>
+          <ScheduleInputContainer>
+            <TimeInput
               hours={Math.floor(intervalMinutes / 60)}
               minutes={intervalMinutes % 60}
               onChange={(newHours, newMinutes) => {
                 setIntervalMinutes(newHours * 60 + newMinutes);
               }}
             />
-						<ScheduleBtn onClick={handleShowResult}>
-              <PlusIcon color="#FFF980"/>
+            <ScheduleBtn onClick={handleShowResult}>
+              <PlusIcon color="#FFF980" />
             </ScheduleBtn>
-					</ScheduleInputContainer>
-					{showResult && finalMinutes !== null && (
+          </ScheduleInputContainer>
+          {showResult && finalMinutes !== null && (
             <ScheduleResult>
               Будет публиковаться каждые{" "}
               <mark>
@@ -92,22 +92,31 @@ const SchedulePopup = () => {
               </mark>
             </ScheduleResult>
           )}
-				</ScheduleKey>
-				<ScheduleKey>
-					<ScheduleKeyTitle>Дополнительно</ScheduleKeyTitle>
-					<ScheduleKeyItem>
-						<Checkbox checked={isEnabled} onChange={() => handleSelectCheckbox("isEnabled", !isEnabled)}>
+        </ScheduleKey>
+        <ScheduleKey>
+          <ScheduleKeyTitle>Выберите интервал</ScheduleKeyTitle>
+          <ScheduleInputContainer>
+            <TimeInput />
+            <ScheduleBtn>
+              <PlusIcon color="#FFF980" />
+            </ScheduleBtn>
+          </ScheduleInputContainer>
+        </ScheduleKey>
+        <ScheduleKey>
+          <ScheduleKeyTitle>Дополнительно</ScheduleKeyTitle>
+          <ScheduleKeyItem>
+            <Checkbox checked={isEnabled} onChange={() => handleSelectCheckbox("isEnabled", !isEnabled)}>
               <h4>Активировать интервальную публ.</h4>
             </Checkbox>
-					</ScheduleKeyItem>
-					<ScheduleKeyItem>
-						<Checkbox checked={avoidNight} onChange={() => handleSelectCheckbox("avoidNight", !avoidNight)}>
+          </ScheduleKeyItem>
+          <ScheduleKeyItem>
+            <Checkbox checked={avoidNight} onChange={() => handleSelectCheckbox("avoidNight", !avoidNight)}>
               <h4>Не публиковать в ночное время</h4>
             </Checkbox>
-					</ScheduleKeyItem>
-				</ScheduleKey>
-				<ScheduleButtons>
-					<BtnBase
+          </ScheduleKeyItem>
+        </ScheduleKey>
+        <ScheduleButtons>
+          <BtnBase
             $color="#D6DCEC"
             $bg="#336CFF"
             onClick={() => handleSave()}
@@ -115,11 +124,11 @@ const SchedulePopup = () => {
           >
             {isLoading ? "Сохраняем..." : "Сохранить"}
           </BtnBase>
-					<BtnBase onClick={goBack} $color="#D6DCEC" $bg="#242A3A">Отменить</BtnBase>
-				</ScheduleButtons>
-			</ScheduleContent>
-		</ScheduleContainer>
-	)
+          <BtnBase onClick={goBack} $color="#D6DCEC" $bg="#242A3A">Отменить</BtnBase>
+        </ScheduleButtons>
+      </ScheduleContent>
+    </ScheduleContainer>
+  )
 }
 const ScheduleContainer = styled.div`
   padding: 0 56px;
