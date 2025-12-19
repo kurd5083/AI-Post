@@ -4,6 +4,7 @@ import { usePopupStore } from "@/store/popupStore";
 import BtnBase from "@/shared/BtnBase";
 import Counter from "@/shared/Counter";
 import { useCreateBoostOrder } from "@/lib/channels/useCreateBoostOrder";
+import CheckboxText from "@/shared/CheckboxText";
 
 const BoostsPopup = () => {
   const { changeContent, popup } = usePopupStore();
@@ -37,6 +38,20 @@ const BoostsPopup = () => {
         <BlockTitle>Длительность бустов (дни)</BlockTitle>
         <Counter placeholder="Длительность" value={boostDays} onChange={setBoostDays} />
       </BoostsBlock>
+      <LinkGenerationItem>
+                <ItemTitle>Срок действия</ItemTitle>
+                <ItemDesc>
+                  Вы можете выбрать срок действия для этой ссылки.
+                </ItemDesc>
+                <CheckboxText
+                  options={[
+                    { id: "ONE_HOUR", label: "1 час" },
+                    { id: "ONE_DAY", label: "1 день" },
+                    { id: "ONE_WEEK", label: "1 нед." },
+                  ]}
+                  bg="#FC5B5B"
+                />
+              </LinkGenerationItem>
 
       <CostTitle>Стоимость:</CostTitle>
       <CostPrice>15.500<mark>,48</mark> руб.</CostPrice>
@@ -101,5 +116,29 @@ const BoostsButtons = styled.div`
   margin-top: 40px;
   @media(max-width: 480px) { flex-direction: column; gap: 64px; }
 `;
+
+const LinkGenerationItem = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+`
+const ItemTitle = styled.h3`
+  font-size: 24px;
+  font-weight: 700;
+
+  mark {
+    color: #6A7080;
+  }
+`
+const ItemDesc = styled.p`
+  font-size: 14px;
+  line-height: 24px;
+  font-weight: 600;
+  color: #6A7080;
+
+  mark {
+    color: #FC5B5B;
+  }
+`
 
 export default BoostsPopup;
