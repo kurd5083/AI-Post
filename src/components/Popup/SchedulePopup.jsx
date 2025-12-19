@@ -25,6 +25,8 @@ const SchedulePopup = () => {
   const channelId = popup?.data?.channelId;
 
   const { channelSchedule } = useChannelSchedule(channelId);
+  const scheduleId = schedule?.id;
+  const updateSchedule = useUpdateChannelSchedule(scheduleId, channelId);
 
   const [timezone, setTimezone] = useState(null);
   const [publicationTimes, setPublicationTimes] = useState([]);
@@ -33,7 +35,6 @@ const SchedulePopup = () => {
   
   const createSchedule = useCreateChannelSchedule(channelId);
   console.log(channelSchedule)
-
   useEffect(() => {
     if (channelSchedule) {
       setTimezone(channelSchedule.timezone);
@@ -58,14 +59,19 @@ const SchedulePopup = () => {
   };
 
   const handleSave = () => {
-    console.log(selectedDays, publicationTimes, timezone)
-
     if (selectedDays.length === 0 || publicationTimes.length === 0) return;
-    createSchedule.mutate({
+
+    const payload = {
       postDays: selectedDays,
       publicationTimes,
-      timezone,
-    });
+      timezone: timezone.value, // 👈 важно
+    };
+
+    if (schedule?.id) {
+      updateSchedule.mutate(payload);
+    } else {
+      createSchedule.mutate(payload);
+    }
   };
 
   return (
