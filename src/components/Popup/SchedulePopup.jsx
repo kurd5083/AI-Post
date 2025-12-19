@@ -90,14 +90,16 @@ const SchedulePopup = () => {
           <ScheduleKeyTitle>ДНИ НЕДЕЛИ</ScheduleKeyTitle>
           <ScheduleDays>
             {DAYS.map(day => (
-              <Checkbox
-                key={day.value}
-                color="#FFF980"
-                checked={selectedDays.includes(day.value)}
-                onChange={() => toggleDay(day.value)}
-              >
-                <h4>{day.label}</h4>
-              </Checkbox>
+              <ScheduleDaysBlock>
+                <Checkbox
+                  key={day.value}
+                  color="#FFF980"
+                  checked={selectedDays.includes(day.value)}
+                  onChange={() => toggleDay(day.value)}
+                >
+                  <h4>{day.label}</h4>
+                </Checkbox>
+              </ScheduleDaysBlock>
             ))}
           </ScheduleDays>
         </ScheduleKey>
@@ -163,7 +165,18 @@ const ScheduleDays = styled.div`
   display: flex;
   flex-wrap: wrap;
   gap: 24px 80px;
-  h4 { font-size: 16px; font-weight: 700; display: flex; align-items: center; }
+  h4 { 
+    font-size: 16px; 
+    font-weight: 700; 
+    display: flex; 
+    align-items: center; 
+    width: 120px;
+  }
 `;
+const ScheduleDaysBlock = styled.div`
+  display: flex; 
+  flex-direction: column; 
+  gap: 24px; 
+`
 
 export default SchedulePopup;
