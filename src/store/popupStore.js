@@ -30,13 +30,14 @@ export const usePopupStore = create((set, get) => ({
       popup: {
         status: true,
         content,
-        data,      
+        data: data ?? currentPopup?.data,
         previousPage: currentPopup
           ? [...(currentPopup.previousPage || []), currentPopup]
           : [],
       },
     });
   },
+
 
   goBack: () => {
     const currentPopup = get().popup;
