@@ -35,9 +35,9 @@ const SchedulePopup = () => {
   
   useEffect(() => {
     if (schedule) {
-      setTimezone(schedule.timezone || "GMT");
-      setPublicationTimes(schedule.publicationTimes || []);
-      setSelectedDays(schedule.postDays || []);
+      setTimezone(schedule?.timezone);
+      setPublicationTimes(schedule?.publicationTimes);
+      setSelectedDays(schedule?.postDays);
     }
   }, [schedule]);
 
