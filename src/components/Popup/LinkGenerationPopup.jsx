@@ -13,10 +13,10 @@ const LinkGenerationPopup = () => {
   const createInviteLink = useCreateChannelInviteLink(channelId);
 
   const [createsJoinRequest, setCreatesJoinRequest] = useState(false);
-  const [name, setName] = useState("");
+  const [name, setName] = useState(null);
   const [memberLimit, setMemberLimit] = useState(null);
-  const [expirePeriod, setExpirePeriod] = useState("UNLIMITED");
-  console.log(memberLimit, expirePeriod)
+  const [expirePeriod, setExpirePeriod] = useState(null);
+
   const handleCreate = () => {
     createInviteLink.mutate({
       name: name || null,
