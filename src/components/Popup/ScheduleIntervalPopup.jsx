@@ -21,6 +21,11 @@ const SchedulePopup = () => {
   const [isEnabled, setIsEnabled] = useState(false);
   const [avoidNight, setAvoidNight] = useState(false);
 
+  const startHours = Math.floor((activeStartHour ?? 0) / 60);
+  const startMinutes = (activeStartHour ?? 0) % 60;
+  const endHours = Math.floor((activeEndHour ?? 0) / 60);
+  const endMinutes = (activeEndHour ?? 0) % 60;
+
   const { mutate: saveInterval, isLoading } = useUpdateChannelInterval(channelId);
 
   useEffect(() => {
@@ -66,6 +71,7 @@ const SchedulePopup = () => {
   const handleShowResultActiveTime = () => {
     setShowResultActiveTime(true);
   };
+  
   return (
     <ScheduleContainer>
       <ScheduleHead>
@@ -109,16 +115,16 @@ const SchedulePopup = () => {
             <div>
               <p>Начало (часы и минуты)</p>
               <TimeInput 
-                hours={Math.floor(activeStartHour / 60)}
-                minutes={activeStartHour % 60}
+                hours={startHours}
+                minutes={startMinutes}
                 onChange={(h, m) => setActiveStartHour(h * 60 + m)}
               />
             </div>
             <div>
               <p>Конец (часы и минуты)</p>
               <TimeInput 
-                hours={Math.floor(activeEndHour / 60)}
-                minutes={activeEndHour % 60}
+                hours={endHours}
+                minutes={endMinutes}
                 onChange={(h, m) => setActiveEndHour(h * 60 + m)}
               />
             </div>
