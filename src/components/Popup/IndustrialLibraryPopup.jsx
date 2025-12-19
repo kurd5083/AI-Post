@@ -2,8 +2,12 @@ import styled from "styled-components";
 import Checkbox from "@/shared/Checkbox";
 import { industrialLibraryDatas } from "@/data/industrialLibraryDatas";
 import BtnBase from "@/shared/BtnBase";
+import { useImagePresets } from "@/lib/channels/useImagePresets";
 
 const IndustrialLibraryPopup = () => {
+  const { imagePresets } = useImagePresets();
+  console.log(imagePresets)
+  
 	return (
 		<IndustrialStyleContainer>
 			{industrialLibraryDatas.map((item, index) => (

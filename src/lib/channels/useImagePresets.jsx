@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { getImagePresets } from "@/api/channels/imagePresets";
+import { getImagePresets } from "@/api/channels/getImagePresets";
 
 export const useImagePresets = () => {
   const { data: imagePresets } = useQuery({

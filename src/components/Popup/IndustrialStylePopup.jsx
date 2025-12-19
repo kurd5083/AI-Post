@@ -19,6 +19,9 @@ const IndustrialStylePopup = () => {
     if (!prompt.trim()) return;
     console.log("Тестирование промпта:", prompt);
   };
+
+
+
   return (
     <IndustrialStyleContainer>
       <IndustrialStyleContent>
