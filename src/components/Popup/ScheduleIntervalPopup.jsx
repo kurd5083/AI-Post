@@ -53,7 +53,7 @@ const SchedulePopup = () => {
 
 	return (
 		<ScheduleContainer>
-			<ScheduleHead>
+			<ScheduleHead>  
 				<ScheduleHeadText onClick={() => changeContent("schedule")}>Расписание</ScheduleHeadText>
 				<ScheduleHeadText $active={true}>Интервал</ScheduleHeadText>
 			</ScheduleHead>
@@ -68,7 +68,9 @@ const SchedulePopup = () => {
 					<ScheduleInputContainer>
 						<TimeInput 
               value={intervalMinutes} 
-              onChange={setIntervalMinutes} 
+              onChange={(newHours, newMinutes) => {
+                setIntervalMinutes(newHours * 60 + newMinutes);
+              }}
             />
 						<ScheduleBtn>
               <PlusIcon color="#FFF980"/>

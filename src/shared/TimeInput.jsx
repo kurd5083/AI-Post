@@ -1,16 +1,12 @@
 import styled from 'styled-components';
 
-const TimeInput = ({ value = 60, onChange }) => {
-  // Преобразуем общее количество минут в часы и минуты
-  const hours = Math.floor(value / 60);
-  const minutes = value % 60;
-
+const TimeInput = ({ hours, minutes, onChange }) => {
   const handleHoursChange = (e) => {
     let val = e.target.value.replace(/\D/g, '');
     if (val.length > 2) val = val.slice(0, 2);
     if (val === '') val = '0';
     if (+val > 23) val = '23';
-    onChange(+val * 60 + minutes);
+    onChange(+val, +minutes);
   };
 
   const handleMinutesChange = (e) => {
@@ -18,17 +14,15 @@ const TimeInput = ({ value = 60, onChange }) => {
     if (val.length > 2) val = val.slice(0, 2);
     if (val === '') val = '0';
     if (+val > 59) val = '59';
-    onChange(hours * 60 + +val);
+    onChange(+hours, +val);
   };
 
-  const handleHoursBlur = (e) => {
-    let val = e.target.value.padStart(2, '0');
-    onChange(+val * 60 + minutes);
+  const handleHoursBlur = () => {
+    onChange(String(hours).padStart(2, '0'), minutes);
   };
 
-  const handleMinutesBlur = (e) => {
-    let val = e.target.value.padStart(2, '0');
-    onChange(hours * 60 + +val);
+  const handleMinutesBlur = () => {
+    onChange(hours, String(minutes).padStart(2, '0'));
   };
 
   return (
