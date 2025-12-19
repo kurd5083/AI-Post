@@ -3,22 +3,18 @@ import styled from "styled-components";
 const Checkbox = ({ checked, onChange, color, children }) => {
   return (
     <CheckboxContainer onClick={() => onChange(!checked)}>
-      <HiddenCheckbox type="checkbox" checked={checked} readOnly />
-      <StyledCheckbox $color={color} checked={checked} />
+      <StyledCheckbox $color={color} $checked={checked} />
       {children}
     </CheckboxContainer>
   );
 };
 
-const CheckboxContainer = styled.label`
+
+const CheckboxContainer = styled.div`
   display: flex;
   gap: 24px;
   position: relative;
   cursor: pointer;
-`;
-
-const HiddenCheckbox = styled.input`
-  display: none;
 `;
 
 const StyledCheckbox = styled.div`
