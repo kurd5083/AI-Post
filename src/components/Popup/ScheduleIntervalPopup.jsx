@@ -39,11 +39,11 @@ const SchedulePopup = () => {
   //   });
   // };
 
-  const handleSelectCheckbox = (name) => {
+  const handleSelectCheckbox = (name, value) => {
     if (name === "isEnabled") {
-      setIsEnabled(!isEnabled);
+      setIsEnabled(value);
     } else if (name === "avoidNight") {
-      setAvoidNight(!avoidNight); 
+      setAvoidNight(value); 
     }
   };
   
@@ -84,12 +84,12 @@ const SchedulePopup = () => {
 				<ScheduleKey>
 					<ScheduleKeyTitle>Дополнительно</ScheduleKeyTitle>
 					<ScheduleKeyItem>
-						<Checkbox checked={isEnabled} onChange={() => handleSelectCheckbox("isEnabled")}>
+						<Checkbox checked={isEnabled} onChange={() => handleSelectCheckbox("isEnabled", !isEnabled)}>
               <h4>Активировать интервальную публ.</h4>
             </Checkbox>
 					</ScheduleKeyItem>
 					<ScheduleKeyItem>
-						<Checkbox checked={avoidNight} onChange={() => handleSelectCheckbox("avoidNight")}>
+						<Checkbox checked={avoidNight} onChange={() => handleSelectCheckbox("avoidNight", !avoidNight)}>
               <h4>Не публиковать в ночное время</h4>
             </Checkbox>
 					</ScheduleKeyItem>
