@@ -67,7 +67,7 @@ const SchedulePopup = () => {
         timezone,
     };
 
-    if (schedule?.id) {
+    if (scheduleId) {
       updateSchedule.mutate(payload);
     } else {
       createSchedule.mutate(payload);
