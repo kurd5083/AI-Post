@@ -12,10 +12,7 @@ const SettingsPopup = () => {
   const channelId = popup?.data?.channelId;
   const { channels } = useChannelsGroupedByFolders();
   const { autoApprovalStatus, setAutoApprovalStatus } = useAutoApprovalStatus(channelId);
-  console.log(channels, 'cxbxcb')
-  const findChannel = channels.folders
-  .flatMap(folder => folder.channels)
-  .find(channel => channel.id === channelId);
+  const findChannel = channels.folders.flatMap(folder => folder.channels).find(channel => channel.id === channelId);
 
 
   return (

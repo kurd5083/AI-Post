@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 import Checkbox from "@/shared/Checkbox";
 import { useUpdateWorkMode } from "@/lib/useUpdateWorkMode";
@@ -12,6 +12,13 @@ const ModePopup = () => {
     const [selectedMode, setSelectedMode] = useState("AUTOPOSTING");
     const [premoderationMinutes, setPremoderationMinutes] = useState(30);
 
+    useEffect(() => {
+        const mode = popup?.data?.workMode;
+        if (mode) {
+            setSelectedMode(mode);
+        }
+    }, [popup?.data?.workMode]);
+
     const handleSelectMode = (mode) => {
         setSelectedMode(mode);
         if (mode === "PREMODERATION") {
@@ -24,7 +31,7 @@ const ModePopup = () => {
         <ModeContent>
             <ModeContentTitle>Выберите один режим работы</ModeContentTitle>
             <div>
-                <ModeContentItem onClick={() => handleSelectMode("AUTOPOSTING")}>
+                <ModeContentItem>
                     <Checkbox 
                         checked={selectedMode === "AUTOPOSTING"}
                         onChange={() => handleSelectMode("AUTOPOSTING")}
@@ -36,7 +43,7 @@ const ModePopup = () => {
                         </div>
                     </Checkbox>
                 </ModeContentItem>
-                <ModeContentItem onClick={() => handleSelectMode("PREMODERATION")}>
+                <ModeContentItem>
                     <Checkbox  
                         checked={selectedMode === "PREMODERATION"} 
                         onChange={() => handleSelectMode("PREMODERATION")}
