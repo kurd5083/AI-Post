@@ -48,3 +48,70 @@ const CustomSelect = ({ options, value, onChange, placeholder = "Выберит�
     </SelectWrapper>
   );
 };
+
+const SelectWrapper = styled.div`
+  position: relative;
+  width: 247px;
+  font-weight: 700;
+`;
+
+const SelectHeader = styled.div`
+  box-sizing: border-box;
+  border: 2px solid #333e59;
+  border-radius: 12px;
+  padding: 16px 24px;
+  background-color: transparent;
+  color: #d6dcec;
+  font-size: 14px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;
+
+const HeaderArrow = styled.img`
+  width: 8px;
+  height: 16px;
+  transition: transform 0.2s ease;
+  transform: rotate(90deg);
+
+  &.open {
+    transform: rotate(270deg);
+  }
+`;
+
+const SelectList = styled.ul`
+  box-sizing: border-box;
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  width: 100%;
+  background: #202638;
+  border-radius: 24px;
+  z-index: 20;
+  max-height: 200px;
+  overflow-y: auto;
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+`;
+
+const SelectItem = styled.li`
+  padding: 16px 24px;
+  cursor: pointer;
+  color: #d6dcec;
+  font-size: 16px;
+  font-weight: 700;
+  border-bottom: 2px solid #2e3954;
+
+  &:last-child {
+    border-bottom: 0;
+  }
+
+  &:hover {
+    background-color: #242b3f;
+  }
+`;
+
+export default CustomSelect;
