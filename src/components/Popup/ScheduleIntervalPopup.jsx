@@ -21,6 +21,7 @@ const SchedulePopup = () => {
   
   useEffect(() => {
     if (channelInterval) {
+      setFinalMinutes(channelInterval.intervalMinutes);
       setIntervalMinutes(channelInterval.intervalMinutes);
       setIsEnabled(channelInterval.isEnabled);
       setAvoidNight(channelInterval.avoidNight);
