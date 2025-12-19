@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import styled from "styled-components";
 import CustomSelect from "@/shared/CustomSelect";
 import Checkbox from "@/shared/Checkbox";
@@ -8,6 +8,7 @@ import BtnBase from "@/shared/BtnBase";
 import BlocksItems from "@/shared/BlocksItems";
 import PlusIcon from "@/icons/PlusIcon";
 import { useCreateChannelSchedule } from "@/lib/channels/useCreateChannelSchedule";
+import { useChannelSchedule } from "@/lib/channels/useChannelSchedule";
 
 const DAYS = [
   { label: "Понедельник", value: "MONDAY" },
@@ -22,6 +23,8 @@ const DAYS = [
 const SchedulePopup = () => {
   const { popup, changeContent } = usePopupStore();
   const channelId = popup?.data?.channelId;
+  
+  const { data: schedule } = useChannelSchedule(channelId);
 
   const [timezone, setTimezone] = useState("GMT");
   const [publicationTimes, setPublicationTimes] = useState([]);
@@ -30,6 +33,14 @@ const SchedulePopup = () => {
   
   const createSchedule = useCreateChannelSchedule(channelId);
   
+  useEffect(() => {
+    if (schedule) {
+      setTimezone(schedule.timezone || "GMT");
+      setPublicationTimes(schedule.publicationTimes || []);
+      setSelectedDays(schedule.postDays || []);
+    }
+  }, [schedule]);
+
   const handleAddTime = () => {
     const timeStr = `${String(currentTime.hours).padStart(2,'0')}:${String(currentTime.minutes).padStart(2,'0')}`;
     if (!publicationTimes.includes(timeStr)) {
