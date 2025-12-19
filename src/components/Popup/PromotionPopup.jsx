@@ -102,12 +102,12 @@ const PromotionHeadText = styled.p`
   cursor: pointer;
   @media(max-width: 480px) { padding-right: 0; }
 `;
-// const PromotionViews = styled.div`
-//   display: flex;
-//   gap: 32px;
-//   margin-top: 40px;
-//   @media(max-width: 480px) { align-items: flex-start; }
-// `;
+const PromotionViews = styled.div`
+  display: flex;
+  gap: 32px;
+  margin-top: 40px;
+  @media(max-width: 480px) { align-items: flex-start; }
+`;
 const PostTitle = styled.h2` font-size: 24px; font-weight: 700; `;
 const PostContainer = styled.div` display: flex; gap: 16px; `;
 const ViewsPost = styled.div`
