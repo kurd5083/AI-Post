@@ -9,7 +9,6 @@ import { useChannelsGroupedByFolders } from "@/lib/useChannelsGroupedByFolders";
 import { useDeleteChannel } from "@/lib/useDeleteChannel";
 import useResolution from "@/lib/useResolution";
 
-
 const TableGroups = () => {
   const { openPopup } = usePopupStore();
   const { isSmall } = useResolution();
@@ -57,6 +56,7 @@ const TableGroups = () => {
 
           return currentChannels.map((channel, index) => (
             <TableItem key={channel.id}>
+              {console.log(channel.id, 'asgsdhjk')}
               <TableCell>
                 <p>
                   <TableCellNum>#{index + 1}</TableCellNum>
