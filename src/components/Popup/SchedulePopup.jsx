@@ -9,6 +9,7 @@ import BlocksItems from "@/shared/BlocksItems";
 import PlusIcon from "@/icons/PlusIcon";
 import { useCreateChannelSchedule } from "@/lib/channels/useCreateChannelSchedule";
 import { useChannelSchedule } from "@/lib/channels/useChannelSchedule";
+import { useUpdateChannelSchedule } from "@/lib/channels/useUpdateChannelSchedule";
 
 const DAYS = [
   { label: "Понедельник", value: "MONDAY" },
