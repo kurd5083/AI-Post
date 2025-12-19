@@ -63,8 +63,8 @@ const SchedulePopup = () => {
 
     const payload = {
       postDays: selectedDays,
-      publicationTimes,
-      timezone: timezone.value, // 👈 важно
+        publicationTimes,
+        timezone,
     };
 
     if (schedule?.id) {
@@ -73,7 +73,6 @@ const SchedulePopup = () => {
       createSchedule.mutate(payload);
     }
   };
-
   return (
     <ScheduleContainer>
       <ScheduleHead>
