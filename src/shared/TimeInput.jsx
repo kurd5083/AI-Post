@@ -1,42 +1,34 @@
-import { useState } from 'react';
 import styled from 'styled-components';
 
-const TimeInput = () => {
-  const [hours, setHours] = useState('09');
-  const [minutes, setMinutes] = useState('15');
+const TimeInput = ({ value = 60, onChange }) => {
+  // Преобразуем общее количество минут в часы и минуты
+  const hours = Math.floor(value / 60);
+  const minutes = value % 60;
 
   const handleHoursChange = (e) => {
-    let value = e.target.value.replace(/\D/g, '');
-
-    if (value.length > 2) value = value.slice(0, 2);
-    if (value === '') {
-      setHours('');
-      return;
-    }
-    if (+value > 23) value = '23';
-
-    setHours(value);
-  };    
+    let val = e.target.value.replace(/\D/g, '');
+    if (val.length > 2) val = val.slice(0, 2);
+    if (val === '') val = '0';
+    if (+val > 23) val = '23';
+    onChange(+val * 60 + minutes);
+  };
 
   const handleMinutesChange = (e) => {
-    let value = e.target.value.replace(/\D/g, '');
-
-    if (value.length > 2) value = value.slice(0, 2);
-    if (value === '') {
-      setMinutes('');
-      return;
-    }
-    if (+value > 59) value = '59';
-
-    setMinutes(value);
+    let val = e.target.value.replace(/\D/g, '');
+    if (val.length > 2) val = val.slice(0, 2);
+    if (val === '') val = '0';
+    if (+val > 59) val = '59';
+    onChange(hours * 60 + +val);
   };
 
-  const handleHoursBlur = () => {
-    setHours(hours.padStart(2, '0'));
+  const handleHoursBlur = (e) => {
+    let val = e.target.value.padStart(2, '0');
+    onChange(+val * 60 + minutes);
   };
 
-  const handleMinutesBlur = () => {
-    setMinutes(minutes.padStart(2, '0'));
+  const handleMinutesBlur = (e) => {
+    let val = e.target.value.padStart(2, '0');
+    onChange(hours * 60 + +val);
   };
 
   return (
@@ -44,10 +36,10 @@ const TimeInput = () => {
       <TimeSection>
         <TimeField
           type="text"
-          value={hours}
+          value={String(hours).padStart(2, '0')}
           onChange={handleHoursChange}
           onBlur={handleHoursBlur}
-          maxLength="2"
+          maxLength={2}
         />
         <TimeLabel>ЧАСЫ</TimeLabel>
       </TimeSection>
@@ -55,10 +47,10 @@ const TimeInput = () => {
       <TimeSection>
         <TimeField
           type="text"
-          value={minutes}
+          value={String(minutes).padStart(2, '0')}
           onChange={handleMinutesChange}
           onBlur={handleMinutesBlur}
-          maxLength="2"
+          maxLength={2}
         />
         <TimeLabel>МИНУТЫ</TimeLabel>
       </TimeSection>

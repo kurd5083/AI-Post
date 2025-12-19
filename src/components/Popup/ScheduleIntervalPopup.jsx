@@ -26,18 +26,18 @@ const SchedulePopup = () => {
   //   }
   // }, [channelInterval]);
 
-  // const handleSave = () => {
-  //   const activeStartHour = avoidNight ? 7 : 0;
-  //   const activeEndHour = 23;
+  const handleSave = () => {
+    const activeStartHour = 1;
+    const activeEndHour = 1;
 
-  //   saveInterval({
-  //     intervalMinutes,
-  //     isEnabled,
-  //     avoidNight,
-  //     activeStartHour,
-  //     activeEndHour,
-  //   });
-  // };
+    saveInterval({
+      intervalMinutes,
+      isEnabled,
+      avoidNight,
+      activeStartHour,
+      activeEndHour,
+    });
+  };
 
   const handleSelectCheckbox = (name, value) => {
     console.log("test", isEnabled, name, value)
@@ -67,8 +67,8 @@ const SchedulePopup = () => {
 					<ScheduleKeyTitle>Выберите интервал</ScheduleKeyTitle>
 					<ScheduleInputContainer>
 						<TimeInput 
-              value={intervalMinutes}
-              onChange={setIntervalMinutes}
+              value={intervalMinutes} 
+              onChange={setIntervalMinutes} 
             />
 						<ScheduleBtn>
               <PlusIcon color="#FFF980"/>
