@@ -10,11 +10,11 @@ const PromotionPopup = () => {
 	const { changeContent } = usePopupStore();
 	const createViewsOrder = useCreateViewsOrder();
 
-	// const [autoViews, setAutoViews] = useState(false);
+	const [autoViews, setAutoViews] = useState(false);
 	const [minViews, setMinViews] = useState(null);
 	const [maxViews, setMaxViews] = useState(null);
 	const [postLink, setPostLink] = useState("");
-	// const [postViews, setPostViews] = useState(100);
+	const [postViews, setPostViews] = useState(null);
 
 	const handleStartPromotion = () => {
 		createViewsOrder.mutate({
@@ -32,12 +32,12 @@ const PromotionPopup = () => {
 				<PromotionHeadText onClick={() => changeContent("boosts")}>Бусты</PromotionHeadText>
 			</PromotionHead>
 
-			{/* <PromotionViews>
+			<PromotionViews>
 				<ToggleSwitch bg="#EF6283" value={autoViews} onChange={() => setAutoViews(!autoViews)} />
 				<PostTitle>
 					Просмотры на новый пост<br /> и автозакупка после публикации
 				</PostTitle>
-			</PromotionViews> */}
+			</PromotionViews>
 
 			<ViewsPost>
 				<PostTitle>Просмотры на пост</PostTitle>
@@ -50,8 +50,7 @@ const PromotionPopup = () => {
 			<PromotePost>
 				<PostTitle>Продвинуть пост</PostTitle>
 				<PromoteText>
-					Введите ссылку на пост
-					 {/* и количество просмотров для ручного продвижения */}
+					Введите ссылку на пост и количество просмотров для ручного продвижения
 				</PromoteText>
 				<PostContainer>
 					<CounterContainer>
@@ -62,10 +61,10 @@ const PromotionPopup = () => {
 							onChange={(e) => setPostLink(e.target.value)}
 						/>
 					</CounterContainer>
-					{/* <CounterContainer>
+					<CounterContainer>
 						<CounterTitle>Количество просмотров</CounterTitle>
 						<Counter placeholder="" value={postViews} onChange={setPostViews} />
-					</CounterContainer> */}
+					</CounterContainer>
 				</PostContainer>
 				<BtnBase
 					$margin="8"
