@@ -26,7 +26,7 @@ const SchedulePopup = () => {
 
   const { data: schedule } = useChannelSchedule(channelId);
 
-  const [timezone, setTimezone] = useState("GMT");
+  const [timezone, setTimezone] = useState("UTC");
   const [publicationTimes, setPublicationTimes] = useState([]);
   const [currentTime, setCurrentTime] = useState({ hours: 0, minutes: 0 });
   const [selectedDays, setSelectedDays] = useState([]);
