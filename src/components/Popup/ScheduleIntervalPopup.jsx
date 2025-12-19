@@ -32,7 +32,7 @@ const SchedulePopup = () => {
     const activeEndHour = 1;
 
     saveInterval({
-      finalMinutes,
+      intervalMinutes: finalMinutes,
       isEnabled,
       avoidNight,
       activeStartHour,
