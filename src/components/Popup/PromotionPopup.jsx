@@ -12,7 +12,7 @@ const PromotionPopup = () => {
   const channelId = popup?.data?.channelId;
 
   const createConfigСhannel = useСreateConfigСhannel();
-  const { data: configData, isLoading: isLoadingConfig } = useGetChannelPromotionConfig(channelId);
+  const { promotionConfig } = useGetChannelPromotionConfig(channelId);
 
   const [autoViews, setAutoViews] = useState(false);
   const [minViews, setMinViews] = useState(null);
@@ -21,12 +21,12 @@ const PromotionPopup = () => {
   const [postViews, setPostViews] = useState(null);
 
   useEffect(() => {
-    if (configData) {
-      setAutoViews(configData.viewsOnNewPostEnabled || false);
-      setMinViews(configData.minViews || null);
-      setMaxViews(configData.maxViews || null);
+    if (promotionConfig) {
+      setAutoViews(promotionConfig.viewsOnNewPostEnabled || false);
+      setMinViews(promotionConfig.minViews || null);
+      setMaxViews(promotionConfig.maxViews || null);
     }
-  }, [configData]);
+  }, [promotionConfig]);
 
   const handleSave = () => {
     createConfigСhannel.mutate({
@@ -40,8 +40,6 @@ const PromotionPopup = () => {
       maxViews,
     });
   };
-
-  if (isLoadingConfig) return <p>Загрузка конфигурации...</p>;
 
   return (
     <PromotionContainer>
