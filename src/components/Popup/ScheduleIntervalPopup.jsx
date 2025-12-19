@@ -1,12 +1,32 @@
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 import TimeInput from "@/shared/TimeInput";
-import { usePopupStore } from "@/store/popupStore"
 import Checkbox from "@/shared/Checkbox";
 import BtnBase from "@/shared/BtnBase";
 import PlusIcon from "@/icons/PlusIcon";
+import { useChannelInterval } from "@/lib/channels/useChannelInterval";
+import { usePopupStore } from "@/store/popupStore"
 
 const SchedulePopup = () => {
-	const { changeContent, goBack } = usePopupStore()
+	const { popup, changeContent, goBack } = usePopupStore()
+  const channelId = popup?.data?.channelId;
+  const { channelInterval } = useChannelInterval(channelId);
+  console.log(channelInterval)
+  const [intervalMinutes, setIntervalMinutes] = useState(60);
+  const [isEnabled, setIsEnabled] = useState(false);
+  const [avoidNight, setAvoidNight] = useState(false);
+
+  useEffect(() => {
+    if (!channelInterval) return;
+
+    setIntervalMinutes(channelInterval.intervalMinutes);
+    setIsEnabled(channelInterval.isEnabled);
+    setAvoidNight(channelInterval.avoidNight);
+  }, [channelInterval]);
+
+  const hours = Math.floor(intervalMinutes / 60);
+  const minutes = intervalMinutes % 60;
+
 	return (
 		<ScheduleContainer>
 			<ScheduleHead>
@@ -22,24 +42,33 @@ const SchedulePopup = () => {
 				<ScheduleKey>
 					<ScheduleKeyTitle>Выберите интервал</ScheduleKeyTitle>
 					<ScheduleInputContainer>
-						<TimeInput />
+						<TimeInput 
+              value={intervalMinutes}
+              onChange={setIntervalMinutes}
+            />
 						<ScheduleBtn>
               <PlusIcon color="#FFF980"/>
             </ScheduleBtn>
 					</ScheduleInputContainer>
-					<ScheduleResult>Будет публиковаться каждые <mark>9 часов 15 минут</mark></ScheduleResult>
+					<ScheduleResult>
+            Будет публиковаться каждые{" "}
+            <mark>
+              {hours > 0 && `${hours} ч `}
+              {minutes > 0 && `${minutes} мин`}
+            </mark>
+          </ScheduleResult>
 				</ScheduleKey>
 				<ScheduleKey>
 					<ScheduleKeyTitle>Дополнительно</ScheduleKeyTitle>
 					<ScheduleKeyItem>
-						<Checkbox>
-							<h4>Активировать интервальную публ.</h4>
-						</Checkbox>
+						<Checkbox checked={isEnabled} onChange={setIsEnabled}>
+              <h4>Активировать интервальную публ.</h4>
+            </Checkbox>
 					</ScheduleKeyItem>
 					<ScheduleKeyItem>
-						<Checkbox>
-							<h4>Не публиковать в ночное время</h4>
-						</Checkbox>
+						<Checkbox checked={avoidNight} onChange={setAvoidNight}>
+              <h4>Не публиковать в ночное время</h4>
+            </Checkbox>
 					</ScheduleKeyItem>
 				</ScheduleKey>
 				<ScheduleButtons>
