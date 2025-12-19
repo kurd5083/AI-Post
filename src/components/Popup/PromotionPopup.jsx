@@ -7,80 +7,86 @@ import { usePopupStore } from "@/store/popupStore";
 import { useСreateConfigСhannel } from "@/lib/channels/useСreateConfigСhannel";
 
 const PromotionPopup = () => {
-	const { changeContent } = usePopupStore();
-	const createConfigСhannel = useСreateConfigСhannel();
+  const { popup, changeContent } = usePopupStore();
+	const channelId = popup?.data?.channelId;
+  const createConfigСhannel = useСreateConfigСhannel(channelId);
 
-	const [autoViews, setAutoViews] = useState(false);
-	const [minViews, setMinViews] = useState(null);
-	const [maxViews, setMaxViews] = useState(null);
-	const [postLink, setPostLink] = useState("");
-	const [postViews, setPostViews] = useState(null);
+  const [autoViews, setAutoViews] = useState(false);
+  const [minViews, setMinViews] = useState(null);
+  const [maxViews, setMaxViews] = useState(null);
+  const [postLink, setPostLink] = useState("");
+  const [postViews, setPostViews] = useState(null);
 
-	const handleStartPromotion = () => {
-		createConfigСhannel.mutate({
-			link: postLink,
-			username: "mychannel",
-			min: minViews,
-			max: maxViews,
-		});
-	};
+  const handleSave = () => {
+    createConfigСhannel.mutate({
+      isEnabled: autoViews,
+      allowedServiceIds: [272],
+      viewsOnNewPostEnabled: autoViews,
+      boostsEnabled: false,
+      boostsRetentionDays: 7,
+      minViews,
+      maxViews,
+    });
+  };
 
-	return (
-		<PromotionContainer>
-			<PromotionHead>
-				<PromotionHeadText $active={true}>Просмотр</PromotionHeadText>
-				<PromotionHeadText onClick={() => changeContent("boosts")}>Бусты</PromotionHeadText>
-			</PromotionHead>
+  return (
+    <PromotionContainer>
+      <PromotionHead>
+        <PromotionHeadText $active={true}>Просмотр</PromotionHeadText>
+        <PromotionHeadText onClick={() => changeContent("boosts")}>Бусты</PromotionHeadText>
+      </PromotionHead>
 
-			<PromotionViews>
-				<ToggleSwitch bg="#EF6283" value={autoViews} onChange={() => setAutoViews(!autoViews)} />
-				<PostTitle>
-					Просмотры на новый пост<br /> и автозакупка после публикации
-				</PostTitle>
-			</PromotionViews>
+      <PromotionViews>
+        <ToggleSwitch bg="#EF6283" value={autoViews} onChange={() => setAutoViews(!autoViews)} />
+        <PostTitle>
+          Просмотры на новый пост<br /> и автозакупка после публикации
+        </PostTitle>
+      </PromotionViews>
 
-			<ViewsPost>
-				<PostTitle>Просмотры на пост</PostTitle>
-				<PostContainer>
-					<Counter placeholder="Мин." value={minViews} onChange={setMinViews} />
-					<Counter placeholder="Макс." value={maxViews} onChange={setMaxViews} />
-				</PostContainer>
-			</ViewsPost>
+      <ViewsPost>
+        <PostTitle>Просмотры на пост</PostTitle>
+        <PostContainer>
+          <Counter placeholder="Мин." value={minViews} onChange={setMinViews} />
+          <Counter placeholder="Макс." value={maxViews} onChange={setMaxViews} />
+        </PostContainer>
+      </ViewsPost>
 
-			<PromotePost>
-				<PostTitle>Продвинуть пост</PostTitle>
-				<PromoteText>
-					Введите ссылку на пост и количество просмотров для ручного продвижения
-				</PromoteText>
-				<PostContainer>
-					<CounterContainer>
-						<CounterTitle>Ссылка на пост:</CounterTitle>
-						<PostInput
-							placeholder="https://"
-							value={postLink}
-							onChange={(e) => setPostLink(e.target.value)}
-						/>
-					</CounterContainer>
-					<CounterContainer>
-						<CounterTitle>Количество просмотров</CounterTitle>
-						<Counter placeholder="" value={postViews} onChange={setPostViews} />
-					</CounterContainer>
-				</PostContainer>
-				<BtnBase
-					$margin="8"
-					$padding="21px 24px"
-					$color="#EF6284"
-					$bg="#241F31"
-					onClick={handleStartPromotion}
-					disabled={createConfigСhannel.isLoading}
-				>
-					{createConfigСhannel.isLoading ? "Продвигаем..." : "Начать продвижение"}
-				</BtnBase>
-			</PromotePost>
+      <PromotePost>
+        <PostTitle>Продвинуть пост</PostTitle>
+        <PromoteText>
+          Введите ссылку на пост и количество просмотров для ручного продвижения
+        </PromoteText>
+        <PostContainer>
+          <CounterContainer>
+            <CounterTitle>Ссылка на пост:</CounterTitle>
+            <PostInput
+              placeholder="https://"
+              value={postLink}
+              onChange={(e) => setPostLink(e.target.value)}
+            />
+          </CounterContainer>
+          <CounterContainer>
+            <CounterTitle>Количество просмотров</CounterTitle>
+            <Counter placeholder="" value={postViews} onChange={setPostViews} />
+          </CounterContainer>
+        </PostContainer>
+        <BtnBase
+          $margin="8"
+          $padding="21px 24px"
+          $color="#EF6284"
+          $bg="#241F31"
+        >
+          Начать продвижение
+        </BtnBase>
+      </PromotePost>
 
-			<BtnBase $margin="64">Сохранить</BtnBase>
-		</PromotionContainer>
-	);
+      <BtnBase 
+				$margin="64"
+			 	onClick={handleSave}
+        disabled={createConfigСhannel.isLoading}
+			>Сохранить</BtnBase>
+    </PromotionContainer>
+  );
 };
 
 const PromotionContainer = styled.div`
@@ -151,9 +157,7 @@ const PostInput = styled.input`
   font-size: 14px;
   font-weight: 700;
   background-color: transparent;
-  @media(max-width: 480px) { 
-    font-size: 16px; 
-  }
+  @media(max-width: 480px) { font-size: 16px; }
   &::placeholder { color: #D6DCEC; }
 `;
 
