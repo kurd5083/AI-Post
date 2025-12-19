@@ -4,11 +4,11 @@ import ToggleSwitch from "@/shared/ToggleSwitch";
 import Counter from "@/shared/Counter";
 import BtnBase from "@/shared/BtnBase";
 import { usePopupStore } from "@/store/popupStore";
-import { useCreateViewsOrder } from "@/lib/channels/useCreateViewsOrder";
+import { useСreateConfigСhannel } from "@/lib/channels/useСreateConfigСhannel";
 
 const PromotionPopup = () => {
 	const { changeContent } = usePopupStore();
-	const createViewsOrder = useCreateViewsOrder();
+	const createConfigСhannel = useСreateConfigСhannel();
 
 	const [autoViews, setAutoViews] = useState(false);
 	const [minViews, setMinViews] = useState(null);
@@ -17,7 +17,7 @@ const PromotionPopup = () => {
 	const [postViews, setPostViews] = useState(null);
 
 	const handleStartPromotion = () => {
-		createViewsOrder.mutate({
+		createConfigСhannel.mutate({
 			link: postLink,
 			username: "mychannel",
 			min: minViews,
@@ -72,9 +72,9 @@ const PromotionPopup = () => {
 					$color="#EF6284"
 					$bg="#241F31"
 					onClick={handleStartPromotion}
-					disabled={createViewsOrder.isLoading}
+					disabled={createConfigСhannel.isLoading}
 				>
-					{createViewsOrder.isLoading ? "Продвигаем..." : "Начать продвижение"}
+					{createConfigСhannel.isLoading ? "Продвигаем..." : "Начать продвижение"}
 				</BtnBase>
 			</PromotePost>
 
