@@ -24,22 +24,23 @@ const SchedulePopup = () => {
   const { popup, changeContent } = usePopupStore();
   const channelId = popup?.data?.channelId;
 
-  const { data: schedule } = useChannelSchedule(channelId);
+  const { channelSchedule } = useChannelSchedule(channelId);
 
-  const [timezone, setTimezone] = useState("UTC");
+  const [timezone, setTimezone] = useState(null);
   const [publicationTimes, setPublicationTimes] = useState([]);
   const [currentTime, setCurrentTime] = useState({ hours: 0, minutes: 0 });
   const [selectedDays, setSelectedDays] = useState([]);
   
   const createSchedule = useCreateChannelSchedule(channelId);
-  console.log(schedule)
+  console.log(channelSchedule)
+
   useEffect(() => {
-    if (schedule) {
-      setTimezone(schedule?.timezone);
-      setPublicationTimes(schedule?.publicationTimes);
-      setSelectedDays(schedule?.postDays);
+    if (channelSchedule) {
+      setTimezone(channelSchedule.timezone);
+      setPublicationTimes(channelSchedule.publicationTimes);
+      setSelectedDays(channelSchedule.postDays);
     }
-  }, [schedule]);
+  }, [channelSchedule]);
 
   const handleAddTime = () => {
     const timeStr = `${String(currentTime.hours).padStart(2,'0')}:${String(currentTime.minutes).padStart(2,'0')}`;
