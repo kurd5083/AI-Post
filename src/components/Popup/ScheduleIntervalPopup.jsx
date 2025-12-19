@@ -12,15 +12,21 @@ const SchedulePopup = () => {
   const { popup, changeContent, goBack } = usePopupStore()
   const channelId = popup?.data?.channelId;
   const { channelInterval } = useChannelInterval(channelId);
+  const [showResult, setShowResult] = useState(false);
+
   const [intervalMinutes, setIntervalMinutes] = useState(null);
   const [finalMinutes, setFinalMinutes] = useState(null);
-  const [showResult, setShowResult] = useState(false);
+  const [activeStartHour, setActiveStartHour] = useState(null); 
+  const [activeEndHour, setActiveEndHour] = useState(null); 
   const [isEnabled, setIsEnabled] = useState(false);
   const [avoidNight, setAvoidNight] = useState(false);
+
   const { mutate: saveInterval, isLoading } = useUpdateChannelInterval(channelId);
 
   useEffect(() => {
     if (channelInterval) {
+      setActiveStartHour(channelInterval.activeStartHour);
+      setActiveEndHour(channelInterval.activeEndHour);
       setFinalMinutes(channelInterval.intervalMinutes);
       setIntervalMinutes(channelInterval.intervalMinutes);
       setIsEnabled(channelInterval.isEnabled);
@@ -94,10 +100,26 @@ const SchedulePopup = () => {
           )}
         </ScheduleKey>
         <ScheduleKey>
-          <ScheduleKeyTitle>Выберите интервал</ScheduleKeyTitle>
+          <ScheduleKeyTitle>Активное время публикаций</ScheduleKeyTitle>
+          
           <ScheduleInputContainer>
-            <TimeInput />
-            <ScheduleBtn>
+            <div>
+              <p>Начало (часы и минуты)</p>
+              <TimeInput 
+                hours={Math.floor(activeStartHour / 60)}
+                minutes={activeStartHour % 60}
+                onChange={(h, m) => setActiveStartHour(h * 60 + m)}
+              />
+            </div>
+            <div>
+              <p>Конец (часы и минуты)</p>
+              <TimeInput 
+                hours={Math.floor(activeEndHour / 60)}
+                minutes={activeEndHour % 60}
+                onChange={(h, m) => setActiveEndHour(h * 60 + m)}
+              />
+            </div>
+            <ScheduleBtn onClick={() => console.log("Активное время:", activeStartHour, activeEndHour)}>
               <PlusIcon color="#FFF980" />
             </ScheduleBtn>
           </ScheduleInputContainer>
