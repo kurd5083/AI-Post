@@ -30,7 +30,7 @@ const TimeInput = ({ hours, minutes, onChange }) => {
       <TimeSection>
         <TimeField
           type="text"
-          value={String(hours).padStart(2, '0')}
+          value={String(hours)}
           onChange={handleHoursChange}
           onBlur={handleHoursBlur}
           maxLength={2}
@@ -41,7 +41,7 @@ const TimeInput = ({ hours, minutes, onChange }) => {
       <TimeSection>
         <TimeField
           type="text"
-          value={String(minutes).padStart(2, '0')}
+          value={String(minutes)}
           onChange={handleMinutesChange}
           onBlur={handleMinutesBlur}
           maxLength={2}

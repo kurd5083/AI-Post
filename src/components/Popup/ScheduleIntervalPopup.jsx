@@ -68,7 +68,7 @@ const SchedulePopup = () => {
 					<ScheduleInputContainer>
 						<TimeInput 
               hours={hours}
-  minutes={minutes}
+              minutes={minutes}
               onChange={(newHours, newMinutes) => {
                 setIntervalMinutes(newHours * 60 + newMinutes);
               }}
