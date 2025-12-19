@@ -9,7 +9,7 @@ import { useСreateConfigСhannel } from "@/lib/channels/useСreateConfigСhanne
 const PromotionPopup = () => {
   const { popup, changeContent } = usePopupStore();
 	const channelId = popup?.data?.channelId;
-  const createConfigСhannel = useСreateConfigСhannel(channelId);
+  const createConfigСhannel = useСreateConfigСhannel();
 
   const [autoViews, setAutoViews] = useState(false);
   const [minViews, setMinViews] = useState(null);
@@ -19,6 +19,7 @@ const PromotionPopup = () => {
 
   const handleSave = () => {
     createConfigСhannel.mutate({
+			channelId: channelId,
       isEnabled: autoViews,
       allowedServiceIds: [272],
       viewsOnNewPostEnabled: autoViews,
@@ -84,7 +85,9 @@ const PromotionPopup = () => {
 				$margin="64"
 			 	onClick={handleSave}
         disabled={createConfigСhannel.isLoading}
-			>Сохранить</BtnBase>
+			>
+				{createConfigСhannel.isLoading ? "Сохраняем..." : "Сохранить"}
+			</BtnBase>
     </PromotionContainer>
   );
 };
