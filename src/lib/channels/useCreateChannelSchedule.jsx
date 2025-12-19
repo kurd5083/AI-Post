@@ -3,6 +3,7 @@ import { createSchedule } from "@/api/channels/createSchedule";
 
 export const useCreateChannelSchedule = (channelId) => {
     const queryClient = useQueryClient();
+    
     return useMutation({
         mutationFn: ({ postDays, publicationTimes, timezone }) =>createSchedule({ channelId, postDays, publicationTimes, timezone }),
         onSuccess: (data) => {
@@ -10,6 +11,5 @@ export const useCreateChannelSchedule = (channelId) => {
             queryClient.invalidateQueries(["channel", channelId]);
         },
     });
-
 };
 

@@ -29,7 +29,7 @@ const SchedulePopup = () => {
   const [selectedDays, setSelectedDays] = useState([]);
   
   const createSchedule = useCreateChannelSchedule(channelId);
-
+  
   const handleAddTime = () => {
     const timeStr = `${String(currentTime.hours).padStart(2,'0')}:${String(currentTime.minutes).padStart(2,'0')}`;
     if (!publicationTimes.includes(timeStr)) {
@@ -46,8 +46,9 @@ const SchedulePopup = () => {
   };
 
   const handleSave = () => {
-    if (selectedDays.length === 0 || publicationTimes.length === 0) return;
+    console.log(selectedDays, publicationTimes, timezone)
 
+    if (selectedDays.length === 0 || publicationTimes.length === 0) return;
     createSchedule.mutate({
       postDays: selectedDays,
       publicationTimes,
