@@ -18,11 +18,29 @@ const LinkGenerationPopup = () => {
   const [expirePeriod, setExpirePeriod] = useState(null);
 
   const handleCreate = () => {
+    let customExpireDate = null;
+    const now = new Date();
+
+    if (expirePeriod && expirePeriod !== "UNLIMITED") {
+      switch (expirePeriod) {
+        case "ONE_HOUR":
+          now.setHours(now.getHours() + 1);
+          break;
+        case "ONE_DAY":
+          now.setDate(now.getDate() + 1);
+          break;
+        case "ONE_WEEK":
+          now.setDate(now.getDate() + 7);
+          break;
+      }
+      customExpireDate = now.toISOString(); 
+    }
+
     createInviteLink.mutate({
       name: name || null,
       memberLimit: memberLimit ? Number(memberLimit) : null,
       expirePeriod,
-      customExpireDate: null,
+      customExpireDate,
       createsJoinRequest,
     });
   };
