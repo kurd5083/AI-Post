@@ -38,9 +38,6 @@ const SchedulePopup = () => {
   }, [channelInterval]);
 
   const handleSave = () => {
-    const activeStartHour = 1;
-    const activeEndHour = 1;
-
     saveInterval({
       intervalMinutes: finalMinutes,
       isEnabled,
