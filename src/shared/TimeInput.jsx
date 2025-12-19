@@ -28,16 +28,17 @@ const TimeInput = ({ hours, minutes, onChange }) => {
         />
         <TimeLabel>ЧАСЫ</TimeLabel>
       </TimeSection>
-
-      <TimeSection>
-        <TimeField
-          type="text"
-          value={String(minutes)}
-          onChange={handleMinutesChange}
-          maxLength={2}
-        />
-        <TimeLabel>МИНУТЫ</TimeLabel>
-      </TimeSection>
+      {minutes !== undefined && (
+        <TimeSection>
+          <TimeField
+            type="text"
+            value={String(minutes)}
+            onChange={handleMinutesChange}
+            maxLength={2}
+          />
+          <TimeLabel>МИНУТЫ</TimeLabel>
+        </TimeSection>
+      )}
     </TimeInputContainer>
   );
 };

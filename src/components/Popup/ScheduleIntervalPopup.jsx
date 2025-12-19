@@ -21,10 +21,8 @@ const SchedulePopup = () => {
   const [isEnabled, setIsEnabled] = useState(false);
   const [avoidNight, setAvoidNight] = useState(false);
 
-  const startHours = Math.floor((activeStartHour ?? 0) / 60);
-  const startMinutes = (activeStartHour ?? 0) % 60;
-  const endHours = Math.floor((activeEndHour ?? 0) / 60);
-  const endMinutes = (activeEndHour ?? 0) % 60;
+  const startHour = activeStartHour ?? 0;
+  const endHour = activeEndHour ?? 0;
 
   const { mutate: saveInterval, isLoading } = useUpdateChannelInterval(channelId);
 
@@ -71,7 +69,7 @@ const SchedulePopup = () => {
   const handleShowResultActiveTime = () => {
     setShowResultActiveTime(true);
   };
-  
+
   return (
     <ScheduleContainer>
       <ScheduleHead>
@@ -113,19 +111,16 @@ const SchedulePopup = () => {
           
           <ScheduleInputContainer>
             <div>
-              <p>Начало (часы и минуты)</p>
               <TimeInput 
                 hours={startHours}
-                minutes={startMinutes}
-                onChange={(h, m) => setActiveStartHour(h * 60 + m)}
+                onChange={(h) => setActiveStartHour(h)}
               />
             </div>
+            <p>-</p>
             <div>
-              <p>Конец (часы и минуты)</p>
               <TimeInput 
                 hours={endHours}
-                minutes={endMinutes}
-                onChange={(h, m) => setActiveEndHour(h * 60 + m)}
+                onChange={(h) => setActiveEndHour(h)}
               />
             </div>
             <ScheduleBtn onClick={handleShowResultActiveTime}>
@@ -134,7 +129,9 @@ const SchedulePopup = () => {
           </ScheduleInputContainer>
           {showResultActiveTime && (
             <ScheduleResult>
-              Активное время: <mark>{startHours}:{startMinutes.toString().padStart(2,'0')}</mark> — <mark>{endHours}:{endMinutes.toString().padStart(2,'0')}</mark>
+              Активное время: 
+              <mark>{startHour}</mark> — 
+              <mark>{endHour}</mark>
             </ScheduleResult>
           )}
         </ScheduleKey>
