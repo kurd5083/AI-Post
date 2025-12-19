@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import Checkbox from "@/shared/Checkbox";
-import { useUpdateWorkMode } from "@/lib/useUpdateWorkMode";
+import { useUpdateWorkMode } from "@/lib/channels/useUpdateWorkMode";
 import { usePopupStore } from "@/store/popupStore"
 
 const ModePopup = () => {

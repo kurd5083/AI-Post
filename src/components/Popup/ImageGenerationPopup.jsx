@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import Checkbox from "@/shared/Checkbox";
 import { imageGenerationDatas } from "@/data/imageGenerationDatas";
-import { useImagePresets } from "@/lib/useImagePresets";
+import { useImagePresets } from "@/lib/channels/useImagePresets";
 
 const ImageGenerationPopup = () => {
   const { imagePresets } = useImagePresets();
