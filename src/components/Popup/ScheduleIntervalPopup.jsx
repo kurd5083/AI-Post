@@ -40,6 +40,7 @@ const SchedulePopup = () => {
   // };
 
   const handleSelectCheckbox = (name, value) => {
+    console.log("test", sEnabled, name, value)
     if (name === "isEnabled") {
       setIsEnabled(value);
     } else if (name === "avoidNight") {
