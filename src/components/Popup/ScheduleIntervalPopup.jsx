@@ -39,6 +39,10 @@ const SchedulePopup = () => {
   //   });
   // };
 
+  const handleSelectCheckbox = (item) => {
+    setSelectedMode(item);
+  };
+  
   const hours = Math.floor(intervalMinutes / 60);
   const minutes = intervalMinutes % 60;
 
@@ -76,12 +80,12 @@ const SchedulePopup = () => {
 				<ScheduleKey>
 					<ScheduleKeyTitle>Дополнительно</ScheduleKeyTitle>
 					<ScheduleKeyItem>
-						<Checkbox checked={isEnabled} onChange={() => setIsEnabled(true)}>
+						<Checkbox checked={isEnabled} onChange={() => handleSelectCheckbox(isEnabled)}>
               <h4>Активировать интервальную публ.</h4>
             </Checkbox>
 					</ScheduleKeyItem>
 					<ScheduleKeyItem>
-						<Checkbox checked={avoidNight} onChange={() => setAvoidNight(!avoidNight)}>
+						<Checkbox checked={avoidNight} onChange={() => handleSelectCheckbox(avoidNight)}>
               <h4>Не публиковать в ночное время</h4>
             </Checkbox>
 					</ScheduleKeyItem>
