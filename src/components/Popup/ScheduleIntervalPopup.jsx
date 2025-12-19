@@ -66,7 +66,7 @@ const SchedulePopup = () => {
             </Checkbox>
 					</ScheduleKeyItem>
 					<ScheduleKeyItem>
-						<Checkbox checked={avoidNight} onChange={setAvoidNight}>
+						<Checkbox checked={true} onChange={setAvoidNight}>
               <h4>Не публиковать в ночное время</h4>
             </Checkbox>
 					</ScheduleKeyItem>

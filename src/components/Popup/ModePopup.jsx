@@ -6,7 +6,6 @@ import { usePopupStore } from "@/store/popupStore"
 
 const ModePopup = () => {
 	const { popup } = usePopupStore();
-    console.log(popup)
     const channelId = popup?.data?.channelId;
     const { mutate: setWorkMode } = useUpdateWorkMode(channelId);
     const [selectedMode, setSelectedMode] = useState("AUTOPOSTING");
