@@ -14,6 +14,8 @@ const SchedulePopup = () => {
   // const { channelInterval } = useChannelInterval(channelId);
 
   const [intervalMinutes, setIntervalMinutes] = useState(60);
+  const [finalMinutes, setFinalMinutes] = useState(null);
+  const [showResult, setShowResult] = useState(false); 
   const [isEnabled, setIsEnabled] = useState(false);
   const [avoidNight, setAvoidNight] = useState(false);
   const { mutate: saveInterval, isLoading } = useUpdateChannelInterval(channelId);
@@ -48,9 +50,13 @@ const SchedulePopup = () => {
     }
   };
   
-  const hours = Math.floor(intervalMinutes / 60);
-  const minutes = intervalMinutes % 60;
+  const hours = Math.floor((finalMinutes ?? 0) / 60);
+  const minutes = (finalMinutes ?? 0) % 60;
 
+  const handleShowResult = () => {
+    setShowResult(true);
+    setFinalMinutes(intervalMinutes);
+  };
 	return (
 		<ScheduleContainer>
 			<ScheduleHead>  
@@ -67,23 +73,25 @@ const SchedulePopup = () => {
 					<ScheduleKeyTitle>Выберите интервал</ScheduleKeyTitle>
 					<ScheduleInputContainer>
 						<TimeInput 
-              hours={hours}
-              minutes={minutes}
+              hours={Math.floor(intervalMinutes / 60)}
+              minutes={intervalMinutes % 60}
               onChange={(newHours, newMinutes) => {
                 setIntervalMinutes(newHours * 60 + newMinutes);
               }}
             />
-						<ScheduleBtn>
+						<ScheduleBtn onClick={handleShowResult}>
               <PlusIcon color="#FFF980"/>
             </ScheduleBtn>
 					</ScheduleInputContainer>
-					<ScheduleResult>
-            Будет публиковаться каждые{" "}
-            <mark>
-              {hours > 0 && `${hours} ч `}
-              {minutes > 0 && `${minutes} мин`}
-            </mark>
-          </ScheduleResult>
+					{showResult && finalMinutes !== null && (
+            <ScheduleResult>
+              Будет публиковаться каждые{" "}
+              <mark>
+                {hours > 0 && `${hours} ч `}
+                {minutes > 0 && `${minutes} мин`}
+              </mark>
+            </ScheduleResult>
+          )}
 				</ScheduleKey>
 				<ScheduleKey>
 					<ScheduleKeyTitle>Дополнительно</ScheduleKeyTitle>
@@ -102,10 +110,10 @@ const SchedulePopup = () => {
 					<BtnBase
             $color="#D6DCEC"
             $bg="#336CFF"
-            // onClick={() => handleSave()}
-            // disabled={isLoading}
+            onClick={() => handleSave()}
+            disabled={isLoading}
           >
-            {/* {isLoading ? "Сохраняем..." : "Сохранить"} */}
+            {isLoading ? "Сохраняем..." : "Сохранить"}
           </BtnBase>
 					<BtnBase onClick={goBack} $color="#D6DCEC" $bg="#242A3A">Отменить</BtnBase>
 				</ScheduleButtons>
