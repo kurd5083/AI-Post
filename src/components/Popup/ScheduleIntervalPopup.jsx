@@ -12,8 +12,7 @@ const SchedulePopup = () => {
 	const { popup, changeContent, goBack } = usePopupStore()
   const channelId = popup?.data?.channelId;
   const { channelInterval } = useChannelInterval(channelId);
-
-  const [intervalMinutes, setIntervalMinutes] = useState(60);
+  const [intervalMinutes, setIntervalMinutes] = useState(null);
   const [finalMinutes, setFinalMinutes] = useState(null);
   const [showResult, setShowResult] = useState(false); 
   const [isEnabled, setIsEnabled] = useState(false);
