@@ -19,6 +19,7 @@ const CheckboxContainer = styled.label`
 
 const HiddenCheckbox = styled.input`
   display: none;
+  pointer-events: none;
 `;
 
 const StyledCheckbox = styled.div`
