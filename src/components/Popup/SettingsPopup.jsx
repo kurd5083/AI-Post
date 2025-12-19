@@ -12,7 +12,8 @@ const SettingsPopup = () => {
   const channelId = popup?.data?.channelId;
   const { channels } = useChannelsGroupedByFolders();
   const { autoApprovalStatus, setAutoApprovalStatus } = useAutoApprovalStatus(channelId);
-  const findChannel = channels.find((channel) => channel.id == channelId)
+  console.log(channels, 'cxbxcb')
+  const findChannel = channels.folders.find((channel) => channel.id == channelId)
 
   return (
 		<SettingsContainer>
