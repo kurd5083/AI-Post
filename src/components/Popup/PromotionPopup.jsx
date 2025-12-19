@@ -1,6 +1,6 @@
 import { useState } from "react";
 import styled from "styled-components";
-// import ToggleSwitch from "@/shared/ToggleSwitch";
+import ToggleSwitch from "@/shared/ToggleSwitch";
 import Counter from "@/shared/Counter";
 import BtnBase from "@/shared/BtnBase";
 import { usePopupStore } from "@/store/popupStore";
