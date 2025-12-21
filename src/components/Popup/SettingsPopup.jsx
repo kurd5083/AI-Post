@@ -19,17 +19,16 @@ const SettingsPopup = () => {
 
   const { autoApprovalStatus, setAutoApprovalStatus } = useAutoApprovalStatus(channelId);
   const { promotionEnabled, togglePromotion } = useEnableChannelPromotion(channelId);
-  console.log(autoApprovalStatus.autoApprovalEnabled, promotionEnabled)
 
   const switchConfig = {
     auto_accepting: {
       checked: channel?.autoApprovalEnabled,
       onChange: () => setAutoApprovalStatus({ channelId }),
     },
-// activate_promotion: {
-//       checked: channel?.forcePosting,
-//       onChange: () => togglePromotion({ channelId }),
-//     },
+    posting: {
+      checked: channel?.forcePosting,
+      // onChange: () => togglePromotion({ channelId }),
+    },
     activate_promotion: {
       checked: channel?.promotionEnabled,
       onChange: () => togglePromotion({ channelId }),
