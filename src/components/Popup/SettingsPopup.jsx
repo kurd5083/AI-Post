@@ -15,7 +15,7 @@ const SettingsPopup = () => {
   const { changeContent, popup } = usePopupStore();
   const channelId = popup?.data?.channelId;
   const { channel } = useChannelById(channelId);
-  console.log(channelId, 'aaa')
+  console.log(channel, 'aaa')
 
   const [localSwitches, setLocalSwitches] = useState({
     posting: channel?.posting || false,
