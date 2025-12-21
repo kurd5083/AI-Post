@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toggleChannelPosting } from "@/api/channels/toggleChannelPosting";
 
-export const useToggleChannelPosting = (channelId) => {
+export const useToggleChannelPosting = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
