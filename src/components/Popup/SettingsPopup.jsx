@@ -14,7 +14,7 @@ const SettingsPopup = () => {
 	const { changeContent, popup } = usePopupStore();
   const channelId = popup?.data?.channelId;
   const { channel } = useChannelById(channelId);
-  console.log(channel, 'aaa')
+  console.log(channelId, 'aaa')
 
   const togglePosting = useToggleChannelPosting(channelId);
   const enablePromotion = useEnableChannelPromotion(channelId);
@@ -26,10 +26,6 @@ const SettingsPopup = () => {
       checked: channel?.posting,
       onChange: () => togglePosting.mutate(),
     },
-    auto_accepting: {
-      checked: channel?.autoApprovalEnabled,
-      onChange: () => autoApprovalStatus.mutate(),
-    },
     activate_promotion: {
       checked: channel?.promotionEnabled,
       onChange: () => {
@@ -39,6 +35,10 @@ const SettingsPopup = () => {
           enablePromotion.mutate();
         }
       },
+    },
+    auto_accepting: {
+      checked: channel?.autoApprovalEnabled,
+      onChange: () => autoApprovalStatus.mutate(),
     },
   };
 
