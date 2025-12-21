@@ -13,13 +13,13 @@ import { useToggleChannelPosting } from "@/lib/channels/useToggleChannelPosting"
 const SettingsPopup = () => {
 	const { changeContent, popup } = usePopupStore();
   const channelId = popup?.data?.channelId;
-  console.log(channelId)
   const { channel } = useChannelById(channelId);
   console.log(channel, 'aaa')
 
   const togglePosting = useToggleChannelPosting(channelId);
   const autoApprovalStatus = useAutoApprovalStatus(channelId);
   const promotionEnabled = useEnableChannelPromotion(channelId);
+  
   const switchConfig = {
     posting: {
       checked: channel?.posting,
