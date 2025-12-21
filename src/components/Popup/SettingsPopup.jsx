@@ -16,7 +16,7 @@ const SettingsPopup = () => {
 
   const { autoApprovalStatus, setAutoApprovalStatus } = useAutoApprovalStatus(channelId);
   const { promotionEnabled, togglePromotion } = useEnableChannelPromotion(channelId);
-
+  console.log(autoApprovalStatus, promotionEnabled)
   const findChannel = [
     ...channels.folders.flatMap(folder => folder.channels),
     ...channels.channelsWithoutFolder
