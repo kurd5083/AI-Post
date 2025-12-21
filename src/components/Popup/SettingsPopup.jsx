@@ -4,7 +4,7 @@ import bell_blue from "@/assets/popup/bell-blue.svg";
 import { settingsDatas } from "@/data/settingsDatas";
 import ToggleSwitch from "@/shared/ToggleSwitch";
 import { usePopupStore } from "@/store/popupStore"
-import { useChannelById } from "@/lib/useChannelById";
+import { useChannelById } from "@/lib/channels/useChannelById";
 
 import { useAutoApprovalStatus } from "@/lib/channels/useAutoApprovalStatus";
 import { useEnableChannelPromotion } from "@/lib/channels/useEnableChannelPromotion";
