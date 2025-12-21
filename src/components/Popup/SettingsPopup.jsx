@@ -12,7 +12,7 @@ import { useEnableChannelPromotion } from "@/lib/channels/useEnableChannelPromot
 const SettingsPopup = () => {
 	const { changeContent, popup } = usePopupStore();
   const channelId = popup?.data?.channelId;
-
+  console.log(channelId)
   const { channel } = useChannelById(channelId);
   // const { channels } = useChannelsGroupedByFolders();
   console.log(channel, 'aaa')
