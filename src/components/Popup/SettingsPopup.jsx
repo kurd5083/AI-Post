@@ -4,18 +4,35 @@ import bell_blue from "@/assets/popup/bell-blue.svg";
 import { settingsDatas } from "@/data/settingsDatas";
 import ToggleSwitch from "@/shared/ToggleSwitch";
 import { usePopupStore } from "@/store/popupStore"
-import { useAutoApprovalStatus } from "@/lib/useAutoApprovalStatus";
 import { useChannelsGroupedByFolders } from "@/lib/useChannelsGroupedByFolders";
+
+import { useAutoApprovalStatus } from "@/lib/useAutoApprovalStatus";
+import { useEnableChannelPromotion } from "@/lib/useEnableChannelPromotion";
 
 const SettingsPopup = () => {
 	const { changeContent, popup } = usePopupStore();
   const channelId = popup?.data?.channelId;
   const { channels } = useChannelsGroupedByFolders();
+
   const { autoApprovalStatus, setAutoApprovalStatus } = useAutoApprovalStatus(channelId);
+  const { promotionEnabled, togglePromotion } = useEnableChannelPromotion(channelId);
+
   const findChannel = [
     ...channels.folders.flatMap(folder => folder.channels),
     ...channels.channelsWithoutFolder
   ].find(channel => channel.id === channelId);
+
+  const switchConfig = {
+    auto_approval: {
+      checked: autoApprovalStatus?.autoApprovalEnabled || false,
+      onChange: () => setAutoApprovalStatus({ channelId }),
+    },
+
+    activate_promotion: {
+      checked: promotionEnabled || false,
+      onChange: () => togglePromotion({ channelId }),
+    },
+  };
 
   return (
 		<SettingsContainer>
@@ -35,12 +52,10 @@ const SettingsPopup = () => {
 								{item.right == 'arrow' ? (
 									<img src={arrow} alt="arrow icon" height={12} width={6} />
 								) : item.right == 'switch' ? (
-									<ToggleSwitch 
-                    bg="#FF9C55" 
-                    checked={autoApprovalStatus?.autoApprovalEnabled || false} 
-                    onChange={() =>
-                      setAutoApprovalStatus({ channelId })
-                    }
+									<ToggleSwitch
+                    bg="#FF9C55"
+                    checked={switchConfig[item.key]?.checked || false}
+                    onChange={switchConfig[item.key]?.onChange}
                   />
 								) : item.right == 'textarrow' ? (
 									<PopupContentRight>
