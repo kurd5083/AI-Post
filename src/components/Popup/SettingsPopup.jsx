@@ -14,14 +14,8 @@ const SettingsPopup = () => {
   const channelId = popup?.data?.channelId;
   console.log(channelId)
   const { channel } = useChannelById(channelId);
-  // const { channels } = useChannelsGroupedByFolders();
   console.log(channel, 'aaa')
 
-
-  // const findChannel = [
-  //   ...channels.folders.flatMap(folder => folder.channels),
-  //   ...channels.channelsWithoutFolder
-  // ].find(channel => channel.id === channelId);
 
   const { autoApprovalStatus, setAutoApprovalStatus } = useAutoApprovalStatus(channelId);
   const { promotionEnabled, togglePromotion } = useEnableChannelPromotion(channelId);
