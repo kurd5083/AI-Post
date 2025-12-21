@@ -71,12 +71,14 @@ const SettingsPopup = () => {
 							<PopupContentItem key={index} onClick={item.right !== 'switch' ? () => changeContent(item.key, { channelId: channelId, workMode: channel?.workMode }) : undefined}>
 								<PopupContentLeft>
 									<img src={item.extra.image} alt={item.name} style={{ background: item.extra.background }} width={40} height={40} />
-									<PopupContentInfo $place={item.place} $size={item.size} $publications={item.key}>
-										<h3>{item.name}</h3>
-										{item.status && <span>{
-                      switchConfig[item.key]? 'Включено' : 'Выключено'
-                    }</span>}
-									</PopupContentInfo>
+								<PopupContentInfo $place={item.place} $size={item.size} $publications={item.key}>
+                  <h3>{item.name}</h3>
+                  {item.status && (
+                    <span>
+                      {switchConfig[item.key]?.checked ? 'Включено' : 'Выключено'}
+                    </span>
+                  )}
+                </PopupContentInfo>
 								</PopupContentLeft>
 								{item.right == 'arrow' ? (
 									<img src={arrow} alt="arrow icon" height={12} width={6} />
