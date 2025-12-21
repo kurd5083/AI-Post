@@ -16,6 +16,16 @@ const SettingsPopup = () => {
   const { channel } = useChannelById(channelId);
   console.log(channelId, 'aaa')
 
+  const [localAutoApproval, setLocalAutoApproval] = useState(channel?.autoApprovalEnabled);
+  const [localPosting, setLocalPosting] = useState(channel?.posting);
+  const [localPromotion, setLocalPromotion] = useState(channel?.promotionEnabled);
+
+  useEffect(() => {
+    setLocalAutoApproval(channel?.autoApprovalEnabled);
+    setLocalPosting(channel?.posting);
+    setLocalPromotion(channel?.promotionEnabled);
+  }, [channel?.autoApprovalEnabled, channel?.posting, channel?.promotionEnabled]);
+
   const { mutate: togglePosting } = useToggleChannelPosting();
   const { mutate: enablePromotion } = useEnableChannelPromotion();
   const { mutate: disablePromotion } = useDisnableChannelPromotion();
@@ -24,22 +34,26 @@ const SettingsPopup = () => {
   const switchConfig = {
     posting: {
       checked: channel?.posting,
-      onChange: () => togglePosting(channelId),
+      onChange: () => {
+        const newValue = !localPosting;
+        setLocalPosting(newValue);
+        togglePosting(channelId);
+      },
     },
     activate_promotion: {
       checked: channel?.promotionEnabled,
       onChange: () => {
-        if (channel?.promotionEnabled) {
-          disablePromotion(channelId);
-        } else {
-          enablePromotion(channelId);
-        }
+        const newValue = !localPromotion;
+        setLocalPromotion(newValue);
+        if (newValue) enablePromotion(channelId);
+        else disablePromotion(channelId);
       },
     },
     auto_accepting: {
       checked: channel?.autoApprovalEnabled,
       onChange: () => {
         const newValue = !channel?.autoApprovalEnabled; 
+        setLocalAutoApproval(newValue);
         autoApprovalStatus({ channelId, autoApprovalEnabled: newValue });
       },
     },
