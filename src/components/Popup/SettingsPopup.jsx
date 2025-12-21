@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 import arrow from "@/assets/arrow.svg";
 import bell_blue from "@/assets/popup/bell-blue.svg";
@@ -16,15 +17,21 @@ const SettingsPopup = () => {
   const { channel } = useChannelById(channelId);
   console.log(channelId, 'aaa')
 
-  const [localAutoApproval, setLocalAutoApproval] = useState(channel?.autoApprovalEnabled);
-  const [localPosting, setLocalPosting] = useState(channel?.posting);
-  const [localPromotion, setLocalPromotion] = useState(channel?.promotionEnabled);
+  useEffect(() => {
+    setLocalSwitches({
+      posting: channel?.posting || false,
+      activate_promotion: channel?.promotionEnabled || false,
+      auto_accepting: channel?.autoApprovalEnabled || false,
+    });
+  }, [channel]);
 
   useEffect(() => {
-    setLocalAutoApproval(channel?.autoApprovalEnabled);
-    setLocalPosting(channel?.posting);
-    setLocalPromotion(channel?.promotionEnabled);
-  }, [channel?.autoApprovalEnabled, channel?.posting, channel?.promotionEnabled]);
+    setLocalSwitches({
+      posting: channel?.posting || false,
+      activate_promotion: channel?.promotionEnabled || false,
+      auto_accepting: channel?.autoApprovalEnabled || false,
+    });
+  }, [channel]);
 
   const { mutate: togglePosting } = useToggleChannelPosting();
   const { mutate: enablePromotion } = useEnableChannelPromotion();
@@ -33,28 +40,25 @@ const SettingsPopup = () => {
 
   const switchConfig = {
     posting: {
-      checked: channel?.posting,
+      checked: localSwitches.posting,
       onChange: () => {
-        const newValue = !localPosting;
-        setLocalPosting(newValue);
+        setLocalSwitches(prev => ({ ...prev, posting: !prev.posting }));
         togglePosting(channelId);
       },
     },
     activate_promotion: {
-      checked: channel?.promotionEnabled,
+      checked: localSwitches.activate_promotion,
       onChange: () => {
-        const newValue = !localPromotion;
-        setLocalPromotion(newValue);
-        if (newValue) enablePromotion(channelId);
+        setLocalSwitches(prev => ({ ...prev, activate_promotion: !prev.activate_promotion }));
+        if (!localSwitches.activate_promotion) enablePromotion(channelId);
         else disablePromotion(channelId);
       },
     },
     auto_accepting: {
-      checked: channel?.autoApprovalEnabled,
+      checked: localSwitches.auto_accepting,
       onChange: () => {
-        const newValue = !channel?.autoApprovalEnabled; 
-        setLocalAutoApproval(newValue);
-        autoApprovalStatus({ channelId, autoApprovalEnabled: newValue });
+        setLocalSwitches(prev => ({ ...prev, auto_accepting: !prev.auto_accepting }));
+        autoApprovalStatus({ channelId, autoApprovalEnabled: !localSwitches.auto_accepting });
       },
     },
   };
