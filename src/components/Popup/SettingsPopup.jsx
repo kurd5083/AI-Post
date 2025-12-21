@@ -23,7 +23,7 @@ const SettingsPopup = () => {
   ].find(channel => channel.id === channelId);
 
   const switchConfig = {
-    auto_approval: {
+    auto_accepting: {
       checked: autoApprovalStatus?.autoApprovalEnabled || false,
       onChange: () => setAutoApprovalStatus({ channelId }),
     },
