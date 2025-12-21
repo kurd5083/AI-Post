@@ -5,7 +5,7 @@ export const useToggleChannelPosting = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: () => toggleChannelPosting(channelId),
+    mutationFn: (channelId) => toggleChannelPosting(channelId),
     onSuccess: () => {
       queryClient.invalidateQueries(["channel", channelId]);
     },

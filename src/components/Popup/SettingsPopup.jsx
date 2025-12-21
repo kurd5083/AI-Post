@@ -6,9 +6,9 @@ import ToggleSwitch from "@/shared/ToggleSwitch";
 import { usePopupStore } from "@/store/popupStore"
 import { useChannelById } from "@/lib/channels/useChannelById";
 
+import { useToggleChannelPosting } from "@/lib/channels/useToggleChannelPosting";
 import { useAutoApprovalStatus } from "@/lib/channels/useAutoApprovalStatus";
 import { useEnableChannelPromotion, useDisnableChannelPromotion } from "@/lib/channels/useEnableChannelPromotion";
-import { useToggleChannelPosting } from "@/lib/channels/useToggleChannelPosting";
 
 const SettingsPopup = () => {
 	const { changeContent, popup } = usePopupStore();
