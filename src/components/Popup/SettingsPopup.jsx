@@ -7,7 +7,7 @@ import { usePopupStore } from "@/store/popupStore"
 import { useChannelById } from "@/lib/channels/useChannelById";
 
 import { useAutoApprovalStatus } from "@/lib/channels/useAutoApprovalStatus";
-import { useEnableChannelPromotion } from "@/lib/channels/useEnableChannelPromotion";
+import { useEnableChannelPromotion, useDisnableChannelPromotion } from "@/lib/channels/useEnableChannelPromotion";
 import { useToggleChannelPosting } from "@/lib/channels/useToggleChannelPosting";
 
 const SettingsPopup = () => {
@@ -17,9 +17,10 @@ const SettingsPopup = () => {
   console.log(channel, 'aaa')
 
   const togglePosting = useToggleChannelPosting(channelId);
+  const enablePromotion = useEnableChannelPromotion(channelId);
+  const disablePromotion = useDisnableChannelPromotion(channelId);
   const autoApprovalStatus = useAutoApprovalStatus(channelId);
-  const promotionEnabled = useEnableChannelPromotion(channelId);
-  
+
   const switchConfig = {
     posting: {
       checked: channel?.posting,
@@ -31,7 +32,13 @@ const SettingsPopup = () => {
     },
     activate_promotion: {
       checked: channel?.promotionEnabled,
-      onChange: () => promotionEnabled.mutate(),
+      onChange: () => {
+        if (channel?.promotionEnabled) {
+          disablePromotion.mutate();
+        } else {
+          enablePromotion.mutate();
+        }
+      },
     },
   };
 

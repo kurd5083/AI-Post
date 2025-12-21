@@ -5,3 +5,9 @@ export const enableChannelPromotion = async (channelId) => {
 
   return response.data;
 };
+
+export const disenableChannelPromotion = async (channelId) => {
+  const response = await apiClient.post(`/channels/${channelId}/promotion/disable`);
+
+  return response.data;
+};

@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { enableChannelPromotion } from "@/api/channels/enableChannelPromotion";
+import { enableChannelPromotion, disenableChannelPromotion } from "@/api/channels/enableChannelPromotion";
 
 export const useEnableChannelPromotion = () => {
   const queryClient = useQueryClient();
@@ -8,7 +8,18 @@ export const useEnableChannelPromotion = () => {
     mutationFn: (channelId) => enableChannelPromotion(channelId),
 
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["channelsGroupedByFolders"] });
+      queryClient.invalidateQueries({ queryKey: ["channel"] });
+    },
+  });
+};
+export const useDisnableChannelPromotion = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (channelId) => disenableChannelPromotion(channelId),
+
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["channel"] });
     },
   });
 };
