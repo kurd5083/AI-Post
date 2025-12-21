@@ -22,7 +22,7 @@ export const settingsDatas = {
                 {
                     key: "posting",
                     name: "Постинг",
-                    status: "ВКЛЮЧЕНО",
+                    status: true,
                     size: true,
                     right: 'switch',
                     extra: {
@@ -45,7 +45,7 @@ export const settingsDatas = {
                     name: "Публикации",
                     place: true,
                     size: true,
-                    status: "44",
+                    status: true,
                     extra: {
                         background: "#382B73",
                         image: publications
@@ -59,7 +59,7 @@ export const settingsDatas = {
                 {
                     key: "activate_promotion",
                     name: "Активировать продвижение",
-                    status: "Выключено",
+                    status: true,
                     right: 'switch',
                     extra: {
                         background: "#445838",
