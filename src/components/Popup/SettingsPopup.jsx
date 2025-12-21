@@ -57,7 +57,9 @@ const SettingsPopup = () => {
 									<img src={item.extra.image} alt={item.name} style={{ background: item.extra.background }} width={40} height={40} />
 									<PopupContentInfo $place={item.place} $size={item.size} $publications={item.key}>
 										<h3>{item.name}</h3>
-										{item.status && <span>{item.status}</span>}
+										{item.status && <span>{
+                      switchConfig[item.key]? 'Включено' : 'Выключено'
+                    }</span>}
 									</PopupContentInfo>
 								</PopupContentLeft>
 								{item.right == 'arrow' ? (
