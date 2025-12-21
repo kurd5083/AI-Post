@@ -1,14 +1,8 @@
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { getAutoApprovalStatus, updateAutoApprovalStatus } from "@/api/channels/getAutoApprovalStatus";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { updateAutoApprovalStatus } from "@/api/channels/getAutoApprovalStatus";
 
 export const useAutoApprovalStatus = (channelId) => {
   const queryClient = useQueryClient();
-
-  const { data: autoApprovalStatus} = useQuery({
-    queryKey: ["autoApprovalStatus", channelId],
-    queryFn: () => getAutoApprovalStatus(channelId),
-    enabled: !!channelId,
-  });
 
   const { mutate: setAutoApprovalStatus} = useMutation({
     mutationFn: (channelId) => updateAutoApprovalStatus(channelId, autoApprovalEnabled),
@@ -17,8 +11,5 @@ export const useAutoApprovalStatus = (channelId) => {
     },
   });
 
-  return {
-    autoApprovalStatus,
-    setAutoApprovalStatus,
-  };
+  return {setAutoApprovalStatus};
 };
