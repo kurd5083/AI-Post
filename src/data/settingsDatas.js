@@ -43,9 +43,7 @@ export const settingsDatas = {
                 {
                     key: "publications",
                     name: "Публикации",
-                    place: true,
                     size: true,
-                    status: true,
                     extra: {
                         background: "#382B73",
                         image: publications

@@ -12,7 +12,7 @@ import { useAutoApprovalStatus } from "@/lib/channels/useAutoApprovalStatus";
 import { useEnableChannelPromotion, useDisnableChannelPromotion } from "@/lib/channels/useEnableChannelPromotion";
 
 const SettingsPopup = () => {
-	const { changeContent, popup } = usePopupStore();
+  const { changeContent, popup } = usePopupStore();
   const channelId = popup?.data?.channelId;
   const { channel } = useChannelById(channelId);
   console.log(channelId, 'aaa')
@@ -62,55 +62,55 @@ const SettingsPopup = () => {
   };
 
   return (
-		<SettingsContainer>
-			{settingsDatas.sections.map((section) => (
-				<PopupNav key={section.key}>
-					<PopupContentTitle>{section.label}</PopupContentTitle>
-					<ul>
-						{section.items.map((item, index) => (
-							<PopupContentItem key={index} onClick={item.right !== 'switch' ? () => changeContent(item.key, { channelId: channelId, workMode: channel?.workMode }) : undefined}>
-								<PopupContentLeft>
-									<img src={item.extra.image} alt={item.name} style={{ background: item.extra.background }} width={40} height={40} />
-								<PopupContentInfo $place={item.place} $size={item.size} $publications={item.key}>
-                  <h3>{item.name}</h3>
-                  {item.status && (
-                    <span>
-                      {switchConfig[item.key]?.checked ? 'Включено' : 'Выключено'}
-                    </span>
-                  )}
-                </PopupContentInfo>
-								</PopupContentLeft>
-								{item.right == 'arrow' ? (
-									<img src={arrow} alt="arrow icon" height={12} width={6} />
-								) : item.right == 'switch' ? (
-									<ToggleSwitch
+    <SettingsContainer>
+      {settingsDatas.sections.map((section) => (
+        <PopupNav key={section.key}>
+          <PopupContentTitle>{section.label}</PopupContentTitle>
+          <ul>
+            {section.items.map((item, index) => (
+              <PopupContentItem key={index} onClick={item.right !== 'switch' ? () => changeContent(item.key, { channelId: channelId, workMode: channel?.workMode }) : undefined}>
+                <PopupContentLeft>
+                  <img src={item.extra.image} alt={item.name} style={{ background: item.extra.background }} width={40} height={40} />
+                  <PopupContentInfo $size={item.size} $publications={item.key}>
+                    <h3>{item.name}</h3>
+                    {item.status && (
+                      <span>
+                        {switchConfig[item.key]?.checked ? 'Включено' : 'Выключено'}
+                      </span>
+                    )}
+                  </PopupContentInfo>
+                </PopupContentLeft>
+                {item.right == 'arrow' ? (
+                  <img src={arrow} alt="arrow icon" height={12} width={6} />
+                ) : item.right == 'switch' ? (
+                  <ToggleSwitch
                     bg="#FF9C55"
                     checked={switchConfig[item.key]?.checked || false}
                     onChange={switchConfig[item.key]?.onChange}
                   />
-								) : item.right == 'textarrow' ? (
-									<PopupContentRight>
-										<span>
+                ) : item.right == 'textarrow' ? (
+                  <PopupContentRight>
+                    <span>
                       {channel?.workMode === "PREMODERATION" && "Предмодерация"}
                       {channel?.workMode === "AUTOPOSTING" && "Автопостинг"}
                     </span>
-										<img src={arrow} alt="arrow icon" height={12} width={6} />
-									</PopupContentRight>
-								) : item.right == 'imgarrow' ? (
-									<PopupContentRight>
-										<img src={bell_blue} alt="bell icon" height={24} width={20} />
-										<img src={arrow} alt="arrow icon" height={12} width={6} />
-									</PopupContentRight>
-								) : (
-									<PopupContentCounter>{item.status}</PopupContentCounter>
-								)}
-							</PopupContentItem>
-						))}
-					</ul>
-				</PopupNav>
-			))}
-		</SettingsContainer>
-	)
+                    <img src={arrow} alt="arrow icon" height={12} width={6} />
+                  </PopupContentRight>
+                ) : item.right == 'imgarrow' ? (
+                  <PopupContentRight>
+                    <img src={bell_blue} alt="bell icon" height={24} width={20} />
+                    <img src={arrow} alt="arrow icon" height={12} width={6} />
+                  </PopupContentRight>
+                ) : (
+                  <PopupContentCounter>{item.status}</PopupContentCounter>
+                )}
+              </PopupContentItem>
+            ))}
+          </ul>
+        </PopupNav>
+      ))}
+    </SettingsContainer>
+  )
 }
 const SettingsContainer = styled.div`
   padding: 0 56px;
@@ -164,9 +164,9 @@ const PopupContentLeft = styled.div`
 `
 const PopupContentInfo = styled.div`
   display: flex;
-  flex-direction: ${props => props.$place ? 'row' : 'column'};
-  align-items: ${props => props.$place ? 'center' : 'flex-start'};
-  gap: ${props => props.$place ? '16px' : '8px'};
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
     
   h3 {
     font-weight: 700;   
@@ -175,7 +175,7 @@ const PopupContentInfo = styled.div`
 
   span {
     color: #6A7080;
-    font-size: ${props => props.$place ? '24px' : '12px'};
+    font-size:  12px;
     font-weight: 700;
     text-transform: uppercase;
 
