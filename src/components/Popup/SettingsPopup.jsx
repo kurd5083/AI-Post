@@ -15,7 +15,7 @@ const SettingsPopup = () => {
 
   const { channel } = useChannelById(channelId);
   // const { channels } = useChannelsGroupedByFolders();
-  console.log(channel)
+  console.log(channel, 'aaa')
 
 
   // const findChannel = [
