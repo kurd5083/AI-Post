@@ -5,9 +5,9 @@ export const useAutoApprovalStatus = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (channelId) => updateAutoApprovalStatus(channelId),
+    mutationFn: (channelId, bul) => updateAutoApprovalStatus(channelId),
     onSuccess: (updatedData) => {
-      queryClient.setQueryData(["autoApprovalStatus", channelId], updatedData);
+      queryClient.setQueryData(["channel", channelId], updatedData);
     },
   });
 };
