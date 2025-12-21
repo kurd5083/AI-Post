@@ -17,21 +17,21 @@ const SettingsPopup = () => {
   console.log(channel, 'aaa')
 
 
-  const { autoApprovalStatus, setAutoApprovalStatus } = useAutoApprovalStatus(channelId);
-  const { promotionEnabled, togglePromotion } = useEnableChannelPromotion(channelId);
-  console.log(autoApprovalStatus.autoApprovalEnabled, promotionEnabled)
+  // const { autoApprovalStatus, setAutoApprovalStatus } = useAutoApprovalStatus(channelId);
+  // const { promotionEnabled, togglePromotion } = useEnableChannelPromotion(channelId);
+  // console.log(autoApprovalStatus.autoApprovalEnabled, promotionEnabled)
 
-  const switchConfig = {
-    auto_accepting: {
-      checked: autoApprovalStatus?.autoApprovalEnabled || false,
-      onChange: () => setAutoApprovalStatus({ channelId }),
-    },
+  // const switchConfig = {
+  //   auto_accepting: {
+  //     checked: autoApprovalStatus?.autoApprovalEnabled || false,
+  //     onChange: () => setAutoApprovalStatus({ channelId }),
+  //   },
 
-    activate_promotion: {
-      checked: promotionEnabled || false,
-      onChange: () => togglePromotion({ channelId }),
-    },
-  };
+  //   activate_promotion: {
+  //     checked: promotionEnabled || false,
+  //     onChange: () => togglePromotion({ channelId }),
+  //   },
+  // };
 
   return (
 		<SettingsContainer>
@@ -40,7 +40,7 @@ const SettingsPopup = () => {
 					<PopupContentTitle>{section.label}</PopupContentTitle>
 					<ul>
 						{section.items.map((item, index) => (
-							<PopupContentItem key={index} onClick={item.right !== 'switch' ? () => changeContent(item.key, { channelId: channelId, workMode: channel.workMode }) : undefined}>
+							<PopupContentItem key={index} onClick={item.right !== 'switch' ? () => changeContent(item.key, { channelId: channelId, workMode: channel?.workMode }) : undefined}>
 								<PopupContentLeft>
 									<img src={item.extra.image} alt={item.name} style={{ background: item.extra.background }} width={40} height={40} />
 									<PopupContentInfo $place={item.place} $size={item.size} $publications={item.key}>
@@ -50,17 +50,17 @@ const SettingsPopup = () => {
 								</PopupContentLeft>
 								{item.right == 'arrow' ? (
 									<img src={arrow} alt="arrow icon" height={12} width={6} />
-								) : item.right == 'switch' ? (
-									<ToggleSwitch
-                    bg="#FF9C55"
-                    checked={switchConfig[item.key]?.checked || false}
-                    onChange={switchConfig[item.key]?.onChange}
-                  />
+								) : item.right == 'switch' ? (1
+									// <ToggleSwitch
+                  //   bg="#FF9C55"
+                  //   checked={switchConfig[item.key]?.checked || false}
+                  //   onChange={switchConfig[item.key]?.onChange}
+                  // />
 								) : item.right == 'textarrow' ? (
 									<PopupContentRight>
 										<span>
-                      {channel.workMode === "PREMODERATION" && "Предмодерация"}
-                      {channel.workMode === "AUTOPOSTING" && "Автопостинг"}
+                      {channel?.workMode === "PREMODERATION" && "Предмодерация"}
+                      {channel?.workMode === "AUTOPOSTING" && "Автопостинг"}
                     </span>
 										<img src={arrow} alt="arrow icon" height={12} width={6} />
 									</PopupContentRight>
