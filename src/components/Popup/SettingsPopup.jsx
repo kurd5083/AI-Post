@@ -4,23 +4,28 @@ import bell_blue from "@/assets/popup/bell-blue.svg";
 import { settingsDatas } from "@/data/settingsDatas";
 import ToggleSwitch from "@/shared/ToggleSwitch";
 import { usePopupStore } from "@/store/popupStore"
-import { useChannelsGroupedByFolders } from "@/lib/useChannelsGroupedByFolders";
+import { useChannelById } from "@/lib/useChannelById";
 
-import { useAutoApprovalStatus } from "@/lib/useAutoApprovalStatus";
-import { useEnableChannelPromotion } from "@/lib/useEnableChannelPromotion";
+import { useAutoApprovalStatus } from "@/lib/channels/useAutoApprovalStatus";
+import { useEnableChannelPromotion } from "@/lib/channels/useEnableChannelPromotion";
 
 const SettingsPopup = () => {
 	const { changeContent, popup } = usePopupStore();
   const channelId = popup?.data?.channelId;
-  const { channels } = useChannelsGroupedByFolders();
+
+  const { channel } = useChannelById(channelId);
+  // const { channels } = useChannelsGroupedByFolders();
+  console.log(channel)
+
+
+  // const findChannel = [
+  //   ...channels.folders.flatMap(folder => folder.channels),
+  //   ...channels.channelsWithoutFolder
+  // ].find(channel => channel.id === channelId);
 
   const { autoApprovalStatus, setAutoApprovalStatus } = useAutoApprovalStatus(channelId);
   const { promotionEnabled, togglePromotion } = useEnableChannelPromotion(channelId);
-  console.log(autoApprovalStatus, promotionEnabled)
-  const findChannel = [
-    ...channels.folders.flatMap(folder => folder.channels),
-    ...channels.channelsWithoutFolder
-  ].find(channel => channel.id === channelId);
+  console.log(autoApprovalStatus.autoApprovalEnabled, promotionEnabled)
 
   const switchConfig = {
     auto_accepting: {
@@ -41,7 +46,7 @@ const SettingsPopup = () => {
 					<PopupContentTitle>{section.label}</PopupContentTitle>
 					<ul>
 						{section.items.map((item, index) => (
-							<PopupContentItem key={index} onClick={item.right !== 'switch' ? () => changeContent(item.key, { channelId: channelId, workMode: findChannel.workMode }) : undefined}>
+							<PopupContentItem key={index} onClick={item.right !== 'switch' ? () => changeContent(item.key, { channelId: channelId, workMode: channel.workMode }) : undefined}>
 								<PopupContentLeft>
 									<img src={item.extra.image} alt={item.name} style={{ background: item.extra.background }} width={40} height={40} />
 									<PopupContentInfo $place={item.place} $size={item.size} $publications={item.key}>
@@ -60,8 +65,8 @@ const SettingsPopup = () => {
 								) : item.right == 'textarrow' ? (
 									<PopupContentRight>
 										<span>
-                      {findChannel.workMode === "PREMODERATION" && "Предмодерация"}
-                      {findChannel.workMode === "AUTOPOSTING" && "Автопостинг"}
+                      {channel.workMode === "PREMODERATION" && "Предмодерация"}
+                      {channel.workMode === "AUTOPOSTING" && "Автопостинг"}
                     </span>
 										<img src={arrow} alt="arrow icon" height={12} width={6} />
 									</PopupContentRight>

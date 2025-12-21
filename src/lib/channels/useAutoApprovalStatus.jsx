@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { getAutoApprovalStatus, updateAutoApprovalStatus } from "@/api/getAutoApprovalStatus";
+import { getAutoApprovalStatus, updateAutoApprovalStatus } from "@/api/channels/getAutoApprovalStatus";
 
 export const useAutoApprovalStatus = (channelId) => {
   const queryClient = useQueryClient();
