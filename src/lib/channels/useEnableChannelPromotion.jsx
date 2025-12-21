@@ -10,12 +10,5 @@ export const useEnableChannelPromotion = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["channelsGroupedByFolders"] });
     },
-
-    onError: (error) => {
-      console.error(
-        "Ошибка включения продвижения:",
-        error?.response?.data || error.message
-      );
-    },
   });
 };

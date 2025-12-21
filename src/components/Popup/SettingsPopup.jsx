@@ -8,6 +8,7 @@ import { useChannelById } from "@/lib/channels/useChannelById";
 
 import { useAutoApprovalStatus } from "@/lib/channels/useAutoApprovalStatus";
 import { useEnableChannelPromotion } from "@/lib/channels/useEnableChannelPromotion";
+import { useToggleChannelPosting } from "@/lib/channels/useToggleChannelPosting";
 
 const SettingsPopup = () => {
 	const { changeContent, popup } = usePopupStore();
@@ -16,22 +17,21 @@ const SettingsPopup = () => {
   const { channel } = useChannelById(channelId);
   console.log(channel, 'aaa')
 
-
-  const { autoApprovalStatus, setAutoApprovalStatus } = useAutoApprovalStatus(channelId);
-  const { promotionEnabled, togglePromotion } = useEnableChannelPromotion(channelId);
-
+  const togglePosting = useToggleChannelPosting(channelId);
+  const autoApprovalStatus = useAutoApprovalStatus(channelId);
+  const promotionEnabled = useEnableChannelPromotion(channelId);
   const switchConfig = {
+    posting: {
+      checked: channel?.posting,
+      onChange: () => togglePosting.mutate(),
+    },
     auto_accepting: {
       checked: channel?.autoApprovalEnabled,
-      onChange: () => setAutoApprovalStatus({ channelId }),
-    },
-    posting: {
-      checked: channel?.forcePosting,
-      // onChange: () => togglePromotion({ channelId }),
+      onChange: () => autoApprovalStatus.mutate(),
     },
     activate_promotion: {
       checked: channel?.promotionEnabled,
-      onChange: () => togglePromotion({ channelId }),
+      onChange: () => promotionEnabled.mutate(),
     },
   };
 
