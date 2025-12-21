@@ -17,13 +17,11 @@ const SettingsPopup = () => {
   const { channel } = useChannelById(channelId);
   console.log(channelId, 'aaa')
 
-  useEffect(() => {
-    setLocalSwitches({
-      posting: channel?.posting || false,
-      activate_promotion: channel?.promotionEnabled || false,
-      auto_accepting: channel?.autoApprovalEnabled || false,
-    });
-  }, [channel]);
+  const [localSwitches, setLocalSwitches] = useState({
+    posting: channel?.posting || false,
+    activate_promotion: channel?.promotionEnabled || false,
+    auto_accepting: channel?.autoApprovalEnabled || false,
+  });
 
   useEffect(() => {
     setLocalSwitches({
