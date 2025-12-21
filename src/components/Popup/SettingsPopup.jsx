@@ -40,7 +40,7 @@ const SettingsPopup = () => {
       checked: channel?.autoApprovalEnabled,
       onChange: () => {
         const newValue = !channel?.autoApprovalEnabled; 
-        autoApprovalStatus.mutate({ channelId, autoApprovalEnabled: newValue });
+        autoApprovalStatus({ channelId, autoApprovalEnabled: newValue });
       },
     },
   };
