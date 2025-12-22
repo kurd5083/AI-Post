@@ -20,7 +20,7 @@ const Drag = ({ value = 0, onChange }) => {
           $width={btn.size}
           $height={btn.size}
           active={value >= btn.value}
-          onClick={() => onChange(btn.value)}
+          onClick={() => onChange(index)}
         />
       ))}
       <img src={light} alt="light icon" />
