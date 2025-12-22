@@ -90,6 +90,9 @@ const TableGroupsHead = styled.div`
   display: flex;
   justify-content: space-between;
   gap: 20px;
+  @media (max-width: 768px) {
+    flex-wrap: wrap;
+  }
 `
 const TableGroupsHeadLeft = styled(Swiper)`
   display: flex;
@@ -98,7 +101,6 @@ const TableGroupsHeadLeft = styled(Swiper)`
   @media (max-width: 768px) {
     padding: 0 24px;
   }
-
 `
 const TableGroupsHeadDir = styled(SwiperSlide)`
   box-sizing: border-box;
