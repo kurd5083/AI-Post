@@ -66,7 +66,6 @@ const FilteringPopup = () => {
           items={channel.stopWords.map((w) => ({ value: w }))} 
           color="#EF6284" 
           onRemove={(value) =>
-            console.log(value, 'ttt')
             removeStopWord({ channelId, stopWord: value })
           }
         />
