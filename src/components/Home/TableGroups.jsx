@@ -67,10 +67,10 @@ const TableGroups = () => {
                 <TableCellStatus>{isSmall ? 'Премодерация' : 'Премодерация постов'}</TableCellStatus>
               </TableCell>
               <TableCell>
-                <TableCellOnline>
+                <p>
                   {channel?.workMode === "PREMODERATION" && "Предмодерация"}
                   {channel?.workMode === "AUTOPOSTING" && "Автопостинг"}
-                </TableCellOnline>
+                </p>
               </TableCell>
               <TableCell>
                 <ButtonsWrap>
@@ -298,17 +298,10 @@ const TableCellStatus = styled.button`
     color: #fff;
   }
 `;
-
-const TableCellOnline = styled.div`
-  display: flex;
-  align-items: center;
-`;
-
 const ButtonsWrap = styled.div`
   display: flex;
   align-items: center;
 `;
-
 const BaseButton = styled.button`
   display: flex;
   align-items: center;

@@ -40,10 +40,10 @@ const GridGroups = () => {
             <GridItemNum>#{index++}</GridItemNum>
             <GridImg src={channel.avatarUrl} alt="Group" />
             <span>{channel.name}</span>
-            {/* <GridOnline $online={channel.online}>
-              <StatusIndicator $online={channel.online} />
-              {channel.online ? 'Онлайн' : 'Ошибка'}
-            </GridOnline> */}
+            <p>
+              {channel?.workMode === "PREMODERATION" && "Предмодерация"}
+              {channel?.workMode === "AUTOPOSTING" && "Автопостинг"}
+            </p>
             <GridStatus>Премодерация</GridStatus>
             <ButtonsWrap>
               <ButtonDir onClick={() => openPopup("move_channel", "popup_window", { channelId: channel.id })} title="Перейти"><img src={dir_white} alt="dir icon" width={16} height={13} /></ButtonDir>
@@ -116,26 +116,10 @@ const GridStatus = styled.button`
   }
 `;
 
-const GridOnline = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  color: ${props => props.$online ? '#D6DCEC' : '#EF6284'};
-`;
-
-const StatusIndicator = styled.span`
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  background-color: ${props => props.$online ? '#B5EC5B' : '#EF6284'};
-  margin-right: 16px;
-`;
-
 const ButtonsWrap = styled.div`
   display: flex;
   align-items: center;
 `;
-
 const BaseButton = styled.button`
   display: flex;
   align-items: center;
