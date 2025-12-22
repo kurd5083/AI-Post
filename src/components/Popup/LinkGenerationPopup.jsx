@@ -21,7 +21,7 @@ const LinkGenerationPopup = () => {
     let customExpireDate = null;
     const now = new Date();
 
-    if (expirePeriod && expirePeriod !== "UNLIMITED") {
+    if (expirePeriod) {
       switch (expirePeriod) {
         case "ONE_HOUR":
           now.setHours(now.getHours() + 1);
@@ -112,7 +112,6 @@ const LinkGenerationPopup = () => {
           </ItemDesc>
           <CheckboxText
             options={[
-              { id: "UNLIMITED", label: "Без ограничений" },
               { id: "ONE_HOUR", label: "1 час" },
               { id: "ONE_DAY", label: "1 день" },
               { id: "ONE_WEEK", label: "1 нед." },
