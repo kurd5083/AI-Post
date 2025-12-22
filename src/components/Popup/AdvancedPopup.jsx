@@ -57,7 +57,7 @@ const AdvancedPopup = () => {
       checked: localSwitches.add_link_post,
       onChange: () => {
         setLocalSwitches(prev => ({ ...prev, add_link_post: !prev.add_link_post }));
-        toggleField({ channelId, field: "preserveOriginalText" });
+        toggleField({ channelId, field: "addLinkPost" });
       },
     },
     add_source_post: {
