@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { updateChannelCreativity } from "@/api/channels/caption/updateChannelCaption";
+import { updateChannelCreativity } from "@/api/channels/creativity/updateChannelCreativity";
 
 export const useUpdateChannelCreativity = () => {
   const queryClient = useQueryClient();
