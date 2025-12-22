@@ -5,6 +5,7 @@ import BlocksItems from "@/shared/BlocksItems";
 import { usePopupStore } from "@/store/popupStore"
 import { useAddChannelKeyword } from "@/lib/channels/filtering/useAddChannelKeyword";
 import { useRemoveChannelKeyword } from "@/lib/channels/filtering/useRemoveChannelKeyword";
+import { useChannelById } from "@/lib/channels/useChannelById";
 
 const FilteringPopup = () => {
   const { popup } = usePopupStore();
