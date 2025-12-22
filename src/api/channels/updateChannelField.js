@@ -2,6 +2,6 @@ import apiClient from "@/api/apiClient";
 
 export const updateChannelField = async (channelId, field) => {
     console.log(channelId, field)
-  const response = await apiClient.patch(`/api/v1/channels/${channelId}/${field}/toggle`);
+  const response = await apiClient.patch(`/channels/${channelId}/${field}/toggle`);
   return response.data;
 };
