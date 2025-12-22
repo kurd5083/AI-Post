@@ -42,13 +42,20 @@ const LinkGenerationPopup = () => {
       expirePeriod,
       customExpireDate,
       createsJoinRequest,
+    },
+    {
+      onSuccess: () => {
+        setCreatesJoinRequest(false);
+        setName("");
+        setMemberLimit(null);
+        setExpirePeriod(null);
+      },
     });
   };
 
   return (
     <LinkGenerationContainer>
       <LinkGenerationTitle>Настройка ссылки</LinkGenerationTitle>
-
       <LinkGenerationContent>
         <LinkGenerationItem>
           <ItemTitle>Заявки на вступление</ItemTitle>
@@ -66,7 +73,6 @@ const LinkGenerationPopup = () => {
             onChange={(id) => setCreatesJoinRequest(id === "on")}
           />
         </LinkGenerationItem>
-
         <LinkGenerationItem>
           <ItemTitle>
             Название <mark>(необязательное)</mark>
@@ -81,7 +87,6 @@ const LinkGenerationPopup = () => {
             onChange={(e) => setName(e.target.value)}
           />
         </LinkGenerationItem>
-
         <LinkGenerationItem>
           <ItemTitle>
             Лимит участников <mark>(необязательное)</mark>
@@ -101,10 +106,7 @@ const LinkGenerationPopup = () => {
             value={memberLimit}
             onChange={(option) => setMemberLimit(option.value)}
           />
-
-
         </LinkGenerationItem>
-
         <LinkGenerationItem>
           <ItemTitle>Срок действия</ItemTitle>
           <ItemDesc>
@@ -122,7 +124,6 @@ const LinkGenerationPopup = () => {
           />
         </LinkGenerationItem>
       </LinkGenerationContent>
-
       <LinkGenerationButtons>
         <BtnBase
           $color="#D6DCEC"
@@ -132,7 +133,6 @@ const LinkGenerationPopup = () => {
         >
           {createInviteLink.isLoading ? "Создаем..." : "Создать ссылку"}
         </BtnBase>
-
         <BtnBase
           onClick={goBack}
           $color="#D6DCEC"
