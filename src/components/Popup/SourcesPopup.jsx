@@ -39,16 +39,16 @@ const SourcesPopup = () => {
         {sources?.length === 0 ? (
           <EmptyText>Источники не добавлены</EmptyText>
         ) : (
-          <BlocksItems
-            items={sources?.map((source) => ({
-              value: source.name,
-              id: source.id,
-            }))}
-            color="#EF6284"
-            onRemove={(value) =>
-              deleteSource({ channelId, sourceId: value })
-            }
-          />
+          // <BlocksItems
+          //   items={sources?.map((source) => ({
+          //     value: source.name,
+          //     id: source.id,
+          //   }))}
+          //   color="#EF6284"
+          //   onRemove={(value) =>
+          //     deleteSource({ channelId, sourceId: value })
+          //   }
+          // />
         )}
       </SourcesKey>
       <SourcesButtons>
