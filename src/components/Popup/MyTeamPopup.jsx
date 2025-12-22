@@ -2,14 +2,13 @@ import styled from "styled-components";
 import BtnBase from "@/shared/BtnBase";
 import { usePopupStore } from "@/store/popupStore"
 import { useChannelMembers } from "@/lib/channels/my-team/useChannelMembers";
-import { myTeamDatas } from "@/data/myTeamDatas";
 import del from "@/assets/del.svg";
 
 const MyTeamPopup = () => {
   const { popup, changeContent } = usePopupStore();
   const channelId = popup?.data?.channelId;
   const { members } = useChannelMembers(channelId);
-  console.log(members)
+  console.log(members, 'hhhh')
   return (
     <MyTeamContainer>
       <BtnBase
