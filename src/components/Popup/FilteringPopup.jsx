@@ -6,8 +6,8 @@ import { usePopupStore } from "@/store/popupStore"
 import { useChannelById } from "@/lib/channels/useChannelById";
 import { useAddChannelKeyword } from "@/lib/channels/filtering/useAddChannelKeyword";
 import { useRemoveChannelKeyword } from "@/lib/channels/filtering/useRemoveChannelKeyword";
-import { useAddChannelStopWord } from "@/lib/channels/filtering/useAddChannelStopWord";
-import { useRemoveChannelStopWord } from "@/lib/channels/filtering/useRemoveChannelStopWord";
+import { useAddChannelStopWord } from "@/lib/channels/filtering/useAddChannelStopword";
+import { useRemoveChannelStopword } from "@/lib/channels/filtering/useRemoveChannelStopword";
 
 const FilteringPopup = () => {
   const { popup } = usePopupStore();
