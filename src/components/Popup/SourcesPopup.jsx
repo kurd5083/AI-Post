@@ -41,7 +41,7 @@ const SourcesPopup = () => {
         ) : (
           <BlocksItems
             items={sources ? sources.map((source) => ({ value: source.name })) : []} 
-            color="#EF6284"
+            color="#2B89ED"
             onRemove={(value) =>
               deleteSource({ channelId, sourceId: value })
             }
