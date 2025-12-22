@@ -3,39 +3,37 @@ import { advancedDatas } from "@/data/advancedDatas";
 import Checkbox from "@/shared/Checkbox";
 import { usePopupStore } from "@/store/popupStore"
 import { useChannelById } from "@/lib/channels/useChannelById";
+import { useToggleChannelField } from "@/lib/channels/useToggleChannelField";
 
 const AdvancedPopup = () => {
   const { popup } = usePopupStore();
   const channelId = popup?.data?.channelId;
   const { channel } = useChannelById(channelId);
   console.log(channel, 'aaa')
-  
-  // const { mutate: togglePosting } = useUpdateChannelPosting();
-  // const { mutate: enablePromotion } = useEnableChannelPromotion();
-  // const { mutate: disablePromotion } = useDisnableChannelPromotion();
-  // const { mutate: autoApprovalStatus } = useAutoApprovalStatus();
+
+  const { mutate: toggleField } = useToggleChannelField();
 
 
   const checkboxConfig = {
     forced_posting: {
       checked: channel.forcePosting,
-      onChange: () => togglePosting(channelId),
+      onChange: () => toggleField({channelId, field: "forcePosting"}),
     },
     disable_media: {
       checked: channel.disableMedia,
-      onChange: () => disablePromotion(channelId),
+      onChange: () => toggleField({channelId, field: "disableMedia"}),
     },
     transferring_source_text: {
       checked: channel.preserveOriginalText,
-      onChange: () => autoApprovalStatus({ channelId, autoApprovalEnabled: !localSwitches.auto_accepting }),
+      onChange: () => toggleField({channelId, field: "preserveOriginalText"}),
     },
     add_link_post: {
       checked: channel.includeSourceLink,
-      onChange: () => autoApprovalStatus({ channelId, autoApprovalEnabled: !localSwitches.auto_accepting }),
+      onChange: () => toggleField({channelId, field: "preserveOriginalText"}),
     },
     add_source_post: {
       checked: channel.includeSourceLink,
-      onChange: () => autoApprovalStatus({ channelId, autoApprovalEnabled: !localSwitches.auto_accepting }),
+      onChange: () => toggleField({channelId, field: "includeSourceLink"}),
     },
   };
   return (
