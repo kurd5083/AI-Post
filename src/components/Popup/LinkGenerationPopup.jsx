@@ -33,24 +33,27 @@ const LinkGenerationPopup = () => {
           now.setDate(now.getDate() + 7);
           break;
       }
-      customExpireDate = now.toISOString(); 
+      customExpireDate = now.toISOString();
     }
 
-    createInviteLink.mutate({
-      name: name || null,
-      memberLimit: memberLimit ? Number(memberLimit) : null,
-      expirePeriod,
-      customExpireDate,
-      createsJoinRequest,
-    },
-    {
-      onSuccess: () => {
-        setCreatesJoinRequest(false);
-        setName("");
-        setMemberLimit(null);
-        setExpirePeriod(null);
+    createInviteLink.mutate(
+      {
+        name: name || null,
+        // 🔥 ВАЖНО
+        memberLimit: createsJoinRequest ? null : memberLimit ? Number(memberLimit) : null,
+        expirePeriod,
+        customExpireDate,
+        createsJoinRequest,
       },
-    });
+      {
+        onSuccess: () => {
+          setCreatesJoinRequest(false);
+          setName("");
+          setMemberLimit(null);
+          setExpirePeriod(null);
+        },
+      }
+    );
   };
 
   return (
