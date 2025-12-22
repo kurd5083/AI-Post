@@ -13,13 +13,13 @@ const buttons = [
 const Drag = ({ value = 0, onChange }) => {
   return (
     <DragContainer>
-      <DragLine value={value} />
+      <DragLine $value={value * 20} />
       {buttons.map((btn, index) => (
         <DragButton
           key={index}
           $width={btn.size}
           $height={btn.size}
-          active={value >= btn.value}
+          $active={value * 20 >= btn.value}
           onClick={() => onChange(index)}
         />
       ))}
@@ -57,7 +57,7 @@ const DragLine = styled.span`
         position: absolute;
         inset: 0;
         height: 100%;
-        width: ${({ value }) => value}%;
+        width: ${({ $value }) => $value}%;
         background-color: #FF7F48;
         z-index: 1;
         transition: width 0.3s ease;
@@ -70,7 +70,7 @@ const DragButton = styled.button`
     width: ${({ $width }) => $width}px;
     height: ${({ $height }) => $height}px;
     border-radius: 50%;
-    background-color: ${({ active }) => (active ? "#FF7F48" : "#6A7080")};
+    background-color: ${({ $active }) => ($active ? "#FF7F48" : "#6A7080")};
     z-index: 2;
     transition: background-color 0.3s ease;
 `;
