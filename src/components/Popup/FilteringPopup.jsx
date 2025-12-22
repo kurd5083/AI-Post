@@ -1,23 +1,57 @@
+import { useState } from "react";
 import styled from "styled-components";
 import InputPlus from "@/shared/InputPlus";
 import BlocksItems from "@/shared/BlocksItems";
+import { usePopupStore } from "@/store/popupStore"
+import { useAddChannelKeyword } from "@/lib/channels/filtering/useAddChannelKeyword";
+import { useRemoveChannelKeyword } from "@/lib/channels/filtering/useRemoveChannelKeyword";
 
 const FilteringPopup = () => {
+  const { popup } = usePopupStore();
+  const channelId = popup?.data?.channelId;
+  const { channel } = useChannelById(channelId);
+
+  const [keyword, setKeyword] = useState("");
+
+  const { mutate: addKeyword } = useAddChannelKeyword();
+  const { mutate: removeKeyword } = useRemoveChannelKeyword();
+
 	return (
 		<FilteringContainer>
 			<FilteringText>Добавьте ключевые слова для фильтрации новостей по заголовкам, или<br />
 				оставьте список пустым, чтобы получать все новости. <mark>В Telegram-каналах <br />
 					и группах/пабликах VK</mark> поиск осуществляется по всему содержанию.</FilteringText>
 			<FilteringKey>
-				<InputPlus title="Ключевые слова" placeholder="Введите ключевое слово" bg="#2B243C" color="#FF55AD"/>
-				<BlocksItems items={[{value: 'Технологии'}, {value: 'Программирование'}, {value: 'Деньги'}]} color="#EF6284"/>
+				<InputPlus 
+          title="Ключевые слова" 
+          placeholder="Введите ключевое слово" 
+          bg="#2B243C" 
+          color="#FF55AD"
+          value={keyword}
+          onChange={setKeyword}
+          onSubmit={() => {
+            if (!keyword.trim()) return;
+            addKeyword({ channelId, keyword });
+            setKeyword("");
+          }}
+        />
+				<BlocksItems 
+          items={channel.keywords.map((k) => ({ value: k }))} 
+          color="#EF6284"
+          onRemove={(value) =>
+            removeKeyword({ channelId, keyword: value })
+          }
+        />
 			</FilteringKey>
 			<FilteringText>Добавьте стоп-слова, чтобы исключить нежелательные новости по заголовкам. <br />
 				В Telegram-каналах и группах/пабликах VK стоп-слова применяются<br />
 				<mark> ко всему содержанию.</mark></FilteringText>
 			<FilteringKey>
 				<InputPlus title="стоп-слова" placeholder="Введите ключевое слово" bg="#2B243C" color="#FF55AD"  />
-				<BlocksItems items={[{value: 'Платный'}, {value: 'Реклама'}, {value: 'Абстракция'}]} color="#EF6284" />
+				<BlocksItems 
+          items={channel.stopWords.map((w) => ({ value: w }))} 
+          color="#EF6284" 
+        />
 			</FilteringKey>
 		</FilteringContainer>
 	)
