@@ -20,6 +20,7 @@ const FilteringPopup = () => {
   const { mutate: removeKeyword } = useRemoveChannelKeyword();
   const { mutate: addStopWord } = useAddChannelStopWord();
   const { mutate: removeStopWord } = useRemoveChannelStopWord();
+  
 	return (
 		<FilteringContainer>
 			<FilteringText>Добавьте ключевые слова для фильтрации новостей по заголовкам, или<br />

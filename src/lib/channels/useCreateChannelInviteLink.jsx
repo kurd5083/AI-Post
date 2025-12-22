@@ -7,10 +7,7 @@ export const useCreateChannelInviteLink = (channelId) => {
   return useMutation({
     mutationFn: (data) => createChannelInviteLink(channelId, data),
     onSuccess: () => {
-      queryClient.invalidateQueries([
-        "channel-invite-links",
-        channelId,
-      ]);
+      queryClient.invalidateQueries(["channel-invite-links",]);
     },
   });
 };

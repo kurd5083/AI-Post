@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import PlusIcon from "@/icons/PlusIcon";
 
-const InputPlus = ({title, placeholder, bg, color, fs, padding, value, onChange, onSubmit,}) => {
+const InputPlus = ({ title, placeholder, bg, color, fs, padding, value, onChange, onSubmit }) => {
     const handleKeyDown = (e) => {
     if (e.key === "Enter") {
       e.preventDefault();
