@@ -1,19 +1,38 @@
 import styled from "styled-components";
 import PlusIcon from "@/icons/PlusIcon";
 
-const InputPlus = ({title, placeholder, bg, color, fs, padding}) => {
+const InputPlus = ({title, placeholder, bg, color, fs, padding, value, onChange, onSubmit,}) => {
+    const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      onSubmit?.();
+    }
+  };
+
     return (
         <>
             <InputPlusTitle>{title}</InputPlusTitle>
             <InputPlusContainer>
-                <InputPlusInput type="text" placeholder={placeholder} $fs={fs} $padding={padding}/>
-                <PlusBtn $bg={bg}>
+                <InputPlusInput 
+                type="text" 
+                placeholder={placeholder} 
+                value={value}
+                onChange={(e) => onChange?.(e.target.value)}
+                onKeyDown={handleKeyDown}
+                $fs={fs} 
+                $padding={padding}/>
+                <PlusBtn 
+                    disabled={!value?.trim()}
+                    onClick={onSubmit}
+                    $bg={bg}
+                >
                     <PlusIcon color={color}/>
                 </PlusBtn>
             </InputPlusContainer>
         </>
     )
 }
+
 const InputPlusTitle = styled.h2`
     text-transform: uppercase;
     font-weight: 700;
