@@ -4,7 +4,7 @@ import del from "@/assets/del.svg";
 import setting from "@/assets/setting.svg";
 import { usePopupStore } from "@/store/popupStore"
 import { useChannelsStore } from "@/store/channelsStore";
-import { useDeleteChannel } from "@/lib/useDeleteChannel";
+import { useDeleteChannel } from "@/lib/channels/useDeleteChannel";
 import { useChannelsGroupedByFolders } from "@/lib/useChannelsGroupedByFolders";
 
 const GridGroups = () => {

@@ -6,7 +6,7 @@ import list from "@/assets/table-groups/list.svg";
 import { usePopupStore } from "@/store/popupStore"
 import { useChannelsStore } from "@/store/channelsStore";
 import { useChannelsGroupedByFolders } from "@/lib/useChannelsGroupedByFolders";
-import { useDeleteChannel } from "@/lib/useDeleteChannel";
+import { useDeleteChannel } from "@/lib/channels/useDeleteChannel";
 import useResolution from "@/lib/useResolution";
 
 const TableGroups = () => {

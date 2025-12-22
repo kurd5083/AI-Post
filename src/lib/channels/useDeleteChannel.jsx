@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { deleteChannel } from "@/api/deleteChannel";
+import { deleteChannel } from "@/api/channels/deleteChannel";
 
 export const useDeleteChannel = () => {
   const queryClient = useQueryClient();
