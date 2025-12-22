@@ -11,24 +11,26 @@ const buttons = [
     { size: 24, value: 100 },
 ];
 
-const Drag = () => {
-    const [progress, setProgress] = useState(0);
+const Drag = ({ value = 0, onChange }) => {
+  const handleClick = (val) => {
+    onChange(val);
+  };
 
-    return (
-        <DragContainer>
-            <DragLine value={progress} />
-            {buttons.map((btn, index) => (
-                <DragButton
-                    key={index}
-                    $width={btn.size}
-                    $height={btn.size}
-                    active={progress >= btn.value}
-                    onClick={() => setProgress(btn.value)}
-                />
-            ))}
-            <img src={light} alt="light icon" />
-        </DragContainer>
-    );
+  return (
+    <DragContainer>
+      <DragLine value={value} />
+      {buttons.map((btn, index) => (
+        <DragButton
+          key={index}
+          $width={btn.size}
+          $height={btn.size}
+          active={value >= btn.value}
+          onClick={() => handleClick(btn.value)}
+        />
+      ))}
+      <img src={light} alt="light icon" />
+    </DragContainer>
+  );
 };
 
 const DragContainer = styled.div`

@@ -1,15 +1,35 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import styled from "styled-components";
 import { usePopupStore } from "@/store/popupStore"
 import Drag from "@/shared/Drag";
 import BtnBase from "@/shared/BtnBase";
 import PlusIcon from "@/icons/PlusIcon";
+import { useGetChannelCreativity } from "@/lib/channels/creativity/useGetChannelCreativity";
+import { useGetChannelCaption } from "@/lib/channels/caption/useGetChannelCaption";
+import { useUpdateChannelCreativity } from "@/lib/channels/creativity/useUpdateChannelCreativity";
+import { useUpdateChannelCaption } from "@/lib/channels/caption/useUpdateChannelCaption";
 
 const MAX_PROMPT_LENGTH = 100;
 
 const IndustrialStylePopup = () => {
-  const { changeContent } = usePopupStore()
+  const { popup, changeContent } = usePopupStore();
+  const channelId = popup?.data?.channelId;
+
   const [prompt, setPrompt] = useState("");
+  const [localCaption, setLocalCaption] = useState("");
+  const [localCreativity, setLocalCreativity] = useState(0);
+
+  const { creativity } = useGetChannelCreativity(channelId);
+  const { caption } = useGetChannelCaption(channelId);
+
+  useEffect(() => {
+    if (caption !== undefined) setLocalCaption(caption);
+  }, [caption]);
+
+  useEffect(() => {
+    if (creativity !== undefined) setLocalCreativity(creativity);
+  }, [creativity]);
+
   const handlePromptChange = (e) => {
     if (e.target.value.length <= MAX_PROMPT_LENGTH) {
       setPrompt(e.target.value);
@@ -20,7 +40,13 @@ const IndustrialStylePopup = () => {
     console.log("Тестирование промпта:", prompt);
   };
 
+  const { mutate: updateCreativity } = useUpdateChannelCreativity(channelId);
+  const { mutate: updateCaption } = useUpdateChannelCaption();
 
+  const handleSave = () => {
+    updateCreativity({channelId, value: localCreativity});
+    updateCaption({channelId, value: localCaption});
+  };
 
   return (
     <IndustrialStyleContainer>
@@ -47,7 +73,12 @@ const IndustrialStylePopup = () => {
           <IndustrialStyleDesc>Введите промпт — это задание для генерации поста. <mark>Чем точнее формулировка, тем лучше результат.</mark></IndustrialStyleDesc>
           <IndustrialStyleTitle>Подпись</IndustrialStyleTitle>
           <IndustrialStyleInputContainer>
-            <IndustrialStyleInput type="text" placeholder="Описание канала" />
+            <IndustrialStyleInput 
+              type="text" 
+              placeholder="Описание канала" 
+              value={localCaption}
+              onChange={(e) => setLocalCaption(e.target.value)}
+            />
             <IndustrialStyleBtn>
               <PlusIcon color="#2B89ED"/>
             </IndustrialStyleBtn>
@@ -56,7 +87,10 @@ const IndustrialStylePopup = () => {
         </IndustrialStyleLeft>
         <IndustrialStyleRight>
           <IndustrialStyleTitle>Креативность</IndustrialStyleTitle>
-          <Drag />
+          <Drag
+            value={localCreativity}
+            onChange={setLocalCreativity}
+          />
           <IndustrialStyleDesc>Ползунок <mark>«Креативность»</mark> регулирует, насколько
             оригинальным и неожиданным будет текст поста.
             Высокие значения <mark>увеличивают</mark> вариативность, что
@@ -64,7 +98,7 @@ const IndustrialStylePopup = () => {
         </IndustrialStyleRight>
       </IndustrialStyleContent>
       <IndustrialStyleButton>
-        <BtnBase>Сохранить</BtnBase>
+        <BtnBase onClick={handleSave}>Сохранить</BtnBase>
       </IndustrialStyleButton>
     </IndustrialStyleContainer>
   )
