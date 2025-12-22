@@ -3,7 +3,7 @@ import { advancedDatas } from "@/data/advancedDatas";
 import Checkbox from "@/shared/Checkbox";
 import { usePopupStore } from "@/store/popupStore"
 import { useChannelById } from "@/lib/channels/useChannelById";
-import { useToggleChannelField } from "@/lib/channels/useToggleChannelField";
+import { useUpdateChannelField } from "@/lib/channels/useUpdateChannelField";
 
 const AdvancedPopup = () => {
   const { popup } = usePopupStore();
@@ -11,7 +11,7 @@ const AdvancedPopup = () => {
   const { channel } = useChannelById(channelId);
   console.log(channel, 'aaa')
 
-  const { mutate: toggleField } = useToggleChannelField();
+  const { mutate: toggleField } = useUpdateChannelField();
 
 
   const checkboxConfig = {

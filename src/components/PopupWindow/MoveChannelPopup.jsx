@@ -5,7 +5,7 @@ import { usePopupStore } from "@/store/popupStore";
 import dir_active from "@/assets/table-groups/dir-active.svg";
 import CheckboxCircle from "@/shared/CheckboxCircle";
 import CloseIcon from "@/icons/CloseIcon";
-import { useMoveChannelToFolder } from "@/lib/useMoveChannelToFolder";
+import { useMoveChannelToFolder } from "@/lib/channels/useMoveChannelToFolder";
 import { useChannelsGroupedByFolders } from "@/lib/useChannelsGroupedByFolders";
 import { useUser } from "@/lib/useUser";
 
