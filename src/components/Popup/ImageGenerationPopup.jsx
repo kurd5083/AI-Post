@@ -5,7 +5,7 @@ import { useImagePresets } from "@/lib/channels/useImagePresets";
 const ImageGenerationPopup = () => {
   const { imagePresets } = useImagePresets();
   console.log(imagePresets)
-  const [selectedImage, setSelectedImage] = useState();  
+  // const [selectedImage, setSelectedImage] = useState();  
 	return (
 		<ImageGenerationContent>
 			<ImageGenerationContentTitle>Выберите одну стилистику</ImageGenerationContentTitle>
