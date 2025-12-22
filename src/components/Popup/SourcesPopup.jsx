@@ -3,17 +3,31 @@ import { usePopupStore } from "@/store/popupStore"
 import BtnBase from "@/shared/BtnBase";
 import InputPlus from "@/shared/InputPlus";
 import BlocksItems from "@/shared/BlocksItems";
+import { useChannelSources } from "@/lib/channels/sources/useChannelSources";
 
 const SourcesPopup = () => {
-  const { changeContent } = usePopupStore()
-
+  const { popup, changeContent } = usePopupStore()
+  const channelId = popup?.data?.channelId;
+  const { sources } = useChannelSources(channelId);
+  console.log(sources)
   return (
     <SourcesContainer>
       <SourcesText>Здесь вы можете добавить источник, откуда сервис будет брать посты. Отображается <mark>имя и URL.</mark></SourcesText>
       <SourcesKey>
         <SourcesKeyTitle>Мои источники:</SourcesKeyTitle>
-        <InputPlus title="Введите источник" bg="#142136" color="#2B89ED"  fs="14px" />
-        <BlocksItems items={[{value: 'apple.com'}, {value: 'Citilink.ru'}, {value: 'dns.shop'}]} color="#2B89ED" />
+        <InputPlus title="Введите источник" bg="#142136" color="#2B89ED" fs="14px" />
+        {sources.length === 0 ? (
+          <EmptyText>Источники не добавлены</EmptyText>
+        ) : (
+          <BlocksItems
+            items={sources.map((source) => ({
+              value: source.name,
+              id: source.id,
+            }))}
+            color="#EF6284"
+          />
+        )}
+
       </SourcesKey>
       <SourcesButtons>
         <BtnBase $margin="40" onClick={() => changeContent("compilation")} $color="#D6DCEC" $bg="#2B89ED">Подборки источников</BtnBase>

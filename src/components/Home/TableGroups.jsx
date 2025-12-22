@@ -56,7 +56,6 @@ const TableGroups = () => {
 
           return currentChannels.map((channel, index) => (
             <TableItem key={channel.id}>
-              {console.log(channel.id, 'asgsdhjk')}
               <TableCell>
                 <p>
                   <TableCellNum>#{index + 1}</TableCellNum>

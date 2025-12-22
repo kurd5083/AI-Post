@@ -5,6 +5,7 @@ import { useImagePresets } from "@/lib/channels/useImagePresets";
 const ImageGenerationPopup = () => {
   const { imagePresets } = useImagePresets();
   console.log(imagePresets)
+  const [selectedImage, setSelectedImage] = useState();  
 	return (
 		<ImageGenerationContent>
 			<ImageGenerationContentTitle>Выберите одну стилистику</ImageGenerationContentTitle>
@@ -14,6 +15,7 @@ const ImageGenerationPopup = () => {
 						<Checkbox
               checked={item.isActive}
               // onChange={() => toggleDay(day.value)}
+              // onChange={() => handleSelectMode("AUTOPOSTING")}
             >
 							<div>
 								<h4>{item.name}</h4>
