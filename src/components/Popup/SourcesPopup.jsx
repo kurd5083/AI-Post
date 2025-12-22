@@ -11,11 +11,10 @@ import { useDeleteChannelSource } from "@/lib/channels/sources/useDeleteChannelS
 const SourcesPopup = () => {
   const { popup, changeContent } = usePopupStore()
   const channelId = popup?.data?.channelId;
-
-  const [url, setUrl] = useState("");
-
   const { sources } = useChannelSources(channelId);
   console.log(sources)
+
+  const [url, setUrl] = useState("");
 
   const { mutate: addSource } = useAddChannelSource();
   const { mutate: deleteSource } = useDeleteChannelSource();
