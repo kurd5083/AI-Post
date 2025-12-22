@@ -37,7 +37,7 @@ const SourcesPopup = () => {
           }}
         />
         {sources?.length === 0 ? (
-          <EmptyText>Источники не добавлены</EmptyText>
+          <p>Источники не добавлены</p>
         ) : (1
           // <BlocksItems
           //   items={sources?.map((source) => ({
