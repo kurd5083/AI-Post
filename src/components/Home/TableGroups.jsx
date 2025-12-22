@@ -67,10 +67,10 @@ const TableGroups = () => {
                 <TableCellStatus>{isSmall ? 'Премодерация' : 'Премодерация постов'}</TableCellStatus>
               </TableCell>
               <TableCell>
-                {/* <TableCellOnline $online={channel.online}>
-                  <StatusIndicator $online={channel.online} />
-                  {channel.online ? 'Онлайн' : 'Ошибка'}
-                </TableCellOnline> */}
+                <TableCellOnline>
+                  {channel?.workMode === "PREMODERATION" && "Предмодерация"}
+                  {channel?.workMode === "AUTOPOSTING" && "Автопостинг"}
+                </TableCellOnline>
               </TableCell>
               <TableCell>
                 <ButtonsWrap>
@@ -302,16 +302,6 @@ const TableCellStatus = styled.button`
 const TableCellOnline = styled.div`
   display: flex;
   align-items: center;
-  color: ${props => props.$online ? '#D6DCEC' : '#EF6284'};
-`;
-
-const StatusIndicator = styled.span`
-  display: inline-block;
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  background-color: ${props => props.$online ? '#B5EC5B' : '#EF6284'};
-  margin-right: 16px;
 `;
 
 const ButtonsWrap = styled.div`
