@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createConfigСhannel } from "@/api/channels/createConfigСhannel";
 
-export const useСreateConfigСhannel = () => { 
+export const useCreateConfigСhannel = () => { 
   const queryClient = useQueryClient();
 
   return useMutation({

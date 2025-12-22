@@ -4,14 +4,14 @@ import ToggleSwitch from "@/shared/ToggleSwitch";
 import Counter from "@/shared/Counter";
 import BtnBase from "@/shared/BtnBase";
 import { usePopupStore } from "@/store/popupStore";
-import { useСreateConfigСhannel } from "@/lib/channels/useСreateConfigСhannel";
+import { useCreateConfigСhannel } from "@/lib/channels/useCreateConfigСhannel";
 import { useGetChannelPromotionConfig } from "@/lib/channels/useGetChannelPromotionConfig";
 
 const PromotionPopup = () => {
   const { popup, changeContent } = usePopupStore();
   const channelId = popup?.data?.channelId;
 
-  const createConfigСhannel = useСreateConfigСhannel();
+  const createConfigСhannel = useCreateConfigСhannel();
   const { promotionConfig } = useGetChannelPromotionConfig(channelId);
 
   const [autoViews, setAutoViews] = useState(false);

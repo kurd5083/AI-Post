@@ -4,7 +4,7 @@ import BtnBase from "@/shared/BtnBase";
 import { usePopupStore } from "@/store/popupStore";
 import CloseIcon from "@/icons/CloseIcon";
 import { useUser } from "@/lib/useUser";
-import { useCreateChannel } from "@/lib/useCreateChannel";
+import { useCreateChannel } from "@/lib/channels/useCreateChannel";
 import CustomSelect from "@/shared/CustomSelectSec";
 import { useChannelsGroupedByFolders } from "@/lib/useChannelsGroupedByFolders";
 

@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { createChannel } from "@/api/createChannel";
+import { createChannel } from "@/api/channels/createChannel";
 
 export const useCreateChannel = () => {
 	const queryClient = useQueryClient();
