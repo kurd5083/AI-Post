@@ -1,3 +1,4 @@
+import { useState } from "react";
 import styled from "styled-components";
 import { usePopupStore } from "@/store/popupStore"
 import BtnBase from "@/shared/BtnBase";
@@ -5,6 +6,7 @@ import InputPlus from "@/shared/InputPlus";
 import BlocksItems from "@/shared/BlocksItems";
 import { useChannelSources } from "@/lib/channels/sources/useChannelSources";
 import { useAddChannelSource } from "@/lib/channels/sources/useAddChannelSource";
+import { useDeleteChannelSource } from "@/lib/channelSources/useDeleteChannelSource";
 
 const SourcesPopup = () => {
   const { popup, changeContent } = usePopupStore()
@@ -16,6 +18,7 @@ const SourcesPopup = () => {
   console.log(sources)
 
   const { mutate: addSource } = useAddChannelSource();
+  const { mutate: deleteSource } = useDeleteChannelSource();
 
   return (
     <SourcesContainer>
@@ -43,6 +46,9 @@ const SourcesPopup = () => {
               id: source.id,
             }))}
             color="#EF6284"
+            onRemove={(value) =>
+              deleteSource({ channelId, sourceId: value })
+            }
           />
         )}
       </SourcesKey>
