@@ -1,21 +1,23 @@
 import styled from "styled-components";
 import Checkbox from "@/shared/Checkbox";
-import { imageGenerationDatas } from "@/data/imageGenerationDatas";
 import { useImagePresets } from "@/lib/channels/useImagePresets";
 
 const ImageGenerationPopup = () => {
   const { imagePresets } = useImagePresets();
-  console.log(imagePresets)
+
 	return (
 		<ImageGenerationContent>
 			<ImageGenerationContentTitle>Выберите одну стилистику</ImageGenerationContentTitle>
 			<div>
-				{imageGenerationDatas.map((item, index) => (
-					<ImageGenerationContentItem key={index}>
-						<Checkbox>
+				{imagePresets.map((item) => (
+					<ImageGenerationContentItem key={item.id}>
+						<Checkbox
+              checked={item.isActive}
+              // onChange={() => toggleDay(day.value)}
+            >
 							<div>
-								<h4>{item.title}</h4>
-								<p>{item.desc}</p>
+								<h4>{item.name}</h4>
+								<p>{item.description}</p>
 							</div>
 						</Checkbox>
 					</ImageGenerationContentItem>
