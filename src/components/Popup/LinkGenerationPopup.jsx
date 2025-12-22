@@ -39,7 +39,6 @@ const LinkGenerationPopup = () => {
     createInviteLink.mutate(
       {
         name: name || null,
-        // 🔥 ВАЖНО
         memberLimit: createsJoinRequest ? null : memberLimit ? Number(memberLimit) : null,
         expirePeriod,
         customExpireDate,
@@ -90,26 +89,28 @@ const LinkGenerationPopup = () => {
             onChange={(e) => setName(e.target.value)}
           />
         </LinkGenerationItem>
-        <LinkGenerationItem>
-          <ItemTitle>
-            Лимит участников <mark>(необязательное)</mark>
-          </ItemTitle>
-          <ItemDesc>
-            Максимальное количество пользователей, которые могут присоединиться
-            по этой ссылке
-          </ItemDesc>
-          <CustomSelect
-            placeholder="Лимит участников"
-            options={[
-              { value: "1", label: "1" },
-              { value: "10", label: "10" },
-              { value: "50", label: "50" },
-              { value: "100", label: "100" },
-            ]}
-            value={memberLimit}
-            onChange={(option) => setMemberLimit(option.value)}
-          />
-        </LinkGenerationItem>
+        {!createsJoinRequest && (
+          <LinkGenerationItem>
+            <ItemTitle>
+              Лимит участников <mark>(необязательное)</mark>
+            </ItemTitle>
+            <ItemDesc>
+              Максимальное количество пользователей, которые могут присоединиться
+              по этой ссылке
+            </ItemDesc>
+            <CustomSelect
+              placeholder="Лимит участников"
+              options={[
+                { value: "1", label: "1" },
+                { value: "10", label: "10" },
+                { value: "50", label: "50" },
+                { value: "100", label: "100" },
+              ]}
+              value={memberLimit}
+              onChange={(option) => setMemberLimit(option.value)}
+            />
+          </LinkGenerationItem>
+        )}
         <LinkGenerationItem>
           <ItemTitle>Срок действия</ItemTitle>
           <ItemDesc>
