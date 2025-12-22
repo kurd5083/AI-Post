@@ -19,7 +19,7 @@ const MyTeamPopup = () => {
         Пригласить в команду
       </BtnBase>
       <TableWrapper>
-        {members.length > 0 ? (
+        {/* {members.length > 0 ? (
           <Table>
             <colgroup>
               <col />
@@ -69,7 +69,7 @@ const MyTeamPopup = () => {
           </Table>
         ) : (
           <p>В команде пока нет участников</p>
-        )}
+        )} */}
       </TableWrapper>
     </MyTeamContainer>
   );
