@@ -6,7 +6,7 @@ import InputPlus from "@/shared/InputPlus";
 import BlocksItems from "@/shared/BlocksItems";
 import { useChannelSources } from "@/lib/channels/sources/useChannelSources";
 import { useAddChannelSource } from "@/lib/channels/sources/useAddChannelSource";
-import { useDeleteChannelSource } from "@/lib/channelSources/useDeleteChannelSource";
+import { useDeleteChannelSource } from "@/lib/channels/sources/useDeleteChannelSource";
 
 const SourcesPopup = () => {
   const { popup, changeContent } = usePopupStore()
