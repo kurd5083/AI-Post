@@ -33,7 +33,7 @@ const TableGroups = () => {
 					key={isSwipe}
 					spaceBetween={40}
 					slidesPerView="auto"
-					allowTouchMove={isSwipe}
+					allowTouchMove={true}
 				>
 				  <TableGroupsHeadDir onClick={() => openPopup("create_folder", "popup_window")}><img src={dir_filled} alt="dir icon"/>Создать папку</TableGroupsHeadDir>
           <TableGroupsHeadBtn 
