@@ -17,10 +17,6 @@ const SourcesPopup = () => {
 
   const { mutate: addSource } = useAddChannelSource();
 
-
-
-
-
   return (
     <SourcesContainer>
       <SourcesText>Здесь вы можете добавить источник, откуда сервис будет брать посты. Отображается <mark>имя и URL.</mark></SourcesText>
@@ -38,11 +34,11 @@ const SourcesPopup = () => {
             setUrl("");
           }}
         />
-        {sources.length === 0 ? (
+        {sources?.length === 0 ? (
           <EmptyText>Источники не добавлены</EmptyText>
         ) : (
           <BlocksItems
-            items={sources.map((source) => ({
+            items={sources?.map((source) => ({
               value: source.name,
               id: source.id,
             }))}
