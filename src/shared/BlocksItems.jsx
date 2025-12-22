@@ -3,7 +3,7 @@ import styled from "styled-components";
 const BlocksItems = ({ items, color, onRemove }) => {
 	return (
 		<ItemsContainer>
-			{items.map((item, index) => (
+			{items?.map((item, index) => (
 				<BlocksItem key={index}>
 					<ItemValue>
 						{item.icon && <img src={item.icon} alt="item icon" />}
