@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { updateAutoApprovalStatus } from "@/api/channels/getAutoApprovalStatus";
+import { updateAutoApprovalStatus } from "@/api/channels/updateAutoApprovalStatus";
 
 export const useAutoApprovalStatus = () => {
   const queryClient = useQueryClient();

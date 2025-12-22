@@ -7,6 +7,7 @@ import SourcePost from "@/icons/SourcePost";
 export const advancedDatas = [
 
   {
+    key: 'forced_posting',
     title: "Принудительный постинг",
     desc: "Сервис будет брать последнюю статью из источников, в случае если по найдем ключевым словам ничего не найдено или все новости были уже опубликованы",
     extra: {
@@ -15,6 +16,7 @@ export const advancedDatas = [
     }
   },
   {
+    key: "disable_media",
     title: "Отключить медиа",
     desc: "Пост не будет содержать в себе картинку или видео, даже если они есть в найденной новости",
     extra: {
@@ -23,6 +25,7 @@ export const advancedDatas = [
     }
   },
   {
+    key: "transferring_source_text",
     title: "Перенос исходного текста",
     desc: "Текста из найденной новости будет перенесён без изменений. Работает только с Telegram - каналами и пабликами / группами VK в  качестве источников",
     extra: {
@@ -31,6 +34,7 @@ export const advancedDatas = [
     }
   },
   {
+    key: "add_link_post",
     title: "Добавить ссылку в пост",
     desc: "В посте будет указан URL исходной статьи",
     extra: {
@@ -39,6 +43,7 @@ export const advancedDatas = [
     }
   },
   {
+    key: "add_source_post",
     title: "Добавить источник в пост",
     desc: "В посте будет указан сайт исходной статьи",
     extra: {

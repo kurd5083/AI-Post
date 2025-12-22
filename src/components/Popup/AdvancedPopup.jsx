@@ -1,8 +1,43 @@
 import styled from "styled-components";
 import { advancedDatas } from "@/data/advancedDatas";
 import Checkbox from "@/shared/Checkbox";
+import { usePopupStore } from "@/store/popupStore"
+import { useChannelById } from "@/lib/channels/useChannelById";
 
 const AdvancedPopup = () => {
+  const { popup } = usePopupStore();
+  const channelId = popup?.data?.channelId;
+  const { channel } = useChannelById(channelId);
+  console.log(channel, 'aaa')
+  
+  // const { mutate: togglePosting } = useUpdateChannelPosting();
+  // const { mutate: enablePromotion } = useEnableChannelPromotion();
+  // const { mutate: disablePromotion } = useDisnableChannelPromotion();
+  // const { mutate: autoApprovalStatus } = useAutoApprovalStatus();
+
+
+  const checkboxConfig = {
+    forced_posting: {
+      checked: channel.forcePosting,
+      onChange: () => togglePosting(channelId),
+    },
+    disable_media: {
+      checked: channel.disableMedia,
+      onChange: () => disablePromotion(channelId),
+    },
+    transferring_source_text: {
+      checked: channel.preserveOriginalText,
+      onChange: () => autoApprovalStatus({ channelId, autoApprovalEnabled: !localSwitches.auto_accepting }),
+    },
+    add_link_post: {
+      checked: channel.includeSourceLink,
+      onChange: () => autoApprovalStatus({ channelId, autoApprovalEnabled: !localSwitches.auto_accepting }),
+    },
+    add_source_post: {
+      checked: channel.includeSourceLink,
+      onChange: () => autoApprovalStatus({ channelId, autoApprovalEnabled: !localSwitches.auto_accepting }),
+    },
+  };
   return (
     <AdvancedContainer>
       {advancedDatas.map((item, index) => (
@@ -20,7 +55,11 @@ const AdvancedPopup = () => {
             <h4>{item.title}</h4>
             <p>{item.desc}</p>
           </ItemText>
-          <Checkbox color="#FFF980" />
+          <Checkbox 
+            color="#FFF980" 
+            checked={checkboxConfig[item.key]?.checked || false}
+            onChange={checkboxConfig[item.key]?.onChange}
+          />
         </AdvancedItem>
       ))}
     </AdvancedContainer>

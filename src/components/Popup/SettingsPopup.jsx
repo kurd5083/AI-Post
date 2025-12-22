@@ -7,7 +7,7 @@ import ToggleSwitch from "@/shared/ToggleSwitch";
 import { usePopupStore } from "@/store/popupStore"
 import { useChannelById } from "@/lib/channels/useChannelById";
 
-import { useToggleChannelPosting } from "@/lib/channels/useToggleChannelPosting";
+import { useEnableChannelPosting, useDisableChannelPosting } from "@/lib/channels/useUpdateChannelPosting";
 import { useAutoApprovalStatus } from "@/lib/channels/useAutoApprovalStatus";
 import { useEnableChannelPromotion, useDisnableChannelPromotion } from "@/lib/channels/useEnableChannelPromotion";
 
@@ -31,7 +31,8 @@ const SettingsPopup = () => {
     });
   }, [channel]);
 
-  const { mutate: togglePosting } = useToggleChannelPosting();
+  const { mutate: enablePosting } = useEnableChannelPosting();
+  const { mutate: disablePosting } = useDisableChannelPosting();
   const { mutate: enablePromotion } = useEnableChannelPromotion();
   const { mutate: disablePromotion } = useDisnableChannelPromotion();
   const { mutate: autoApprovalStatus } = useAutoApprovalStatus();
@@ -41,7 +42,8 @@ const SettingsPopup = () => {
       checked: localSwitches.posting,
       onChange: () => {
         setLocalSwitches(prev => ({ ...prev, posting: !prev.posting }));
-        togglePosting(channelId);
+        if (!localSwitches.posting) enablePosting(channelId);
+        else disablePosting(channelId);
       },
     },
     activate_promotion: {

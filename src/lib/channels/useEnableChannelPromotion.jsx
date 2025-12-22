@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { enableChannelPromotion, disenableChannelPromotion } from "@/api/channels/enableChannelPromotion";
+import { enableChannelPromotion, disenableChannelPromotion } from "@/api/channels/updateChannelPromotion";
 
 export const useEnableChannelPromotion = () => {
   const queryClient = useQueryClient();
