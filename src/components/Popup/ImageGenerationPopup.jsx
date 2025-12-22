@@ -4,12 +4,12 @@ import { useImagePresets } from "@/lib/channels/useImagePresets";
 
 const ImageGenerationPopup = () => {
   const { imagePresets } = useImagePresets();
-
+  console.log(imagePresets)
 	return (
 		<ImageGenerationContent>
 			<ImageGenerationContentTitle>Выберите одну стилистику</ImageGenerationContentTitle>
 			<div>
-				{imagePresets.map((item) => (
+				{imagePresets?.map((item) => (
 					<ImageGenerationContentItem key={item.id}>
 						<Checkbox
               checked={item.isActive}
