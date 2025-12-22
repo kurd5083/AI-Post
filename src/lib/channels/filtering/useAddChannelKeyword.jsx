@@ -6,8 +6,8 @@ export const useAddChannelKeyword = () => {
 
   return useMutation({
     mutationFn: ({ channelId, keyword }) => addChannelKeyword(channelId, keyword),
-    onSuccess: () => {
-      queryClient.invalidateQueries(["channel"]);
+    onSuccess: (channelId) => {
+      queryClient.invalidateQueries(["channel", channelId]);
     },
   });
 };

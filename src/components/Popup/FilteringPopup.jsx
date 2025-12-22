@@ -6,8 +6,8 @@ import { usePopupStore } from "@/store/popupStore"
 import { useChannelById } from "@/lib/channels/useChannelById";
 import { useAddChannelKeyword } from "@/lib/channels/filtering/useAddChannelKeyword";
 import { useRemoveChannelKeyword } from "@/lib/channels/filtering/useRemoveChannelKeyword";
-import { useAddChannelStopword } from "@/lib/channels/filtering/useAddChannelStopword";
-import { useRemoveChannelStopword } from "@/lib/channels/filtering/useRemoveChannelStopword";
+import { useAddChannelStopWord } from "@/lib/channels/filtering/useAddChannelStopWord";
+import { useRemoveChannelStopWord } from "@/lib/channels/filtering/useRemoveChannelStopWord";
 
 const FilteringPopup = () => {
   const { popup } = usePopupStore();
@@ -15,11 +15,11 @@ const FilteringPopup = () => {
   const { channel } = useChannelById(channelId);
 
   const [keyword, setKeyword] = useState("");
-  const [stopword, setStopword] = useState("");
+  const [stopWord, setStopWord] = useState("");
   const { mutate: addKeyword } = useAddChannelKeyword();
   const { mutate: removeKeyword } = useRemoveChannelKeyword();
-  const { mutate: addStopword } = useAddChannelStopword();
-  const { mutate: removeStopword } = useRemoveChannelStopword();
+  const { mutate: addStopWord } = useAddChannelStopWord();
+  const { mutate: removeStopWord } = useRemoveChannelStopWord();
 	return (
 		<FilteringContainer>
 			<FilteringText>Добавьте ключевые слова для фильтрации новостей по заголовкам, или<br />
@@ -55,18 +55,18 @@ const FilteringPopup = () => {
           placeholder="Введите ключевое слово" 
           bg="#2B243C" 
           color="#FF55AD"
-          value={stopword}
-          onChange={setStopword}
+          value={stopWord}
+          onChange={setStopWord}
           onSubmit={() => {
-            addStopword({ channelId, stopword });
-            setStopword("");
+            addStopWord({ channelId, stopWord });
+            setStopWord("");
           }}
         />
 				<BlocksItems 
           items={channel.stopWords.map((w) => ({ value: w }))} 
           color="#EF6284" 
           onRemove={(value) =>
-            removeStopword({ channelId, stopword: value })
+            removeStopWord({ channelId, stopWord: value })
           }
         />
 			</FilteringKey>

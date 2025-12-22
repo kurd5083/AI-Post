@@ -1,13 +1,13 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { removeChannelStopword } from "@/api/channels/filtering/removeChannelStopword";
+import { removeChannelStopWord } from "@/api/channels/filtering/removeChannelStopWord";
 
 export const useRemoveChannelStopword = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ channelId, stopword }) => removeChannelStopword(channelId, stopword),
-    onSuccess: () => {
-      queryClient.invalidateQueries(["channel"]);
+    mutationFn: ({ channelId, stopWord }) => removeChannelStopWord(channelId, stopWord),
+    onSuccess: (channelId) => {
+      queryClient.invalidateQueries(["channel", channelId]);
     },
   });
 };

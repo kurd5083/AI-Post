@@ -6,8 +6,8 @@ export const useRemoveChannelKeyword = () => {
 
   return useMutation({
     mutationFn: ({ channelId, keyword }) => removeChannelKeyword(channelId, keyword),
-    onSuccess: () => {
-      queryClient.invalidateQueries(["channel"]);
+    onSuccess: (channelId) => {
+      queryClient.invalidateQueries(["channel", channelId]);
     },
   });
 };

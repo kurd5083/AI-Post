@@ -1,6 +1,6 @@
 import apiClient from "@/api/apiClient";
 
-export const addChannelStopword = async (channelId, stopword) => {
-  const response = await apiClient.post(`/channels/${channelId}/stopwords`, { stopword });
+export const addChannelStopWord = async (channelId, stopWord) => {
+  const response = await apiClient.post(`/channels/${channelId}/stopwords`, { stopWord });
   return response.data;
 };

@@ -1,6 +1,6 @@
 import apiClient from "@/api/apiClient";
 
-export const removeChannelStopword = async (channelId, stopword) => {
-  const response = await apiClient.delete(`/channels/${channelId}/stopwords/${stopword}`);
+export const removeChannelStopWord = async (channelId, stopWord) => {
+  const response = await apiClient.delete(`/channels/${channelId}/stopwords/${stopWord}`);
   return response.data;
 };  
