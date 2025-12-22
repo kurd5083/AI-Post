@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { advancedDatas } from "@/data/advancedDatas";
 import Checkbox from "@/shared/Checkbox";
@@ -9,33 +10,65 @@ const AdvancedPopup = () => {
   const { popup } = usePopupStore();
   const channelId = popup?.data?.channelId;
   const { channel } = useChannelById(channelId);
-  console.log(channel, 'aaa')
+
+  const [localSwitches, setLocalSwitches] = useState({
+    forced_posting: channel?.forcePosting || false,
+    disable_media: channel?.disableMedia || false,
+    transferring_source_text: channel?.preserveOriginalText || false,
+    add_link_post: channel?.includeSourceLink || false,
+    add_source_post: channel?.includeSourceLink || false, 
+  });
+
+  useEffect(() => {
+    setLocalSwitches({
+      forced_posting: channel?.forcePosting || false,
+      disable_media: channel?.disableMedia || false,
+      transferring_source_text: channel?.preserveOriginalText || false,
+      add_link_post: channel?.includeSourceLink || false,
+      add_source_post: channel?.includeSourceLink || false, 
+    });
+  }, [channel]);
 
   const { mutate: toggleField } = useUpdateChannelField();
 
-
   const checkboxConfig = {
     forced_posting: {
-      checked: channel.forcePosting,
-      onChange: () => toggleField({channelId, field: "forcePosting"}),
+      checked: localSwitches.forced_posting,
+      onChange: () => {
+        setLocalSwitches(prev => ({ ...prev, forced_posting: !prev.forced_posting }));
+        toggleField({ channelId, field: "forcePosting" });
+      },
     },
     disable_media: {
-      checked: channel.disableMedia,
-      onChange: () => toggleField({channelId, field: "disableMedia"}),
+      checked: localSwitches.disable_media,
+      onChange: () => {
+        setLocalSwitches(prev => ({ ...prev, disable_media: !prev.disable_media }));
+        toggleField({ channelId, field: "disableMedia" });
+      },
     },
     transferring_source_text: {
-      checked: channel.preserveOriginalText,
-      onChange: () => toggleField({channelId, field: "preserveOriginalText"}),
+      checked: localSwitches.transferring_source_text,
+      onChange: () => {
+        setLocalSwitches(prev => ({ ...prev, transferring_source_text: !prev.transferring_source_text }));
+        toggleField({ channelId, field: "preserveOriginalText" });
+      },
     },
     add_link_post: {
-      checked: channel.includeSourceLink,
-      onChange: () => toggleField({channelId, field: "preserveOriginalText"}),
+      checked: localSwitches.add_link_post,
+      onChange: () => {
+        setLocalSwitches(prev => ({ ...prev, add_link_post: !prev.add_link_post }));
+        toggleField({ channelId, field: "preserveOriginalText" });
+      },
     },
     add_source_post: {
-      checked: channel.includeSourceLink,
-      onChange: () => toggleField({channelId, field: "includeSourceLink"}),
+      checked: localSwitches.add_source_post,
+      onChange: () => {
+        setLocalSwitches(prev => ({ ...prev, add_source_post: !prev.add_source_post }));
+        toggleField({ channelId, field: "includeSourceLink" });
+      },
     },
   };
+
   return (
     <AdvancedContainer>
       {advancedDatas.map((item, index) => (
@@ -53,8 +86,8 @@ const AdvancedPopup = () => {
             <h4>{item.title}</h4>
             <p>{item.desc}</p>
           </ItemText>
-          <Checkbox 
-            color="#FFF980" 
+          <Checkbox
+            color="#FFF980"
             checked={checkboxConfig[item.key]?.checked || false}
             onChange={checkboxConfig[item.key]?.onChange}
           />
