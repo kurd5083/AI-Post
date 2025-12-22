@@ -3,7 +3,7 @@ import styled from "styled-components";
 import BtnBase from "@/shared/BtnBase";
 import { usePopupStore } from "@/store/popupStore";
 import CloseIcon from "@/icons/CloseIcon";
-import { useCreateFolder } from "@/lib/useCreateFolder";
+import { useCreateFolder } from "@/lib/channels/useCreateFolder";
 import { useUser } from "@/lib/useUser";
 
 const CreateFolderPopup = () => {
