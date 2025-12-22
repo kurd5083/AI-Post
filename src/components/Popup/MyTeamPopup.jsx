@@ -1,11 +1,15 @@
 import styled from "styled-components";
 import BtnBase from "@/shared/BtnBase";
 import { usePopupStore } from "@/store/popupStore"
+import { useChannelMembers } from "@/lib/channels/my-team/useChannelMembers";
 import { myTeamDatas } from "@/data/myTeamDatas";
 import del from "@/assets/del.svg";
 
 const MyTeamPopup = () => {
-  const { changeContent } = usePopupStore()
+  const { popup, changeContent } = usePopupStore();
+  const channelId = popup?.data?.channelId;
+  const { members } = useChannelMembers(channelId);
+  console.log(members)
   return (
     <MyTeamContainer>
       <BtnBase
@@ -16,42 +20,57 @@ const MyTeamPopup = () => {
         Пригласить в команду
       </BtnBase>
       <TableWrapper>
-        <Table>
-          <colgroup>
-            <col />
-            <col />
-            <col />
-            <col />
-          </colgroup>
-          <thead>
-            <tr>
-              <HeaderCell>Имя</HeaderCell>
-              <HeaderCell>Роль</HeaderCell>
-              <HeaderCell>Дата вступления</HeaderCell>
-              <HeaderCell></HeaderCell>
-            </tr>
-          </thead>
-          <tbody>
-            {myTeamDatas.map((row) => (
-              <TableItem key={row.id}>
-                <TableCell>
-                  <TableCellName>
-                    <img src={row.ava} alt="Group" />
-                    <NameBlock>
-                      <p>{row.name}</p>
-                      <span>{row.data}</span>
-                    </NameBlock>
-                  </TableCellName>
-                </TableCell>
-                <TableCell>{row.role}</TableCell>
-                <TableCell>{row.data}</TableCell>
-                <TableCell>
-                  <ButtonDel title="Удалить"><img src={del} alt="del icon" width={14} height={16} /></ButtonDel>
-                </TableCell>
-              </TableItem>
-            ))}
-          </tbody>
-        </Table>
+        {members.length > 0 ? (
+          <Table>
+            <colgroup>
+              <col />
+              <col />
+              <col />
+              <col />
+            </colgroup>
+            <thead>
+              <tr>
+                <HeaderCell>Имя</HeaderCell>
+                <HeaderCell>Роль</HeaderCell>
+                <HeaderCell>Дата вступления</HeaderCell>
+                <HeaderCell />
+              </tr>
+            </thead>
+            <tbody>
+              {members.map((member) => (
+                <TableItem key={member.userTelegramId}>
+                  <TableCell>
+                    <TableCellName>
+                      <img src={row.ava} alt="Group" />
+                      <NameBlock>
+                        <p>
+                          {member.firstName} {member.lastName}
+                        </p>
+                        {member.username && (
+                          <span>@{member.username}</span>
+                        )}
+                      </NameBlock>
+                    </TableCellName>
+                  </TableCell>
+
+                  <TableCell>{member.role}</TableCell>
+
+                  <TableCell>
+                    {new Date(member.createdAt).toLocaleDateString()}
+                  </TableCell>
+
+                  <TableCell>
+                    <ButtonDel title="Удалить">
+                      <img src={del} alt="del icon" width={14} height={16} />
+                    </ButtonDel>
+                  </TableCell>
+                </TableItem>
+              ))}
+            </tbody>
+          </Table>
+        ) : (
+          <p>В команде пока нет участников</p>
+        )}
       </TableWrapper>
     </MyTeamContainer>
   );
