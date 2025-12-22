@@ -88,7 +88,6 @@ const TableGroupsContainer = styled.section`
 `
 const TableGroupsHead = styled.div`
   display: flex;
-  flex-wrap: wrap;
   justify-content: space-between;
   gap: 20px;
 `
@@ -160,8 +159,8 @@ const TableGroupsHeadRight = styled.div`
     flex-direction: row-reverse
 	}
 `
-
 const TableGroupsHeadAdd = styled.button`
+  flex-shrink: 0;
   background-color: #336CFF;
   color: #fff;
   padding: 15px 24px;
