@@ -4,10 +4,10 @@ import InputPlus from "@/shared/InputPlus";
 import BlocksItems from "@/shared/BlocksItems";
 import { usePopupStore } from "@/store/popupStore"
 import { useChannelById } from "@/lib/channels/useChannelById";
-import { useAddChannelKeyword } from "@/lib/channels/filtering/useAddChannelKeyword";
-import { useRemoveChannelKeyword } from "@/lib/channels/filtering/useRemoveChannelKeyword";
-import { useAddChannelStopWord } from "@/lib/channels/filtering/useAddChannelStopWord";
-import { useRemoveChannelStopWord } from "@/lib/channels/filtering/useRemoveChannelStopWord";
+import { useAddChannelKeyword } from "@/lib/channels/filtration/useAddChannelKeyword";
+import { useRemoveChannelKeyword } from "@/lib/channels/filtration/useRemoveChannelKeyword";
+import { useAddChannelStopWord } from "@/lib/channels/filtration/useAddChannelStopWord";
+import { useRemoveChannelStopWord } from "@/lib/channels/filtration/useRemoveChannelStopWord";
 
 const FilteringPopup = () => {
   const { popup } = usePopupStore();

@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { addChannelStopWord } from "@/api/channels/filtering/addChannelStopWord";
+import { addChannelStopWord } from "@/api/channels/filtration/addChannelStopWord";
 
 export const useAddChannelStopWord = () => {
   const queryClient = useQueryClient();
