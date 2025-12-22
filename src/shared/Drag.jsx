@@ -1,4 +1,3 @@
-import { useState } from "react";
 import styled from "styled-components";
 import light from "@/assets/popup/light.svg";
 
@@ -12,10 +11,6 @@ const buttons = [
 ];
 
 const Drag = ({ value = 0, onChange }) => {
-  const handleClick = (val) => {
-    onChange(val);
-  };
-
   return (
     <DragContainer>
       <DragLine value={value} />
@@ -25,7 +20,7 @@ const Drag = ({ value = 0, onChange }) => {
           $width={btn.size}
           $height={btn.size}
           active={value >= btn.value}
-          onClick={() => handleClick(btn.value)}
+          onClick={() => onChange(btn.value)}
         />
       ))}
       <img src={light} alt="light icon" />
