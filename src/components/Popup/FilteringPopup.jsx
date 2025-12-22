@@ -31,7 +31,6 @@ const FilteringPopup = () => {
           value={keyword}
           onChange={setKeyword}
           onSubmit={() => {
-            if (!keyword.trim()) return;
             addKeyword({ channelId, keyword });
             setKeyword("");
           }}
