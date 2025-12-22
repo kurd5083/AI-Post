@@ -154,6 +154,8 @@ const TableGroupsHeadRight = styled.div`
   display: flex;
   align-items: center;
   gap: 8px;
+  flex-shrink: 0;
+  
 	@media (max-width: 768px) {
     padding: 0 24px;
   }
