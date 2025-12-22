@@ -3,11 +3,11 @@ import PlusIcon from "@/icons/PlusIcon";
 
 const InputPlus = ({ title, placeholder, bg, color, fs, padding, value, onChange, onSubmit }) => {
     const handleKeyDown = (e) => {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      onSubmit?.();
-    }
-  };
+        if (e.key === "Enter") {
+        e.preventDefault();
+        onSubmit?.();
+        }
+    };
 
     return (
         <>
