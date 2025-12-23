@@ -19,6 +19,8 @@ const PopupWindow = () => {
                 ) : popup.content == 'change_time' ? (
                     <ChangeTimePopup />
                 ) : popup.content == 'create_channel' ?(
+                    <CreateChannelPopup />
+                ) : popup.content == 'delete_popup' ?(
                     <DeleteConfirmPopup />
                 ) : (
                     2

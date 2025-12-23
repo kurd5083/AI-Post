@@ -1,17 +1,17 @@
 import styled from "styled-components";
 import BtnBase from "@/shared/BtnBase";
 import { usePopupStore } from "@/store/popupStore";
-import { useDeleteItem } from "@/lib/useDeleteItem"; // твоя функция удаления из API
+// import { useDeleteItem } from "@/lib/useDeleteItem"; // твоя функция удаления из API
 
 const DeleteConfirmPopup = () => {
   const { popup, closePopup } = usePopupStore();
-  const { mutate: deleteItem, isPending } = useDeleteItem();
+//   const { mutate: deleteItem, isPending } = useDeleteItem();
 
   const handleDelete = () => {
-    if (!popup?.data?.itemId) return;
-    deleteItem(popup.data.itemId, {
-      onSuccess: () => closePopup(),
-    });
+    // if (!popup?.data?.itemId) return;
+    // deleteItem(popup.data.itemId, {
+    //   onSuccess: () => closePopup(),
+    // });
   };
 
   return (
@@ -29,9 +29,9 @@ const DeleteConfirmPopup = () => {
           $bg="#FF4D4D"
           $padding="21px"
           onClick={handleDelete}
-          disabled={isPending}
+        //   disabled={isPending}
         >
-          {isPending ? "Удаление..." : "Удалить"}
+          {/* {isPending ? "Удаление..." : "Удалить"} */}
         </BtnBase>
         <BtnBase
           onClick={closePopup}
