@@ -9,6 +9,7 @@ export const useAuthTelegram = () => {
     onSuccess: (res) => {
       localStorage.setItem("accessToken", res.accessToken);
       localStorage.setItem("refreshToken", res.refreshToken);
+      localStorage.setItem("userId", res.id);
 
       queryClient.invalidateQueries(["user"]);
     },
