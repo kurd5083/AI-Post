@@ -49,8 +49,8 @@ const PublicationsPopup = () => {
         <PublicationsFilter>По дате</PublicationsFilter>
       </PublicationsHead>
       <PublicationsList>
-        {currentItems.length > 0 ? (
-          currentItems.map((item) => (
+        {currentItems?.length > 0 ? (
+          currentItems?.map((item) => (
             <CardPablish key={item.id} item={item} bg />
           ))
         ) : (
