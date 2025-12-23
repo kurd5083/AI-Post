@@ -4,8 +4,11 @@ import CustomSelect from '@/shared/CustomSelect'
 import BtnBase from "@/shared/BtnBase";
 import { Link } from "react-router";
 import { promotionsDatas } from "@/data/promotionsDatas";
+import { usePromotionServices } from "@/lib/promotion/usePromotionServices";
 
 const Promotion = () => {
+	const { servicesData } = usePromotionServices();
+
 	return (
 		<PromotionContainer>
 			<PageHead />
@@ -38,8 +41,8 @@ const Promotion = () => {
 				</label>
 			</PromotionFilter>
 			<PromotionCards>
-				{promotionsDatas.map((item) => (
-					<PromotionCard>
+				{servicesData?.length > 0 ? servicesData.map((item) => (
+					<PromotionCard key={item.id}>
 						<img src={item.icon} alt={`${item.title} icon`} />
 						<PromotionCardInfo>
 							<PromotionCardArea>{item.area}</PromotionCardArea>
@@ -48,7 +51,9 @@ const Promotion = () => {
 							<BtnBase $color="#fff" $bg="#336CFF" $padding="17px 80px">Заказать</BtnBase>
 						</PromotionCardInfo>
 					</PromotionCard>
-				))}
+				)) : (
+					<p>Услуги не найдены</p>
+				)}
 			</PromotionCards>
 		</PromotionContainer>
 	)
