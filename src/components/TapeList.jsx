@@ -21,7 +21,6 @@ const TapeList = ({ forceHorizontal = false, padding }) => {
 
   const { newsData, newsLoding } = useNews();
   console.log(newsData)
-  if (newsLoding) return <div>Загрузка новостей...</div>;
 
   const { mutate: copyToChannel, isLoading: isCopying } = useCopyNewsToChannel();
 
@@ -37,54 +36,63 @@ const TapeList = ({ forceHorizontal = false, padding }) => {
 	};
 
 	return (
-		<TapeContainer
-			ref={ref}
-			key={isSwipe}
-			spaceBetween={16}
-			direction={direction}
-			slidesPerView="auto"
-			allowTouchMove={forceHorizontal || isSwipe}
-			$fadeVisible={fadeVisible}
-      $padding={padding}
-			modules={[Navigation]}
-			navigation={{
-				nextEl: ".TapeNext",
-				prevEl: ".TapePrev",
-			}}
-		>
-			{/* {newsData?.data?.map((news) => (
-				<TapeItem key={news.id} $forceHorizontal={forceHorizontal}>
-					<TapeItemContent>
-						<TapeItemHead>
-							<img src={item.ava} alt="ava icon" />
-							<p>{news.sourceName}</p>
-						</TapeItemHead>
+    <>
+      {newsLoding ? (
+        <div>Загрузка новостей...</div>
+      ) : (
+        <TapeContainer
+          ref={ref}
+          key={isSwipe}
+          spaceBetween={16}
+          direction={direction}
+          slidesPerView="auto"
+          allowTouchMove={forceHorizontal || isSwipe}
+          $fadeVisible={fadeVisible}
+          $padding={padding}
+          modules={[Navigation]}
+          navigation={{
+            nextEl: ".TapeNext",
+            prevEl: ".TapePrev",
+          }}
+        >
+          {newsData?.data?.map((news) => (
+            <TapeItem key={news.id} $forceHorizontal={forceHorizontal}>
+              <TapeItemContent>
+                <TapeItemHead>
+                  <p>{news.sourceName}</p>
+                </TapeItemHead>
 
-						<Link to={`/news/${news.id}`}><TapeItemText>{news.title}</TapeItemText></Link>
-            <TapeItemAction onClick={() => handleCopy(news.id)} disabled={isCopying}>
-              {isCopying ? "Сохраняем..." : "Сохранить в канал"}
-            </TapeItemAction>
-						<TapeTime>
-              <TimeIcons/>
-							<span>{news.time}</span>
-						</TapeTime>
-					</TapeItemContent>
+                <Link to={`/news/${news.id}`}>
+                  <TapeItemText>{news.title}</TapeItemText>
+                </Link>
 
-					<TapePostImg src={`/api/${news.images[0]}`} alt="post img" $forceHorizontal={forceHorizontal}/>
-				</TapeItem>
-			))} */}
-			{(forceHorizontal || isSwipe) && (
-				<div>
-					<TapePostButton className="TapePrev">
-						<img src={arrow} alt="arrow icon" />
-					</TapePostButton>
+                <TapeItemAction onClick={() => handleCopy(news.id)} disabled={isCopying}>
+                  {isCopying ? "Сохраняем..." : "Сохранить в канал"}
+                </TapeItemAction>
+                <TapeTime>
+                  <TimeIcons />
+                </TapeTime>
+              </TapeItemContent>
 
-					<TapePostButton className="TapeNext">
-						<img src={arrow} alt="arrow icon" />
-					</TapePostButton>
-				</div>
-			)}
-		</TapeContainer>
+              {news.images?.[0] && (
+                <TapePostImg src={`/api/${news.images[0]}`} alt="post img" $forceHorizontal={forceHorizontal} />
+              )}
+            </TapeItem>
+          ))}
+          {(forceHorizontal || isSwipe) && (
+            <div>
+              <TapePostButton className="TapePrev">
+                <img src={arrow} alt="arrow icon" />
+              </TapePostButton>
+
+              <TapePostButton className="TapeNext">
+                <img src={arrow} alt="arrow icon" />
+              </TapePostButton>
+            </div>
+          )}
+        </TapeContainer>
+      )}
+    </>
 	)
 }
 const TapeContainer = styled(Swiper)`
