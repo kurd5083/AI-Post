@@ -11,17 +11,17 @@ import { useNewsById } from "@/lib/news/useNewsById";
 const NewsDetail = () => {
 	const { popup } = usePopupStore();
   const channelId = popup?.data?.channelId;
-	const { newsId } = useParams();
-	console.log(newsId)
+	const { id } = useParams();
+	console.log(id)
 	const navigate = useNavigate();
 
-	const { news } = useNewsById(newsId);
+	const { news } = useNewsById(id);
 
 	const { mutate: copyToChannel, isLoading: isCopying } = useCopyNewsToChannel();
 
 	const handleCopy = () => {
 		copyToChannel({
-			id: newsId,
+			id: id,
 			data: {
 				channelId,
 				publishedAt: new Date().toISOString(),
