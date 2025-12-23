@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import refresh from "@/assets/table-groups/refresh.svg";
 import del from "@/assets/del.svg";
 import useResolution from "@/lib/useResolution";
@@ -136,7 +136,7 @@ const LeftSwiper = styled(Swiper)`
   display: flex;
 	margin: 0;
 `
-const BaseFolderBtn = styled.button`
+const baseFolderStyles = css`
   box-sizing: border-box;
   display: flex;
   align-items: center;
@@ -151,19 +151,23 @@ const BaseFolderBtn = styled.button`
     color: #6A7080;
   }
 
-  @media(max-width: 1600px) {
+  @media (max-width: 1600px) {
     gap: 8px;
 
     p {
       max-width: 75px;
       white-space: nowrap;
-      overflow: hidden;     
+      overflow: hidden;
       text-overflow: ellipsis;
     }
   }
 `;
+const BaseFolderBtn = styled.button`
+  ${baseFolderStyles}
+`;
+
 const TableGroupsHeadBtn = styled(SwiperSlide)`
-  ${BaseFolderBtn}
+  ${baseFolderStyles}
   width: auto;
 `;
 const FolderName = styled.p`
