@@ -52,10 +52,17 @@ const TableGroups = () => {
               $active={selectedId === folder.id}
             >
               <img src={dir} alt="dir icon" /><p>{folder.name}</p> <mark>{folder.channels.length}</mark>
-              <DeleteFolderButton src={del} alt="del icon" onClick={(e) => {
-                e.stopPropagation();
-                deleteFolder(folder.id);
-              }}/>
+              <DeleteFolderButton 
+                src={del} 
+                alt="del icon" 
+                onClick={(e) => {
+                  e.stopPropagation();
+                  openPopup("delete_popup", "popup_window", {
+                    itemName: folder.name,
+                    onDelete: () => deleteFolder(folder.id),
+                  });
+                }}
+              />
             </TableGroupsHeadBtn>
           ))}
           </LeftSwiper>

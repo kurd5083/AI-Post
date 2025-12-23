@@ -2,49 +2,46 @@ import styled from "styled-components";
 import BtnBase from "@/shared/BtnBase";
 import CloseIcon from "@/icons/CloseIcon";
 import { usePopupStore } from "@/store/popupStore";
-// import { useDeleteItem } from "@/lib/useDeleteItem";
 
 const DeleteConfirmPopup = () => {
-    const { popup, closePopup } = usePopupStore();
-    //   const { mutate: deleteItem, isPending } = useDeleteItem();
+  const { popup, closePopup } = usePopupStore();
 
-    const handleDelete = () => {
-        // if (!popup?.data?.itemId) return;
-        // deleteItem(popup.data.itemId, {
-        //   onSuccess: () => closePopup(),
-        // });
-    };
+  const handleDelete = () => {
+    if (popup?.data?.onDelete) {
+      popup.data.onDelete();
+    }
+    closePopup();
+  };
 
-    return (
-        <div>
-            <DeleteHead>
-                <HeadTitle>Создать папку</HeadTitle>
-                <CloseButton onClick={closePopup}>
-                    <CloseIcon color="#336CFF"/>
-                </CloseButton>
-            </DeleteHead>
-            <DeleteSubtitle>
-                Вы действительно хотите удалить "{popup?.data?.itemName}"? Это действие нельзя будет отменить.
-            </DeleteSubtitle>
-            <PopupButtons>
-                <BtnBase
-                    $color="#D6DCEC"
-                    $bg="#FF4D4D"
-                    onClick={handleDelete}
-                //   disabled={isPending}
-                >
-                    {/* {isPending ? "Удаление..." : "Удалить"} */}
-                </BtnBase>
-                <BtnBase
-                    onClick={closePopup}
-                    $color="#D6DCEC"
-                    $bg="#242A3A"
-                >
-                    Отменить
-                </BtnBase>
-            </PopupButtons>
-        </div>
-    );
+  return (
+    <div>
+      <DeleteHead>
+        <HeadTitle>Подтвердите удаление</HeadTitle>
+        <CloseButton onClick={closePopup}>
+          <CloseIcon color="#336CFF"/>
+        </CloseButton>
+      </DeleteHead>
+      <DeleteSubtitle>
+        Вы действительно хотите удалить "{popup?.data?.itemName}"? Это действие нельзя будет отменить.
+      </DeleteSubtitle>
+      <PopupButtons>
+        <BtnBase
+          $color="#D6DCEC"
+          $bg="#FF4D4D"
+          onClick={handleDelete}
+        >
+          Удалить
+        </BtnBase>
+        <BtnBase
+          onClick={closePopup}
+          $color="#D6DCEC"
+          $bg="#242A3A"
+        >
+          Отменить
+        </BtnBase>
+      </PopupButtons>
+    </div>
+  );
 };
 
 const DeleteHead = styled.div`
