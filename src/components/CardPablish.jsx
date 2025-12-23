@@ -5,6 +5,7 @@ import { useFormattedHtml } from "@/lib/useFormattedHtml";
 
 const CardPablish = ({ item, bg }) => {
   const formattedText = useFormattedHtml(item.text);
+  
 	return (
 		<CardPablishItem $bg={bg}>
 			<CardPablishItemHead>

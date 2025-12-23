@@ -13,7 +13,9 @@ const NewsDetail = () => {
 	const { id } = useParams();
 	const navigate = useNavigate();
 	const { news } = useNewsById(id);
-
+	const formattedTitle = useFormattedHtml(news?.title);
+	const formattedContent = useFormattedHtml(news?.content);
+	console.log(formattedTitle)
 	if (!news) {
 		return (
 			<div className="not-found">
@@ -39,8 +41,8 @@ const NewsDetail = () => {
 					</PostHead>
 					<NewsImgMobile src={`/.netlify/functions/api-proxy/${news.images[0]}`} alt={news.title} />
 					<PostTimeMobile ><TimeIcons color="#336CFF" />{news.readingTime}</PostTimeMobile>
-					{/* <PostTilte>{useFormattedHtml(news.title)}</PostTilte>
-					<PostDescription>{useFormattedHtml(news.content)}</PostDescription> */}
+					<PostTilte dangerouslySetInnerHTML={{__html: formattedTitle}}/>
+					{/* <PostDescription>{useFormattedHtml(news.content)}</PostDescription> */}
 					<PostFooter className="news-meta">
 						<BtnBase
 							$bg="#336CFF"
