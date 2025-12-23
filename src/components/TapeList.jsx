@@ -15,9 +15,9 @@ const TapeList = ({ forceHorizontal = false, padding }) => {
   const { popup } = usePopupStore();
   const channelId = popup?.data?.channelId;
   const { fadeVisible, ref } = useFadeOnScroll(20);
-	const { isSwipe } = useSwipeAllowed(1400);
+  const { isSwipe } = useSwipeAllowed(1400);
 
-	const direction = forceHorizontal ? "horizontal" : (isSwipe ? "horizontal" : "vertical");
+  const direction = forceHorizontal ? "horizontal" : (isSwipe ? "horizontal" : "vertical");
 
   const { newsData, newsLoding } = useNews();
   console.log(newsData)
@@ -25,17 +25,17 @@ const TapeList = ({ forceHorizontal = false, padding }) => {
   const { mutate: copyToChannel, isLoading: isCopying } = useCopyNewsToChannel();
 
   const handleCopy = (newsId) => {
-		copyToChannel({
-			id: newsId,
-			data: {
-				channelId,
-				publishedAt: new Date().toISOString(),
-				calendarScheduledAt: new Date().toISOString(),
-			},
-		});
-	};
+    copyToChannel({
+      id: newsId,
+      data: {
+        channelId,
+        publishedAt: new Date().toISOString(),
+        calendarScheduledAt: new Date().toISOString(),
+      },
+    });
+  };
 
-	return (
+  return (
     <>
       {newsLoding ? (
         <NoTape>Загрузка новостей...</NoTape>
@@ -92,7 +92,7 @@ const TapeList = ({ forceHorizontal = false, padding }) => {
         </TapeContainer>
       )}
     </>
-	)
+  )
 }
 const NoTape = styled.div`
   margin-top: 32px;
@@ -114,11 +114,11 @@ const TapeContainer = styled(Swiper)`
   overflow-y: auto;
   scrollbar-width: none;  
   max-height: calc(100dvh - 215px);
-  padding: ${({$padding}) => $padding && "0 52px"};
+  padding: ${({ $padding }) => $padding && "0 52px"};
   padding-bottom: 20px;
   
   @media (max-width: 1600px) {
-    padding: ${({$padding}) => $padding && "0 32px 30px"};
+    padding: ${({ $padding }) => $padding && "0 32px 30px"};
   }
   @media (max-width: 1400px) {
     padding: 0 32px ;
@@ -127,23 +127,24 @@ const TapeContainer = styled(Swiper)`
   @media (max-width: 768px) {
     padding: 0 24px;
   }
-
-  &::after {
-    content: '';
-    position: fixed;
-    bottom: 0;
-    height: 135px;
-    width: 100%;
-    background: linear-gradient(to top, #131826, transparent);
-    backdrop-filter: blur(8px);
-    mask-image: linear-gradient(to top, black 50%, transparent);
-    transition: opacity 0.2s;
-    opacity: ${({$fadeVisible}) => $fadeVisible ? 1 : 0};
-    pointer-events: none;
-		z-index: 1;
-    @media(max-width: 1400px) {
-        display: none;
-    }
+  ${({ $forceHorizontal }) => $forceHorizontal && ` 
+    &::after {
+      content: '';
+      position: fixed;
+      bottom: 0;
+      height: 135px;
+      width: 100%;
+      background: linear-gradient(to top, #131826, transparent);
+      backdrop-filter: blur(8px);
+      mask-image: linear-gradient(to top, black 50%, transparent);
+      transition: opacity 0.2s;
+      opacity: ${({ $fadeVisible }) => $fadeVisible ? 1 : 0};
+      pointer-events: none;
+      z-index: 1;
+      @media(max-width: 1400px) {
+          display: none;
+      }
+    `
   }
 `
 const TapeItem = styled(SwiperSlide)`
@@ -152,8 +153,8 @@ const TapeItem = styled(SwiperSlide)`
   gap: 10px;
   border: 2px solid #1F273B;
   border-radius: 24px;
-  max-width: ${({$forceHorizontal}) => $forceHorizontal && '345px'};
-	padding: ${({$forceHorizontal}) => $forceHorizontal ? '8px 8px 8px 24px' : '8px 8px 8px 33px'};
+  max-width: ${({ $forceHorizontal }) => $forceHorizontal && '345px'};
+	padding: ${({ $forceHorizontal }) => $forceHorizontal ? '8px 8px 8px 24px' : '8px 8px 8px 33px'};
 
   @media(max-width: 1600px) {
     padding: 8px 8px 8px 24px;
@@ -176,7 +177,7 @@ const TapeItemContent = styled.div`
   padding: 20px 0;
   max-width: calc(100% - 162px);
   max-width: ${({ $forceHorizontal }) =>
-  $forceHorizontal ? 'calc(100% - 115px)' : 'calc(100% - 162px)'};
+    $forceHorizontal ? 'calc(100% - 115px)' : 'calc(100% - 162px)'};
 
   @media(max-width: 1600px) {
     max-width: calc(100% - 115px);
@@ -223,7 +224,7 @@ const TapeTime = styled.div`
 const TapePostImg = styled.img`
   object-fit: cover;
   border-radius: 24px;
-	width: ${({$forceHorizontal}) => $forceHorizontal ? '105px' : '152px'};
+	width: ${({ $forceHorizontal }) => $forceHorizontal ? '105px' : '152px'};
   @media (max-width: 1600px) {
     width: 105px;
   }
