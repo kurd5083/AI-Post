@@ -61,7 +61,7 @@ const NewsDetail = () => {
 							$color="#fff" 
 							$padding="21px 40px"
 							// onClick={handleCopy}
-							onClick={() => openPopup("change_time", "popup_window")}
+							onClick={() => openPopup("select_channels", "popup_window")}
 							disabled={isCopying}
 							>
 							{isCopying ? "Сохраняем..." : "Сохранить в канал"}
