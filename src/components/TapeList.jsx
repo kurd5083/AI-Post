@@ -52,7 +52,7 @@ const TapeList = ({ forceHorizontal = false, padding }) => {
 				prevEl: ".TapePrev",
 			}}
 		>
-			{newsData.map((news) => (
+			{newsData?.map((news) => (
 				<TapeItem key={news.id} $forceHorizontal={forceHorizontal}>
 					<TapeItemContent>
 						<TapeItemHead>
