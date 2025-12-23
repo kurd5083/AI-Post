@@ -5,6 +5,7 @@ import useResolution from "@/lib/useResolution";
 import useSwipeAllowed from "@/lib/useSwipeAllowed";
 import { useChannelsGroupedByFolders } from "@/lib/useChannelsGroupedByFolders";
 import { useDeleteFolder } from "@/lib/useDeleteFolder";
+import { useSendAddChannelButton } from "@/lib/channels/useSendAddChannelButton";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import { usePopupStore } from "@/store/popupStore"
@@ -22,6 +23,7 @@ const TableGroups = () => {
   const { selectedId, setId } = useChannelsStore();
   const { channels } = useChannelsGroupedByFolders();
   const { mutate: deleteFolder } = useDeleteFolder();
+  const { mutate: sendButton, isLoading } = useSendAddChannelButton();
 
 	return (
 		<TableGroupsContainer>
@@ -70,7 +72,10 @@ const TableGroups = () => {
           </LeftSwiper>
 				</TableGroupsHeadLeft>
 				<TableGroupsHeadRight>
-					<TableGroupsHeadAdd  onClick={() => openPopup("create_channel", "popup_window")}>{isSmall ? "+ Добавить" : "+ Добавить канал"}</TableGroupsHeadAdd>
+          <TableGroupsHeadAdd onClick={() => sendButton()}>
+            {isLoading ? "Отправка..." : isSmall ? "+ Добавить" : "+ Добавить канал"}
+          </TableGroupsHeadAdd>
+					{/* <TableGroupsHeadAdd  onClick={() => openPopup("create_channel", "popup_window")}>{isSmall ? "+ Добавить" : "+ Добавить канал"}</TableGroupsHeadAdd> */}
 					<TableGroupsHeadShow $active={viewType === "grid"} onClick={setGridView}>
             <GridIcon color={viewType === "grid" ? "#D6DCEC" : "#6A7080"} />
           </TableGroupsHeadShow>
