@@ -9,6 +9,7 @@ import { Navigation } from "swiper/modules";
 import "swiper/css";
 import TimeIcons from "@/icons/TimeIcons";
 import useFadeOnScroll from "@/lib/useFadeOnScroll";
+import { useNews } from "@/lib/news/useNews";
 
 const TapeList = ({ forceHorizontal = false, padding }) => {
   const { fadeVisible, ref } = useFadeOnScroll(20);
@@ -16,6 +17,8 @@ const TapeList = ({ forceHorizontal = false, padding }) => {
 
 	const direction = forceHorizontal ? "horizontal" : (isSwipe ? "horizontal" : "vertical");
 
+  const { newsData } = useNews();
+  console.log(newsData)
 	return (
 		<TapeContainer
 			ref={ref}
