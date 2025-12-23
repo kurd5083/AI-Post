@@ -52,25 +52,25 @@ const TapeList = ({ forceHorizontal = false, padding }) => {
 				prevEl: ".TapePrev",
 			}}
 		>
-			{postsDatas.map((item) => (
-				<TapeItem key={item.id} $forceHorizontal={forceHorizontal}>
+			{newsData.map((news) => (
+				<TapeItem key={news.id} $forceHorizontal={forceHorizontal}>
 					<TapeItemContent>
 						<TapeItemHead>
-							<img src={item.ava} alt="ava icon" />
-							<p>{item.username}</p>
+							{/* <img src={item.ava} alt="ava icon" /> */}
+							<p>{news.sourceName}</p>
 						</TapeItemHead>
 
-						<Link to={`/news/${item.id}`}><TapeItemText>{item.title}</TapeItemText></Link>
-            <TapeItemAction onClick={() => handleCopy(item.id)} disabled={isCopying}>
+						<Link to={`/news/${news.id}`}><TapeItemText>{news.title}</TapeItemText></Link>
+            <TapeItemAction onClick={() => handleCopy(news.id)} disabled={isCopying}>
               {isCopying ? "Сохраняем..." : "Сохранить в канал"}
             </TapeItemAction>
 						<TapeTime>
               <TimeIcons/>
-							<span>{item.time}</span>
+							{/* <span>{news.time}</span> */}
 						</TapeTime>
 					</TapeItemContent>
 
-					<TapePostImg src={item.img} alt="post img" $forceHorizontal={forceHorizontal}/>
+					<TapePostImg src={`/api/${news.images[0]}`} alt="post img" $forceHorizontal={forceHorizontal}/>
 				</TapeItem>
 			))}
 			{(forceHorizontal || isSwipe) && (
