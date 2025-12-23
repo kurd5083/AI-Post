@@ -38,7 +38,7 @@ const TapeList = ({ forceHorizontal = false, padding }) => {
 	return (
     <>
       {newsLoding ? (
-        <div>Загрузка новостей...</div>
+        <NoTape>Загрузка новостей...</NoTape>
       ) : (
         <TapeContainer
           ref={ref}
@@ -92,6 +92,14 @@ const TapeList = ({ forceHorizontal = false, padding }) => {
     </>
 	)
 }
+const NoTape = styled.div`
+  border-radius: 24px !important;
+  text-align: center;
+  color: #6A7080;
+  padding: 24px 0 !important;
+  font-weight: 600;
+  background-color: #1C2438;
+`
 const TapeContainer = styled(Swiper)`
   position: relative;
   box-sizing: border-box;
