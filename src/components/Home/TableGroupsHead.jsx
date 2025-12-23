@@ -100,8 +100,8 @@ const TableGroupsContainer = styled.section`
   }
 `
 const TableGroupsHead = styled.div`
-  display: flex;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
   gap: 20px;
   @media (max-width: 768px) {
     flex-wrap: wrap;
@@ -110,12 +110,13 @@ const TableGroupsHead = styled.div`
 const TableGroupsHeadLeft = styled.div`
   display: flex;
   gap: 40px;
-
+  grid-column: 1 /span 5;
   @media (max-width: 768px) {
     padding: 0 24px;
   }
 `
 const TableGroupsHeadDir = styled.button`
+  white-space: nowrap;
   box-sizing: border-box;
   display: flex;
   align-items: center;
@@ -163,6 +164,7 @@ const baseFolderStyles = css`
 `;
 const BaseFolderBtn = styled.button`
   ${baseFolderStyles}
+  white-space: nowrap;
 `;
 
 const TableGroupsHeadBtn = styled(SwiperSlide)`
@@ -193,7 +195,7 @@ const TableGroupsHeadRight = styled.div`
 	}
 `
 const TableGroupsHeadAdd = styled.button`
-  flex-shrink: 0;
+  white-space: nowrap;
   background-color: #336CFF;
   color: #fff;
   padding: 15px 24px;
