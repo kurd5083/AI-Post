@@ -57,7 +57,7 @@ const TapeList = ({ forceHorizontal = false, padding }) => {
         >
           {newsData?.data?.map((news) => (
             <TapeItem key={news.id} $forceHorizontal={forceHorizontal}>
-              <TapeItemContent>
+              <TapeItemContent $forceHorizontal={forceHorizontal}>
                 <TapeItemHead>
                   <p>{news.sourceName}</p>
                 </TapeItemHead>
@@ -173,6 +173,9 @@ const TapeItemContent = styled.div`
   flex-direction: column;
   padding: 20px 0;
   max-width: calc(100% - 162px);
+  max-width: ${({ $forceHorizontal }) =>
+  $forceHorizontal ? 'calc(100% - 115px)' : 'calc(100% - 162px)'};
+  
   @media(max-width: 1600px) {
     max-width: calc(100% - 115px);
   }
@@ -216,10 +219,9 @@ const TapeTime = styled.div`
   color: #6A7080;
 `
 const TapePostImg = styled.img`
-  width: 152px;
   object-fit: cover;
   border-radius: 24px;
-	width: ${({$forceHorizontal}) => $forceHorizontal && '105px'};
+	width: ${({$forceHorizontal}) => $forceHorizontal ? '105px' : '152px'};
   @media (max-width: 1600px) {
     width: 105px;
   }
