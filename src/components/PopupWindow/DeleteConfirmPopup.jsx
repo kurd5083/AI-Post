@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import BtnBase from "@/shared/BtnBase";
+import CloseIcon from "@/icons/CloseIcon";
 import { usePopupStore } from "@/store/popupStore";
 // import { useDeleteItem } from "@/lib/useDeleteItem"; // твоя функция удаления из API
 
