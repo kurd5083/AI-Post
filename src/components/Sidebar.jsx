@@ -5,7 +5,7 @@ import arrow_close from "@/assets/arrow-close.svg";
 import { usePopupStore } from "@/store/popupStore";
 import { useSidebarStore } from "@/store/sidebarStore";
 import { useUser } from "@/lib/useUser";
-import { useTelegramBotLink } from "@/hooks/useTelegramBotLink";
+import { useTelegramBotLink } from "@/lib/useTelegramBotLink";
 
 const Sidebar = () => {
   const { openPopup } = usePopupStore()
