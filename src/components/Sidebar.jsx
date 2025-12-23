@@ -13,7 +13,7 @@ const Sidebar = () => {
   const { openPopup } = usePopupStore()
   const { user } = useUser();
   const { botLinkData } = useTelegramBotLink();
-
+  console.log(botLinkData)
   const {
     activePage,
     setActivePage,
