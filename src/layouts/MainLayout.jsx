@@ -53,6 +53,7 @@ const Main = styled.main`
   min-width: 0;
   z-index: 1;
   overflow-y: ${({ $blocked }) => ($blocked ? "clip" : "auto")};
+  overflow-x: clip;
   scrollbar-width: none;
   @media(max-width: 1600px) {
     padding: 0;
