@@ -1,16 +1,15 @@
 import styled from "styled-components";
-import arrow from "@/assets/arrow.svg";
-import { postsDatas } from "@/data/postsDatas";
-import useSwipeAllowed from "@/lib/useSwipeAllowed";
 import { Link } from "react-router";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
 import "swiper/css";
-import TimeIcons from "@/icons/TimeIcons";
+import useSwipeAllowed from "@/lib/useSwipeAllowed";
 import useFadeOnScroll from "@/lib/useFadeOnScroll";
 import { useNews } from "@/lib/news/useNews";
 import { useCopyNewsToChannel } from "@/lib/news/useCopyNewsToChannel";
 import { usePopupStore } from "@/store/popupStore"
+import TimeIcons from "@/icons/TimeIcons";
+import arrow from "@/assets/arrow.svg";
 
 const TapeList = ({ forceHorizontal = false, padding }) => {
   const { popup } = usePopupStore();
@@ -71,7 +70,7 @@ const TapeList = ({ forceHorizontal = false, padding }) => {
 						</TapeTime>
 					</TapeItemContent>
 
-					<TapePostImg src={`/api/${news.images[0]}`} alt="post img" $forceHorizontal={forceHorizontal}/>
+					{/* <TapePostImg src={`/api/${news.images[0]}`} alt="post img" $forceHorizontal={forceHorizontal}/> */}
 				</TapeItem>
 			))}
 			{(forceHorizontal || isSwipe) && (
