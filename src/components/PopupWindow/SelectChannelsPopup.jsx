@@ -10,7 +10,7 @@ import { useCopyNewsToChannel } from "@/lib/news/useCopyNewsToChannel";
 const SelectChannelsPopup = () => {
     const { closePopup } = usePopupStore();
     const { userChannels } = useUserChannels();
-    console.log(userChannels)
+    console.log(userChannels, 'asgsdgsd')
     const [selectedChannelId, setSelectedChannelId] = useState(null);
 
     const { mutate: copyToChannel, isLoading: isCopying } = useCopyNewsToChannel();
@@ -41,7 +41,7 @@ const SelectChannelsPopup = () => {
                     <CloseIcon color="#336CFF" />
                 </CloseButton>
             </SelectChannelsHead>
-            <SelectChannelsSubtitle>Выберите канал в </SelectChannelsSubtitle>
+            <SelectChannelsSubtitle>Укажите канал, в котором будет опубликована новость</SelectChannelsSubtitle>
             <CustomSelect
                 value={selectedChannelId}
                 onChange={(option) => setSelectedChannelId(option.value)}
