@@ -1,30 +1,34 @@
 import styled from "styled-components";
-import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { postsDatas } from "@/data/postsDatas";
-import createSlug from '@/lib/createSlug';
 import fire from "@/assets/tape/fire.svg";
-import TimeIcons from "../icons/TimeIcons";
+import TimeIcons from "@/icons/TimeIcons";
 import TapeList from "@/components/TapeList";
 import BtnBase from "@/shared/BtnBase";
+import { useCopyNewsToChannel } from "@/lib/news/useCopyNewsToChannel";
+import { usePopupStore } from "@/store/popupStore"
 
 const NewsDetail = () => {
-	const { slug } = useParams();
+	const { popup } = usePopupStore();
+  const channelId = popup?.data?.channelId;
+	const { id } = useParams();
 	const navigate = useNavigate();
-	const [post, setPost] = useState(null);
 
-	useEffect(() => {
-		const foundPost = postsDatas.find(postItem => {
-			const postSlug = createSlug(postItem.title);
-			return postSlug === slug;
+	const { news } = useNewsById(id);
+
+	const { mutate: copyToChannel, isLoading: isCopying } = useCopyNewsToChannel();
+
+	const handleCopy = () => {
+		copyToChannel({
+			id: news.id,
+			data: {
+				channelId,
+				publishedAt: new Date().toISOString(),
+				calendarScheduledAt: new Date().toISOString(),
+			},
 		});
+	};
 
-		setPost(foundPost);
-	}, [slug, navigate]);
-
-
-
-	if (!post) {
+	if (!news) {
 		return (
 			<div className="not-found">
 				<h1>Новость не найдена</h1>
@@ -44,21 +48,29 @@ const NewsDetail = () => {
 			<NewsPost>
 				<PostLeft>
 					<PostHead>
-						<img src={post.ava} alt="ava icon" />
-						<p>{post.username}</p>
+						<img src={news.ava} alt="ava icon" />
+						<p>{news.username}</p>
 					</PostHead>
-					<NewsImgMobile src={post.img} alt={post.title}/>
-					<PostTimeMobile ><TimeIcons color="#336CFF"/>{post.time}</PostTimeMobile>
-					<PostTilte>{post.title}</PostTilte>
-					<PostDescription>{post.description}</PostDescription>
+					<NewsImgMobile src={news.img} alt={news.title} />
+					<PostTimeMobile ><TimeIcons color="#336CFF" />{news.time}</PostTimeMobile>
+					<PostTilte>{news.title}</PostTilte>
+					<PostDescription>{news.description}</PostDescription>
 					<PostFooter className="news-meta">
-						<BtnBase $bg="#336CFF" $color="#fff" $padding="21px 40px">Сохранить в канал</BtnBase>
-						<PostTime><TimeIcons color="#336CFF"/>{post.time}</PostTime>
+						<BtnBase 
+							$bg="#336CFF" 
+							$color="#fff" 
+							$padding="21px 40px"
+							onClick={handleCopy}
+							disabled={isCopying}
+							>
+							{isCopying ? "Сохраняем..." : "Сохранить в канал"}
+						</BtnBase>
+						<PostTime><TimeIcons color="#336CFF" />{news.time}</PostTime>
 					</PostFooter>
 				</PostLeft>
-				<NewsImg src={post.img} alt={post.title}/>
+				<NewsImg src={news.img} alt={news.title} />
 			</NewsPost>
-			<TapeList forceHorizontal={true} padding={true}/>
+			<TapeList forceHorizontal={true} padding={true} />
 		</NewsContainer>
 	);
 }

@@ -1,7 +1,6 @@
 import styled from "styled-components";
 import arrow from "@/assets/arrow.svg";
 import { postsDatas } from "@/data/postsDatas";
-import createSlug from "@/lib/createSlug";
 import useSwipeAllowed from "@/lib/useSwipeAllowed";
 import { Link } from "react-router";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -10,8 +9,12 @@ import "swiper/css";
 import TimeIcons from "@/icons/TimeIcons";
 import useFadeOnScroll from "@/lib/useFadeOnScroll";
 import { useNews } from "@/lib/news/useNews";
+import { useCopyNewsToChannel } from "@/lib/news/useCopyNewsToChannel";
+import { usePopupStore } from "@/store/popupStore"
 
 const TapeList = ({ forceHorizontal = false, padding }) => {
+  const { popup } = usePopupStore();
+  const channelId = popup?.data?.channelId;
   const { fadeVisible, ref } = useFadeOnScroll(20);
 	const { isSwipe } = useSwipeAllowed(1400);
 
@@ -19,6 +22,20 @@ const TapeList = ({ forceHorizontal = false, padding }) => {
 
   const { newsData } = useNews();
   console.log(newsData)
+
+  const { mutate: copyToChannel, isLoading: isCopying } = useCopyNewsToChannel();
+
+  const handleCopy = () => {
+		copyToChannel({
+			id: news.id,
+			data: {
+				channelId,
+				publishedAt: new Date().toISOString(),
+				calendarScheduledAt: new Date().toISOString(),
+			},
+		});
+	};
+
 	return (
 		<TapeContainer
 			ref={ref}
@@ -35,18 +52,18 @@ const TapeList = ({ forceHorizontal = false, padding }) => {
 				prevEl: ".TapePrev",
 			}}
 		>
-			{postsDatas.map((item, i) => (
-				<TapeItem key={i} $forceHorizontal={forceHorizontal}>
+			{postsDatas.map((item) => (
+				<TapeItem key={item.id} $forceHorizontal={forceHorizontal}>
 					<TapeItemContent>
 						<TapeItemHead>
 							<img src={item.ava} alt="ava icon" />
 							<p>{item.username}</p>
 						</TapeItemHead>
 
-						<Link to={`/news/${createSlug(item.title)}`}><TapeItemText>{item.title}</TapeItemText></Link>
-
-						<TapeItemAction>Сохранить в канал</TapeItemAction>
-
+						<Link to={`/news/${item.id}`}><TapeItemText>{item.title}</TapeItemText></Link>
+            <TapeItemAction onClick={() => handleCopy(item.id)} disabled={isCopying}>
+              {isCopying ? "Сохраняем..." : "Сохранить в канал"}
+            </TapeItemAction>
 						<TapeTime>
               <TimeIcons/>
 							<span>{item.time}</span>
@@ -164,7 +181,7 @@ const TapeItemText = styled.div`
   -webkit-box-orient: vertical;
   overflow: hidden;
 `
-const TapeItemAction = styled.div`
+const TapeItemAction = styled.button`
   color: #6A7080;
   margin-bottom: 18px;
   line-height: 14px;
