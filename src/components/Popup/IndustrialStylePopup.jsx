@@ -79,9 +79,9 @@ const IndustrialStylePopup = () => {
               value={localCaption}
               onChange={(e) => setLocalCaption(e.target.value)}
             />
-            <IndustrialStyleBtn>
+            {/* <IndustrialStyleBtn>
               <PlusIcon color="#2B89ED"/>
-            </IndustrialStyleBtn>
+            </IndustrialStyleBtn> */}
           </IndustrialStyleInputContainer>
           <IndustrialStyleDesc>Подпись будет добавлена в <mark>конец каждого поста.</mark> Например: ссылка или призыв подписаться.</IndustrialStyleDesc>
         </IndustrialStyleLeft>
@@ -128,9 +128,9 @@ const IndustrialStyleLeft = styled.div`
   }
 `
 const IndustrialStyleInputContainer = styled.div`
-  display: flex;
+  /* display: flex;
   align-items: center;
-  gap: 24px;
+  gap: 24px; */
 `
 const IndustrialStyleTitle = styled.h2`
   font-size: 12px;

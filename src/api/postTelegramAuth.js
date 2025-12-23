@@ -1,4 +1,4 @@
-import apiClient from './apiClient';
+import apiClient from "@/api/apiClient";
 
 export const postTelegramAuth = async (data) => {
   console.log(data)
