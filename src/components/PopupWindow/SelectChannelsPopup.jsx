@@ -9,7 +9,7 @@ import { useCopyNewsToChannel } from "@/lib/news/useCopyNewsToChannel";
 
 const SelectChannelsPopup = () => {
     const { closePopup } = usePopupStore();
-    const { userChannels } = useUserChannels();
+    const { userChannels, isLoading } = useUserChannels();
     console.log(userChannels, 'asgsdgsd')
     const [selectedChannelId, setSelectedChannelId] = useState(null);
 
@@ -42,15 +42,19 @@ const SelectChannelsPopup = () => {
                 </CloseButton>
             </SelectChannelsHead>
             <SelectChannelsSubtitle>Укажите канал, в котором будет опубликована новость</SelectChannelsSubtitle>
-            <CustomSelect
-                // value={selectedChannelId}
-                // onChange={(option) => setSelectedChannelId(option.value)}
-                width="100%"
-                // options={userChannels.map((channel) => ({
-                //     value: channel.id,
-                //     label: channel.name,
-                // }))}
-            />
+            {isLoading ? (
+        <p>Загрузка каналов…</p>
+      ) : (
+        <CustomSelect
+          value={selectedChannelId}
+          onChange={(option) => setSelectedChannelId(option.value)}
+          width="100%"
+          options={userChannels.map((channel) => ({
+            value: channel.id,
+            label: channel.name,
+          }))}
+        />
+      )}
             <SelectChannelsButtons>
                 <BtnBase onClick={handleSave} $color="#D6DCEC" $bg="#336CFF">{isCopying ? "Сохраняем..." : "Сохранить"}</BtnBase>
                 <BtnBase onClick={closePopup} $color="#D6DCEC" $bg="#242A3A">Отменить</BtnBase>
