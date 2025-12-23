@@ -36,7 +36,7 @@ const PublicationsPopup = () => {
     setCurrentPage(1);
   }, [itemsPerPage]);
 
-  const totalPages = Math.ceil(posts?.length / itemsPerPage);
+  const totalPages = posts?.length ? Math.ceil(posts.length / itemsPerPage) : 0;
   const indexOfLast = currentPage * itemsPerPage;
   const indexOfFirst = indexOfLast - itemsPerPage;
   const currentItems = posts?.slice(indexOfFirst, indexOfLast);
@@ -57,18 +57,19 @@ const PublicationsPopup = () => {
           <EmptyState>Публикаций пока нет</EmptyState>
         )}
       </PublicationsList>
-
-      <PaginationWrapper>
-        {[...Array(totalPages)].map((_, i) => (
-          <PageBtn
-            key={i}
-            onClick={() => setCurrentPage(i + 1)}
-            active={currentPage === i + 1}
-          >
-            {i + 1}
-          </PageBtn>
-        ))}
-      </PaginationWrapper>
+      {totalPages > 1 && (
+        <PaginationWrapper>
+          {Array.from({ length: totalPages }, (_, i) => (
+            <PageBtn
+              key={i}
+              onClick={() => setCurrentPage(i + 1)}
+              active={currentPage === i + 1}
+            >
+              {i + 1}
+            </PageBtn>
+          ))}
+        </PaginationWrapper>
+      )}
     </>
   );
 };
