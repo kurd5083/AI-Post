@@ -8,56 +8,53 @@ import { useUserChannels } from "@/lib/channels/useUserChannels";
 import { useCopyNewsToChannel } from "@/lib/news/useCopyNewsToChannel";
 
 const SelectChannelsPopup = () => {
-    const { closePopup } = usePopupStore();
-    const { userChannels, isLoading } = useUserChannels();
-    console.log(userChannels, 'asgsdgsd')
-    const [selectedChannelId, setSelectedChannelId] = useState(null);
+	const { popup, closePopup } = usePopupStore();
+	const { userChannels } = useUserChannels();
+	console.log(userChannels, 'asgsdgsd')
+	const [selectedChannelId, setSelectedChannelId] = useState(null);
 
-    const { mutate: copyToChannel, isLoading: isCopying } = useCopyNewsToChannel();
+	const { mutate: copyToChannel, isLoading: isCopying } = useCopyNewsToChannel();
 
-    const handleSave = () => {
-        if (!selectedChannelId) {
-            alert("Выберите канал");
-            return;
-        }
+	const handleSave = () => {
+		if (!selectedChannelId) {
+			alert("Выберите канал");
+			return;
+		}
+		copyToChannel({
+			id: popup?.data?.newsId,
+			data: {
+				channelId: selectedChannelId,
+				publishedAt: new Date().toISOString(),
+				calendarScheduledAt: new Date().toISOString(),
+			},
+		});
+		closePopup();
+	};
 
-        copyToChannel({
-            id: newsId,
-            data: {
-                channelId: selectedChannelId,
-                publishedAt: new Date().toISOString(),
-                calendarScheduledAt: new Date().toISOString(),
-            },
-        });
-
-        closePopup();
-    };
-
-    return (
-        <div>
-            <SelectChannelsHead>
-                <HeadTitle>Выбрать канал</HeadTitle>
-                <CloseButton onClick={closePopup}>
-                    <CloseIcon color="#336CFF" />
-                </CloseButton>
-            </SelectChannelsHead>
-            <SelectChannelsSubtitle>Укажите канал, в котором будет опубликована новость</SelectChannelsSubtitle>
-       
-        <CustomSelect
-          value={selectedChannelId}
-          onChange={(option) => setSelectedChannelId(option.value)}
-          width="100%"
-          options={userChannels?.map((channel) => ({
-            value: channel.id,
-            label: channel.name,
-          }))}
-        />
-            <SelectChannelsButtons>
-                <BtnBase onClick={handleSave} $color="#D6DCEC" $bg="#336CFF">{isCopying ? "Сохраняем..." : "Сохранить"}</BtnBase>
-                <BtnBase onClick={closePopup} $color="#D6DCEC" $bg="#242A3A">Отменить</BtnBase>
-            </SelectChannelsButtons>
-        </div>
-    );
+	return (
+		<div>
+			<SelectChannelsHead>
+				<HeadTitle>Выбрать канал</HeadTitle>
+				<CloseButton onClick={closePopup}>
+					<CloseIcon color="#336CFF" />
+				</CloseButton>
+			</SelectChannelsHead>
+			<SelectChannelsSubtitle>Укажите канал, в котором будет опубликована новость</SelectChannelsSubtitle>
+			<CustomSelect
+				value={selectedChannelId}
+				onChange={(option) => setSelectedChannelId(option.value)}
+				width="100%"
+				options={userChannels?.map((channel) => ({
+					value: channel.id,
+					label: channel.name,
+				}))}
+			/>
+			<SelectChannelsButtons>
+				<BtnBase onClick={handleSave} $color="#D6DCEC" $bg="#336CFF">{isCopying ? "Сохраняем..." : "Сохранить"}</BtnBase>
+				<BtnBase onClick={closePopup} $color="#D6DCEC" $bg="#242A3A">Отменить</BtnBase>
+			</SelectChannelsButtons>
+		</div>
+	);
 };
 
 const SelectChannelsHead = styled.div`
@@ -91,6 +88,7 @@ const SelectChannelsSubtitle = styled.p`
   line-height: 20px;
   font-weight: 700;
   margin-top: 24px;
+	margin-bottom: 40px;
 `;
 const SelectChannelsButtons = styled.div`
   display: flex;

@@ -47,11 +47,7 @@ const NewsDetail = () => {
 							$bg="#336CFF"
 							$color="#fff"
 							$padding="21px 40px"
-							onClick={() => openPopup("select_channel", "popup_window", {
-								onSave: (selectedId) => {
-									setChannelId(selectedId);
-								},
-							})}
+							onClick={() => openPopup("select_channel", "popup_window", { newsId: id })}
 						>
 							Сохранить в канал
 						</BtnBase>
