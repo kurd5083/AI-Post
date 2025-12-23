@@ -1,10 +1,11 @@
+import { useState } from "react";
+
 import styled from "styled-components";
 import { useParams, useNavigate } from 'react-router-dom';
 import fire from "@/assets/tape/fire.svg";
 import TimeIcons from "@/icons/TimeIcons";
 import TapeList from "@/components/TapeList";
 import BtnBase from "@/shared/BtnBase";
-import { useCopyNewsToChannel } from "@/lib/news/useCopyNewsToChannel";
 import { usePopupStore } from "@/store/popupStore"
 import { useNewsById } from "@/lib/news/useNewsById";
 
@@ -12,21 +13,7 @@ const NewsDetail = () => {
 	const { openPopup } = usePopupStore();
 	const { id } = useParams();
 	const navigate = useNavigate();
-
 	const { news } = useNewsById(id);
-
-	const { mutate: copyToChannel, isLoading: isCopying } = useCopyNewsToChannel();
-
-	const handleCopy = () => {
-		copyToChannel({
-			id: id,
-			data: {
-				channelId: channelId,
-				publishedAt: new Date().toISOString(),
-				calendarScheduledAt: new Date().toISOString(),
-			},
-		});
-	};
 
 	if (!news) {
 		return (
@@ -56,14 +43,17 @@ const NewsDetail = () => {
 					<PostTilte>{news.title}</PostTilte>
 					<PostDescription>{news.content}</PostDescription>
 					<PostFooter className="news-meta">
-						<BtnBase 
-							$bg="#336CFF" 
-							$color="#fff" 
+						<BtnBase
+							$bg="#336CFF"
+							$color="#fff"
 							$padding="21px 40px"
-							// onClick={handleCopy}
-							onClick={() => openPopup("select_channels", "popup_window")}
+							onClick={() => openPopup("select_channels", "popup_window", {
+								onSave: (selectedId) => {
+									setChannelId(selectedId);
+								},
+							})}
 							disabled={isCopying}
-							>
+						>
 							{isCopying ? "Сохраняем..." : "Сохранить в канал"}
 						</BtnBase>
 						<PostTime><TimeIcons color="#336CFF" />{news.readingTime}</PostTime>

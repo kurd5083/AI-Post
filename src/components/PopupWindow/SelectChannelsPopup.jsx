@@ -5,11 +5,34 @@ import BtnBase from "@/shared/BtnBase";
 import CustomSelect from "@/shared/CustomSelectSec";
 import CloseIcon from "@/icons/CloseIcon";
 import { useUserChannels } from "@/lib/channels/useUserChannels";
+import { useCopyNewsToChannel } from "@/lib/news/useCopyNewsToChannel";
 
 const SelectChannelsPopup = () => {
     const { closePopup } = usePopupStore();
     const { userChannels } = useUserChannels();
     console.log(userChannels)
+    const [selectedChannelId, setSelectedChannelId] = useState(null);
+
+    const { mutate: copyToChannel, isLoading: isCopying } = useCopyNewsToChannel();
+
+    const handleSave = () => {
+        if (!selectedChannelId) {
+            alert("Выберите канал");
+            return;
+        }
+
+        copyToChannel({
+            id: newsId,
+            data: {
+                channelId: selectedChannelId,
+                publishedAt: new Date().toISOString(),
+                calendarScheduledAt: new Date().toISOString(),
+            },
+        });
+
+        closePopup();
+    };
+
     return (
         <div>
             <SelectChannelsHead>
@@ -20,18 +43,16 @@ const SelectChannelsPopup = () => {
             </SelectChannelsHead>
             <SelectChannelsSubtitle>Выберите канал в </SelectChannelsSubtitle>
             <CustomSelect
-                value={folderId}
-                onChange={(option) => setFolderId(option.value)}
+                value={selectedChannelId}
+                onChange={(option) => setSelectedChannelId(option.value)}
                 width="100%"
-                options={
-                    userChannels.map((channel) => ({
-                        value: channel.id,
-                        label: channel.name,
-                    }))
-                }
+                options={userChannels.map((channel) => ({
+                    value: channel.id,
+                    label: channel.name,
+                }))}
             />
             <SelectChannelsButtons>
-                <BtnBase $color="#D6DCEC" $bg="#336CFF">Сохранить</BtnBase>
+                <BtnBase onClick={handleSave} $color="#D6DCEC" $bg="#336CFF">{isCopying ? "Сохраняем..." : "Сохранить"}</BtnBase>
                 <BtnBase onClick={closePopup} $color="#D6DCEC" $bg="#242A3A">Отменить</BtnBase>
             </SelectChannelsButtons>
         </div>
