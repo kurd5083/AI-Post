@@ -29,12 +29,7 @@ const TableGroups = () => {
 	return (
 		<TableGroupsContainer>
 			<TableGroupsHead>
-				<TableGroupsHeadLeft
-					key={isSwipe}
-					spaceBetween={40}
-					slidesPerView="auto"
-					allowTouchMove={true}
-				>
+				<TableGroupsHeadLeft>
 				  <TableGroupsHeadDir onClick={() => openPopup("create_folder", "popup_window")}><img src={dir_filled} alt="dir icon"/>Создать папку</TableGroupsHeadDir>
           <BaseFolderBtn 
             onClick={() => setId(null)} 
@@ -103,6 +98,7 @@ const TableGroupsHead = styled.div`
 `
 const TableGroupsHeadLeft = styled.div`
   display: flex;
+  gap: 40px;
 	margin: 0;
   @media (max-width: 768px) {
     padding: 0 24px;
