@@ -14,6 +14,7 @@ const SettingsPopup = () => {
   const { changeContent, popup } = usePopupStore();
   const channelId = popup?.data?.channelId;
   const { channel } = useChannelById(channelId);
+  const { posts } = usePostsByChannel(channelId);
   console.log(channel, 'aaa')
 
   const [localSwitches, setLocalSwitches] = useState({
@@ -103,7 +104,7 @@ const SettingsPopup = () => {
                     <img src={arrow} alt="arrow icon" height={12} width={6} />
                   </PopupContentRight>
                 ) : (
-                  <PopupContentCounter>{item.status}</PopupContentCounter>
+                  <PopupContentCounter>{posts?.length}</PopupContentCounter>
                 )}
               </PopupContentItem>
             ))}
