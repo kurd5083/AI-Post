@@ -9,8 +9,7 @@ import { usePopupStore } from "@/store/popupStore"
 import { useNewsById } from "@/lib/news/useNewsById";
 
 const NewsDetail = () => {
-	const { popup } = usePopupStore();
-  const channelId = popup?.data?.channelId;
+	const { openPopup } = usePopupStore();
 	const { id } = useParams();
 	const navigate = useNavigate();
 
@@ -61,7 +60,8 @@ const NewsDetail = () => {
 							$bg="#336CFF" 
 							$color="#fff" 
 							$padding="21px 40px"
-							onClick={handleCopy}
+							// onClick={handleCopy}
+							onClick={() => openPopup("change_time", "popup_window")}
 							disabled={isCopying}
 							>
 							{isCopying ? "Сохраняем..." : "Сохранить в канал"}

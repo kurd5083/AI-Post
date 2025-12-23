@@ -34,7 +34,7 @@ const CreatePostManuallyPopup = () => {
             <BtnBase $color="#EF6284" $bg="#26202F" $padding="21px 24px">Настройки</BtnBase>
             <BtnBase $color="#336CFF" $bg="#161F37" $padding="21px 24px"><PromotionIcon color="#336CFF"/>{!isSmall ? 'Опубликовать сейчас' : 'Опубликовать'}</BtnBase>
           </PostSettingTop>
-          <BtnBase $color="#6A7080" $bg="transporent" $border={true} onClick={() => openPopup("change_time", "popup_window")} ><TimeIcons/>Изменить время</BtnBase>
+          <BtnBase $color="#6A7080" $bg="transporent" $border={true} onClick={() => openPopup("change_time", "popup_window")}><TimeIcons/>Изменить время</BtnBase>
         </PostSetting>
       </NewPostLeft>
       <PostLeftButtons>
