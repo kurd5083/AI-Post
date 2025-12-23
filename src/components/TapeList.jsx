@@ -52,11 +52,11 @@ const TapeList = ({ forceHorizontal = false, padding }) => {
 				prevEl: ".TapePrev",
 			}}
 		>
-			{newsData?.data?.map((news) => (
+			{/* {newsData?.data?.map((news) => (
 				<TapeItem key={news.id} $forceHorizontal={forceHorizontal}>
 					<TapeItemContent>
 						<TapeItemHead>
-							{/* <img src={item.ava} alt="ava icon" /> */}
+							<img src={item.ava} alt="ava icon" />
 							<p>{news.sourceName}</p>
 						</TapeItemHead>
 
@@ -66,13 +66,13 @@ const TapeList = ({ forceHorizontal = false, padding }) => {
             </TapeItemAction>
 						<TapeTime>
               <TimeIcons/>
-							{/* <span>{news.time}</span> */}
+							<span>{news.time}</span>
 						</TapeTime>
 					</TapeItemContent>
 
-					{/* <TapePostImg src={`/api/${news.images[0]}`} alt="post img" $forceHorizontal={forceHorizontal}/> */}
+					<TapePostImg src={`/api/${news.images[0]}`} alt="post img" $forceHorizontal={forceHorizontal}/>
 				</TapeItem>
-			))}
+			))} */}
 			{(forceHorizontal || isSwipe) && (
 				<div>
 					<TapePostButton className="TapePrev">
