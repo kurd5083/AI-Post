@@ -6,34 +6,18 @@ import "swiper/css";
 import useSwipeAllowed from "@/lib/useSwipeAllowed";
 import useFadeOnScroll from "@/lib/useFadeOnScroll";
 import { useNews } from "@/lib/news/useNews";
-import { useCopyNewsToChannel } from "@/lib/news/useCopyNewsToChannel";
 import { usePopupStore } from "@/store/popupStore"
 import TimeIcons from "@/icons/TimeIcons";
 import arrow from "@/assets/arrow.svg";
 
 const TapeList = ({ forceHorizontal = false, padding }) => {
-  const { popup } = usePopupStore();
-  const channelId = popup?.data?.channelId;
+  const { openPopup } = usePopupStore();
   const { fadeVisible, ref } = useFadeOnScroll(20);
   const { isSwipe } = useSwipeAllowed(1400);
 
   const direction = forceHorizontal ? "horizontal" : (isSwipe ? "horizontal" : "vertical");
 
   const { newsData, newsLoding } = useNews();
-  console.log(newsData)
-
-  const { mutate: copyToChannel, isLoading: isCopying } = useCopyNewsToChannel();
-
-  const handleCopy = (newsId) => {
-    copyToChannel({
-      id: newsId,
-      data: {
-        channelId,
-        publishedAt: new Date().toISOString(),
-        calendarScheduledAt: new Date().toISOString(),
-      },
-    });
-  };
 
   return (
     <>
@@ -63,13 +47,11 @@ const TapeList = ({ forceHorizontal = false, padding }) => {
                   {/* <img src={news.ava} alt="ava icon" /> */}
                   <p>{news.sourceName}</p>
                 </TapeItemHead>
-
                 <Link to={`/news/${news.id}`}>
                   <TapeItemText>{news.title}</TapeItemText>
                 </Link>
-
-                <TapeItemAction onClick={() => handleCopy(news.id)} disabled={isCopying}>
-                  {isCopying ? "Сохраняем..." : "Сохранить в канал"}
+                <TapeItemAction onClick={() => openPopup("select_channel", "popup_window", { newsId: news.id })}>
+                  Сохранить в канал
                 </TapeItemAction>
                 <TapeTime>
                   <TimeIcons />
