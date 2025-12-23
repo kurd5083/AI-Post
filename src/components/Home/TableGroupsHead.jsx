@@ -101,7 +101,7 @@ const TableGroupsHead = styled.div`
     flex-wrap: wrap;
   }
 `
-const TableGroupsHeadLeft = styled(Swiper)`
+const TableGroupsHeadLeft = styled.div`
   display: flex;
 	margin: 0;
   @media (max-width: 768px) {
@@ -124,6 +124,10 @@ const TableGroupsHeadDir = styled.button`
 	@media(max-width: 480px) {
     display: none;
   }
+`
+const LeftSwiper = styled(Swiper)`
+  display: flex;
+	margin: 0;
 `
 const BaseFolderBtn = styled.button`
   box-sizing: border-box;
