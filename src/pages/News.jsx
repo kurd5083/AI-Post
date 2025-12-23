@@ -1,5 +1,3 @@
-import { useState } from "react";
-
 import styled from "styled-components";
 import { useParams, useNavigate } from 'react-router-dom';
 import fire from "@/assets/tape/fire.svg";
@@ -8,6 +6,7 @@ import TapeList from "@/components/TapeList";
 import BtnBase from "@/shared/BtnBase";
 import { usePopupStore } from "@/store/popupStore"
 import { useNewsById } from "@/lib/news/useNewsById";
+import { useFormattedHtml } from "@/lib/useFormattedHtml";
 
 const NewsDetail = () => {
 	const { openPopup } = usePopupStore();
@@ -40,7 +39,7 @@ const NewsDetail = () => {
 					</PostHead>
 					<NewsImgMobile src={`/.netlify/functions/api-proxy/${news.images[0]}`} alt={news.title} />
 					<PostTimeMobile ><TimeIcons color="#336CFF" />{news.readingTime}</PostTimeMobile>
-					<PostTilte>{news.title}</PostTilte>
+					<PostTilte>{useFormattedHtml(news.title)}</PostTilte>
 					<PostDescription>{news.content}</PostDescription>
 					<PostFooter className="news-meta">
 						<BtnBase

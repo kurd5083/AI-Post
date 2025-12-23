@@ -4,7 +4,6 @@ import TimeIcons from "@/icons/TimeIcons";
 import { useFormattedHtml } from "@/lib/useFormattedHtml";
 
 const CardPablish = ({ item, bg }) => {
-  const html = (text);
 	return (
 		<CardPablishItem $bg={bg}>
 			<CardPablishItemHead>
