@@ -39,7 +39,7 @@ const TableGroups = () => {
             <p>Без папки</p>
             <mark>{channels?.totalChannelsWithoutFolder}</mark>
           </BaseFolderBtn>
-          <Swiper
+          <LeftSwiper
             key={isSwipe}
             spaceBetween={40}
             slidesPerView="auto"
@@ -67,7 +67,7 @@ const TableGroups = () => {
               />
             </TableGroupsHeadBtn>
           ))}
-          </Swiper>
+          </LeftSwiper>
 				</TableGroupsHeadLeft>
 				<TableGroupsHeadRight>
 					<TableGroupsHeadAdd  onClick={() => openPopup("create_channel", "popup_window")}>{isSmall ? "+ Добавить" : "+ Добавить канал"}</TableGroupsHeadAdd>
@@ -132,7 +132,9 @@ const TableGroupsHeadDir = styled.button`
     display: none;
   }
 `
-
+const LeftSwiper = styled(Swiper)`
+  width: 100%;
+`
 const baseFolderStyles = css`
   box-sizing: border-box;
   display: flex;
@@ -165,7 +167,7 @@ const BaseFolderBtn = styled.button`
 
 const TableGroupsHeadBtn = styled(SwiperSlide)`
   ${baseFolderStyles}
-  width: auto;
+  width: fit-content;
 `;
 const FolderName = styled.p`
   max-width: 100px;

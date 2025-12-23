@@ -26,7 +26,7 @@ const DeleteConfirmPopup = () => {
       </DeleteSubtitle>
       <PopupButtons>
         <BtnBase
-          $color="#D6DCEC"
+          $color="#fff"
           $bg="#FF4D4D"
           onClick={handleDelete}
         >
