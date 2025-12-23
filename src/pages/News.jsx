@@ -88,8 +88,8 @@ const NewsTitle = styled.h1`
   line-height: 48px;
   font-size: 48px;
   font-weight: 900;
-	padding: 0 56px;
 	margin-top: 16px;
+	padding: 0 56px;
 
 	@media(max-width: 1600px) {
     padding: 0 32px;
@@ -234,6 +234,14 @@ const NewsSubTitle = styled.h3`
   font-size: 24px;
   font-weight: 700;
 	margin-top: 40px;
+	padding: 0 56px;
+
+  @media(max-width: 1600px) {
+    padding: 0 32px;
+  }
+  @media(max-width: 768px) {
+    padding: 0 24px;
+  }
 `
 
 export default NewsDetail;
