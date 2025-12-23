@@ -50,13 +50,13 @@ const NewsDetail = () => {
 			<NewsPost>
 				<PostLeft>
 					<PostHead>
-						<img src={news.ava} alt="ava icon" />
-						<p>{news.username}</p>
+						{/* <img src={news.ava} alt="ava icon" /> */}
+						<p>{news.sourceName}</p>
 					</PostHead>
-					<NewsImgMobile src={news.img} alt={news.title} />
-					<PostTimeMobile ><TimeIcons color="#336CFF" />{news.time}</PostTimeMobile>
+					<NewsImgMobile src={`/.netlify/functions/api-proxy/${news.images[0]}`} alt={news.title} />
+					<PostTimeMobile ><TimeIcons color="#336CFF" />{news.readingTime}</PostTimeMobile>
 					<PostTilte>{news.title}</PostTilte>
-					<PostDescription>{news.description}</PostDescription>
+					<PostDescription>{news.content}</PostDescription>
 					<PostFooter className="news-meta">
 						<BtnBase 
 							$bg="#336CFF" 
@@ -67,10 +67,10 @@ const NewsDetail = () => {
 							>
 							{isCopying ? "Сохраняем..." : "Сохранить в канал"}
 						</BtnBase>
-						<PostTime><TimeIcons color="#336CFF" />{news.time}</PostTime>
+						<PostTime><TimeIcons color="#336CFF" />{news.readingTime}</PostTime>
 					</PostFooter>
 				</PostLeft>
-				<NewsImg src={news.img} alt={news.title} />
+				<NewsImg src={`/.netlify/functions/api-proxy/${news.images[0]}`} alt={news.title} />
 			</NewsPost>
 			<TapeList forceHorizontal={true} padding={true} />
 		</NewsContainer>

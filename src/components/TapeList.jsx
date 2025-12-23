@@ -59,6 +59,7 @@ const TapeList = ({ forceHorizontal = false, padding }) => {
             <TapeItem key={news.id} $forceHorizontal={forceHorizontal}>
               <TapeItemContent $forceHorizontal={forceHorizontal}>
                 <TapeItemHead>
+                  {/* <img src={item.ava} alt="ava icon" /> */}
                   <p>{news.sourceName}</p>
                 </TapeItemHead>
 
@@ -71,6 +72,7 @@ const TapeList = ({ forceHorizontal = false, padding }) => {
                 </TapeItemAction>
                 <TapeTime>
                   <TimeIcons />
+                  <span>{item.readingTime}</span>
                 </TapeTime>
               </TapeItemContent>
               <TapePostImg src={`/.netlify/functions/api-proxy/${news.images[0]}`} alt="post img" $forceHorizontal={forceHorizontal} />
@@ -175,7 +177,7 @@ const TapeItemContent = styled.div`
   max-width: calc(100% - 162px);
   max-width: ${({ $forceHorizontal }) =>
   $forceHorizontal ? 'calc(100% - 115px)' : 'calc(100% - 162px)'};
-  
+
   @media(max-width: 1600px) {
     max-width: calc(100% - 115px);
   }
