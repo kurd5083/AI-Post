@@ -139,7 +139,6 @@ const MoveChannelButtons = styled.div`
 
   button {
     width: 100%;
-    justify-content: center;
   }
 `;
 

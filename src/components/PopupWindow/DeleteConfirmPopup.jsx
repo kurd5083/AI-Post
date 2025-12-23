@@ -78,7 +78,6 @@ const PopupButtons = styled.div`
 
   button {
     width: 100%;
-    justify-content: center;
   }
 `;
 

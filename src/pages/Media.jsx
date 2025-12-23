@@ -188,7 +188,6 @@ const CardActions = styled.div`
   width: 100%;
   button {
     width: 100%;
-    justify-content: center;
   }
 `
 const LeftActions = styled.div`

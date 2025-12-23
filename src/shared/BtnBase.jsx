@@ -4,6 +4,7 @@ export const BtnBase = styled.button`
   display: flex;
   gap: 8px;
   align-items: center;
+  justify-content: center;
   padding: ${({ $padding }) => $padding ? $padding : '21px 32px'};
   border-radius: ${({ $radius }) => $radius ? $radius : '12px'};
   color: ${({ $color }) => $color || "#336CFF"};

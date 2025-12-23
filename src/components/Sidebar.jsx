@@ -70,28 +70,32 @@ const Sidebar = () => {
             {isSidebarVisible && <p>{user?.firstName} {user?.lastName}</p>}
           </SidebarFooterTop>
         ) : (
-          <BtnBase
-            $padding="6px 12px"
-            $bg="#54a9eb"
-            $color="#fff"
-            $radius="20px"
-            onClick={() => {
-              if (!botLinkData) return;
-              window.location.href = botLinkData.botLink;
-            }}
+          <SidebarFooterBtn>
+            <BtnBase
+              $padding="6px 12px"
+              $bg="#54a9eb"
+              $color="#fff"
+              $radius="20px"
+              onClick={() => {
+                if (!botLinkData) return;
+                window.location.href = botLinkData.botLink;
+              }}
             >
-            <TgIcon width="22" height="20"/>
-            Войти через бот
-          </BtnBase>
+              <TgIcon width="22" height="20" />
+              Войти через бот
+            </BtnBase>
+          </SidebarFooterBtn>
         )}
-        <BtnBase 
-          $padding="12px 24px"
-          $bg="#151F37"
-          $color="#336CFF"
-          onClick={() => openPopup("replenish")}
-        >
-          + {isSidebarVisible && 'Пополнить'}
-        </BtnBase>
+        <SidebarFooterBtn>
+          <BtnBase
+            $padding="12px 24px"
+            $bg="#151F37"
+            $color="#336CFF"
+            onClick={() => openPopup("replenish")}
+          >
+            + {isSidebarVisible && 'Пополнить'}
+          </BtnBase>
+        </SidebarFooterBtn>
       </SidebarFooter>
     </SidebarContainer>
   )
@@ -243,12 +247,9 @@ const SidebarAva = styled.img`
   height: 48px;
   border-radius: 16px;
 `
-const SidebarFooterBtn = styled.button`
-  background-color: #151F37;
-  color: #336CFF;
-  padding: 12px;
-  border-radius: 8px;
-  font-size: 14px;
-  font-weight: 700;
+const SidebarFooterBtn = styled.div`
+  button {
+    width: 100%;
+  }
 `
 export default Sidebar
