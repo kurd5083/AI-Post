@@ -22,8 +22,8 @@ const MoveChannelPopup = () => {
 		<div>
 			<MoveChannelHead>
 				<HeadTitle>Переместить канал в папку</HeadTitle>
-				<CloseButton>
-					<CloseIcon color="#336CFF" onClick={closePopup} />
+				<CloseButton onClick={closePopup}>
+					<CloseIcon color="#336CFF"/>
 				</CloseButton>
 			</MoveChannelHead>
 			<MoveChannelSubtitle>Выберите папку для канала “Все о криптовалюте”</MoveChannelSubtitle>

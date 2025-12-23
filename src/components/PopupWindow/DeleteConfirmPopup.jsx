@@ -19,8 +19,8 @@ const DeleteConfirmPopup = () => {
         <div>
             <DeleteHead>
                 <HeadTitle>Создать папку</HeadTitle>
-                <CloseButton>
-                    <CloseIcon color="#336CFF" onClick={closePopup} />
+                <CloseButton onClick={closePopup}>
+                    <CloseIcon color="#336CFF"/>
                 </CloseButton>
             </DeleteHead>
             <DeleteSubtitle>

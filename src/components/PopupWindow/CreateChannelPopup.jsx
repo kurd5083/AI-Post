@@ -58,8 +58,8 @@ const CreateChannelPopup = () => {
 		<div>
 			<PopupHead>
 				<HeadTitle>Создать канал</HeadTitle>
-				<CloseButton>
-					<CloseIcon color="#336CFF" onClick={closePopup} />
+				<CloseButton onClick={closePopup}>
+					<CloseIcon color="#336CFF"/>
 				</CloseButton>
 			</PopupHead>
 

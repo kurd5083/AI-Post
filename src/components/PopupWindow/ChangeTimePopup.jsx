@@ -31,8 +31,8 @@ const ChangeTimePopup = () => {
     <div>
       <ChangeTimeHead>
         <HeadTitle>Изменить время</HeadTitle>
-        <CloseButton>
-					<CloseIcon color="#336CFF" onClick={closePopup} />
+        <CloseButton onClick={closePopup}>
+					<CloseIcon color="#336CFF"/>
 				</CloseButton>
       </ChangeTimeHead>
       <ChangeTimeSubtitle>Выберите время в которое будет удобнее опубликовать пост</ChangeTimeSubtitle>
