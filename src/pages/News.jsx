@@ -47,7 +47,7 @@ const NewsDetail = () => {
 							$bg="#336CFF"
 							$color="#fff"
 							$padding="21px 40px"
-							onClick={() => openPopup("select_channels", "popup_window", {
+							onClick={() => openPopup("select_channel", "popup_window", {
 								onSave: (selectedId) => {
 									setChannelId(selectedId);
 								},

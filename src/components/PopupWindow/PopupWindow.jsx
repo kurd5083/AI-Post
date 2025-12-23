@@ -23,7 +23,7 @@ const PopupWindow = () => {
                     <CreateChannelPopup />
                 ) : popup.content == 'delete_popup' ?(
                     <DeleteConfirmPopup />
-                ) : popup.content == 'select_popup' ?(
+                ) : popup.content == 'select_channel' ?(
                     <SelectChannelsPopup />
                 ) : (
                     2
