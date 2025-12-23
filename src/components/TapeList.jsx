@@ -75,7 +75,7 @@ const TapeList = ({ forceHorizontal = false, padding }) => {
               </TapeItemContent>
 
               {news.images?.[0] && (
-                <TapePostImg src={`/api/${news.images[0]}`} alt="post img" $forceHorizontal={forceHorizontal} />
+                <TapePostImg src={`/.netlify/functions/api-proxy/${news.images[0]}`} alt="post img" $forceHorizontal={forceHorizontal} />
               )}
             </TapeItem>
           ))}
