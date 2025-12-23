@@ -1,8 +1,7 @@
 import { useState, useEffect } from "react";
 import styled from "styled-components";
 import CardPablish from "@/components/CardPablish";
-import { publicationsDatas } from "@/data/publicationsDatas";
-import useSwipeAllowed from "@/lib/useSwipeAllowed";
+import { usePopupStore } from "@/store/popupStore"
 const itemsPerPageDefault = 9;
 const itemsPerPageSmall = 6;
 const itemsPerPageMob = 4;
@@ -10,6 +9,11 @@ const itemsPerPageMob = 4;
 const PublicationsPopup = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(itemsPerPageDefault);
+
+  const { popup } = usePopupStore();
+  const channelId = popup?.data?.channelId;
+
+  const { posts } = usePostsByChannel(channelId);
 
   useEffect(() => {
     const handleResize = () => {
@@ -31,11 +35,11 @@ const PublicationsPopup = () => {
     setCurrentPage(1);
   }, [itemsPerPage]);
 
-  const totalPages = Math.ceil(publicationsDatas.length / itemsPerPage);
+  const totalPages = Math.ceil(posts.length / itemsPerPage);
   const indexOfLast = currentPage * itemsPerPage;
   const indexOfFirst = indexOfLast - itemsPerPage;
-  const currentItems = publicationsDatas.slice(indexOfFirst, indexOfLast);
-
+  const currentItems = posts.slice(indexOfFirst, indexOfLast);
+  console.log(currentItems)
   return (
     <>
       <PublicationsHead>
@@ -44,7 +48,7 @@ const PublicationsPopup = () => {
         <PublicationsFilter>По дате</PublicationsFilter>
       </PublicationsHead>
       <PublicationsList>
-        {currentItems.map((item, index) => (
+        {currentItems.length > 0 ?.map((item, index) => (
           <CardPablish key={index} item={item} bg={true} />
         ))}
       </PublicationsList>

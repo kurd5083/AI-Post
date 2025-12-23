@@ -6,7 +6,6 @@ import { settingsDatas } from "@/data/settingsDatas";
 import ToggleSwitch from "@/shared/ToggleSwitch";
 import { usePopupStore } from "@/store/popupStore"
 import { useChannelById } from "@/lib/channels/useChannelById";
-
 import { useEnableChannelPosting, useDisableChannelPosting } from "@/lib/channels/useUpdateChannelPosting";
 import { useAutoApprovalStatus } from "@/lib/channels/useAutoApprovalStatus";
 import { useEnableChannelPromotion, useDisnableChannelPromotion } from "@/lib/channels/useEnableChannelPromotion";
