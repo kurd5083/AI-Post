@@ -22,7 +22,7 @@ const NewsDetail = () => {
 		copyToChannel({
 			id: id,
 			data: {
-				channelId,
+				channelId: channelId,
 				publishedAt: new Date().toISOString(),
 				calendarScheduledAt: new Date().toISOString(),
 			},
