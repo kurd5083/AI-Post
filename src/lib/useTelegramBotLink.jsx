@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
-import { getTelegramBotLink } from '@/api/usersAuth';
+import { getTelegramBotLink } from '@/api/getTelegramBotLink';
+
 
 export const useTelegramBotLink = () => {
   const { data: botLinkData } = useQuery({
