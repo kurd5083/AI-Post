@@ -1,8 +1,10 @@
 import styled from "styled-components";
 import arrow from "@/assets/arrow.svg";
 import TimeIcons from "@/icons/TimeIcons";
+import { useFormattedHtml } from "@/lib/useFormattedHtml";
 
 const CardPablish = ({ item, bg }) => {
+  const html = (text);
 	return (
 		<CardPablishItem $bg={bg}>
 			<CardPablishItemHead>
@@ -15,8 +17,10 @@ const CardPablish = ({ item, bg }) => {
 					{item.time}
 				</CardPablishItemTime>
 			</CardPablishItemHead>
-			<CardPablishText>{item.text}</CardPablishText>
-			<CardPablishSubtext>{item.subtext}</CardPablishSubtext>
+			<CardPablishText>{item.title}</CardPablishText>
+			<CardPablishSubtext
+        dangerouslySetInnerHTML={{__html: useFormattedHtml(item.text)}}
+      />
 			<CardPablishOpen>
 				<img src={arrow} alt="arrow icon" />
 			</CardPablishOpen>
