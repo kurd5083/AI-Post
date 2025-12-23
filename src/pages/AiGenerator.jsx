@@ -15,7 +15,7 @@ import eye_blue from "@/assets/eye-blue.svg";
 import publish from "@/assets/ai-generator/publish.svg";
 import PreviewBG from "@/assets/ai-generator/PreviewBG.png";
 import copy from "@/assets/copy.svg";
-import tg from "@/assets/feedmentions/tg.svg";
+import TgIcon from "@/icons/TgIcon";
 import arrow from "@/assets/arrow.svg";
 import CheckboxCircle from "@/shared/CheckboxCircle";
 import CustomSelect from "@/shared/CustomSelectSec";
@@ -123,7 +123,7 @@ const AiGenerator = () => {
                 <CustomSelect
                   placeholder="Все платформы"
                   options={[
-                    { icon: tg, value: "Telegram", label: "Telegram" },
+                    { value: "Telegram", label: "Telegram" },
                   ]}
                   width="220px"
                   fs="14px"

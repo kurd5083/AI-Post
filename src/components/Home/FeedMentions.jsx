@@ -4,9 +4,9 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import { Navigation } from "swiper/modules";
 import { feedmentionsDatas } from "@/data/feedmentionsDatas";
-import tg from "@/assets/feedmentions/tg.svg";
 import arrow from "@/assets/arrow.svg";
 import CardPablish from "@/components/CardPablish";
+import TgIcon from "@/icons/TgIcon";
 
 const FeedMentions = () => {
   const [fadeVisible, setFadeVisible] = useState(true);
@@ -15,7 +15,7 @@ const FeedMentions = () => {
     <FeedMentionsContainer>
       <FeedMentionsHead>
         <FeedMentionsTitle>
-          <img src={tg} alt="tg icon" />
+          <TgIcon color="#579AFF"/>
           Лента упоминаний
         </FeedMentionsTitle>
 

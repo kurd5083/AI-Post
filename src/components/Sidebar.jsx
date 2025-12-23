@@ -6,6 +6,8 @@ import { usePopupStore } from "@/store/popupStore";
 import { useSidebarStore } from "@/store/sidebarStore";
 import { useUser } from "@/lib/useUser";
 import { useTelegramBotLink } from "@/lib/useTelegramBotLink";
+import BtnBase from "@/shared/BtnBase";
+import TgIcon from "@/icons/TgIcon";
 
 const Sidebar = () => {
   const { openPopup } = usePopupStore()
@@ -68,16 +70,27 @@ const Sidebar = () => {
             {isSidebarVisible && <p>{user?.firstName} {user?.lastName}</p>}
           </SidebarFooterTop>
         ) : (
-          <SidebarFooterBtn
-            onClick={() => {
-              if (!botLinkData) return;
-              window.location.href = botLinkData.botLink;
-            }}
-          >
-            Войти через Telegram
-          </SidebarFooterBtn>
+          <BtnBase
+            $padding="12px 24px"
+            $bg="#54a9eb"
+            $color="#fff"
+              onClick={() => {
+                if (!botLinkData) return;
+                window.location.href = botLinkData.botLink;
+              }}
+            >
+              <TgIcon/>
+              Войти через Telegram
+          </BtnBase>
         )}
-        <SidebarFooterBtn onClick={() => openPopup("replenish")}>+ {isSidebarVisible && 'Пополнить'} </SidebarFooterBtn>
+        <BtnBase 
+          $padding="12px 24px"
+          $bg="#151F37"
+          $color="#336CFF"
+          onClick={() => openPopup("replenish")}
+        >
+          + {isSidebarVisible && 'Пополнить'}
+        </BtnBase>
       </SidebarFooter>
     </SidebarContainer>
   )
