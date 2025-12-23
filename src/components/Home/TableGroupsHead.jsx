@@ -51,7 +51,9 @@ const TableGroups = () => {
               onClick={() => setId(folder.id)}
               $active={selectedId === folder.id}
             >
-              <img src={dir} alt="dir icon" /><p>{folder.name}</p> <mark>{folder.channels.length}</mark>
+              <img src={dir} alt="dir icon" />
+              <FolderName>{folder.name}</FolderName>
+              <mark>{folder.channels.length}</mark>
               <DeleteFolderButton 
                 src={del} 
                 alt="del icon" 
@@ -162,6 +164,12 @@ const TableGroupsHeadBtn = styled(SwiperSlide)`
   ${BaseFolderBtn}
   width: auto;
 `;
+const FolderName = styled.p`
+  max-width: 100px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+`
 const DeleteFolderButton = styled.img`
   cursor: pointer;
   width: 12px;

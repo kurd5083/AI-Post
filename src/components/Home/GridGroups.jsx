@@ -12,7 +12,7 @@ const GridGroups = () => {
   const { selectedId } = useChannelsStore();
   const { channels } = useChannelsGroupedByFolders();
   const { mutate: deleteChannel } = useDeleteChannel();
-  
+
   return (
     <GridContainer>
       {(() => {
@@ -48,7 +48,18 @@ const GridGroups = () => {
             <ButtonsWrap>
               <ButtonDir onClick={() => openPopup("move_channel", "popup_window", { channelId: channel.id })} title="Перейти"><img src={dir_white} alt="dir icon" width={16} height={13} /></ButtonDir>
               <ButtonSetting onClick={() => openPopup('settings', 'popup', { channelId: channel.id })} title="Настройки"><img src={setting} alt="setting icon" width={16} height={16} /></ButtonSetting>
-              <ButtonDel onClick={() => deleteChannel(channel.id)} title="Удалить"><img src={del} alt="del icon" width={14} height={16} /></ButtonDel>
+              <ButtonDel
+                onClick={(e) => {
+                  e.stopPropagation();
+                  openPopup("delete_confirm", "popup_window", {
+                    itemName: channel.name,
+                    onDelete: () => deleteChannel(channel.id), 
+                  });
+                }}
+                title="Удалить"
+              >
+                <img src={del} alt="del icon" width={14} height={16} />
+              </ButtonDel>
             </ButtonsWrap>
           </GridItem>
         ));
