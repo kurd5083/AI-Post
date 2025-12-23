@@ -71,6 +71,7 @@ const NewsDetail = () => {
 				</PostLeft>
 				<NewsImg src={`/.netlify/functions/api-proxy/${news.images[0]}`} alt={news.title} />
 			</NewsPost>
+			<NewsSubTitle>Другие новости</NewsSubTitle>
 			<TapeList forceHorizontal={true} padding={true} />
 		</NewsContainer>
 	);
@@ -228,6 +229,11 @@ const PostTime = styled.p`
 	@media (max-width: 480px) {
    display: none;
   }
+`
+const NewsSubTitle = styled.h3`
+  font-size: 24px;
+  font-weight: 700;
+	margin-top: 40px;
 `
 
 export default NewsDetail;
