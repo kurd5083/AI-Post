@@ -172,6 +172,10 @@ const TapeItemContent = styled.div`
   display: flex;
   flex-direction: column;
   padding: 20px 0;
+  max-width: calc(100% - 162px);
+  @media(max-width: 1600px) {
+    max-width: calc(100% - 115px);
+  }
 `
 const TapeItemHead = styled.div`
   display: flex;
