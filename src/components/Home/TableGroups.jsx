@@ -60,7 +60,7 @@ const TableGroups = () => {
                 <p>
                   <TableCellNum>#{index + 1}</TableCellNum>
                   <img src={channel.avatarUrl} alt="Group" />
-                  <span>{channel.name}</span>
+                  <CellName>{channel.name}</CellName>
                 </p>
               </TableCell>
               <TableCell>
@@ -292,12 +292,17 @@ const TableCell = styled.td`
     }
   }
 `;
+const CellName = styled.span`
+  max-width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+`
 const TableCellNum = styled.span`
   @media(max-width: 991px) {
     display: none;
   }
 `;
-
 const TableCellStatus = styled.button`
   padding: 18px 24px;
   border-radius: 12px;

@@ -39,7 +39,7 @@ const GridGroups = () => {
           <GridItem key={channel.id}>
             <GridItemNum>#{index++}</GridItemNum>
             <GridImg src={channel.avatarUrl} alt="Group" />
-            <span>{channel.name}</span>
+            <CellName>{channel.name}</CellName>
             <p>
               {channel?.workMode === "PREMODERATION" && "Предмодерация"}
               {channel?.workMode === "AUTOPOSTING" && "Автопостинг"}
@@ -112,6 +112,12 @@ const GridImg = styled.img`
   border-radius: 12px;
   object-fit: cover;
 `;
+const CellName = styled.span`
+  max-width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+`
 const GridStatus = styled.button`
   padding: 18px 24px;
   border-radius: 12px;
