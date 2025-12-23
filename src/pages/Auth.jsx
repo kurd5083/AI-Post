@@ -5,7 +5,7 @@ import { useAuthTelegram } from "@/lib/useAuthTelegram";
 const Auth = () => {
   const navigate = useNavigate();
   const { search } = useLocation();
-  const { telegramAuth } = useAuthTelegram();
+  const { mutate: telegramAuth } = useAuthTelegram();
 
   useEffect(() => {
     const params = new URLSearchParams(search);
