@@ -59,7 +59,7 @@ const TapeList = ({ forceHorizontal = false, padding }) => {
             <TapeItem key={news.id} $forceHorizontal={forceHorizontal}>
               <TapeItemContent $forceHorizontal={forceHorizontal}>
                 <TapeItemHead>
-                  {/* <img src={item.ava} alt="ava icon" /> */}
+                  {/* <img src={news.ava} alt="ava icon" /> */}
                   <p>{news.sourceName}</p>
                 </TapeItemHead>
 
@@ -72,7 +72,7 @@ const TapeList = ({ forceHorizontal = false, padding }) => {
                 </TapeItemAction>
                 <TapeTime>
                   <TimeIcons />
-                  <span>{item.readingTime}</span>
+                  <span>{news.readingTime}</span>
                 </TapeTime>
               </TapeItemContent>
               <TapePostImg src={`/.netlify/functions/api-proxy/${news.images[0]}`} alt="post img" $forceHorizontal={forceHorizontal} />
