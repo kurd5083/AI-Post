@@ -6,6 +6,7 @@ import TapeList from "@/components/TapeList";
 import BtnBase from "@/shared/BtnBase";
 import { useCopyNewsToChannel } from "@/lib/news/useCopyNewsToChannel";
 import { usePopupStore } from "@/store/popupStore"
+import { useNewsById } from "@/lib/news/useNewsById";
 
 const NewsDetail = () => {
 	const { popup } = usePopupStore();
