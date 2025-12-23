@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { getUserChannels } from "@/api/getUserChannels";
+import { getUserChannels } from "@/api/channels/getUserChannels";
 
 export const useUserChannels = () => {
     const { data: userChannels } = useQuery({
