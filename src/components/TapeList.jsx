@@ -93,12 +93,15 @@ const TapeList = ({ forceHorizontal = false, padding }) => {
 	)
 }
 const NoTape = styled.div`
+  margin-top: 32px;
+  box-sizing: border-box;
   border-radius: 24px !important;
   text-align: center;
   color: #6A7080;
   padding: 24px 0 !important;
   font-weight: 600;
   background-color: #1C2438;
+  width: 387px;
 `
 const TapeContainer = styled(Swiper)`
   position: relative;
