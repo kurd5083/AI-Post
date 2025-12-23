@@ -11,6 +11,7 @@ const NewsDetail = () => {
 	const { popup } = usePopupStore();
   const channelId = popup?.data?.channelId;
 	const { id } = useParams();
+	console.log(id)
 	const navigate = useNavigate();
 
 	const { news } = useNewsById(id);

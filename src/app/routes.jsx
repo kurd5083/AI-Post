@@ -81,7 +81,7 @@ export const router = createBrowserRouter([
         path: '/news/', 
         element:<OtherLayout />,
         children: [
-            { path: ':slug', element: <News /> }, 
+            { path: ':id', element: <News /> }, 
         ],
     },
     {
