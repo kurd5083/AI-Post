@@ -11,6 +11,7 @@ import MyOrders from '@/pages/MyOrders';
 import Media from '@/pages/Media';
 import Help from '@/pages/Help';
 import News from '@/pages/News';
+import Auth from '@/pages/Auth';
 
 export const router = createBrowserRouter([
     {
@@ -82,5 +83,9 @@ export const router = createBrowserRouter([
         children: [
             { path: ':slug', element: <News /> }, 
         ],
+    },
+    {
+        path: '/auth',
+        element: <Auth />,
     },
 ]);
