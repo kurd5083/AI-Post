@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import styled from "styled-components";
 import CardPablish from "@/components/CardPablish";
 import { usePopupStore } from "@/store/popupStore"
+import { usePostsByChannel } from "@/lib/posts/usePostsByChannel";
 const itemsPerPageDefault = 9;
 const itemsPerPageSmall = 6;
 const itemsPerPageMob = 4;
@@ -30,7 +31,7 @@ const PublicationsPopup = () => {
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
-  
+
   useEffect(() => {
     setCurrentPage(1);
   }, [itemsPerPage]);
@@ -48,9 +49,13 @@ const PublicationsPopup = () => {
         <PublicationsFilter>По дате</PublicationsFilter>
       </PublicationsHead>
       <PublicationsList>
-        {currentItems.length > 0 ?.map((item, index) => (
-          <CardPablish key={index} item={item} bg={true} />
-        ))}
+        {currentItems.length > 0 ? (
+          currentItems.map((item) => (
+            <CardPablish key={item.id} item={item} bg />
+          ))
+        ) : (
+          <EmptyState>Публикаций пока нет</EmptyState>
+        )}
       </PublicationsList>
 
       <PaginationWrapper>
@@ -113,7 +118,11 @@ const PublicationsList = styled.div`
     padding: 0 24px;
   }
 `;
-
+const EmptyState = styled.p`
+  text-align: center;
+  font-size: 14px;
+  color: #6a7080;
+`;
 const PaginationWrapper = styled.div`
   flex-grow: 1;
   display: flex;
@@ -122,7 +131,6 @@ const PaginationWrapper = styled.div`
   gap: 37px;
   padding-top: 40px;
 `;
-
 const PageBtn = styled.button`
   font-size: 12px;
   color: ${(props) => (props.active ? "#D6DCEC" : "#6A7080")};
