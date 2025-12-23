@@ -129,7 +129,7 @@ const TapeContainer = styled(Swiper)`
     padding: 0 24px;
   }
   ${({ $forceHorizontal, $fadeVisible }) =>
-    $forceHorizontal &&
+    !$forceHorizontal &&
     `
       &::after {
         content: '';
