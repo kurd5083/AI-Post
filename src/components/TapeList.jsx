@@ -48,6 +48,7 @@ const TapeList = ({ forceHorizontal = false, padding }) => {
           slidesPerView="auto"
           allowTouchMove={forceHorizontal || isSwipe}
           $fadeVisible={fadeVisible}
+          $forceHorizontal={forceHorizontal}
           $padding={padding}
           modules={[Navigation]}
           navigation={{
@@ -127,25 +128,28 @@ const TapeContainer = styled(Swiper)`
   @media (max-width: 768px) {
     padding: 0 24px;
   }
-  ${({ $forceHorizontal }) => $forceHorizontal && ` 
-    &::after {
-      content: '';
-      position: fixed;
-      bottom: 0;
-      height: 135px;
-      width: 100%;
-      background: linear-gradient(to top, #131826, transparent);
-      backdrop-filter: blur(8px);
-      mask-image: linear-gradient(to top, black 50%, transparent);
-      transition: opacity 0.2s;
-      opacity: ${({ $fadeVisible }) => $fadeVisible ? 1 : 0};
-      pointer-events: none;
-      z-index: 1;
-      @media(max-width: 1400px) {
-          display: none;
-      }
+  ${({ $forceHorizontal, $fadeVisible }) =>
+    $forceHorizontal &&
     `
-  }
+      &::after {
+        content: '';
+        position: fixed;
+        bottom: 0;
+        height: 135px;
+        width: 100%;
+        background: linear-gradient(to top, #131826, transparent);
+        backdrop-filter: blur(8px);
+        mask-image: linear-gradient(to top, black 50%, transparent);
+        transition: opacity 0.2s;
+        opacity: ${$fadeVisible ? 1 : 0};
+        pointer-events: none;
+        z-index: 1;
+        
+        @media(max-width: 1400px) {
+          display: none;
+        }
+      }
+  `}
 `
 const TapeItem = styled(SwiperSlide)`
   box-sizing: border-box;
