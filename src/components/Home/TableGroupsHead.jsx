@@ -39,11 +39,11 @@ const TableGroups = () => {
             <p>Без папки</p>
             <mark>{channels?.totalChannelsWithoutFolder}</mark>
           </BaseFolderBtn>
-          <LeftSwiper
+          <Swiper
             key={isSwipe}
             spaceBetween={40}
             slidesPerView="auto"
-            allowTouchMove={true}
+            // allowTouchMove={true}
           >
           {channels?.folders?.map((folder) => (
             <TableGroupsHeadBtn 
@@ -67,7 +67,7 @@ const TableGroups = () => {
               />
             </TableGroupsHeadBtn>
           ))}
-          </LeftSwiper>
+          </Swiper>
 				</TableGroupsHeadLeft>
 				<TableGroupsHeadRight>
 					<TableGroupsHeadAdd  onClick={() => openPopup("create_channel", "popup_window")}>{isSmall ? "+ Добавить" : "+ Добавить канал"}</TableGroupsHeadAdd>
@@ -110,7 +110,7 @@ const TableGroupsHead = styled.div`
 const TableGroupsHeadLeft = styled.div`
   display: flex;
   gap: 40px;
-	margin: 0;
+
   @media (max-width: 768px) {
     padding: 0 24px;
   }
@@ -132,10 +132,7 @@ const TableGroupsHeadDir = styled.button`
     display: none;
   }
 `
-const LeftSwiper = styled(Swiper)`
-  display: flex;
-	margin: 0;
-`
+
 const baseFolderStyles = css`
   box-sizing: border-box;
   display: flex;
