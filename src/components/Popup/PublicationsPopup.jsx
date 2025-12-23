@@ -36,10 +36,10 @@ const PublicationsPopup = () => {
     setCurrentPage(1);
   }, [itemsPerPage]);
 
-  const totalPages = Math.ceil(posts.length / itemsPerPage);
+  const totalPages = Math.ceil(posts?.length / itemsPerPage);
   const indexOfLast = currentPage * itemsPerPage;
   const indexOfFirst = indexOfLast - itemsPerPage;
-  const currentItems = posts.slice(indexOfFirst, indexOfLast);
+  const currentItems = posts?.slice(indexOfFirst, indexOfLast);
   console.log(currentItems)
   return (
     <>
