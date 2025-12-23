@@ -50,7 +50,9 @@ const CreateFolderPopup = () => {
     <div>
       <CreateFolderHead>
         <HeadTitle>Создать папку</HeadTitle>
-        <CloseIcon color="#336CFF" onClick={closePopup} />
+        <CloseButton>
+          <CloseIcon color="#336CFF" onClick={closePopup} />
+        </CloseButton>
       </CreateFolderHead>
       <CreateFolderSubtitle>
         Используйте папки для удобства управления каналами
@@ -109,13 +111,18 @@ const CreateFolderHead = styled.div`
     cursor: pointer;
   }
 `;
-
 const HeadTitle = styled.h2`
   font-size: 32px;
   line-height: 32px;
   font-weight: 700;
 `;
-
+const CloseButton = styled.button`
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
 const CreateFolderSubtitle = styled.p`
   color: #6a7080;
   font-size: 14px;
@@ -123,7 +130,6 @@ const CreateFolderSubtitle = styled.p`
   font-weight: 700;
   margin-top: 24px;
 `;
-
 const CreateFolderTitle = styled.h2`
   text-transform: uppercase;
   color: #6a7080;
@@ -132,7 +138,6 @@ const CreateFolderTitle = styled.h2`
   margin: 48px 0 26px;
   border: none;
 `;
-
 const CreateFolderInput = styled.input`
   background-color: transparent;
   width: 100%;
@@ -146,13 +151,11 @@ const CreateFolderInput = styled.input`
     color: #d6dcec;
   }
 `;
-
 const CreateFolderUl = styled.ul`
   display: flex;
   gap: 8px;
   flex-wrap: wrap;
 `;
-
 const ColorItem = styled.li`
   border-radius: 50%;
   width: 40px;
@@ -161,7 +164,6 @@ const ColorItem = styled.li`
   cursor: pointer;
   border: ${(props) => (props.$selected ? "3px solid #336CFF" : "none")};
 `;
-
 const CreateFolderButtons = styled.div`
   display: flex;
   gap: 8px;

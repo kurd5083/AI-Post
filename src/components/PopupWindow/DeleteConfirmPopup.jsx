@@ -2,7 +2,7 @@ import styled from "styled-components";
 import BtnBase from "@/shared/BtnBase";
 import CloseIcon from "@/icons/CloseIcon";
 import { usePopupStore } from "@/store/popupStore";
-// import { useDeleteItem } from "@/lib/useDeleteItem"; // твоя функция удаления из API
+// import { useDeleteItem } from "@/lib/useDeleteItem";
 
 const DeleteConfirmPopup = () => {
     const { popup, closePopup } = usePopupStore();
@@ -19,7 +19,9 @@ const DeleteConfirmPopup = () => {
         <div>
             <DeleteHead>
                 <HeadTitle>Создать папку</HeadTitle>
-                <CloseIcon color="#336CFF" onClick={closePopup} />
+                <CloseButton>
+                    <CloseIcon color="#336CFF" onClick={closePopup} />
+                </CloseButton>
             </DeleteHead>
             <DeleteSubtitle>
                 Вы действительно хотите удалить "{popup?.data?.itemName}"? Это действие нельзя будет отменить.
@@ -57,6 +59,13 @@ const HeadTitle = styled.h2`
   font-size: 32px;
   line-height: 32px;
   font-weight: 700;
+`;
+const CloseButton = styled.button`
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;
 const DeleteSubtitle = styled.p`
   color: #6a7080;

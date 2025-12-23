@@ -22,7 +22,9 @@ const MoveChannelPopup = () => {
 		<div>
 			<MoveChannelHead>
 				<HeadTitle>Переместить канал в папку</HeadTitle>
-				<CloseIcon color="#336CFF" onClick={closePopup} />
+				<CloseButton>
+					<CloseIcon color="#336CFF" onClick={closePopup} />
+				</CloseButton>
 			</MoveChannelHead>
 			<MoveChannelSubtitle>Выберите папку для канала “Все о криптовалюте”</MoveChannelSubtitle>
 			<MoveChannelUl>
@@ -79,6 +81,13 @@ const HeadTitle = styled.h2`
     font-size: 24px;
     line-height: 24px;
   }
+`;
+const CloseButton = styled.button`
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;
 const MoveChannelSubtitle = styled.p`
   color: #6a7080;

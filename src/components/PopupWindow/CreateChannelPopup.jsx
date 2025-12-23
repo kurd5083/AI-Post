@@ -58,7 +58,9 @@ const CreateChannelPopup = () => {
 		<div>
 			<PopupHead>
 				<HeadTitle>Создать канал</HeadTitle>
-				<CloseIcon color="#336CFF" onClick={closePopup} />
+				<CloseButton>
+					<CloseIcon color="#336CFF" onClick={closePopup} />
+				</CloseButton>
 			</PopupHead>
 
 			<PopupSubtitle>Заполните данные нового канала</PopupSubtitle>
@@ -151,13 +153,18 @@ const PopupHead = styled.div`
     cursor: pointer;
   }
 `;
-
 const HeadTitle = styled.h2`
   font-size: 32px;
   line-height: 32px;
   font-weight: 700;
 `;
-
+const CloseButton = styled.button`
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
 const PopupSubtitle = styled.p`
   color: #6a7080;
   font-size: 14px;
@@ -165,7 +172,6 @@ const PopupSubtitle = styled.p`
   font-weight: 700;
   margin-top: 24px;
 `;
-
 const PopupTitle = styled.h2`
   text-transform: uppercase;
   color: #6a7080;
@@ -174,7 +180,6 @@ const PopupTitle = styled.h2`
   margin: 48px 0 26px;
   border: none;
 `;
-
 const PopupInput = styled.input`
   background-color: transparent;
   width: 100%;
@@ -188,7 +193,6 @@ const PopupInput = styled.input`
     color: #d6dcec;
   }
 `;
-
 const CreateButtons = styled.div`
   display: flex;
   gap: 8px;

@@ -31,7 +31,9 @@ const ChangeTimePopup = () => {
     <div>
       <ChangeTimeHead>
         <HeadTitle>Изменить время</HeadTitle>
-        <CloseIcon color="#336CFF" onClick={closePopup}/>
+        <CloseButton>
+					<CloseIcon color="#336CFF" onClick={closePopup} />
+				</CloseButton>
       </ChangeTimeHead>
       <ChangeTimeSubtitle>Выберите время в которое будет удобнее опубликовать пост</ChangeTimeSubtitle>
       <TimeWrapper>
@@ -66,7 +68,6 @@ const ChangeTimeHead = styled.div`
     cursor: pointer;
   }
 `;
-
 const HeadTitle = styled.h2`
   font-size: 32px;
   line-height: 32px;
@@ -76,7 +77,13 @@ const HeadTitle = styled.h2`
     line-height: 24px;
   }
 `;
-
+const CloseButton = styled.button`
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
 const ChangeTimeSubtitle = styled.p`
   color: #6a7080;
   font-size: 14px;
@@ -84,7 +91,6 @@ const ChangeTimeSubtitle = styled.p`
   font-weight: 700;
   margin-top: 24px;
 `;
-
 const TimeWrapper = styled.div`
   display: flex;
   align-items: center;
@@ -95,7 +101,6 @@ const TimeWrapper = styled.div`
     padding: 0 20px;
   }
 `;
-
 const TimeInputField = styled.input`
   font-size: 64px;
   line-height: 64px;
@@ -110,7 +115,6 @@ const TimeInputField = styled.input`
     outline: none;
   }
 `;
-
 const Colon = styled.span`
   color: #6A7080;
   font-size: 64px;
@@ -118,7 +122,6 @@ const Colon = styled.span`
   font-weight: 700;
   margin-top: -8px;
 `;
-
 const ChangeTimeButtons = styled.div`
   display: flex;
   gap: 8px;
