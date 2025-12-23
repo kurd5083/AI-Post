@@ -71,16 +71,17 @@ const Sidebar = () => {
           </SidebarFooterTop>
         ) : (
           <BtnBase
-            $padding="12px 24px"
+            $padding="6px 12px"
             $bg="#54a9eb"
             $color="#fff"
-              onClick={() => {
-                if (!botLinkData) return;
-                window.location.href = botLinkData.botLink;
-              }}
+            $radius="20px"
+            onClick={() => {
+              if (!botLinkData) return;
+              window.location.href = botLinkData.botLink;
+            }}
             >
-              <TgIcon/>
-              Войти через Telegram
+            <TgIcon width="22" height="20"/>
+            Войти через бот
           </BtnBase>
         )}
         <BtnBase 
