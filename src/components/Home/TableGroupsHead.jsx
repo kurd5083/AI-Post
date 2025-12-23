@@ -36,14 +36,20 @@ const TableGroups = () => {
 					allowTouchMove={true}
 				>
 				  <TableGroupsHeadDir onClick={() => openPopup("create_folder", "popup_window")}><img src={dir_filled} alt="dir icon"/>Создать папку</TableGroupsHeadDir>
-          <TableGroupsHeadBtn 
+          <BaseFolderBtn 
             onClick={() => setId(null)} 
             $active={selectedId === null}
           >
             <img src={dir} alt="dir icon" />
             <p>Без папки</p>
             <mark>{channels?.totalChannelsWithoutFolder}</mark>
-          </TableGroupsHeadBtn>
+          </BaseFolderBtn>
+          <LeftSwiper
+            key={isSwipe}
+            spaceBetween={40}
+            slidesPerView="auto"
+            allowTouchMove={true}
+          >
           {channels?.folders?.map((folder) => (
             <TableGroupsHeadBtn 
               key={folder.id} 
@@ -57,6 +63,7 @@ const TableGroups = () => {
               }}/>
             </TableGroupsHeadBtn>
           ))}
+          </LeftSwiper>
 				</TableGroupsHeadLeft>
 				<TableGroupsHeadRight>
 					<TableGroupsHeadAdd  onClick={() => openPopup("create_channel", "popup_window")}>{isSmall ? "+ Добавить" : "+ Добавить канал"}</TableGroupsHeadAdd>
@@ -96,13 +103,12 @@ const TableGroupsHead = styled.div`
 `
 const TableGroupsHeadLeft = styled(Swiper)`
   display: flex;
-  flex-wrap: wrap;
 	margin: 0;
   @media (max-width: 768px) {
     padding: 0 24px;
   }
 `
-const TableGroupsHeadDir = styled(SwiperSlide)`
+const TableGroupsHeadDir = styled.button`
   box-sizing: border-box;
   display: flex;
   align-items: center;
@@ -114,13 +120,13 @@ const TableGroupsHeadDir = styled(SwiperSlide)`
   font-size: 14px;
   font-weight: 700;
 	width: auto;
-  cursor: pointer;
+
 	@media(max-width: 480px) {
     display: none;
   }
 `
-const TableGroupsHeadBtn = styled(SwiperSlide)`
-	box-sizing: border-box;
+const BaseFolderBtn = styled.button`
+  box-sizing: border-box;
   display: flex;
   align-items: center;
   gap: 16px;
@@ -129,23 +135,26 @@ const TableGroupsHeadBtn = styled(SwiperSlide)`
   padding-bottom: 18px;
   font-size: 14px;
   font-weight: 700;
-	width: auto;
-  cursor: pointer;
 
   mark {
     color: #6A7080;
   }
+
   @media(max-width: 1600px) {
     gap: 8px;
 
     p {
       max-width: 75px;
-      white-space: nowrap;  
+      white-space: nowrap;
       overflow: hidden;     
       text-overflow: ellipsis;
     }
   }
-`
+`;
+const TableGroupsHeadBtn = styled(SwiperSlide)`
+  ${BaseFolderBtn}
+  width: auto;
+`;
 const DeleteFolderButton = styled.img`
   cursor: pointer;
   width: 12px;
