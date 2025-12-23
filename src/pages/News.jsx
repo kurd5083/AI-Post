@@ -39,8 +39,8 @@ const NewsDetail = () => {
 					</PostHead>
 					<NewsImgMobile src={`/.netlify/functions/api-proxy/${news.images[0]}`} alt={news.title} />
 					<PostTimeMobile ><TimeIcons color="#336CFF" />{news.readingTime}</PostTimeMobile>
-					<PostTilte>{useFormattedHtml(news.title)}</PostTilte>
-					<PostDescription>{news.content}</PostDescription>
+					{/* <PostTilte>{useFormattedHtml(news.title)}</PostTilte>
+					<PostDescription>{useFormattedHtml(news.content)}</PostDescription> */}
 					<PostFooter className="news-meta">
 						<BtnBase
 							$bg="#336CFF"

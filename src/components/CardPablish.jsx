@@ -4,6 +4,7 @@ import TimeIcons from "@/icons/TimeIcons";
 import { useFormattedHtml } from "@/lib/useFormattedHtml";
 
 const CardPablish = ({ item, bg }) => {
+  const formattedText = useFormattedHtml(item.text);
 	return (
 		<CardPablishItem $bg={bg}>
 			<CardPablishItemHead>
@@ -18,7 +19,7 @@ const CardPablish = ({ item, bg }) => {
 			</CardPablishItemHead>
 			<CardPablishText>{item.title}</CardPablishText>
 			<CardPablishSubtext
-        dangerouslySetInnerHTML={{__html: useFormattedHtml(item.text)}}
+        dangerouslySetInnerHTML={{__html: formattedText}}
       />
 			<CardPablishOpen>
 				<img src={arrow} alt="arrow icon" />
