@@ -52,9 +52,8 @@ const NewsDetail = () => {
 									setChannelId(selectedId);
 								},
 							})}
-							disabled={isCopying}
 						>
-							{isCopying ? "Сохраняем..." : "Сохранить в канал"}
+							Сохранить в канал
 						</BtnBase>
 						<PostTime><TimeIcons color="#336CFF" />{news.readingTime}</PostTime>
 					</PostFooter>

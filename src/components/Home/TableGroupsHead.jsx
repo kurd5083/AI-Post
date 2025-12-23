@@ -4,7 +4,7 @@ import del from "@/assets/del.svg";
 import useResolution from "@/lib/useResolution";
 import useSwipeAllowed from "@/lib/useSwipeAllowed";
 import { useChannelsGroupedByFolders } from "@/lib/useChannelsGroupedByFolders";
-import { useDeleteFolder } from "@/lib/useDeleteFolder";
+import { useDeleteFolder } from "@/lib/channels/folder/useDeleteFolder";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import { usePopupStore } from "@/store/popupStore"
