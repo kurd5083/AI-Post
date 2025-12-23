@@ -43,13 +43,13 @@ const SelectChannelsPopup = () => {
             </SelectChannelsHead>
             <SelectChannelsSubtitle>Укажите канал, в котором будет опубликована новость</SelectChannelsSubtitle>
             <CustomSelect
-                value={selectedChannelId}
-                onChange={(option) => setSelectedChannelId(option.value)}
+                // value={selectedChannelId}
+                // onChange={(option) => setSelectedChannelId(option.value)}
                 width="100%"
-                options={userChannels.map((channel) => ({
-                    value: channel.id,
-                    label: channel.name,
-                }))}
+                // options={userChannels.map((channel) => ({
+                //     value: channel.id,
+                //     label: channel.name,
+                // }))}
             />
             <SelectChannelsButtons>
                 <BtnBase onClick={handleSave} $color="#D6DCEC" $bg="#336CFF">{isCopying ? "Сохраняем..." : "Сохранить"}</BtnBase>
