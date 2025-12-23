@@ -181,10 +181,11 @@ const TapeItemText = styled.div`
   -webkit-box-orient: vertical;
   overflow: hidden;
 `
-const TapeItemAction = styled.button`
+const TapeItemAction = styled.span`
   color: #6A7080;
   margin-bottom: 18px;
   line-height: 14px;
+  cursor: pointer;
 `
 const TapeTime = styled.div`
   display: flex;
