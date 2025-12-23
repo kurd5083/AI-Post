@@ -20,14 +20,15 @@ const TapeList = ({ forceHorizontal = false, padding }) => {
 
 	const direction = forceHorizontal ? "horizontal" : (isSwipe ? "horizontal" : "vertical");
 
-  const { newsData } = useNews();
+  const { newsData, newsLoding } = useNews();
   console.log(newsData)
+  if (newsLoding) return <div>Загрузка новостей...</div>;
 
   const { mutate: copyToChannel, isLoading: isCopying } = useCopyNewsToChannel();
 
-  const handleCopy = () => {
+  const handleCopy = (newsId) => {
 		copyToChannel({
-			id: news.id,
+			id: newsId,
 			data: {
 				channelId,
 				publishedAt: new Date().toISOString(),
