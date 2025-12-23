@@ -9,6 +9,7 @@ import { useChannelById } from "@/lib/channels/useChannelById";
 import { useEnableChannelPosting, useDisableChannelPosting } from "@/lib/channels/useUpdateChannelPosting";
 import { useAutoApprovalStatus } from "@/lib/channels/useAutoApprovalStatus";
 import { useEnableChannelPromotion, useDisnableChannelPromotion } from "@/lib/channels/useEnableChannelPromotion";
+import { usePostsByChannel } from "@/lib/posts/usePostsByChannel";
 
 const SettingsPopup = () => {
   const { changeContent, popup } = usePopupStore();
