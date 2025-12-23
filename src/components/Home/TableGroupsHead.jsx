@@ -1,21 +1,18 @@
 import styled from "styled-components";
-import dir_filled from "@/assets/table-groups/dir-filled.svg";
-import dir from "@/assets/table-groups/dir.svg";
-import dir_active from "@/assets/table-groups/dir-active.svg";
-import dir_gray from "@/assets/table-groups/dir-gray.svg";
 import refresh from "@/assets/table-groups/refresh.svg";
 import del from "@/assets/del.svg";
 import useResolution from "@/lib/useResolution";
 import useSwipeAllowed from "@/lib/useSwipeAllowed";
+import { useChannelsGroupedByFolders } from "@/lib/useChannelsGroupedByFolders";
+import { useDeleteFolder } from "@/lib/useDeleteFolder";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import { usePopupStore } from "@/store/popupStore"
 import { useViewStore } from "@/store/viewStore";
+import { useChannelsStore } from "@/store/channelsStore";
 import GridIcon from "@/icons/GridIcon";
 import ListIcon from "@/icons/ListIcon";
-import { useChannelsGroupedByFolders } from "@/lib/useChannelsGroupedByFolders";
-import { useChannelsStore } from "@/store/channelsStore";
-import { useDeleteFolder } from "@/lib/useDeleteFolder";
+import DirIcon from "@/icons/DirIcon";
 
 const TableGroups = () => {
   const { openPopup } = usePopupStore();
@@ -30,12 +27,15 @@ const TableGroups = () => {
 		<TableGroupsContainer>
 			<TableGroupsHead>
 				<TableGroupsHeadLeft>
-				  <TableGroupsHeadDir onClick={() => openPopup("create_folder", "popup_window")}><img src={dir_filled} alt="dir icon"/>Создать папку</TableGroupsHeadDir>
+				  <TableGroupsHeadDir onClick={() => openPopup("create_folder", "popup_window")}>
+            <DirIcon color="#336CFF"/>
+            Создать папку
+          </TableGroupsHeadDir>
           <BaseFolderBtn 
             onClick={() => setId(null)} 
             $active={selectedId === null}
           >
-            <img src={dir} alt="dir icon" />
+            <DirIcon color="#6A7080"/>
             <p>Без папки</p>
             <mark>{channels?.totalChannelsWithoutFolder}</mark>
           </BaseFolderBtn>
@@ -51,7 +51,7 @@ const TableGroups = () => {
               onClick={() => setId(folder.id)}
               $active={selectedId === folder.id}
             >
-              <img src={dir} alt="dir icon" />
+              <DirIcon color={folder.color}/>
               <FolderName>{folder.name}</FolderName>
               <mark>{folder.channels.length}</mark>
               <DeleteFolderButton 
@@ -77,7 +77,9 @@ const TableGroups = () => {
 					<TableGroupsHeadShow $active={viewType === "list"} onClick={setListView}>
             <ListIcon color={viewType === "list" ? "#D6DCEC" : "#6A7080"} />
           </TableGroupsHeadShow>
-					<TableGroupsHeadShow onClick={() => openPopup("create_folder", "popup_window")}><img src={dir_gray} alt="dir icon" /></TableGroupsHeadShow>
+					<TableGroupsHeadShow onClick={() => openPopup("create_folder", "popup_window")}>
+            <DirIcon color="#6A7080"/>
+            </TableGroupsHeadShow>
 					<TableGroupsHeadShow><img src={refresh} alt="refresh icon" /></TableGroupsHeadShow>
 				</TableGroupsHeadRight>
 			</TableGroupsHead>

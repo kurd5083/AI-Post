@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import dir_white from "@/assets/table-groups/dir-white.svg";
 import del from "@/assets/del.svg";
 import setting from "@/assets/setting.svg";
 import list from "@/assets/table-groups/list.svg";
@@ -8,6 +7,7 @@ import { useChannelsStore } from "@/store/channelsStore";
 import { useChannelsGroupedByFolders } from "@/lib/useChannelsGroupedByFolders";
 import { useDeleteChannel } from "@/lib/channels/useDeleteChannel";
 import useResolution from "@/lib/useResolution";
+import DirIcon from '@/icons/DirIcon';
 
 const TableGroups = () => {
   const { openPopup } = usePopupStore();
@@ -75,7 +75,9 @@ const TableGroups = () => {
               <TableCell>
                 <ButtonsWrap>
                   <ButtonList title="Список"><img src={list} alt="list icon" width={16} height={16} /></ButtonList>
-                  <ButtonDir onClick={() => openPopup("move_channel", "popup_window", { channelId: channel.id })} title="Перейти"><img src={dir_white} alt="dir icon" width={16} height={13} /></ButtonDir>
+                  <ButtonDir onClick={() => openPopup("move_channel", "popup_window", { channelId: channel.id })} title="Перейти">
+                    <DirIcon/>
+                  </ButtonDir>
                   <ButtonSetting onClick={() => openPopup('settings', 'popup', { channelId: channel.id })} title="Настройки"><img src={setting} alt="setting icon" width={16} height={16} /></ButtonSetting>
                   <ButtonDel
                     onClick={(e) => {

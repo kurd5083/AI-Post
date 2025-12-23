@@ -1,11 +1,11 @@
 import styled from 'styled-components';
-import dir_white from "@/assets/table-groups/dir-white.svg";
 import del from "@/assets/del.svg";
 import setting from "@/assets/setting.svg";
 import { usePopupStore } from "@/store/popupStore"
 import { useChannelsStore } from "@/store/channelsStore";
 import { useDeleteChannel } from "@/lib/channels/useDeleteChannel";
 import { useChannelsGroupedByFolders } from "@/lib/useChannelsGroupedByFolders";
+import DirIcon from '@/icons/DirIcon';
 
 const GridGroups = () => {
   const { openPopup } = usePopupStore();
@@ -46,7 +46,9 @@ const GridGroups = () => {
             </p>
             <GridStatus>Премодерация</GridStatus>
             <ButtonsWrap>
-              <ButtonDir onClick={() => openPopup("move_channel", "popup_window", { channelId: channel.id })} title="Перейти"><img src={dir_white} alt="dir icon" width={16} height={13} /></ButtonDir>
+              <ButtonDir onClick={() => openPopup("move_channel", "popup_window", { channelId: channel.id })} title="Перейти">
+                <DirIcon/>
+              </ButtonDir>
               <ButtonSetting onClick={() => openPopup('settings', 'popup', { channelId: channel.id })} title="Настройки"><img src={setting} alt="setting icon" width={16} height={16} /></ButtonSetting>
               <ButtonDel
                 onClick={(e) => {
