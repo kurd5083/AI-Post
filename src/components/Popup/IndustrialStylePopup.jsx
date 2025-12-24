@@ -3,7 +3,6 @@ import styled from "styled-components";
 import { usePopupStore } from "@/store/popupStore"
 import Drag from "@/shared/Drag";
 import BtnBase from "@/shared/BtnBase";
-import PlusIcon from "@/icons/PlusIcon";
 import { useChannelGlobalPrompt } from "@/lib/channels/global-prompt/useChannelGlobalPrompt";
 import { useGetChannelCreativity } from "@/lib/channels/creativity/useGetChannelCreativity";
 import { useGetChannelCaption } from "@/lib/channels/caption/useGetChannelCaption";
@@ -22,7 +21,7 @@ const IndustrialStylePopup = () => {
   const [localCaption, setLocalCaption] = useState("");
   const [localCreativity, setLocalCreativity] = useState(0);
 
-  const { globalPrompt } = useUpdateChannelGlobalPrompt(channelId);
+  const { globalPrompt } = useChannelGlobalPrompt(channelId);
   const { creativity } = useGetChannelCreativity(channelId);
   const { caption } = useGetChannelCaption(channelId);
 
