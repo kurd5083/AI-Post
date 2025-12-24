@@ -21,9 +21,9 @@ const LoadingSpinner = styled.div`
   align-items: center;
   justify-content: center;
   gap: 24px;
-  height: calc(100% - 150px);
+  min-height: 300px;
   width: 100%;
-  height: 100%;
+  height: calc(100% - 150px);
   flex: 1;
 `;
 const SpinnerRing = styled.div`
