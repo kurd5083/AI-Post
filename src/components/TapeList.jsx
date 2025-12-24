@@ -21,24 +21,24 @@ const TapeList = ({ forceHorizontal = false, padding }) => {
   const { newsData, newsLoding } = useNews();
 
   return (
-    <>
+    <TapeContainer
+          ref={ref}
+          key={isSwipe}
+          spaceBetween={16}
+          direction={direction}
+          slidesPerView="auto"
+          allowTouchMove={forceHorizontal || isSwipe}
+          $fadeVisible={fadeVisible}
+          $forceHorizontal={forceHorizontal}
+          $padding={padding}
+          modules={[Navigation]}
+          navigation={{
+            nextEl: ".TapeNext",
+            prevEl: ".TapePrev",
+          }}
+        >
       {!newsLoding ? (
-        // <TapeContainer
-        //   ref={ref}
-        //   key={isSwipe}
-        //   spaceBetween={16}
-        //   direction={direction}
-        //   slidesPerView="auto"
-        //   allowTouchMove={forceHorizontal || isSwipe}
-        //   $fadeVisible={fadeVisible}
-        //   $forceHorizontal={forceHorizontal}
-        //   $padding={padding}
-        //   modules={[Navigation]}
-        //   navigation={{
-        //     nextEl: ".TapeNext",
-        //     prevEl: ".TapePrev",
-        //   }}
-        // >
+        // 
         //   {newsData?.data?.map((news) => (
         //     <TapeItem key={news.id} $forceHorizontal={forceHorizontal}>
         //       <TapeItemContent $forceHorizontal={forceHorizontal}>
@@ -71,25 +71,15 @@ const TapeList = ({ forceHorizontal = false, padding }) => {
         //       </TapePostButton>
         //     </div>
         //   )}
-        // </TapeContainer>
-        <ModernLoading text="Загрузка новости..." />
+        // 
+        <ModernLoading text="Загрузка новостей..." />
       ) : (
-        <ModernLoading text="Загрузка новости..." />
+        <ModernLoading text="Загрузка новостей..." />
       )}
-    </>
+      </TapeContainer>
   )
 }
-const NoTape = styled.div`
-  margin-top: 32px;
-  box-sizing: border-box;
-  border-radius: 24px !important;
-  text-align: center;
-  color: #6A7080;
-  padding: 24px 0 !important;
-  font-weight: 600;
-  background-color: #1C2438;
-  width: 387px;
-`
+
 const TapeContainer = styled(Swiper)`
   position: relative;
   box-sizing: border-box;
