@@ -45,17 +45,16 @@ const IndustrialStylePopup = () => {
     }
   };
   const handleTest = () => {
-    if (!prompt.trim()) return;
+    if (!localPrompt.trim()) return;
     console.log("Тестирование промпта:", prompt);
   };
 
-  const { mutate: updateGlobalPrompt } = useChannelGlobalPrompt();
+  const { mutate: updateGlobalPrompt } = useUpdateChannelGlobalPrompt();
   const { mutate: updateCreativity } = useUpdateChannelCreativity();
   const { mutate: updateCaption } = useUpdateChannelCaption();
 
   const handleSave = () => {
-    updateGlobalPrompt
-    updateCreativity({channelId, value: localPrompt});
+    updateGlobalPrompt({channelId, value: localPrompt});
     updateCreativity({channelId, value: localCreativity});
     updateCaption({channelId, value: localCaption});
   };
@@ -75,12 +74,12 @@ const IndustrialStylePopup = () => {
               ></textarea>
             </div>
             <button
-              disabled={!prompt.trim()}
+              disabled={!localPrompt.trim()}
               onClick={handleTest}
             >
               Тест
             </button>
-            <p>{prompt.length} / {MAX_PROMPT_LENGTH}</p>
+            <p>{localPrompt.length} / {MAX_PROMPT_LENGTH}</p>
           </IndustrialStyleInfo>
           <IndustrialStyleDesc>Введите промпт — это задание для генерации поста. <mark>Чем точнее формулировка, тем лучше результат.</mark></IndustrialStyleDesc>
           <IndustrialStyleTitle>Подпись</IndustrialStyleTitle>
