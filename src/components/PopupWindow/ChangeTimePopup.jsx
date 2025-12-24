@@ -5,7 +5,7 @@ import { usePopupStore } from "@/store/popupStore";
 import CloseIcon from "@/icons/CloseIcon";
 
 const ChangeTimePopup = () => {
-  const { popup, closePopup } = usePopupStore();
+  const { popup, goBack } = usePopupStore();
 
   const onSave = popup?.data?.onSave;
   const currentTime = popup?.data?.currentTime;
@@ -64,20 +64,19 @@ const ChangeTimePopup = () => {
         />
       </TimeWrapper>
       <ChangeTimeButtons>
-        <BtnBase $color="#D6DCEC" $bg="#336CFF">Сохранить</BtnBase>
         <BtnBase
           $color="#D6DCEC"
           $bg="#336CFF"
           onClick={() => {
             if (hours && minutes) {
               onSave?.(`${hours.padStart(2, "0")}:${minutes.padStart(2, "0")}`);
-              closePopup();
+              goBack();
             }
           }}
         >
           Сохранить
         </BtnBase>
-        <BtnBase onClick={closePopup} $color="#D6DCEC" $bg="#242A3A">Отменить</BtnBase>
+        <BtnBase onClick={goBack} $color="#D6DCEC" $bg="#242A3A">Отменить</BtnBase>
       </ChangeTimeButtons>
     </div>
   );
