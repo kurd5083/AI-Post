@@ -1,9 +1,11 @@
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 import Checkbox from "@/shared/Checkbox";
 import { useImagePresets } from "@/lib/channels/image-generation/useImagePresets";
 import { useGetChannelImagePreset } from "@/lib/channels/image-generation/useGetChannelImagePreset";
 import { useUpdateChannelImagePreset } from "@/lib/channels/image-generation/useUpdateChannelImagePreset";
 import { usePopupStore } from "@/store/popupStore"
+
 const ImageGenerationPopup = () => {
   const { popup } = usePopupStore();
   const channelId = popup?.data?.channelId;
