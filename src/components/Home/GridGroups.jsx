@@ -6,14 +6,14 @@ import { useChannelsStore } from "@/store/channelsStore";
 import { useDeleteChannel } from "@/lib/channels/useDeleteChannel";
 import { useChannelsGroupedByFolders } from "@/lib/useChannelsGroupedByFolders";
 import DirIcon from '@/icons/DirIcon';
+import ModernLoading from "@/components/ModernLoading";
 
 const GridGroups = () => {
   const { openPopup } = usePopupStore();
   const { selectedId } = useChannelsStore();
   const { channels } = useChannelsGroupedByFolders();
   const { mutate: deleteChannel, isLoading: deleteLoading } = useDeleteChannel();
-
-  // Получаем текущие каналы в зависимости от выбранной папки
+  console.log(deleteLoading)
   let currentChannels = [];
   let isEmpty = true;
 
@@ -27,11 +27,7 @@ const GridGroups = () => {
   }
 
   if (!deleteLoading) {
-    return (
-      <GridContainer>
-        <LoadingMessage>Загрузка...</LoadingMessage>
-      </GridContainer>
-    );
+    return <ModernLoading text="Загрузка каналов..." />;
   }
 
   if (isEmpty) {
@@ -205,7 +201,6 @@ const ButtonDel = styled(BaseButton)`
     background-color: rgba(239, 98, 132, 0.08);
   }
 `;
-
 const NoChannels = styled.div`
   grid-column: 1 / -1;
   text-align: center;
@@ -214,14 +209,6 @@ const NoChannels = styled.div`
   font-weight: 600;
   background-color: #1C2438;
   border-radius: 16px;
-`;
-
-const LoadingMessage = styled.div`
-  grid-column: 1 / -1;
-  text-align: center;
-  color: #6A7080;
-  padding: 48px 0;
-  font-weight: 600;
 `;
 
 export default GridGroups;
