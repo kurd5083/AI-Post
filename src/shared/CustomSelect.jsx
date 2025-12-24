@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
 import arrow from "@/assets/arrow.svg";
 
-const CustomSelect = ({ options, value, onChange, placeholder = "Выберите значение" }) => {
+const CustomSelect = ({ options, value, onChange, placeholder = "Выберите значение", padding, border }) => {
   const [open, setOpen] = useState(false);
   const selectRef = useRef(null);
 
@@ -28,7 +28,7 @@ const CustomSelect = ({ options, value, onChange, placeholder = "Выберит�
 
   return (
     <SelectWrapper ref={selectRef}>
-      <SelectHeader onClick={toggle}>
+      <SelectHeader onClick={toggle} $border={border} $padding={padding}>
         <span>{selectedOption?.label || placeholder}</span>
         <HeaderArrow src={arrow} alt="arrow" className={open ? "open" : ""} />
       </SelectHeader>
@@ -57,9 +57,9 @@ const SelectWrapper = styled.div`
 
 const SelectHeader = styled.div`
   box-sizing: border-box;
-  border: 2px solid #333e59;
+  border: ${({$border}) => !$border ? '' : '2px solid #333e59'};
   border-radius: 12px;
-  padding: 16px 24px;
+  padding: ${({$padding}) => !$padding ? '' : ' 16px 24px'};
   background-color: transparent;
   color: #d6dcec;
   font-size: 14px;

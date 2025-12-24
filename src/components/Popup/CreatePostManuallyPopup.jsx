@@ -31,7 +31,7 @@ const CreatePostManuallyPopup = () => {
   const [postSource, setPostSource] = useState("");
   const [postText, setPostText] = useState("");
 
-  const { mutate: createPost } = useCreatePost(); 
+  const { mutate: createPost } = useCreatePost();
 
   const handleSave = () => {
     createPost({
@@ -49,8 +49,8 @@ const CreatePostManuallyPopup = () => {
     <PostManually>
       <NewPostLeft>
         <PostTitle>Заголовок</PostTitle>
-        <PostInput 
-          type="text" 
+        <PostInput
+          type="text"
           placeholder="Новый пост"
           value={postTitle}
           onChange={(e) => setPostTitle(e.target.value)}
@@ -59,17 +59,17 @@ const CreatePostManuallyPopup = () => {
           <PostSettingTop>
             <BtnBase $color="#EF6284" $bg="#26202F" $padding="21px 24px">Настройки</BtnBase>
             <BtnBase $color="#336CFF" $bg="#161F37" $padding="21px 24px">
-              <PromotionIcon color="#336CFF"/>{!isSmall ? 'Опубликовать сейчас' : 'Опубликовать'}
+              <PromotionIcon color="#336CFF" />{!isSmall ? 'Опубликовать сейчас' : 'Опубликовать'}
             </BtnBase>
           </PostSettingTop>
           <BtnBase $color="#6A7080" $bg="transporent" $border={true} onClick={() => openPopup("change_time", "popup_window")}>
-            <TimeIcons/>Изменить время
+            <TimeIcons />Изменить время
           </BtnBase>
         </PostSetting>
       </NewPostLeft>
       <PostLeftButtons>
         <PostGenerate>
-          <BtnBase $color="#FF7F48" $bg="#28222B"><AiGeneratorIcon color="#FF7F48"/>Перегенерировать пост</BtnBase>
+          <BtnBase $color="#FF7F48" $bg="#28222B"><AiGeneratorIcon color="#FF7F48" />Перегенерировать пост</BtnBase>
           <BtnBase $color="#FF7F48" $bg="#28222B"><img src={create} alt="create icon" />Сгенерировать изображение</BtnBase>
         </PostGenerate>
         <PostButtons>
@@ -80,28 +80,33 @@ const CreatePostManuallyPopup = () => {
       <PostRight>
         <PostCreate>
           <PostSource>
-            <p>Источник: <mark>apple.com/home</mark></p>
-            <CustomSelect
-              options={[
-                { value: "Antropia Digital", label: "Antropia Digital" },
-              ]}
-            />
-            <SourcePost width="16" height="16"/>
+            <p>Источник: 
+              <mark>
+              <CustomSelect
+                padding={false}
+                border={false}
+                options={[
+                  { value: "Antropia Digital", label: "Antropia Digital" },
+                ]}
+              />
+            </mark>
+            </p>
+            <SourcePost width="16" height="16" />
           </PostSource>
           <PostTitle>Описание</PostTitle>
           <PostCreateContainer>
-            <PostCreateContainerTitle><CheckboxCircle/>Пост 1</PostCreateContainerTitle>
+            <PostCreateContainerTitle><CheckboxCircle />Пост 1</PostCreateContainerTitle>
             <textarea
-                placeholder="Текст публикации..."
-                value={postText}
-                onChange={(e) => setPostText(e.target.value)}
-              ></textarea>
+              placeholder="Текст публикации..."
+              value={postText}
+              onChange={(e) => setPostText(e.target.value)}
+            ></textarea>
             <CreateAI>
               <p><img src={create} alt="create icon" />Создать фото с AI</p>
-              <p><AiGeneratorIcon color="#336CFF"/>Написать с AI</p>
+              <p><AiGeneratorIcon color="#336CFF" />Написать с AI</p>
             </CreateAI>
             <CreateActionsAdd>
-              <AiGeneratorIcon color="#336CFF" width="24" height="24"/>
+              <AiGeneratorIcon color="#336CFF" width="24" height="24" />
               <img src={paper} alt="paper icon" width={14} height={16} />
               <img src={img} alt="img icon" width={16} height={16} />
               <img src={comment} alt="comment icon" width={16} height={16} />
