@@ -70,7 +70,7 @@ const TapeContainer = styled.section`
   box-sizing: border-box;
   position: relative;
   padding: 40px 24px 32px;
-  background: #121726;
+  background: #131826;
   max-width: 430px;
   width: 100%;
   padding: 35px 43px 0 0;
