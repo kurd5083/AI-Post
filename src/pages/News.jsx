@@ -7,26 +7,16 @@ import BtnBase from "@/shared/BtnBase";
 import { usePopupStore } from "@/store/popupStore"
 import { useNewsById } from "@/lib/news/useNewsById";
 import { useFormattedHtml } from "@/lib/useFormattedHtml";
+import ModernLoading from "@/components/ModernLoading";
 
 const NewsDetail = () => {
 	const { openPopup } = usePopupStore();
 	const { id } = useParams();
 	const navigate = useNavigate();
-	const { news } = useNewsById(id);
+	const { news, newsLoading } = useNewsById(id);
 	console.log(news)
 	const formattedTitle = useFormattedHtml(news?.title);
 	const formattedContent = useFormattedHtml(news?.content);
-	
-	if (!news) {
-		return (
-			<div className="not-found">
-				<h1>Новость не найдена</h1>
-				<button onClick={() => navigate('/')}>
-					Вернуться к домой
-				</button>
-			</div>
-		);
-	}
 
 	return (
 		<NewsContainer>
@@ -34,32 +24,39 @@ const NewsDetail = () => {
 				<img src={fire} alt="fire icon" />
 				<mark>Лайв</mark> лента
 			</NewsTitle>
-			<NewsPost>
-				<PostLeft>
-					<PostHead>
-						{/* <img src={news.ava} alt="ava icon" /> */}
-						<p>{news.sourceName}</p>
-					</PostHead>
-					<NewsImgMobile src={`/.netlify/functions/api-proxy/${news.images[0]}`} alt={news.title} />
-					<PostTimeMobile ><TimeIcons color="#336CFF" />{news.readingTime}</PostTimeMobile>
-					<PostTilte dangerouslySetInnerHTML={{__html: formattedTitle}}/>
-					<PostDescription dangerouslySetInnerHTML={{__html: formattedContent}}/>
-					<PostFooter className="news-meta">
-						<BtnBase
-							$bg="#336CFF"
-							$color="#fff"
-							$padding="21px 40px"
-							onClick={() => openPopup("select_channel", "popup_window", { newsId: id })}
-						>
-							Сохранить в канал
-						</BtnBase>
-						<PostTime><TimeIcons color="#336CFF" />{news.readingTime}</PostTime>
-					</PostFooter>
-				</PostLeft>
-				<NewsImg src={`/.netlify/functions/api-proxy/${news.images[0]}`} alt={news.title} />
-			</NewsPost>
-			<NewsSubTitle>Другие новости</NewsSubTitle>
-			<TapeList forceHorizontal={true} padding={true} />
+			{!newsLoading ? (
+				<>
+					<NewsPost>
+						<PostLeft>
+							<PostHead>
+								{/* <img src={news.ava} alt="ava icon" /> */}
+								<p>{news.sourceName}</p>
+							</PostHead>
+							<NewsImgMobile src={`/.netlify/functions/api-proxy/${news.images[0]}`} alt={news.title} />
+							<PostTimeMobile ><TimeIcons color="#336CFF" />{news.readingTime}</PostTimeMobile>
+							<PostTilte dangerouslySetInnerHTML={{ __html: formattedTitle }} />
+							<PostDescription dangerouslySetInnerHTML={{ __html: formattedContent }} />
+							<PostFooter className="news-meta">
+								<BtnBase
+									$bg="#336CFF"
+									$color="#fff"
+									$padding="21px 40px"
+									onClick={() => openPopup("select_channel", "popup_window", { newsId: id })}
+								>
+									Сохранить в канал
+								</BtnBase>
+								<PostTime><TimeIcons color="#336CFF" />{news.readingTime}</PostTime>
+							</PostFooter>
+						</PostLeft>
+						<NewsImg src={`/.netlify/functions/api-proxy/${news.images[0]}`} alt={news.title} />
+					</NewsPost>
+					<NewsSubTitle>Другие новости</NewsSubTitle>
+					<TapeList forceHorizontal={true} padding={true} />
+				</>
+			) : (
+				<ModernLoading text="Загрузка новости..." />
+			)}
+
 		</NewsContainer>
 	);
 }
