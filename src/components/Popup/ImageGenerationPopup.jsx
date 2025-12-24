@@ -5,15 +5,16 @@ import { useImagePresets } from "@/lib/channels/image-generation/useImagePresets
 import { useGetChannelImagePreset } from "@/lib/channels/image-generation/useGetChannelImagePreset";
 import { useUpdateChannelImagePreset } from "@/lib/channels/image-generation/useUpdateChannelImagePreset";
 import { usePopupStore } from "@/store/popupStore"
+import ModernLoading from "@/components/ModernLoading";
 
 const ImageGenerationPopup = () => {
   const { popup } = usePopupStore();
   const channelId = popup?.data?.channelId;
 
-  const { imagePresets } = useImagePresets();
+  const { imagePresets, imagePresetsLoading } = useImagePresets();
   const { imageChannelPreset } = useGetChannelImagePreset(channelId);
   const [selectedPresetId, setSelectedPresetId] = useState(null);
-  console.log(imagePresets, imageChannelPreset)
+
   useEffect(() => {
     if (imageChannelPreset) {
       setSelectedPresetId(imageChannelPreset.id);
@@ -21,34 +22,38 @@ const ImageGenerationPopup = () => {
   }, [imageChannelPreset]);
 
   const { mutate: updateImagePreset } = useUpdateChannelImagePreset();
-  
+
   const handlePresetChange = (presetId) => {
     if (!channelId) return;
-    
+
     setSelectedPresetId(presetId);
     updateImagePreset({ channelId, presetId });
   };
 
-	return (
-		<ImageGenerationContent>
-			<ImageGenerationContentTitle>Выберите одну стилистику</ImageGenerationContentTitle>
-			<div>
-				{imagePresets?.map((item) => (
-					<ImageGenerationContentItem key={item.id}>
-						<Checkbox
-              checked={selectedPresetId === item.id}
-              onChange={() => handlePresetChange(item.id)}
-            >
-							<div>
-								<h4>{item.name}</h4>
-								<p>{item.description}</p>
-							</div>
-						</Checkbox>
-					</ImageGenerationContentItem>
-				))}
-			</div>
-		</ImageGenerationContent>
-	)
+  return (
+    <ImageGenerationContent>
+      <ImageGenerationContentTitle>Выберите одну стилистику</ImageGenerationContentTitle>
+      <div>
+        {imagePresetsLoading ? (
+          imagePresets?.map((item) => (
+            <ImageGenerationContentItem key={item.id}>
+              <Checkbox
+                checked={selectedPresetId === item.id}
+                onChange={() => handlePresetChange(item.id)}
+              >
+                <div>
+                  <h4>{item.name}</h4>
+                  <p>{item.description}</p>
+                </div>
+              </Checkbox>
+            </ImageGenerationContentItem>
+          ))
+        ) : (
+          <ModernLoading/>
+        )}
+      </div>
+    </ImageGenerationContent>
+  )
 }
 const ImageGenerationContent = styled.div`
   display: flex;
