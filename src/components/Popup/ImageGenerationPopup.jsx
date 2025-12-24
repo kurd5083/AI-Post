@@ -33,7 +33,7 @@ const ImageGenerationPopup = () => {
   return (
     <ImageGenerationContent>
       <ImageGenerationContentTitle>Выберите одну стилистику</ImageGenerationContentTitle>
-        {imagePresetsLoading ? (
+        {!imagePresetsLoading ? (
           imagePresets?.map((item) => (
             <ImageGenerationContentItem key={item.id}>
               <Checkbox
@@ -58,6 +58,7 @@ const ImageGenerationContent = styled.div`
   flex-direction: column;
   gap: 32px;
   padding: 0 56px;
+  height: 100%;
     
   @media(max-width: 1600px) {
     padding: 0 32px;

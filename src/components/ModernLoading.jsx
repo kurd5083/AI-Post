@@ -23,6 +23,7 @@ const LoadingSpinner = styled.div`
   gap: 24px;
   min-height: 300px;
   width: 100%;
+  height: 100%;
 `;
 const SpinnerRing = styled.div`
   width: 60px;
