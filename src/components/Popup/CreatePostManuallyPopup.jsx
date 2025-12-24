@@ -32,7 +32,7 @@ const CreatePostManuallyPopup = () => {
   const [postTitle, setPostTitle] = useState("");
   const [postSource, setPostSource] = useState("");
   const [postText, setPostText] = useState("");
-
+  const [postTime, setPostTime] = useState("");
   const { mutate: createPost } = useCreatePost();
 
   const handleSave = () => {
@@ -42,7 +42,7 @@ const CreatePostManuallyPopup = () => {
       title: postTitle,
       summary: '1',
       publishedAt: '',
-      source: '',
+      source: postSource,
       images: ['']
     });
   };
@@ -87,20 +87,22 @@ const CreatePostManuallyPopup = () => {
       </PostLeftButtons>
       <PostRight>
         <PostCreate>
-          <PostSource>
+          <PostSourceSelect>
             <p>Источник:</p>
             <CustomSelect
               padding={false}
               border={false}
               value={postSource}
               onChange={(option) => setPostSource(option.value)}
-              options={sources?.map((source) => ({
-                value: source.name,
-                label: source.name,
-              }))}
+              options={
+                sources?.map((source) => ({
+                  value: source.name,
+                  label: source.name,
+                }))
+              }
             />
             <SourcePost width="16" height="16" />
-          </PostSource>
+          </PostSourceSelect>
           <PostTitle>Описание</PostTitle>
           <PostCreateContainer>
             <PostCreateContainerTitle><CheckboxCircle />Пост 1</PostCreateContainerTitle>
@@ -234,7 +236,7 @@ const PostRight = styled.div`
 `
 const PostCreate = styled.div`
 `
-const PostSource = styled.div`
+const PostSourceSelect = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
