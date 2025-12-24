@@ -1,17 +1,66 @@
+import { useEffect } from "react";
+
 import styled from "styled-components";
-import create_post  from "@/assets/popup/create-post-sec.svg";
+import create_post from "@/assets/popup/create-post-sec.svg";
 import BtnBase from "@/shared/BtnBase";
 import { usePopupStore } from "@/store/popupStore";
+import { useGeneratePost } from "@/lib/posts/useGeneratePost";
 
 const CreatePostPopup = () => {
-  const { goBack } = usePopupStore()
+  const { popup, goBack, closePopup } = usePopupStore();
+  const channelId = popup?.data?.channelId;
+
+  const {
+    mutate: generatePost,
+    isLoading,
+    isSuccess,
+    isError,
+  } = useGeneratePost();
+
+  useEffect(() => {
+    if (channelId) {
+      generatePost(channelId);
+    }
+  }, [channelId, generatePost]);
 
   return (
     <CreatePostContainer>
-      <img src={create_post} alt="create post icon" width={123} height={113}/>
-      <CreatePostTitle>Генерируем пост</CreatePostTitle>
-      <CreatePostText>Это может занять несколько минут...</CreatePostText>
-      <BtnBase $color="#AC60FD" $bg="#201F39" onClick={goBack}>Отменить генерирование</BtnBase>
+      <img src={create_post} alt="create post icon" width={123} height={113} />
+      {isLoading && (
+        <>
+          <CreatePostTitle>Генерируем пост</CreatePostTitle>
+          <CreatePostText>
+            Это может занять несколько минут. Пожалуйста, не закрывайте окно
+          </CreatePostText>
+          <BtnBase $color="#AC60FD" $bg="#201F39" onClick={goBack}>
+            Отменить генерацию
+          </BtnBase>
+        </>
+      )}
+
+      {isSuccess && (
+        <>
+          <CreatePostTitle>Пост готов ✨</CreatePostTitle>
+          <CreatePostText>
+            Пост успешно сгенерирован и готов к публикации
+          </CreatePostText>
+          <BtnBase $color="#D6DCEC" $bg="#336CFF" onClick={closePopup}>
+            Продолжить
+          </BtnBase>
+        </>
+      )}
+
+      {isError && (
+        <>
+          <CreatePostTitle>Ошибка</CreatePostTitle>
+          <CreatePostText>
+            Не удалось сгенерировать пост. Попробуйте ещё раз
+          </CreatePostText>
+          <BtnBase $color="#D6DCEC" $bg="#336CFF" onClick={goBack}>
+            Назад
+          </BtnBase>
+        </>
+      )}
     </CreatePostContainer>
   )
 }
