@@ -64,10 +64,10 @@ const CreatePostManuallyPopup = () => {
               <PromotionIcon color="#336CFF" />{!isSmall ? 'Опубликовать сейчас' : 'Опубликовать'}
             </BtnBase>
           </PostSettingTop>
-          <BtnBase 
-            $color="#6A7080" 
-            $bg="transporent" 
-            $border={true} 
+          <BtnBase
+            $color="#6A7080"
+            $bg="transporent"
+            $border={true}
             onClick={() => openPopup("change_time", "popup_window")}
           >
             <TimeIcons />
@@ -88,20 +88,19 @@ const CreatePostManuallyPopup = () => {
       <PostRight>
         <PostCreate>
           <PostSource>
-            <p>Источник:
-              <CustomSelect
-                padding={false}
-                border={false}
-                value={postSource}
-                onChange={(value) => setPostSource(value)}
-                options={[
-                  sources?.map((source) => ({
-                    value: source?.value,
-                    label: source?.value,
-                  }))
-                ]}
-              />
-            </p>
+            <p>Источник:</p>
+            <CustomSelect
+              padding={false}
+              border={false}
+              value={postSource}
+              onChange={(option) => setPostSource(option.value)}
+              options={[
+                sources?.map((source) => ({
+                  value: source?.value,
+                  label: source?.value,
+                }))
+              ]}
+            />
             <SourcePost width="16" height="16" />
           </PostSource>
           <PostTitle>Описание</PostTitle>
