@@ -23,7 +23,7 @@ const TableGroups = () => {
   const { selectedId, setId } = useChannelsStore();
   const { channels } = useChannelsGroupedByFolders();
   const { mutate: deleteFolder } = useDeleteFolder();
-  const { mutate: AddChannel } = useSendAddChannelButton();
+  const { mutate: addChannel } = useSendAddChannelButton();
   
 	return (
 		<TableGroupsContainer>
@@ -73,7 +73,7 @@ const TableGroups = () => {
 				</TableGroupsHeadLeft>
 				<TableGroupsHeadRight>
 					<TableGroupsHeadAdd 
-          onClick={AddChannel}
+          onClick={addChannel}
           // onClick={() => openPopup("create_channel", "popup_window")}
           >{isSmall ? "+ Добавить" : "+ Добавить канал"}</TableGroupsHeadAdd>
 					<TableGroupsHeadShow $active={viewType === "grid"} onClick={setGridView}>
