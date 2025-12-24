@@ -21,6 +21,14 @@ const ImageGenerationPopup = () => {
   }, [imageChannelPreset]);
 
   const { mutate: updateImagePreset } = useUpdateChannelImagePreset();
+  
+  const handlePresetChange = (presetId) => {
+    if (!channelId) return;
+    
+    setSelectedPresetId(presetId);
+    updateImagePreset({ channelId, presetId });
+  };
+
 	return (
 		<ImageGenerationContent>
 			<ImageGenerationContentTitle>Выберите одну стилистику</ImageGenerationContentTitle>
@@ -29,7 +37,7 @@ const ImageGenerationPopup = () => {
 					<ImageGenerationContentItem key={item.id}>
 						<Checkbox
               checked={selectedPresetId === item.id}
-              onChange={() => updateImagePreset({channelId, presetId: item.id})}
+              onChange={() => handlePresetChange(item.id)}
             >
 							<div>
 								<h4>{item.name}</h4>
