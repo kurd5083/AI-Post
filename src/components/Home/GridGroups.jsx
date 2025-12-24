@@ -22,12 +22,12 @@ const GridGroups = () => {
   let isEmpty = null;
 
   if (selectedId === null) {
-    currentChannels = channels.channelsWithoutFolder || [];
+    currentChannels = channels?.channelsWithoutFolder || [];
     isEmpty = currentChannels.length === 0;
   } else {
-    const selectedFolder = channels.folders?.find(folder => folder.id == selectedId);
+    const selectedFolder = channels?.folders?.find(folder => folder.id == selectedId);
     currentChannels = selectedFolder?.channels || [];
-    isEmpty = !selectedFolder || currentChannels.length === 0;
+    isEmpty = currentChannels.length === 0;
   }
 
   if (isEmpty) {
