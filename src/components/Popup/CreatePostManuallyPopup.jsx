@@ -81,7 +81,6 @@ const CreatePostManuallyPopup = () => {
         <PostCreate>
           <PostSource>
             <p>Источник: 
-              <mark>
               <CustomSelect
                 padding={false}
                 border={false}
@@ -89,7 +88,6 @@ const CreatePostManuallyPopup = () => {
                   { value: "Antropia Digital", label: "Antropia Digital" },
                 ]}
               />
-            </mark>
             </p>
             <SourcePost width="16" height="16" />
           </PostSource>
@@ -247,9 +245,6 @@ const PostSource = styled.div`
     font-size: 14px;
     font-weight: 700;
     color: #6A7080;
-    mark {
-      color: #336CFF;
-    }
   }
 `
 
