@@ -13,6 +13,7 @@ const CreatePostPopup = () => {
   console.log(channelId)
   const {
     mutate: generatePost,
+    isPending, 
     isLoading,
     isSuccess,
     isError,
@@ -27,7 +28,7 @@ const CreatePostPopup = () => {
   return (
     <CreatePostContainer>
       <img src={create_post} alt="create post icon" width={123} height={113} />
-      {isLoading && (
+      {isPending && (
         <>
           <CreatePostTitle>Генерируем пост</CreatePostTitle>
           <CreatePostText>
