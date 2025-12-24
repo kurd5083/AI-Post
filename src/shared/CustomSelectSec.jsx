@@ -33,7 +33,6 @@ const CustomSelect = ({
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // Обновляем selected при изменении value извне
   useEffect(() => {
     if (value !== undefined && options) {
       const sel = options.find(opt => opt.value === value);

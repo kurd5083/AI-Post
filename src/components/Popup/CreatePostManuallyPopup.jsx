@@ -28,7 +28,7 @@ const CreatePostManuallyPopup = () => {
   const { popup, openPopup, goBack } = usePopupStore()
   const channelId = popup?.data?.channelId;
   const { sources } = useChannelSources(channelId);
-
+  console.log(sources)
   const [postTitle, setPostTitle] = useState("");
   const [postSource, setPostSource] = useState("");
   const [postText, setPostText] = useState("");
