@@ -65,6 +65,8 @@ const Tape = () => {
 };
 
 const TapeContainer = styled.section`
+  display: flex;
+  flex-direction: column;
   box-sizing: border-box;
   position: relative;
   padding: 40px 24px 32px;

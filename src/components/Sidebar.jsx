@@ -108,7 +108,7 @@ const SidebarContainer = styled.section`
   position: relative;
   border-radius: 24px 0 0 24px;
   padding: 40px 0 32px;
-  background: #121726;
+  background: #131826;
   max-width: ${({ $isSidebarVisible }) => $isSidebarVisible ? '240px' : '116px'};
   width: 100%;
   
