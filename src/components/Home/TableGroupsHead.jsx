@@ -102,15 +102,24 @@ const TableGroupsContainer = styled.section`
 const TableGroupsHead = styled.div`
   display: grid;
   grid-template-columns: repeat(6, 1fr);
-  gap: 20px;
+  gap: 20px 0;
   @media (max-width: 768px) {
     flex-wrap: wrap;
   }
 `
 const TableGroupsHeadLeft = styled.div`
   display: flex;
-  gap: 40px;
+  gap: 20px;
   grid-column: 1 /span 5;
+  @media (max-width: 1600px) {
+    grid-column: 1 /span 6;
+  }
+  @media (max-width: 1400px) {
+    grid-column: 1 /span 5;
+  }
+  @media (max-width: 991px) {
+    grid-column: 1 /span 6;
+  }
   @media (max-width: 768px) {
     padding: 0 24px;
   }
