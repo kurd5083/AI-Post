@@ -182,7 +182,7 @@ const TableGroupsSlide = styled(SwiperSlide)`
 `;
 const SlideBtn = styled.button`
   ${baseFolderStyles}
-  width: fit-content;
+  height: 100%;
 `;
 
 const FolderName = styled.p`
