@@ -19,14 +19,28 @@ import TimeIcons from "@/icons/TimeIcons";
 import SourcePost from "@/icons/SourcePost";
 import useResolution from "@/lib/useResolution";
 import { useCreatePost } from "@/lib/posts/useCreatePost";
-
+usePopupStore
 const CreatePostManuallyPopup = () => {
+  const { isSmall } = useResolution(480);
+
+  const { popup, openPopup, goBack } = usePopupStore()
+  const channelId = popup?.data?.channelId;
+
   const [postTitle, setPostTitle] = useState("");
   const [postSource, setPostSource] = useState("");
   const [postText, setPostText] = useState("");
-  const { openPopup, goBack } = usePopupStore()
-  const { isSmall } = useResolution(480);
-channelId= 28;
+
+  const { mutate: createPost } = useCreatePost(); 
+
+  const handleSave = () => {
+    createPost({
+      text: postText,
+      channelId: channelId,
+      title: postTitle,
+      summary: '1'
+    });
+  };
+
   return (
     <PostManually>
       <NewPostLeft>
@@ -55,7 +69,7 @@ channelId= 28;
           <BtnBase $color="#FF7F48" $bg="#28222B"><img src={create} alt="create icon" />Сгенерировать изображение</BtnBase>
         </PostGenerate>
         <PostButtons>
-          <BtnBase $color="#D6DCEC" $bg="#336CFF">Сохранить</BtnBase>
+          <BtnBase $color="#D6DCEC" $bg="#336CFF" onClick={handleSave}>Сохранить</BtnBase>
           <BtnBase onClick={goBack} $color="#D6DCEC" $bg="#242A3A">Отменить</BtnBase>
         </PostButtons>
       </PostLeftButtons>
