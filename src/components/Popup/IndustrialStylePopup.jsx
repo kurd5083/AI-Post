@@ -18,7 +18,7 @@ const IndustrialStylePopup = () => {
   const { popup, changeContent } = usePopupStore();
   const channelId = popup?.data?.channelId;
 
-  const [prompt, setPrompt] = useState("");
+  const [localPrompt, setLocalPrompt] = useState("");
   const [localCaption, setLocalCaption] = useState("");
   const [localCreativity, setLocalCreativity] = useState(0);
 
@@ -29,16 +29,20 @@ const IndustrialStylePopup = () => {
   console.log(channelId, globalPrompt, creativity, caption, 'asd12')
 
   useEffect(() => {
-    if (caption !== undefined) setLocalCaption(caption);
+    if (globalPrompt.globalPrompt !== undefined) setLocalPrompt(globalPrompt.globalPrompt);
+  }, [globalPrompt]);
+
+  useEffect(() => {
+    if (caption.caption !== undefined) setLocalCaption(caption.caption);
   }, [caption]);
 
   useEffect(() => {
-    if (creativity !== undefined) setLocalCreativity(creativity);
+    if (creativity.creativity !== undefined) setLocalCreativity(creativity.creativity);
   }, [creativity]);
 
   const handlePromptChange = (e) => {
     if (e.target.value.length <= MAX_PROMPT_LENGTH) {
-      setPrompt(e.target.value);
+      setLocalPrompt(e.target.value);
     }
   };
   const handleTest = () => {
@@ -46,11 +50,13 @@ const IndustrialStylePopup = () => {
     console.log("Тестирование промпта:", prompt);
   };
 
-  const { mutate: updateGlobalPrompt } = useChannelGlobalPrompt(channelId);
-  const { mutate: updateCreativity } = useUpdateChannelCreativity(channelId);
-  const { mutate: updateCaption } = useUpdateChannelCaption(channelId);
+  const { mutate: updateGlobalPrompt } = useChannelGlobalPrompt();
+  const { mutate: updateCreativity } = useUpdateChannelCreativity();
+  const { mutate: updateCaption } = useUpdateChannelCaption();
 
   const handleSave = () => {
+    updateGlobalPrompt
+    updateCreativity({channelId, value: localPrompt});
     updateCreativity({channelId, value: localCreativity});
     updateCaption({channelId, value: localCaption});
   };
@@ -65,7 +71,7 @@ const IndustrialStylePopup = () => {
             <div>
               <textarea
                 placeholder="Введите промпт..."
-                value={prompt}
+                value={localPrompt}
                 onChange={handlePromptChange}
               ></textarea>
             </div>
