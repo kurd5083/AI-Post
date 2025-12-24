@@ -13,8 +13,30 @@ const TableGroups = () => {
   const { openPopup } = usePopupStore();
   const { isSmall } = useResolution();
   const { selectedId } = useChannelsStore();
-  const { channels } = useChannelsGroupedByFolders();
+  const { channels, channelsLoading } = useChannelsGroupedByFolders();
   const { mutate: deleteChannel } = useDeleteChannel();
+
+  let currentChannels = [];
+  let isEmpty = true;
+
+  if (selectedId === null) {
+    currentChannels = channels?.channelsWithoutFolder || [];
+    isEmpty = currentChannels.length === 0;
+  } else {
+    const selectedFolder = channels?.folders?.find(folder => folder.id == selectedId);
+    currentChannels = selectedFolder?.channels || [];
+    isEmpty = currentChannels.length === 0;
+  }
+  if (channelsLoading) {
+    return <ModernLoading text="Загрузка каналов..." />;
+  }
+  if (isEmpty) {
+    return (
+      <TableItem>
+        <NoChannels colSpan={4}>Каналы отсутствуют</NoChannels>
+      </TableItem>
+    );
+  }
 
   return (
     <Table>
@@ -33,69 +55,47 @@ const TableGroups = () => {
         </tr>
       </TableHead>
       <tbody>
-        {(() => {
-          let currentChannels = [];
-          let isEmpty = true;
-
-          if (selectedId === null) {
-            currentChannels = channels?.channelsWithoutFolder || [];
-            isEmpty = currentChannels.length === 0;
-          } else {
-            const selectedFolder = channels?.folders?.find(folder => folder.id == selectedId);
-            currentChannels = selectedFolder?.channels || [];
-            isEmpty = currentChannels.length === 0;
-          }
-
-          if (isEmpty) {
-            return (
-              <TableItem>
-                <NoChannels colSpan={4}>Каналы отсутствуют</NoChannels>
-              </TableItem>
-            );
-          }
-
-          return currentChannels.map((channel, index) => (
-            <TableItem key={channel.id}>
-              <TableCell>
-                <p>
-                  <TableCellNum>#{index + 1}</TableCellNum>
-                  <img src={channel.avatarUrl} alt="Group" />
-                  <CellName>{channel.name}</CellName>
-                </p>
-              </TableCell>
-              <TableCell>
-                <TableCellStatus>{isSmall ? 'Премодерация' : 'Премодерация постов'}</TableCellStatus>
-              </TableCell>
-              <TableCell>
-                <p>
-                  {channel?.workMode === "PREMODERATION" && "Предмодерация"}
-                  {channel?.workMode === "AUTOPOSTING" && "Автопостинг"}
-                </p>
-              </TableCell>
-              <TableCell>
-                <ButtonsWrap>
-                  <ButtonList title="Список"><img src={list} alt="list icon" width={16} height={16} /></ButtonList>
-                  <ButtonDir onClick={() => openPopup("move_channel", "popup_window", { channelId: channel.id })} title="Перейти">
-                    <DirIcon/>
-                  </ButtonDir>
-                  <ButtonSetting onClick={() => openPopup('settings', 'popup', { channelId: channel.id, channelName: channel.channelId  })} title="Настройки"><img src={setting} alt="setting icon" width={16} height={16} /></ButtonSetting>
-                  <ButtonDel
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      openPopup("delete_confirm", "popup_window", {
-                        itemName: channel.name,
-                        onDelete: () => deleteChannel(channel.id),
-                      });
-                    }}
-                    title="Удалить"
-                  >
-                    <img src={del} alt="del icon" width={14} height={16} />
-                  </ButtonDel>
-                </ButtonsWrap>
-              </TableCell>
-            </TableItem>
-          ));
-        })()}
+        {currentChannels.map((channel, index) => (
+          <TableItem key={channel.id}>
+            <TableCell>
+              <p>
+                <TableCellNum>#{index + 1}</TableCellNum>
+                <img src={channel.avatarUrl} alt="Group" />
+                <CellName>{channel.name}</CellName>
+              </p>
+            </TableCell>
+            <TableCell>
+              <TableCellStatus>{isSmall ? 'Премодерация' : 'Премодерация постов'}</TableCellStatus>
+            </TableCell>
+            <TableCell>
+              <p>
+                {channel?.workMode === "PREMODERATION" && "Предмодерация"}
+                {channel?.workMode === "AUTOPOSTING" && "Автопостинг"}
+              </p>
+            </TableCell>
+            <TableCell>
+              <ButtonsWrap>
+                <ButtonList title="Список"><img src={list} alt="list icon" width={16} height={16} /></ButtonList>
+                <ButtonDir onClick={() => openPopup("move_channel", "popup_window", { channelId: channel.id })} title="Перейти">
+                  <DirIcon />
+                </ButtonDir>
+                <ButtonSetting onClick={() => openPopup('settings', 'popup', { channelId: channel.id, channelName: channel.channelId })} title="Настройки"><img src={setting} alt="setting icon" width={16} height={16} /></ButtonSetting>
+                <ButtonDel
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    openPopup("delete_confirm", "popup_window", {
+                      itemName: channel.name,
+                      onDelete: () => deleteChannel(channel.id),
+                    });
+                  }}
+                  title="Удалить"
+                >
+                  <img src={del} alt="del icon" width={14} height={16} />
+                </ButtonDel>
+              </ButtonsWrap>
+            </TableCell>
+          </TableItem>
+        ))}
       </tbody>
     </Table>
   );
