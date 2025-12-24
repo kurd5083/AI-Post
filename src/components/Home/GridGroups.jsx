@@ -26,7 +26,7 @@ const GridGroups = () => {
     isEmpty = currentChannels.length === 0;
   }
 
-  if (!deleteLoading) {
+  if (deleteLoading) {
     return <ModernLoading text="Загрузка каналов..." />;
   }
 
