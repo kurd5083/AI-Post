@@ -27,7 +27,7 @@ const IndustrialStylePopup = () => {
   console.log(channelId, globalPrompt, creativity, caption, 'asd12')
 
   useEffect(() => {
-    // if (globalPrompt.globalPrompt !== undefined) setLocalPrompt(globalPrompt.globalPrompt);
+    if (globalPrompt !== undefined) setLocalPrompt(globalPrompt.globalPromt);
     if (caption !== undefined) setLocalCaption(caption.caption);
     if (creativity !== undefined) setLocalCreativity(creativity.creativity);
   }, [globalPrompt, caption, creativity]);
