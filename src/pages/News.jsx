@@ -25,35 +25,34 @@ const NewsDetail = () => {
 				<mark>Лайв</mark> лента
 			</NewsTitle>
 			{!newsLoading ? (
-				// <>
-				// 	<NewsPost>
-				// 		<PostLeft>
-				// 			<PostHead>
-				// 				{/* <img src={news.ava} alt="ava icon" /> */}
-				// 				<p>{news.sourceName}</p>
-				// 			</PostHead>
-				// 			<NewsImgMobile src={`/.netlify/functions/api-proxy/${news.images[0]}`} alt={news.title} />
-				// 			<PostTimeMobile ><TimeIcons color="#336CFF" />{news.readingTime}</PostTimeMobile>
-				// 			<PostTilte dangerouslySetInnerHTML={{ __html: formattedTitle }} />
-				// 			<PostDescription dangerouslySetInnerHTML={{ __html: formattedContent }} />
-				// 			<PostFooter className="news-meta">
-				// 				<BtnBase
-				// 					$bg="#336CFF"
-				// 					$color="#fff"
-				// 					$padding="21px 40px"
-				// 					onClick={() => openPopup("select_channel", "popup_window", { newsId: id })}
-				// 				>
-				// 					Сохранить в канал
-				// 				</BtnBase>
-				// 				<PostTime><TimeIcons color="#336CFF" />{news.readingTime}</PostTime>
-				// 			</PostFooter>
-				// 		</PostLeft>
-				// 		<NewsImg src={`/.netlify/functions/api-proxy/${news.images[0]}`} alt={news.title} />
-				// 	</NewsPost>
-				// 	<NewsSubTitle>Другие новости</NewsSubTitle>
-				// 	<TapeList forceHorizontal={true} padding={true} />
-				// </>
-				<ModernLoading text="Загрузка новости..." />
+				<>
+					<NewsPost>
+						<PostLeft>
+							<PostHead>
+								{/* <img src={news.ava} alt="ava icon" /> */}
+								<p>{news.sourceName}</p>
+							</PostHead>
+							<NewsImgMobile src={`/.netlify/functions/api-proxy/${news.images[0]}`} alt={news.title} />
+							<PostTimeMobile ><TimeIcons color="#336CFF" />{news.readingTime}</PostTimeMobile>
+							<PostTilte dangerouslySetInnerHTML={{ __html: formattedTitle }} />
+							<PostDescription dangerouslySetInnerHTML={{ __html: formattedContent }} />
+							<PostFooter className="news-meta">
+								<BtnBase
+									$bg="#336CFF"
+									$color="#fff"
+									$padding="21px 40px"
+									onClick={() => openPopup("select_channel", "popup_window", { newsId: id })}
+								>
+									Сохранить в канал
+								</BtnBase>
+								<PostTime><TimeIcons color="#336CFF" />{news.readingTime}</PostTime>
+							</PostFooter>
+						</PostLeft>
+						<NewsImg src={`/.netlify/functions/api-proxy/${news.images[0]}`} alt={news.title} />
+					</NewsPost>
+					<NewsSubTitle>Другие новости</NewsSubTitle>
+					<TapeList forceHorizontal={true} padding={true} />
+				</>
 			) : (
 				<ModernLoading text="Загрузка новости..." />
 			)}
