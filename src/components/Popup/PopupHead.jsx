@@ -5,22 +5,23 @@ import arrow from "@/assets/arrow.svg";
 import { usePopupStore } from "@/store/popupStore"
 import { popupDatas } from "@/data/popupDatas";
 import CloseIcon from "@/icons/CloseIcon";
-import { useUser } from "@/lib/useUser";
+import { useChannelById } from "@/lib/channels/useChannelById";
 
 const PopupHead = () => {
 	const { popup, closePopup, goBack } = usePopupStore()
+  const channelId = popup?.data?.channelId;
 	const foundItem = popupDatas.find(elem => elem.key == popup.content)
-  const { user } = useUser();
-  console.log(user)
+  const { channel } = useChannelById(channelId);
+
 	return (
 		<>
 			{popup.content !== 'notifications' && popup.content !== 'replenish' && popup.content !== 'upload_media' && popup.content !== 'profile' && (
 				<PopupListInfo>
 					{popup.content != 'settings' && <PopupArrow src={arrow} alt="arrow icon" width={8} height={16} onClick={goBack} />}
-					<PopupListAva src={ava_icon} alt="ava icon" width={48} height={48} />
+					<PopupListAva src={channel?.owner.avatarUrl} alt="ava icon" width={48} height={48} />
 					<PopupListInfoContent>
-						<p>{user?.firstName} {user?.lastName}</p>
-						<span>14.670 Подписчиков</span>
+						<p>{channel?.owner.firstName} {channel?.owner.lastName}</p>
+						<span>{channel?.subscribersCount} Подписчиков</span>
 					</PopupListInfoContent>
 				</PopupListInfo>
 			)}
