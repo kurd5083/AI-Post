@@ -1,11 +1,19 @@
 import styled from "styled-components";
 import Checkbox from "@/shared/Checkbox";
-import { useImagePresets } from "@/lib/channels/useImagePresets";
+import { useImagePresets } from "@/lib/channels/image-generation/useImagePresets";
+import { useChannelImagePreset } from "../../lib/channels/image-generation/useChannelImagePreset";
 
 const ImageGenerationPopup = () => {
   const { imagePresets } = useImagePresets();
-  console.log(imagePresets)
-  // const [selectedImage, setSelectedImage] = useState();  
+  const { imageChannelPreset } = useChannelImagePreset();
+  const [selectedPresetId, setSelectedPresetId] = useState(null);
+
+  useEffect(() => {
+    if (imageChannelPreset) {
+      setSelectedPresetId(imageChannelPreset.id);
+    }
+  }, [imageChannelPreset]);
+
 	return (
 		<ImageGenerationContent>
 			<ImageGenerationContentTitle>Выберите одну стилистику</ImageGenerationContentTitle>
@@ -13,9 +21,8 @@ const ImageGenerationPopup = () => {
 				{imagePresets?.map((item) => (
 					<ImageGenerationContentItem key={item.id}>
 						<Checkbox
-              checked={item.isActive}
-              // onChange={() => toggleDay(day.value)}
-              // onChange={() => handleSelectMode("AUTOPOSTING")}
+              checked={selectedPresetId === item.id}
+              onChange={() => handleCheckboxChange(item.id)}
             >
 							<div>
 								<h4>{item.name}</h4>

@@ -3,10 +3,19 @@ import Checkbox from "@/shared/Checkbox";
 import { industrialLibraryDatas } from "@/data/industrialLibraryDatas";
 import BtnBase from "@/shared/BtnBase";
 import { usePromptLibrary } from "@/lib/channels/usePromptLibrary";
+import { useUpdateChannelGlobalPrompt } from "@/lib/channels/global-prompt/useUpdateChannelGlobalPrompt";
+import { usePopupStore } from "@/store/popupStore"
 
 const IndustrialLibraryPopup = () => {
+  const { popup } = usePopupStore();
+  const channelId = popup?.data?.channelId;
   const { promptLibrary } = usePromptLibrary();
+  const { mutate: updateGlobalPrompt } = useUpdateChannelGlobalPrompt();
   console.log(promptLibrary)
+
+  const handleSave = () => {
+    updateGlobalPrompt({ channelId, value: localPrompt });
+  };
   
 	return (
 		<IndustrialStyleContainer>
