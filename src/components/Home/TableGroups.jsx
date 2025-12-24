@@ -17,7 +17,7 @@ const TableGroups = () => {
   const { mutate: deleteChannel } = useDeleteChannel();
 
   let currentChannels = [];
-  let isEmpty = true;
+  let isEmpty = null;
 
   if (selectedId === null) {
     currentChannels = channels?.channelsWithoutFolder || [];

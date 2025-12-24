@@ -13,9 +13,9 @@ const GridGroups = () => {
   const { selectedId } = useChannelsStore();
   const { channels, channelsLoading } = useChannelsGroupedByFolders();
   const { mutate: deleteChannel } = useDeleteChannel();
-  
+
   let currentChannels = [];
-  let isEmpty = true;
+  let isEmpty = null;
 
   if (selectedId === null) {
     currentChannels = channels?.channelsWithoutFolder || [];
