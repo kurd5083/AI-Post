@@ -6,7 +6,7 @@ const CustomSelect = ({ options, value, onChange, placeholder = "Выберит�
   const [open, setOpen] = useState(false);
   const selectRef = useRef(null);
 
-  const selectedOption = options?.find(opt => opt.value === value);
+  const selectedOption = options.find(opt => opt.value === value);
 
   const toggle = () => setOpen(prev => !prev);
 

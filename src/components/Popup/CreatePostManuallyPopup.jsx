@@ -95,8 +95,8 @@ const CreatePostManuallyPopup = () => {
               value={postSource}
               onChange={(option) => setPostSource(option.value)}
               options={sources?.map((source) => ({
-                value: source.value,
-                label: source.value,
+                value: source.name,
+                label: source.name,
               }))}
             />
             <SourcePost width="16" height="16" />
