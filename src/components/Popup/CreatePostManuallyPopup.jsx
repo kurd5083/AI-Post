@@ -41,7 +41,7 @@ const CreatePostManuallyPopup = () => {
       channelId: channelId,
       title: postTitle,
       summary: '1',
-      publishedAt: '',
+      publishedAt: postTime ? `2025-01-01T${postTime}:00` : null,
       source: postSource,
       images: ['']
     });
@@ -66,12 +66,17 @@ const CreatePostManuallyPopup = () => {
           </PostSettingTop>
           <BtnBase
             $color="#6A7080"
-            $bg="transporent"
+            $bg="transparent"
             $border={true}
-            onClick={() => openPopup("change_time", "popup_window")}
+            onClick={() =>
+              openPopup("change_time", "popup_window", {
+                onSave: (time) => setPostTime(time),
+                currentTime: postTime,
+              })
+            }
           >
             <TimeIcons />
-            Изменить время
+            {postTime ? `Время: ${postTime}` : "Изменить время"}
           </BtnBase>
         </PostSetting>
       </NewPostLeft>
@@ -98,7 +103,7 @@ const CreatePostManuallyPopup = () => {
                 sources?.map((source) => ({
                   value: source.name,
                   label: source.name,
-                }))
+                })) ?? []
               }
             />
             <SourcePost width="16" height="16" />

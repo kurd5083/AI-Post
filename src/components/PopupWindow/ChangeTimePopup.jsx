@@ -5,9 +5,21 @@ import { usePopupStore } from "@/store/popupStore";
 import CloseIcon from "@/icons/CloseIcon";
 
 const ChangeTimePopup = () => {
-  const { closePopup } = usePopupStore();
+  const { popup, closePopup } = usePopupStore();
+
+  const onSave = popup?.data?.onSave;
+  const currentTime = popup?.data?.currentTime;
+
   const [hours, setHours] = useState('');
   const [minutes, setMinutes] = useState('');
+
+  useEffect(() => {
+    if (currentTime) {
+      const [h, m] = currentTime.split(":");
+      setHours(h);
+      setMinutes(m);
+    }
+  }, [currentTime]);
 
   const handleHoursChange = (e) => {
     let value = e.target.value;
@@ -53,6 +65,18 @@ const ChangeTimePopup = () => {
       </TimeWrapper>
       <ChangeTimeButtons>
         <BtnBase $color="#D6DCEC" $bg="#336CFF">Сохранить</BtnBase>
+        <BtnBase
+          $color="#D6DCEC"
+          $bg="#336CFF"
+          onClick={() => {
+            if (hours && minutes) {
+              onSave?.(`${hours.padStart(2, "0")}:${minutes.padStart(2, "0")}`);
+              closePopup();
+            }
+          }}
+        >
+          Сохранить
+        </BtnBase>
         <BtnBase onClick={closePopup} $color="#D6DCEC" $bg="#242A3A">Отменить</BtnBase>
       </ChangeTimeButtons>
     </div>
