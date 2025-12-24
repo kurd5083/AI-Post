@@ -72,6 +72,7 @@ const TapeContainer = styled.section`
   padding: 40px 24px 32px;
   background: #121726;
   max-width: 430px;
+  width: 100%;
   padding: 35px 43px 0 0;
   overflow: hidden;
 

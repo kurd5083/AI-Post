@@ -21,24 +21,24 @@ const TapeList = ({ forceHorizontal = false, padding }) => {
   const { newsData, newsLoding } = useNews();
 
   return (
-    <TapeContainer
-          ref={ref}
-          key={isSwipe}
-          spaceBetween={16}
-          direction={direction}
-          slidesPerView="auto"
-          allowTouchMove={forceHorizontal || isSwipe}
-          $fadeVisible={fadeVisible}
-          $forceHorizontal={forceHorizontal}
-          $padding={padding}
-          modules={[Navigation]}
-          navigation={{
-            nextEl: ".TapeNext",
-            prevEl: ".TapePrev",
-          }}
-        >
+    <>
       {!newsLoding ? (
-        // 
+        // <TapeContainer
+        //   ref={ref}
+        //   key={isSwipe}
+        //   spaceBetween={16}
+        //   direction={direction}
+        //   slidesPerView="auto"
+        //   allowTouchMove={forceHorizontal || isSwipe}
+        //   $fadeVisible={fadeVisible}
+        //   $forceHorizontal={forceHorizontal}
+        //   $padding={padding}
+        //   modules={[Navigation]}
+        //   navigation={{
+        //     nextEl: ".TapeNext",
+        //     prevEl: ".TapePrev",
+        //   }}
+        // >
         //   {newsData?.data?.map((news) => (
         //     <TapeItem key={news.id} $forceHorizontal={forceHorizontal}>
         //       <TapeItemContent $forceHorizontal={forceHorizontal}>
@@ -71,12 +71,12 @@ const TapeList = ({ forceHorizontal = false, padding }) => {
         //       </TapePostButton>
         //     </div>
         //   )}
-        // 
+        // </TapeContainer>
         <ModernLoading text="Загрузка новостей..." />
       ) : (
         <ModernLoading text="Загрузка новостей..." />
       )}
-      </TapeContainer>
+    </>
   )
 }
 
