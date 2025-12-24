@@ -19,7 +19,7 @@ const Drag = ({ value = 0, onChange }) => {
           key={index}
           $width={btn.size}
           $height={btn.size}
-          $active={value * 20 >= btn.value}
+          $active={value * 20}
           onClick={() => onChange(index)}
         />
       ))}
