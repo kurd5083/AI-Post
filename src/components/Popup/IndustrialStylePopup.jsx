@@ -4,10 +4,13 @@ import { usePopupStore } from "@/store/popupStore"
 import Drag from "@/shared/Drag";
 import BtnBase from "@/shared/BtnBase";
 import PlusIcon from "@/icons/PlusIcon";
+import { useChannelGlobalPrompt } from "@/lib/channels/global-prompt/useChannelGlobalPrompt";
 import { useGetChannelCreativity } from "@/lib/channels/creativity/useGetChannelCreativity";
 import { useGetChannelCaption } from "@/lib/channels/caption/useGetChannelCaption";
+import { useUpdateChannelGlobalPrompt } from "@/lib/channels/global-prompt/useUpdateChannelGlobalPrompt";
 import { useUpdateChannelCreativity } from "@/lib/channels/creativity/useUpdateChannelCreativity";
 import { useUpdateChannelCaption } from "@/lib/channels/caption/useUpdateChannelCaption";
+
 
 const MAX_PROMPT_LENGTH = 100;
 
@@ -19,9 +22,12 @@ const IndustrialStylePopup = () => {
   const [localCaption, setLocalCaption] = useState("");
   const [localCreativity, setLocalCreativity] = useState(0);
 
+  const { globalPrompt } = useUpdateChannelGlobalPrompt(channelId);
   const { creativity } = useGetChannelCreativity(channelId);
   const { caption } = useGetChannelCaption(channelId);
-  console.log(creativity, caption, 'asd12')
+
+  console.log(channelId, globalPrompt, creativity, caption, 'asd12')
+
   useEffect(() => {
     if (caption !== undefined) setLocalCaption(caption);
   }, [caption]);
@@ -40,8 +46,9 @@ const IndustrialStylePopup = () => {
     console.log("Тестирование промпта:", prompt);
   };
 
+  const { mutate: updateGlobalPrompt } = useChannelGlobalPrompt(channelId);
   const { mutate: updateCreativity } = useUpdateChannelCreativity(channelId);
-  const { mutate: updateCaption } = useUpdateChannelCaption();
+  const { mutate: updateCaption } = useUpdateChannelCaption(channelId);
 
   const handleSave = () => {
     updateCreativity({channelId, value: localCreativity});
