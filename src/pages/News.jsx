@@ -24,7 +24,7 @@ const NewsDetail = () => {
 				<img src={fire} alt="fire icon" />
 				<mark>Лайв</mark> лента
 			</NewsTitle>
-			{!newsLoading ? (
+			{newsLoading ? (
 				<>
 					<NewsPost>
 						<PostLeft>
@@ -61,6 +61,7 @@ const NewsDetail = () => {
 	);
 }
 const NewsContainer = styled.div`
+	height: 100%;
 	@media(max-width: 1600px) {
   	padding-bottom: 30px;
   }
