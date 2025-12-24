@@ -20,12 +20,14 @@ import SourcePost from "@/icons/SourcePost";
 import useResolution from "@/lib/useResolution";
 import { useCreatePost } from "@/lib/posts/useCreatePost";
 import CustomSelect from "@/shared/CustomSelect";
+import { useChannelSources } from "@/lib/channels/sources/useChannelSources";
 
 const CreatePostManuallyPopup = () => {
   const { isSmall } = useResolution(480);
 
   const { popup, openPopup, goBack } = usePopupStore()
   const channelId = popup?.data?.channelId;
+  const { sources } = useChannelSources(channelId);
 
   const [postTitle, setPostTitle] = useState("");
   const [postSource, setPostSource] = useState("");
@@ -80,12 +82,15 @@ const CreatePostManuallyPopup = () => {
       <PostRight>
         <PostCreate>
           <PostSource>
-            <p>Источник: 
+            <p>Источник:
               <CustomSelect
                 padding={false}
                 border={false}
                 options={[
-                  { value: "Antropia Digital", label: "Antropia Digital" },
+                  sources.map((source) => ({
+                    value: source.value,
+                    label: source.value,
+                  }))
                 ]}
               />
             </p>

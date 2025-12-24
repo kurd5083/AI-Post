@@ -91,14 +91,11 @@ const GridContainer = styled.div`
   @media (max-width: 1600px) {
     padding: 0;
   }
-  
+  @media (max-width: 991px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
   @media (max-width: 768px) {
     gap: 8px;
-    padding: 0 32px;
-    grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
-  }
-  
-  @media (max-width: 768px) {
     padding: 0 24px;
   }
 `;
