@@ -41,7 +41,7 @@ const MyTeamPopup = () => {
                 <TableItem key={index}>
                   <TableCell>
                     <TableCellName>
-                      <img src={member.user.avatarUrl} alt="Group" />
+                      <img src={member.user.avatarUrl} alt="avatar" />
                       <NameBlock>
                         <p>
                           {member.user.firstName} {member.user.lastName}

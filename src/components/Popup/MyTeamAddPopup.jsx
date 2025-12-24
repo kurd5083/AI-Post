@@ -2,13 +2,15 @@ import { useState } from "react";
 import styled from "styled-components";
 import my_team from "@/assets/popup/my-team.svg";
 import BtnBase from "@/shared/BtnBase";
+import { usePopupStore } from "@/store/popupStore"
 
 const MyTeamAddPopup = () => {
+  const { popup } = usePopupStore();
+  const channelName = popup?.data?.channelName;
   const [copied, setCopied] = useState(false);
-  const shareLink = "aipost.com/share/5215ikwad"; 
 
    const handleCopy = () => {
-    navigator.clipboard.writeText(shareLink);
+    navigator.clipboard.writeText(channelName);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
@@ -22,7 +24,7 @@ const MyTeamAddPopup = () => {
         $bg="#1B283C"
         onClick={handleCopy}
       >
-        {shareLink}
+        {channelName}
       </BtnBase>
     </MyTeamContainer>
   );
