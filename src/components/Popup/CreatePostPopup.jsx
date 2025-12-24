@@ -9,7 +9,7 @@ import { useGeneratePost } from "@/lib/posts/useGeneratePost";
 const CreatePostPopup = () => {
   const { popup, goBack, closePopup } = usePopupStore();
   const channelId = popup?.data?.channelId;
-
+  console.log(channelId)
   const {
     mutate: generatePost,
     isLoading,
