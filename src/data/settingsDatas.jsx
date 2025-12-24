@@ -54,6 +54,7 @@ export const settingsDatas = {
                     key: "create_post_common",
                     name: "Создать пост",
                     right: 'arrow',
+                    size: true,
                     extra: {
                         background: "#44336D",
                         image: '',
