@@ -83,7 +83,7 @@ const CreatePostManuallyPopup = () => {
             <p>Источник: <mark>apple.com/home</mark></p>
             <CustomSelect
               options={[
-                { icon: ava_icon, value: "Antropia Digital", label: "Antropia Digital" },
+                { value: "Antropia Digital", label: "Antropia Digital" },
               ]}
             />
             <SourcePost width="16" height="16"/>
