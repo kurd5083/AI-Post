@@ -14,6 +14,7 @@ import { usePostsByChannel } from "@/lib/posts/usePostsByChannel";
 const SettingsPopup = () => {
   const { changeContent, popup } = usePopupStore();
   const channelId = popup?.data?.channelId;
+  const channelName = popup?.data?.channelName;
   const { channel } = useChannelById(channelId);
   const { posts } = usePostsByChannel(channelId);
   console.log(channel, 'aaa')
@@ -71,7 +72,7 @@ const SettingsPopup = () => {
           <PopupContentTitle>{section.label}</PopupContentTitle>
           <ul>
             {section.items.map((item, index) => (
-              <PopupContentItem key={index} onClick={item.right !== 'switch' ? () => changeContent(item.key, { channelId: channelId, workMode: channel?.workMode }) : undefined}>
+              <PopupContentItem key={index} onClick={item.right !== 'switch' ? () => changeContent(item.key, { channelId: channelId, channelName: channelName, workMode: channel?.workMode }) : undefined}>
                 <PopupContentLeft>
                   <img src={item.extra.image} alt={item.name} style={{ background: item.extra.background }} width={40} height={40} />
                   <PopupContentInfo $size={item.size} $publications={item.key}>
