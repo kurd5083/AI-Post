@@ -20,7 +20,7 @@ const MyTeamPopup = () => {
         Пригласить в команду
       </BtnBase>
       <TableWrapper>
-        {/* {members.length > 0 ? (
+        {members?.team?.length > 0 ? (
           <Table>
             <colgroup>
               <col />
@@ -37,18 +37,18 @@ const MyTeamPopup = () => {
               </tr>
             </thead>
             <tbody>
-              {members.map((member) => (
-                <TableItem key={member.userTelegramId}>
+              {members.map((member, index) => (
+                <TableItem key={index}>
                   <TableCell>
                     <TableCellName>
-                      <img src={row.ava} alt="Group" />
+                      <img src={member.user.avatarUrl} alt="Group" />
                       <NameBlock>
                         <p>
-                          {member.firstName} {member.lastName}
+                          {member.user.firstName} {member.user.lastName}
                         </p>
-                        {member.username && (
+                        {/* {member.username && (
                           <span>@{member.username}</span>
-                        )}
+                        )} */}
                       </NameBlock>
                     </TableCellName>
                   </TableCell>
@@ -56,7 +56,7 @@ const MyTeamPopup = () => {
                   <TableCell>{member.role}</TableCell>
 
                   <TableCell>
-                    {new Date(member.createdAt).toLocaleDateString()}
+                    {/* {new Date(member.createdAt).toLocaleDateString()} */}
                   </TableCell>
 
                   <TableCell>
@@ -70,7 +70,7 @@ const MyTeamPopup = () => {
           </Table>
         ) : (
           <p>В команде пока нет участников</p>
-        )} */}
+        )}
       </TableWrapper>
     </MyTeamContainer>
   );
