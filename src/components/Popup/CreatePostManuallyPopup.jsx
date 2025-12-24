@@ -19,7 +19,8 @@ import TimeIcons from "@/icons/TimeIcons";
 import SourcePost from "@/icons/SourcePost";
 import useResolution from "@/lib/useResolution";
 import { useCreatePost } from "@/lib/posts/useCreatePost";
-usePopupStore
+import CustomSelect from "@/shared/CustomSelect";
+
 const CreatePostManuallyPopup = () => {
   const { isSmall } = useResolution(480);
 
@@ -77,6 +78,7 @@ const CreatePostManuallyPopup = () => {
         <PostCreate>
           <PostSource>
             <p>Источник: <mark>apple.com/home</mark></p>
+            <CustomSelect/>
             <SourcePost width="16" height="16"/>
           </PostSource>
           <PostTitle>Описание</PostTitle>
