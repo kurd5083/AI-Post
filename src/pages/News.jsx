@@ -13,6 +13,7 @@ const NewsDetail = () => {
 	const { id } = useParams();
 	const navigate = useNavigate();
 	const { news } = useNewsById(id);
+	console.log(news)
 	const formattedTitle = useFormattedHtml(news?.title);
 	const formattedContent = useFormattedHtml(news?.content);
 	
