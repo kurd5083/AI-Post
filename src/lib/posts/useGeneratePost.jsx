@@ -7,7 +7,7 @@ export const useGeneratePost = () => {
     return useMutation({
         mutationFn: (channelId) => generatePost(channelId),
 
-        onSuccess: (data) => {
+        onSuccess: (data, channelId) => {
             console.log("Пост успешно сгенерирован:", data);
             queryClient.invalidateQueries([ "posts-by-channel", channelId ]);
         }
