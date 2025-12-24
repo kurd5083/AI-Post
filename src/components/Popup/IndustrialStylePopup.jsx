@@ -38,7 +38,7 @@ const IndustrialStylePopup = () => {
     }
   };
   const handleTest = () => {
-    if (!localPrompt.trim()) return;
+    if (!localPrompt?.trim()) return;
     console.log("Тестирование промпта:", prompt);
   };
 
@@ -67,7 +67,7 @@ const IndustrialStylePopup = () => {
               ></textarea>
             </div>
             <button
-              disabled={!localPrompt.trim()}
+              disabled={!localPrompt?.trim()}
               onClick={handleTest}
             >
               Тест
