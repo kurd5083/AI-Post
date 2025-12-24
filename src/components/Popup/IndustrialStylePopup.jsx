@@ -21,7 +21,7 @@ const IndustrialStylePopup = () => {
 
   const { creativity } = useGetChannelCreativity(channelId);
   const { caption } = useGetChannelCaption(channelId);
-
+  console.log(creativity, caption, 'asd12')
   useEffect(() => {
     if (caption !== undefined) setLocalCaption(caption);
   }, [caption]);
