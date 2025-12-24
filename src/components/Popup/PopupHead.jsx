@@ -18,9 +18,9 @@ const PopupHead = () => {
 			{popup.content !== 'notifications' && popup.content !== 'replenish' && popup.content !== 'upload_media' && popup.content !== 'profile' && (
 				<PopupListInfo>
 					{popup.content != 'settings' && <PopupArrow src={arrow} alt="arrow icon" width={8} height={16} onClick={goBack} />}
-					<PopupListAva src={channel?.owner.avatarUrl} alt="ava icon" width={48} height={48} />
+					<PopupListAva src={channel?.avatarUrl} alt="ava icon" width={48} height={48} />
 					<PopupListInfoContent>
-						<p>{channel?.owner.firstName} {channel?.owner.lastName}</p>
+						<p>{channel?.name}</p>
 						<span>{channel?.subscribersCount} Подписчиков</span>
 					</PopupListInfoContent>
 				</PopupListInfo>

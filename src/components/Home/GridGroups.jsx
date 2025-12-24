@@ -128,10 +128,13 @@ const GridImg = styled.img`
 `;
 
 const CellName = styled.span`
-  max-width: 100%;
+  max-width: 180px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  @media (max-width: 768px) {
+    max-width: 140px;
+  }
 `;
 
 const GridStatus = styled.button`
