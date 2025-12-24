@@ -72,7 +72,7 @@ const IndustrialStylePopup = () => {
             >
               Тест
             </button>
-            <p>{localPrompt.length} / {MAX_PROMPT_LENGTH}</p>
+            <p>{localPrompt?.length} / {MAX_PROMPT_LENGTH}</p>
           </IndustrialStyleInfo>
           <IndustrialStyleDesc>Введите промпт — это задание для генерации поста. <mark>Чем точнее формулировка, тем лучше результат.</mark></IndustrialStyleDesc>
           <IndustrialStyleTitle>Подпись</IndustrialStyleTitle>
