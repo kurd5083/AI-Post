@@ -40,6 +40,7 @@ const TableContainer = styled.div`
   }
 `;
 const TableWrapper = styled.div`
+  box-sizing: border-box;
   width: 100%;
   max-height: calc(100dvh - 600px); 
   min-height: 400px;
