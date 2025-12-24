@@ -33,8 +33,9 @@ const ImageGenerationPopup = () => {
   return (
     <ImageGenerationContent>
       <ImageGenerationContentTitle>Выберите одну стилистику</ImageGenerationContentTitle>
-        {!imagePresetsLoading ? (
-          imagePresets?.map((item) => (
+      {!imagePresetsLoading ? (
+        <div>
+          {imagePresets?.map((item) => (
             <ImageGenerationContentItem key={item.id}>
               <Checkbox
                 checked={selectedPresetId === item.id}
@@ -46,10 +47,11 @@ const ImageGenerationPopup = () => {
                 </div>
               </Checkbox>
             </ImageGenerationContentItem>
-          ))
-        ) : (
-          <ModernLoading text="Загрузка стилей..."/>
-        )}
+          ))}
+        </div>
+      ) : (
+        <ModernLoading text="Загрузка стилей..." />
+      )}
     </ImageGenerationContent>
   )
 }
