@@ -18,53 +18,209 @@ import AiGeneratorIcon from "@/icons/AiGeneratorIcon";
 import TimeIcons from "@/icons/TimeIcons";
 import SourcePost from "@/icons/SourcePost";
 import useResolution from "@/lib/useResolution";
+import { useCreatePost } from "@/lib/posts/useCreatePost";
 
 const CreatePostManuallyPopup = () => {
+  const [title, setTitle] = useState("");
   const [post, setPost] = useState("");
-  const { openPopup, goBack } = usePopupStore()
+  const [source, setSource] = useState("apple.com/home");
+  const [publishedAt, setPublishedAt] = useState(null);
+  const [channelId, setChannelId] = useState(null); // Нужно добавить выбор канала
+  const [summary, setSummary] = useState(""); // Нужно добавить поле для summary
+  
+  const { openPopup, goBack } = usePopupStore();
   const { isSmall } = useResolution(480);
+  const { mutate: createPost, isLoading } = useCreatePost();
+
+  const handlePublishNow = () => {
+    if (!title.trim() || !post.trim()) {
+      alert("Заполните заголовок и текст поста");
+      return;
+    }
+
+    if (!channelId) {
+      alert("Выберите канал для публикации");
+      return;
+    }
+
+    const postData = {
+      text: post,
+      channelId,
+      title,
+      summary: summary || post.substring(0, 100) + "...", 
+      source,
+      ...(publishedAt && { publishedAt: publishedAt.toISOString() })
+    };
+
+    createPost(postData);
+  };
+
+  const handleSave = () => {
+    if (!title.trim() || !post.trim()) {
+      alert("Заполните заголовок и текст поста");
+      return;
+    }
+
+    if (!channelId) {
+      alert("Выберите канал для публикации");
+      return;
+    }
+
+    const postData = {
+      text: post,
+      channelId,
+      title,
+      summary: summary || post.substring(0, 100) + "...",
+      source,
+      publishedAt: null 
+    };
+
+    createPost(postData);
+  };
+
+  const handleChangeTime = () => {
+    openPopup("change_time", "popup_window");
+
+  };
+
+  const handleTimeSelected = (date) => {
+    setPublishedAt(date);
+  };
+
+
 
   return (
     <PostManually>
       <NewPostLeft>
         <PostTitle>Заголовок</PostTitle>
-        <PostInput type="text" placeholder="Новый пост"/>
+        <PostInput 
+          type="text" 
+          placeholder="Новый пост"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          disabled={isLoading}
+        />
+        
         <PostSetting>
           <PostSettingTop>
-            <BtnBase $color="#EF6284" $bg="#26202F" $padding="21px 24px">Настройки</BtnBase>
-            <BtnBase $color="#336CFF" $bg="#161F37" $padding="21px 24px"><PromotionIcon color="#336CFF"/>{!isSmall ? 'Опубликовать сейчас' : 'Опубликовать'}</BtnBase>
+            <BtnBase 
+              $color="#EF6284" 
+              $bg="#26202F" 
+              $padding="21px 24px"
+              onClick={() => openPopup("channel_select", "popup_window")} // Нужен popup для выбора канала
+            >
+              Настройки
+            </BtnBase>
+            <BtnBase 
+              $color="#336CFF" 
+              $bg="#161F37" 
+              $padding="21px 24px"
+              onClick={handlePublishNow}
+              disabled={isLoading}
+            >
+              <PromotionIcon color="#336CFF"/>
+              {!isSmall ? 'Опубликовать сейчас' : 'Опубликовать'}
+            </BtnBase>
           </PostSettingTop>
-          <BtnBase $color="#6A7080" $bg="transporent" $border={true} onClick={() => openPopup("change_time", "popup_window")}><TimeIcons/>Изменить время</BtnBase>
+          <BtnBase 
+            $color="#6A7080" 
+            $bg="transparent" 
+            $border={true} 
+            onClick={handleChangeTime}
+            disabled={isLoading}
+          >
+            <TimeIcons/>
+            Изменить время
+            {publishedAt && (
+              <span style={{ marginLeft: '8px', fontSize: '12px' }}>
+                {publishedAt.toLocaleDateString()} {publishedAt.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
+              </span>
+            )}
+          </BtnBase>
         </PostSetting>
       </NewPostLeft>
+      
       <PostLeftButtons>
         <PostGenerate>
-          <BtnBase $color="#FF7F48" $bg="#28222B"><AiGeneratorIcon color="#FF7F48"/>Перегенерировать пост</BtnBase>
-          <BtnBase $color="#FF7F48" $bg="#28222B"><img src={create} alt="create icon" />Сгенерировать изображение</BtnBase>
+          <BtnBase $color="#FF7F48" $bg="#28222B" disabled={isLoading}>
+            <AiGeneratorIcon color="#FF7F48"/>
+            Перегенерировать пост
+          </BtnBase>
+          <BtnBase $color="#FF7F48" $bg="#28222B" disabled={isLoading}>
+            <img src={create} alt="create icon" />
+            Сгенерировать изображение
+          </BtnBase>
         </PostGenerate>
+        
         <PostButtons>
-          <BtnBase $color="#D6DCEC" $bg="#336CFF">Сохранить</BtnBase>
-          <BtnBase onClick={goBack} $color="#D6DCEC" $bg="#242A3A">Отменить</BtnBase>
+          <BtnBase 
+            $color="#D6DCEC" 
+            $bg="#336CFF"
+            onClick={handleSave}
+            disabled={isLoading}
+          >
+            Сохранить
+          </BtnBase>
+          <BtnBase 
+            onClick={goBack} 
+            $color="#D6DCEC" 
+            $bg="#242A3A"
+            disabled={isLoading}
+          >
+            Отменить
+          </BtnBase>
         </PostButtons>
       </PostLeftButtons>
+      
       <PostRight>
         <PostCreate>
           <PostSource>
-            <p>Источник: <mark>apple.com/home</mark></p>
+            <p>
+              Источник: 
+              <input
+                type="text"
+                value={source}
+                onChange={(e) => setSource(e.target.value)}
+                placeholder="Введите URL источника"
+                style={{
+                  background: 'transparent',
+                  border: 'none',
+                  color: '#336CFF',
+                  marginLeft: '8px',
+                  minWidth: '200px'
+                }}
+                disabled={isLoading}
+              />
+            </p>
             <SourcePost width="16" height="16"/>
           </PostSource>
+          
           <PostTitle>Описание</PostTitle>
+          
           <PostCreateContainer>
-            <PostCreateContainerTitle><CheckboxCircle/>Пост 1</PostCreateContainerTitle>
+            <PostCreateContainerTitle>
+              <CheckboxCircle/>
+              Пост 1
+            </PostCreateContainerTitle>
+            
             <textarea
-                placeholder="Текст публикации..."
-                value={post}
-                onChange={(e) => setPost(e.target.value)}
-              ></textarea>
+              placeholder="Текст публикации..."
+              value={post}
+              onChange={(e) => setPost(e.target.value)}
+              disabled={isLoading}
+            ></textarea>
+            
             <CreateAI>
-              <p><img src={create} alt="create icon" />Создать фото с AI</p>
-              <p><AiGeneratorIcon color="#336CFF"/>Написать с AI</p>
+              <p>
+                <img src={create} alt="create icon" />
+                Создать фото с AI
+              </p>
+              <p>
+                <AiGeneratorIcon color="#336CFF"/>
+                Написать с AI
+              </p>
             </CreateAI>
+            
             <CreateActionsAdd>
               <AiGeneratorIcon color="#336CFF" width="24" height="24"/>
               <img src={paper} alt="paper icon" width={14} height={16} />
@@ -77,21 +233,45 @@ const CreatePostManuallyPopup = () => {
             </CreateActionsAdd>
           </PostCreateContainer>
         </PostCreate>
+        
         <Buttons>
-          <HideButton>
+          <HideButton disabled={isLoading}>
             <img src={hide} alt="hide icon" width={24} height={17} />
           </HideButton>
-          <DeleteButton>
+          <DeleteButton disabled={isLoading}>
             <img src={del} alt="del icon" width={14} height={16} />
           </DeleteButton>
-          <BtnBase $padding="19px 46px">
-            Сохранить
+          <BtnBase 
+            $padding="19px 46px"
+            onClick={handlePublishNow}
+            disabled={isLoading}
+          >
+            {isLoading ? 'Создание...' : 'Сохранить'}
           </BtnBase>
         </Buttons>
       </PostRight>
+      
+      {isLoading && (
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          background: 'rgba(0,0,0,0.5)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          zIndex: 1000
+        }}>
+          <div style={{ color: 'white' }}>Создание поста...</div>
+        </div>
+      )}
     </PostManually>
   )
 }
+
+// ... (стили остаются без изменений)
 
 const PostManually = styled.div`
   display: grid;

@@ -1,16 +1,14 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { createPost } from "@/api/createPost";
+import { createPost } from "@/api/posts/createPost";
 
 export const useCreatePost = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: createPost,
+    mutationFn: (postData) => createPost(postData),
     onSuccess: (data) => {
       console.log("Пост успешно создан:", data);
-      queryClient.invalidateQueries(["posts", 
-        // data.channelId
-    ]);
+      queryClient.invalidateQueries(["posts"]);
     },
     onError: (error) => {
       console.error("Ошибка при создании поста:", error);

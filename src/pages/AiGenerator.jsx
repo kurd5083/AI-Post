@@ -21,12 +21,10 @@ import CheckboxCircle from "@/shared/CheckboxCircle";
 import CustomSelect from "@/shared/CustomSelectSec";
 import AiGeneratorIcon from "@/icons/AiGeneratorIcon";
 import useFadeOnScroll from "@/lib/useFadeOnScroll";
-import { useCreatePost } from "@/lib/useCreatePost";
 
 const AiGenerator = () => {
   const [collapsed, setCollapsed] = useState(false);
   const [posts, setPosts] = useState([]);
-  const { mutate: createPost } = useCreatePost();
 
   const { fadeVisible, ref } = useFadeOnScroll(20);
 
@@ -38,15 +36,6 @@ const AiGenerator = () => {
       text: "Текст публикации...",
     };
     setPosts([newPost, ...posts]);
-  };
-
-  const handlePublishPost = (post) => {
-    createPost({
-      text: post.text,
-      channelId: 1,
-      title: post.title,
-      summary: post.text.slice(0, 100),
-    });
   };
 
   useEffect(() => {
@@ -103,7 +92,7 @@ const AiGenerator = () => {
                 <DeleteButton>
                   <img src={del} alt="del icon" width={14} height={16} />
                 </DeleteButton>
-                <BtnBase $padding="19px 46px"  onClick={() => handlePublishPost(post)}>
+                <BtnBase $padding="19px 46px">
                   Сохранить
                 </BtnBase>
               </Buttons>
