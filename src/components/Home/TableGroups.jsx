@@ -78,7 +78,7 @@ const TableGroups = () => {
                   <ButtonDir onClick={() => openPopup("move_channel", "popup_window", { channelId: channel.id })} title="Перейти">
                     <DirIcon/>
                   </ButtonDir>
-                  <ButtonSetting onClick={() => openPopup('settings', 'popup', { channelId: channel.id })} title="Настройки"><img src={setting} alt="setting icon" width={16} height={16} /></ButtonSetting>
+                  <ButtonSetting onClick={() => openPopup('settings', 'popup', { channelId: channel.id, channelName: channel.channelId  })} title="Настройки"><img src={setting} alt="setting icon" width={16} height={16} /></ButtonSetting>
                   <ButtonDel
                     onClick={(e) => {
                       e.stopPropagation();

@@ -6,9 +6,9 @@ import del from "@/assets/del.svg";
 
 const MyTeamPopup = () => {
   const { popup, changeContent } = usePopupStore();
-  const channelId = popup?.data?.channelId;
-  console.log(channelId)
-  const { members } = useChannelMembers(channelId);
+  const channelName = popup?.data?.channelName;
+  console.log(channelName)
+  const { members } = useChannelMembers(channelName);
   console.log(members, 'hhhh')
   return (
     <MyTeamContainer>

@@ -1,11 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
 import { getChannelMembers } from "@/api/channels/my-team/getChannelMembers";
 
-export const useChannelMembers = (channelId) => {
+export const useChannelMembers = (channelName) => {
   const { data: members } = useQuery({
-    queryKey: ["channel-members", channelId],
-    queryFn: () => getChannelMembers(channelId),
-    enabled: !!channelId,
+    queryKey: ["channel-members", channelName],
+    queryFn: () => getChannelMembers(channelName),
+    enabled: !!channelName,
   });
 
   return { members };
