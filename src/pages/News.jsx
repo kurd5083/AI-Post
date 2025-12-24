@@ -24,7 +24,7 @@ const NewsDetail = () => {
 				<img src={fire} alt="fire icon" />
 				<mark>Лайв</mark> лента
 			</NewsTitle>
-			{newsLoading ? (
+			{!newsLoading ? (
 				<>
 					<NewsPost>
 						<PostLeft>
