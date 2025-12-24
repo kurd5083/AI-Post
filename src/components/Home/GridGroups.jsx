@@ -16,6 +16,10 @@ const GridGroups = () => {
 
   let currentChannels = [];
   let isEmpty = null;
+  
+  if (channelsLoading) {
+    return <ModernLoading text="Загрузка каналов..." />;
+  }
 
   if (selectedId === null) {
     currentChannels = channels?.channelsWithoutFolder || [];
@@ -24,10 +28,6 @@ const GridGroups = () => {
     const selectedFolder = channels?.folders?.find(folder => folder.id == selectedId);
     currentChannels = selectedFolder?.channels || [];
     isEmpty = currentChannels.length === 0;
-  }
-
-  if (channelsLoading) {
-    return <ModernLoading text="Загрузка каналов..." />;
   }
 
   if (isEmpty) {
