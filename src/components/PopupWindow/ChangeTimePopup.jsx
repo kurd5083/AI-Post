@@ -43,7 +43,7 @@ const ChangeTimePopup = () => {
     <div>
       <ChangeTimeHead>
         <HeadTitle>Изменить время</HeadTitle>
-        <CloseButton onClick={closePopup}>
+        <CloseButton onClick={goBack}>
 					<CloseIcon color="#336CFF"/>
 				</CloseButton>
       </ChangeTimeHead>
