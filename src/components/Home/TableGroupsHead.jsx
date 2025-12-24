@@ -13,6 +13,7 @@ import { useChannelsStore } from "@/store/channelsStore";
 import GridIcon from "@/icons/GridIcon";
 import ListIcon from "@/icons/ListIcon";
 import DirIcon from "@/icons/DirIcon";
+import { useSendAddChannelButton } from "@/lib/channels/useSendAddChannelButton";
 
 const TableGroups = () => {
   const { openPopup } = usePopupStore();
@@ -22,7 +23,8 @@ const TableGroups = () => {
   const { selectedId, setId } = useChannelsStore();
   const { channels } = useChannelsGroupedByFolders();
   const { mutate: deleteFolder } = useDeleteFolder();
-
+  const { mutate: AddChannel } = useSendAddChannelButton();
+  
 	return (
 		<TableGroupsContainer>
 			<TableGroupsHead>
@@ -70,7 +72,10 @@ const TableGroups = () => {
           </LeftSwiper>
 				</TableGroupsHeadLeft>
 				<TableGroupsHeadRight>
-					<TableGroupsHeadAdd  onClick={() => openPopup("create_channel", "popup_window")}>{isSmall ? "+ Добавить" : "+ Добавить канал"}</TableGroupsHeadAdd>
+					<TableGroupsHeadAdd 
+          onClick={AddChannel}
+          // onClick={() => openPopup("create_channel", "popup_window")}
+          >{isSmall ? "+ Добавить" : "+ Добавить канал"}</TableGroupsHeadAdd>
 					<TableGroupsHeadShow $active={viewType === "grid"} onClick={setGridView}>
             <GridIcon color={viewType === "grid" ? "#D6DCEC" : "#6A7080"} />
           </TableGroupsHeadShow>
