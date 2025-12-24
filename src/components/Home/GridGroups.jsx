@@ -11,7 +11,7 @@ const GridGroups = () => {
   const { openPopup } = usePopupStore();
   const { selectedId } = useChannelsStore();
   const { channels } = useChannelsGroupedByFolders();
-  const { mutate: deleteChannel } = useDeleteChannel();
+  const { mutate: deleteChannel, isLoading: deleteLoading } = useDeleteChannel();
 
   return (
     <GridContainer>
@@ -28,43 +28,46 @@ const GridGroups = () => {
           isEmpty = currentChannels.length === 0;
         }
 
-        if (isEmpty) {
-          return (
-            <GridItem>
-              <NoChannels colSpan={4}>Каналы отсутствуют</NoChannels>
-            </GridItem>
-          );
-        }
-        return currentChannels.map((channel, index) => (
-          <GridItem key={channel.id}>
-            <GridItemNum>#{index++}</GridItemNum>
-            <GridImg src={channel.avatarUrl} alt="Group" />
-            <CellName>{channel.name}</CellName>
-            <p>
-              {channel?.workMode === "PREMODERATION" && "Предмодерация"}
-              {channel?.workMode === "AUTOPOSTING" && "Автопостинг"}
-            </p>
-            <GridStatus>Премодерация</GridStatus>
-            <ButtonsWrap>
-              <ButtonDir onClick={() => openPopup("move_channel", "popup_window", { channelId: channel.id })} title="Перейти">
-                <DirIcon/>
-              </ButtonDir>
-              <ButtonSetting onClick={() => openPopup('settings', 'popup', { channelId: channel.id, channelName: channel.channelId })} title="Настройки"><img src={setting} alt="setting icon" width={16} height={16} /></ButtonSetting>
-              <ButtonDel
-                onClick={(e) => {
-                  e.stopPropagation();
-                  openPopup("delete_confirm", "popup_window", {
-                    itemName: channel.name,
-                    onDelete: () => deleteChannel(channel.id), 
-                  });
-                }}
-                title="Удалить"
-              >
-                <img src={del} alt="del icon" width={14} height={16} />
-              </ButtonDel>
-            </ButtonsWrap>
-          </GridItem>
-        ));
+        {!deleteLoading ? (
+          !isEmpty ? (
+            currentChannels.map((channel, index) => (
+              <GridItem key={channel.id}>
+                <GridItemNum>#{index++}</GridItemNum>
+                <GridImg src={channel.avatarUrl} alt="Group" />
+                <CellName>{channel.name}</CellName>
+                <p>
+                  {channel?.workMode === "PREMODERATION" && "Предмодерация"}
+                  {channel?.workMode === "AUTOPOSTING" && "Автопостинг"}
+                </p>
+                <GridStatus>Премодерация</GridStatus>
+                <ButtonsWrap>
+                  <ButtonDir onClick={() => openPopup("move_channel", "popup_window", { channelId: channel.id })} title="Перейти">
+                    <DirIcon />
+                  </ButtonDir>
+                  <ButtonSetting onClick={() => openPopup('settings', 'popup', { channelId: channel.id, channelName: channel.channelId })} title="Настройки"><img src={setting} alt="setting icon" width={16} height={16} /></ButtonSetting>
+                  <ButtonDel
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    openPopup("delete_confirm", "popup_window", {
+                      itemName: channel.name,
+                      onDelete: () => deleteChannel(channel.id),
+                    });
+                    }}
+                     title="Удалить"
+                   >
+                     <img src={del} alt="del icon" width={14} height={16} />
+                   </ButtonDel>
+                 </ButtonsWrap>
+                </GridItem>
+              ))
+            ) : (
+              <GridItem>
+                <NoChannels colSpan={4}>Каналы отсутствуют</NoChannels>
+              </GridItem>
+            )
+        ) : (
+          <ModernLoading text="Загрузка новости..." />
+        )}
       })()}
     </GridContainer>
   );
