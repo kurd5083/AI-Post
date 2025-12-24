@@ -11,8 +11,8 @@ import ModernLoading from "@/components/ModernLoading";
 const GridGroups = () => {
   const { openPopup } = usePopupStore();
   const { selectedId } = useChannelsStore();
-  const { channels } = useChannelsGroupedByFolders();
-  const { mutate: deleteChannel, isLoading: deleteLoading } = useDeleteChannel();
+  const { channels, channelsLoading } = useChannelsGroupedByFolders();
+  const { mutate: deleteChannel } = useDeleteChannel();
   console.log(deleteLoading)
   let currentChannels = [];
   let isEmpty = true;
@@ -26,7 +26,7 @@ const GridGroups = () => {
     isEmpty = currentChannels.length === 0;
   }
 
-  if (deleteLoading) {
+  if (channelsLoading) {
     return <ModernLoading text="Загрузка каналов..." />;
   }
 
