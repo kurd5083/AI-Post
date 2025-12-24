@@ -9,6 +9,7 @@ import { useNews } from "@/lib/news/useNews";
 import { usePopupStore } from "@/store/popupStore"
 import TimeIcons from "@/icons/TimeIcons";
 import arrow from "@/assets/arrow.svg";
+import ModernLoading from "@/components/ModernLoading";
 
 const TapeList = ({ forceHorizontal = false, padding }) => {
   const { openPopup } = usePopupStore();
@@ -21,58 +22,59 @@ const TapeList = ({ forceHorizontal = false, padding }) => {
 
   return (
     <>
-      {newsLoding ? (
-        <NoTape>Загрузка новостей...</NoTape>
-      ) : (
-        <TapeContainer
-          ref={ref}
-          key={isSwipe}
-          spaceBetween={16}
-          direction={direction}
-          slidesPerView="auto"
-          allowTouchMove={forceHorizontal || isSwipe}
-          $fadeVisible={fadeVisible}
-          $forceHorizontal={forceHorizontal}
-          $padding={padding}
-          modules={[Navigation]}
-          navigation={{
-            nextEl: ".TapeNext",
-            prevEl: ".TapePrev",
-          }}
-        >
-          {newsData?.data?.map((news) => (
-            <TapeItem key={news.id} $forceHorizontal={forceHorizontal}>
-              <TapeItemContent $forceHorizontal={forceHorizontal}>
-                <TapeItemHead>
-                  {/* <img src={news.ava} alt="ava icon" /> */}
-                  <p>{news.sourceName}</p>
-                </TapeItemHead>
-                <Link to={`/news/${news.id}`}>
-                  <TapeItemText>{news.title}</TapeItemText>
-                </Link>
-                <TapeItemAction onClick={() => openPopup("select_channel", "popup_window", { newsId: news.id })}>
-                  Сохранить в канал
-                </TapeItemAction>
-                <TapeTime>
-                  <TimeIcons />
-                  <span>{news.readingTime}</span>
-                </TapeTime>
-              </TapeItemContent>
-              <TapePostImg src={`/.netlify/functions/api-proxy/${news.images[0]}`} alt="post img" $forceHorizontal={forceHorizontal} />
-            </TapeItem>
-          ))}
-          {(forceHorizontal || isSwipe) && (
-            <div>
-              <TapePostButton className="TapePrev">
-                <img src={arrow} alt="arrow icon" />
-              </TapePostButton>
+      {!newsLoding ? (
+        // <TapeContainer
+        //   ref={ref}
+        //   key={isSwipe}
+        //   spaceBetween={16}
+        //   direction={direction}
+        //   slidesPerView="auto"
+        //   allowTouchMove={forceHorizontal || isSwipe}
+        //   $fadeVisible={fadeVisible}
+        //   $forceHorizontal={forceHorizontal}
+        //   $padding={padding}
+        //   modules={[Navigation]}
+        //   navigation={{
+        //     nextEl: ".TapeNext",
+        //     prevEl: ".TapePrev",
+        //   }}
+        // >
+        //   {newsData?.data?.map((news) => (
+        //     <TapeItem key={news.id} $forceHorizontal={forceHorizontal}>
+        //       <TapeItemContent $forceHorizontal={forceHorizontal}>
+        //         <TapeItemHead>
+        //           {/* <img src={news.ava} alt="ava icon" /> */}
+        //           <p>{news.sourceName}</p>
+        //         </TapeItemHead>
+        //         <Link to={`/news/${news.id}`}>
+        //           <TapeItemText>{news.title}</TapeItemText>
+        //         </Link>
+        //         <TapeItemAction onClick={() => openPopup("select_channel", "popup_window", { newsId: news.id })}>
+        //           Сохранить в канал
+        //         </TapeItemAction>
+        //         <TapeTime>
+        //           <TimeIcons />
+        //           <span>{news.readingTime}</span>
+        //         </TapeTime>
+        //       </TapeItemContent>
+        //       <TapePostImg src={`/.netlify/functions/api-proxy/${news.images[0]}`} alt="post img" $forceHorizontal={forceHorizontal} />
+        //     </TapeItem>
+        //   ))}
+        //   {(forceHorizontal || isSwipe) && (
+        //     <div>
+        //       <TapePostButton className="TapePrev">
+        //         <img src={arrow} alt="arrow icon" />
+        //       </TapePostButton>
 
-              <TapePostButton className="TapeNext">
-                <img src={arrow} alt="arrow icon" />
-              </TapePostButton>
-            </div>
-          )}
-        </TapeContainer>
+        //       <TapePostButton className="TapeNext">
+        //         <img src={arrow} alt="arrow icon" />
+        //       </TapePostButton>
+        //     </div>
+        //   )}
+        // </TapeContainer>
+        <ModernLoading text="Загрузка новости..." />
+      ) : (
+        <ModernLoading text="Загрузка новости..." />
       )}
     </>
   )
