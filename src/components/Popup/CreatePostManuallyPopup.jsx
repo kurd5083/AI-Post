@@ -87,7 +87,7 @@ const CreatePostManuallyPopup = () => {
                 padding={false}
                 border={false}
                 options={[
-                  sources.map((source) => ({
+                  sources?.map((source) => ({
                     value: source.value,
                     label: source.value,
                   }))
