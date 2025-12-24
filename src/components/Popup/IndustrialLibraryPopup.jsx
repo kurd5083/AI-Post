@@ -2,11 +2,11 @@ import styled from "styled-components";
 import Checkbox from "@/shared/Checkbox";
 import { industrialLibraryDatas } from "@/data/industrialLibraryDatas";
 import BtnBase from "@/shared/BtnBase";
-import { useImagePresets } from "@/lib/channels/useImagePresets";
+import { usePromptLibrary } from "@/lib/channels/usePromptLibrary";
 
 const IndustrialLibraryPopup = () => {
-  const { imagePresets } = useImagePresets();
-  console.log(imagePresets)
+  const { promptLibrary } = usePromptLibrary();
+  console.log(promptLibrary)
   
 	return (
 		<IndustrialStyleContainer>
