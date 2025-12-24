@@ -50,11 +50,11 @@ const NewsDetail = () => {
 						</PostLeft>
 						<NewsImg src={`/.netlify/functions/api-proxy/${news.images[0]}`} alt={news.title} />
 					</NewsPost>
-					<NewsSubTitle>Другие новости</NewsSubTitle>
 				</>
 			) : (
 				<ModernLoading text="Загрузка новости..." />
 			)}
+			<NewsSubTitle>Другие новости</NewsSubTitle>
 			<TapeList forceHorizontal={true} padding={true} />
 		</NewsContainer>
 	);
