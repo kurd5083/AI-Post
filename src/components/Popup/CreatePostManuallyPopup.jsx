@@ -21,21 +21,32 @@ import useResolution from "@/lib/useResolution";
 import { useCreatePost } from "@/lib/posts/useCreatePost";
 
 const CreatePostManuallyPopup = () => {
-  const [post, setPost] = useState("");
+  const [postTitle, setPostTitle] = useState("");
+  const [postSource, setPostSource] = useState("");
+  const [postText, setPostText] = useState("");
   const { openPopup, goBack } = usePopupStore()
   const { isSmall } = useResolution(480);
-
+channelId= 28;
   return (
     <PostManually>
       <NewPostLeft>
         <PostTitle>Заголовок</PostTitle>
-        <PostInput type="text" placeholder="Новый пост"/>
+        <PostInput 
+          type="text" 
+          placeholder="Новый пост"
+          value={postTitle}
+          onChange={(e) => setPostTitle(e.target.value)}
+        />
         <PostSetting>
           <PostSettingTop>
             <BtnBase $color="#EF6284" $bg="#26202F" $padding="21px 24px">Настройки</BtnBase>
-            <BtnBase $color="#336CFF" $bg="#161F37" $padding="21px 24px"><PromotionIcon color="#336CFF"/>{!isSmall ? 'Опубликовать сейчас' : 'Опубликовать'}</BtnBase>
+            <BtnBase $color="#336CFF" $bg="#161F37" $padding="21px 24px">
+              <PromotionIcon color="#336CFF"/>{!isSmall ? 'Опубликовать сейчас' : 'Опубликовать'}
+            </BtnBase>
           </PostSettingTop>
-          <BtnBase $color="#6A7080" $bg="transporent" $border={true} onClick={() => openPopup("change_time", "popup_window")}><TimeIcons/>Изменить время</BtnBase>
+          <BtnBase $color="#6A7080" $bg="transporent" $border={true} onClick={() => openPopup("change_time", "popup_window")}>
+            <TimeIcons/>Изменить время
+          </BtnBase>
         </PostSetting>
       </NewPostLeft>
       <PostLeftButtons>
@@ -59,8 +70,8 @@ const CreatePostManuallyPopup = () => {
             <PostCreateContainerTitle><CheckboxCircle/>Пост 1</PostCreateContainerTitle>
             <textarea
                 placeholder="Текст публикации..."
-                value={post}
-                onChange={(e) => setPost(e.target.value)}
+                value={postText}
+                onChange={(e) => setPostText(e.target.value)}
               ></textarea>
             <CreateAI>
               <p><img src={create} alt="create icon" />Создать фото с AI</p>

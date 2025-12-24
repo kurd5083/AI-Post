@@ -48,6 +48,15 @@ export const settingsDatas = {
                         background: "#382B73",
                         image: publications
                     }
+                },
+                {
+                    key: "create_post_common",
+                    name: "Создать пост",
+                    right: 'arrow',
+                    extra: {
+                        background: "#382B73",
+                        image: publications
+                    }
                 }
             ]
         },
