@@ -13,6 +13,7 @@ import schedule from "@/assets/popup/schedule.svg";
 import sources from "@/assets/popup/sources.svg";
 import post_style  from "@/assets/popup/post-style.svg";
 import advanced from "@/assets/popup/advanced.svg";
+import PlusIcon from "@/icons/PlusIcon";
 
 export const settingsDatas = {
     sections: [
@@ -54,8 +55,9 @@ export const settingsDatas = {
                     name: "Создать пост",
                     right: 'arrow',
                     extra: {
-                        background: "#382B73",
-                        image: publications
+                        background: "#44336D",
+                        image: '',
+                        svg: <PlusIcon color="#D6DCEC"/>
                     }
                 }
             ]

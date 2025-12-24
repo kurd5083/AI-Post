@@ -74,7 +74,17 @@ const SettingsPopup = () => {
             {section.items.map((item, index) => (
               <PopupContentItem key={index} onClick={item.right !== 'switch' ? () => changeContent(item.key, { channelId: channelId, channelName: channelName, workMode: channel?.workMode }) : undefined}>
                 <PopupContentLeft>
-                  <img src={item.extra.image} alt={item.name} style={{ background: item.extra.background }} width={40} height={40} />
+                  {item.extra && (
+                    <IconBac $bg={item.extra.background}>
+                      {item.extra.image ? (
+                        <img src={item.extra.image} alt={item.name} />
+                      ) : (
+                        <>
+                          {item.extra.svg}
+                        </>
+                      )}
+                    </IconBac>
+                  )}
                   <PopupContentInfo $size={item.size} $publications={item.key}>
                     <h3>{item.name}</h3>
                     {item.status && (
@@ -165,6 +175,17 @@ const PopupContentLeft = styled.div`
     border-radius: 8px;
     padding: 8px;
   }
+`
+const IconBac = styled.div`
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	box-sizing: border-box;
+  padding: 10px;
+  width: 40px;
+	height: 40px;
+  border-radius: 8px;
+	background-color: ${({ $bg }) => $bg};
 `
 const PopupContentInfo = styled.div`
   display: flex;
