@@ -59,7 +59,7 @@ const TableGroups = () => {
                 alt="del icon" 
                 onClick={(e) => {
                   e.stopPropagation();
-                  openPopup("delete_popup", "popup_window", {
+                  openPopup("delete_confirm", "popup_window", {
                     itemName: folder.name,
                     onDelete: () => deleteFolder(folder.id),
                   });
