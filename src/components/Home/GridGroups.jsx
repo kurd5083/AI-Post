@@ -13,62 +13,69 @@ const GridGroups = () => {
   const { channels } = useChannelsGroupedByFolders();
   const { mutate: deleteChannel, isLoading: deleteLoading } = useDeleteChannel();
 
+  // Получаем текущие каналы в зависимости от выбранной папки
+  let currentChannels = [];
+  let isEmpty = true;
+
+  if (selectedId === null) {
+    currentChannels = channels?.channelsWithoutFolder || [];
+    isEmpty = currentChannels.length === 0;
+  } else {
+    const selectedFolder = channels?.folders?.find(folder => folder.id == selectedId);
+    currentChannels = selectedFolder?.channels || [];
+    isEmpty = currentChannels.length === 0;
+  }
+
+  if (deleteLoading) {
+    return (
+      <GridContainer>
+        <LoadingMessage>Загрузка...</LoadingMessage>
+      </GridContainer>
+    );
+  }
+
+  if (isEmpty) {
+    return (
+      <GridContainer>
+        <NoChannels>Каналы отсутствуют</NoChannels>
+      </GridContainer>
+    );
+  }
+
   return (
     <GridContainer>
-      {(() => {
-        let currentChannels = [];
-        let isEmpty = true;
-
-        if (selectedId === null) {
-          currentChannels = channels?.channelsWithoutFolder || [];
-          isEmpty = currentChannels.length === 0;
-        } else {
-          const selectedFolder = channels?.folders?.find(folder => folder.id == selectedId);
-          currentChannels = selectedFolder?.channels || [];
-          isEmpty = currentChannels.length === 0;
-        }
-
-        {!deleteLoading ? (
-          !isEmpty ? (
-            currentChannels.map((channel, index) => (
-              <GridItem key={channel.id}>
-                <GridItemNum>#{index++}</GridItemNum>
-                <GridImg src={channel.avatarUrl} alt="Group" />
-                <CellName>{channel.name}</CellName>
-                <p>
-                  {channel?.workMode === "PREMODERATION" && "Предмодерация"}
-                  {channel?.workMode === "AUTOPOSTING" && "Автопостинг"}
-                </p>
-                <GridStatus>Премодерация</GridStatus>
-                <ButtonsWrap>
-                  <ButtonDir onClick={() => openPopup("move_channel", "popup_window", { channelId: channel.id })} title="Перейти">
-                    <DirIcon />
-                  </ButtonDir>
-                  <ButtonSetting onClick={() => openPopup('settings', 'popup', { channelId: channel.id, channelName: channel.channelId })} title="Настройки"><img src={setting} alt="setting icon" width={16} height={16} /></ButtonSetting>
-                  <ButtonDel
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    openPopup("delete_confirm", "popup_window", {
-                      itemName: channel.name,
-                      onDelete: () => deleteChannel(channel.id),
-                    });
-                    }}
-                     title="Удалить"
-                   >
-                     <img src={del} alt="del icon" width={14} height={16} />
-                   </ButtonDel>
-                 </ButtonsWrap>
-                </GridItem>
-              ))
-            ) : (
-              <GridItem>
-                <NoChannels colSpan={4}>Каналы отсутствуют</NoChannels>
-              </GridItem>
-            )
-        ) : (
-          <ModernLoading text="Загрузка новости..." />
-        )}
-      })()}
+      {currentChannels.map((channel, index) => (
+        <GridItem key={channel.id}>
+          <GridItemNum>#{index + 1}</GridItemNum>
+          <GridImg src={channel.avatarUrl} alt="Group" />
+          <CellName>{channel.name}</CellName>
+          <p>
+            {channel?.workMode === "PREMODERATION" && "Предмодерация"}
+            {channel?.workMode === "AUTOPOSTING" && "Автопостинг"}
+          </p>
+          <GridStatus>Премодерация</GridStatus>
+          <ButtonsWrap>
+            <ButtonDir onClick={() => openPopup("move_channel", "popup_window", { channelId: channel.id })} title="Перейти">
+              <DirIcon />
+            </ButtonDir>
+            <ButtonSetting onClick={() => openPopup('settings', 'popup', { channelId: channel.id, channelName: channel.channelId })} title="Настройки">
+              <img src={setting} alt="setting icon" width={16} height={16} />
+            </ButtonSetting>
+            <ButtonDel
+              onClick={(e) => {
+                e.stopPropagation();
+                openPopup("delete_confirm", "popup_window", {
+                  itemName: channel.name,
+                  onDelete: () => deleteChannel(channel.id),
+                });
+              }}
+              title="Удалить"
+            >
+              <img src={del} alt="del icon" width={14} height={16} />
+            </ButtonDel>
+          </ButtonsWrap>
+        </GridItem>
+      ))}
     </GridContainer>
   );
 };
@@ -79,18 +86,22 @@ const GridContainer = styled.div`
   gap: 16px;
   padding-bottom: 30px;
   padding: 0 24px;
+  
   @media (max-width: 1600px) {
     padding: 0;
   }
+  
   @media (max-width: 768px) {
     gap: 8px;
     padding: 0 32px;
     grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
   }
+  
   @media (max-width: 768px) {
     padding: 0 24px;
   }
 `;
+
 const GridItem = styled.div`
   display: flex;
   flex-direction: column;
@@ -100,10 +111,12 @@ const GridItem = styled.div`
   background-color: #1C2438;
   border-radius: 16px;
   text-align: center;
+  
   @media (max-width: 768px) {
     padding: 16px 8px;
   }
 `;
+
 const GridItemNum = styled.p`
   font-size: 14px;
   font-weight: 600;
@@ -115,12 +128,14 @@ const GridImg = styled.img`
   border-radius: 12px;
   object-fit: cover;
 `;
+
 const CellName = styled.span`
   max-width: 100%;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-`
+`;
+
 const GridStatus = styled.button`
   padding: 18px 24px;
   border-radius: 12px;
@@ -129,9 +144,11 @@ const GridStatus = styled.button`
   font-size: 14px;
   font-weight: 700;
   background: transparent;
+  
   @media (max-width: 768px) {
     padding: 18px 20px;
   }
+  
   &:hover {
     background-color: #336CFF;
     color: #fff;
@@ -142,6 +159,7 @@ const ButtonsWrap = styled.div`
   display: flex;
   align-items: center;
 `;
+
 const BaseButton = styled.button`
   display: flex;
   align-items: center;
@@ -151,13 +169,15 @@ const BaseButton = styled.button`
   border-radius: 12px;
   flex-shrink: 0;
   transition: all 0.2s;
-	margin-right: 8px;
-	@media (max-width: 480px) {
+  margin-right: 8px;
+  
+  @media (max-width: 480px) {
     margin-right: 4px !important;
-		width: 40px;
-  	height: 40px;
+    width: 40px;
+    height: 40px;
   }
 `;
+
 const ButtonDir = styled(BaseButton)`
   border: 2px solid #336CFF;
 
@@ -169,6 +189,7 @@ const ButtonDir = styled(BaseButton)`
 const ButtonSetting = styled(BaseButton)`
   border: 2px solid #2F3953;
   margin-right: 24px;
+  
   @media (max-width: 991px) {
     flex-direction: row;
     margin-right: 8px;
@@ -178,18 +199,29 @@ const ButtonSetting = styled(BaseButton)`
 const ButtonDel = styled(BaseButton)`
   border: 2px solid #2F3953;
   margin-right: 0;
+  
   &:hover {
     border: none;
     background-color: rgba(239, 98, 132, 0.08);
   }
 `;
-const NoChannels = styled.td`
-  border-radius: 24px !important;
+
+const NoChannels = styled.div`
+  grid-column: 1 / -1;
   text-align: center;
   color: #6A7080;
-  padding: 24px 0 !important;
+  padding: 48px 0;
   font-weight: 600;
   background-color: #1C2438;
+  border-radius: 16px;
+`;
+
+const LoadingMessage = styled.div`
+  grid-column: 1 / -1;
+  text-align: center;
+  color: #6A7080;
+  padding: 48px 0;
+  font-weight: 600;
 `;
 
 export default GridGroups;
