@@ -17,27 +17,27 @@ import { useSendAddChannelButton } from "@/lib/channels/useSendAddChannelButton"
 
 const TableGroups = () => {
   const { openPopup } = usePopupStore();
-	const { isSwipe } = useSwipeAllowed(768);
-	const { isSmall } = useResolution(480);
+  const { isSwipe } = useSwipeAllowed(768);
+  const { isSmall } = useResolution(480);
   const { viewType, setGridView, setListView } = useViewStore();
   const { selectedId, setId } = useChannelsStore();
   const { channels } = useChannelsGroupedByFolders();
   const { mutate: deleteFolder } = useDeleteFolder();
   const { mutate: addChannel } = useSendAddChannelButton();
-  
-	return (
-		<TableGroupsContainer>
-			<TableGroupsHead>
-				<TableGroupsHeadLeft>
-				  <TableGroupsHeadDir onClick={() => openPopup("create_folder", "popup_window")}>
-            <DirIcon color="#336CFF"/>
+
+  return (
+    <TableGroupsContainer>
+      <TableGroupsHead>
+        <TableGroupsHeadLeft>
+          <TableGroupsHeadDir onClick={() => openPopup("create_folder", "popup_window")}>
+            <DirIcon color="#336CFF" />
             Создать папку
           </TableGroupsHeadDir>
-          <BaseFolderBtn 
-            onClick={() => setId(null)} 
+          <BaseFolderBtn
+            onClick={() => setId(null)}
             $active={selectedId === null}
           >
-            <DirIcon color="#6A7080"/>
+            <DirIcon color="#6A7080" />
             <p>Без папки</p>
             <mark>{channels?.totalChannelsWithoutFolder}</mark>
           </BaseFolderBtn>
@@ -45,51 +45,48 @@ const TableGroups = () => {
             key={isSwipe}
             spaceBetween={40}
             slidesPerView="auto"
-            // allowTouchMove={true}
           >
-          {channels?.folders?.map((folder) => (
-            <TableGroupsHeadBtn 
-              key={folder.id} 
-              onClick={() => setId(folder.id)}
-              $active={selectedId === folder.id}
-            >
-              <DirIcon color={folder.color}/>
-              <FolderName>{folder.name}</FolderName>
-              <mark>{folder.channels.length}</mark>
-              <DeleteFolderButton 
-                src={del} 
-                alt="del icon" 
-                onClick={(e) => {
-                  e.stopPropagation();
-                  openPopup("delete_confirm", "popup_window", {
-                    itemName: folder.name,
-                    onDelete: () => deleteFolder(folder.id),
-                  });
-                }}
-              />
-            </TableGroupsHeadBtn>
-          ))}
+            {channels?.folders?.map((folder) => (
+              <TableGroupsSlide key={folder.id}>
+                <SlideBtn $active={selectedId === folder.id} onClick={() => setId(folder.id)}>
+                  <DirIcon color={folder.color} />
+                  <FolderName>{folder.name}</FolderName>
+                  <mark>{folder.channels.length}</mark>
+                  <DeleteFolderButton
+                    src={del}
+                    alt="del icon"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      openPopup("delete_confirm", "popup_window", {
+                        itemName: folder.name,
+                        onDelete: () => deleteFolder(folder.id),
+                      });
+                    }}
+                  />
+                </SlideBtn>
+              </TableGroupsSlide>
+            ))}
           </LeftSwiper>
-				</TableGroupsHeadLeft>
-				<TableGroupsHeadRight>
-					<TableGroupsHeadAdd 
-          onClick={addChannel}
+        </TableGroupsHeadLeft>
+        <TableGroupsHeadRight>
+          <TableGroupsHeadAdd
+            onClick={addChannel}
           // onClick={() => openPopup("create_channel", "popup_window")}
           >{isSmall ? "+ Добавить" : "+ Добавить канал"}</TableGroupsHeadAdd>
-					<TableGroupsHeadShow $active={viewType === "grid"} onClick={setGridView}>
+          <TableGroupsHeadShow $active={viewType === "grid"} onClick={setGridView}>
             <GridIcon color={viewType === "grid" ? "#D6DCEC" : "#6A7080"} />
           </TableGroupsHeadShow>
-					<TableGroupsHeadShow $active={viewType === "list"} onClick={setListView}>
+          <TableGroupsHeadShow $active={viewType === "list"} onClick={setListView}>
             <ListIcon color={viewType === "list" ? "#D6DCEC" : "#6A7080"} />
           </TableGroupsHeadShow>
-					<TableGroupsHeadShow onClick={() => openPopup("create_folder", "popup_window")}>
-            <DirIcon color="#6A7080"/>
-            </TableGroupsHeadShow>
-					<TableGroupsHeadShow><img src={refresh} alt="refresh icon" /></TableGroupsHeadShow>
-				</TableGroupsHeadRight>
-			</TableGroupsHead>
-		</TableGroupsContainer>
-	)
+          <TableGroupsHeadShow onClick={() => openPopup("create_folder", "popup_window")}>
+            <DirIcon color="#6A7080" />
+          </TableGroupsHeadShow>
+          <TableGroupsHeadShow><img src={refresh} alt="refresh icon" /></TableGroupsHeadShow>
+        </TableGroupsHeadRight>
+      </TableGroupsHead>
+    </TableGroupsContainer>
+  )
 }
 const TableGroupsContainer = styled.section`
   margin-top: 80px;
@@ -180,11 +177,14 @@ const BaseFolderBtn = styled.button`
   ${baseFolderStyles}
   white-space: nowrap;
 `;
-
-const TableGroupsHeadBtn = styled(SwiperSlide)`
+const TableGroupsSlide = styled(SwiperSlide)`
+  width: fit-content;
+`;
+const SlideBtn = styled.button`
   ${baseFolderStyles}
   width: fit-content;
 `;
+
 const FolderName = styled.p`
   max-width: 100px;
   white-space: nowrap;
