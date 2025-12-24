@@ -38,7 +38,10 @@ const CreatePostManuallyPopup = () => {
       text: postText,
       channelId: channelId,
       title: postTitle,
-      summary: '1'
+      summary: '1',
+      publishedAt: '',
+      source: '',
+      images: ['']
     });
   };
 
@@ -78,7 +81,11 @@ const CreatePostManuallyPopup = () => {
         <PostCreate>
           <PostSource>
             <p>Источник: <mark>apple.com/home</mark></p>
-            <CustomSelect/>
+            <CustomSelect
+              options={[
+                { icon: ava_icon, value: "Antropia Digital", label: "Antropia Digital" },
+              ]}
+            />
             <SourcePost width="16" height="16"/>
           </PostSource>
           <PostTitle>Описание</PostTitle>
