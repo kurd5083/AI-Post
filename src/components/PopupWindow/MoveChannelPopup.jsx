@@ -15,7 +15,7 @@ const MoveChannelPopup = () => {
 	const { channels } = useChannelsGroupedByFolders();
 	const [selectedFolderId, setSelectedFolderId] = useState(null);
 	const { user } = useUser();
-
+	console.log(user)
 	const handleMove = (folderId, channelId) => moveChannel({ folderId, channelId, ownerTelegramId: String(user.telegramId), });
 
 	return (
