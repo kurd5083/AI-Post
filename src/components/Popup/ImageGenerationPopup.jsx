@@ -33,7 +33,6 @@ const ImageGenerationPopup = () => {
   return (
     <ImageGenerationContent>
       <ImageGenerationContentTitle>Выберите одну стилистику</ImageGenerationContentTitle>
-      <div>
         {imagePresetsLoading ? (
           imagePresets?.map((item) => (
             <ImageGenerationContentItem key={item.id}>
@@ -49,9 +48,8 @@ const ImageGenerationPopup = () => {
             </ImageGenerationContentItem>
           ))
         ) : (
-          <ModernLoading/>
+          <ModernLoading text="Загрузка стилей..."/>
         )}
-      </div>
     </ImageGenerationContent>
   )
 }

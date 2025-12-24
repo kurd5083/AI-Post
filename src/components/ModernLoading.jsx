@@ -1,9 +1,9 @@
 import styled, { keyframes } from "styled-components";
 
-const ModernLoading = () => (
+const ModernLoading = ({text}) => (
   <LoadingSpinner>
     <SpinnerRing />
-    <LoadingText>Загрузка стилей...</LoadingText>
+    <LoadingText>{text}</LoadingText>
   </LoadingSpinner>
 );
 
