@@ -1,11 +1,15 @@
 import styled from "styled-components";
 import Checkbox from "@/shared/Checkbox";
 import { useImagePresets } from "@/lib/channels/image-generation/useImagePresets";
-import { useChannelImagePreset } from "../../lib/channels/image-generation/useChannelImagePreset";
-
+import { useGetChannelImagePreset } from "@/lib/channels/image-generation/useGetChannelImagePreset";
+import { useUpdateChannelImagePreset } from "@/lib/channels/image-generation/useUpdateChannelImagePreset";
+import { usePopupStore } from "@/store/popupStore"
 const ImageGenerationPopup = () => {
+  const { popup } = usePopupStore();
+  const channelId = popup?.data?.channelId;
+
   const { imagePresets } = useImagePresets();
-  const { imageChannelPreset } = useChannelImagePreset();
+  const { imageChannelPreset } = useGetChannelImagePreset();
   const [selectedPresetId, setSelectedPresetId] = useState(null);
 
   useEffect(() => {
@@ -14,6 +18,7 @@ const ImageGenerationPopup = () => {
     }
   }, [imageChannelPreset]);
 
+  const { mutate: updateImagePreset } = useUpdateChannelImagePreset();
 	return (
 		<ImageGenerationContent>
 			<ImageGenerationContentTitle>Выберите одну стилистику</ImageGenerationContentTitle>
@@ -22,7 +27,7 @@ const ImageGenerationPopup = () => {
 					<ImageGenerationContentItem key={item.id}>
 						<Checkbox
               checked={selectedPresetId === item.id}
-              onChange={() => handleCheckboxChange(item.id)}
+              onChange={() => updateImagePreset({channelId, presetId: item.id})}
             >
 							<div>
 								<h4>{item.name}</h4>
