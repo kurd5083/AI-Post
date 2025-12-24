@@ -52,7 +52,10 @@ const Main = styled.main`
   z-index: 1;
   overflow-y: ${({ $blocked }) => ($blocked ? "clip" : "auto")};
   scrollbar-width: none;
-
+  //
+  display: flex;
+  flex-direction: column;
+  //
   @media(max-width: 1600px) {
     padding: 0;
   }

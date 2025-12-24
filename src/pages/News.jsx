@@ -62,7 +62,10 @@ const NewsDetail = () => {
 	);
 }
 const NewsContainer = styled.div`
-	height: 100%;
+	flex: 1;
+	display: flex;
+  flex-direction: column;
+	
 	@media(max-width: 1600px) {
   	padding-bottom: 30px;
   }
