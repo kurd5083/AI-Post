@@ -37,7 +37,7 @@ const MyTeamPopup = () => {
               </tr>
             </thead>
             <tbody>
-              {members?.map((member, index) => (
+              {members?.team?.map((member, index) => (
                 <TableItem key={index}>
                   <TableCell>
                     <TableCellName>
