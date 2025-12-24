@@ -14,20 +14,20 @@ const GridGroups = () => {
   const { channels, channelsLoading } = useChannelsGroupedByFolders();
   const { mutate: deleteChannel } = useDeleteChannel();
 
-  let currentChannels = [];
-  let isEmpty = null;
-  
   if (channelsLoading) {
     return <ModernLoading text="Загрузка каналов..." />;
   }
+  
+  let currentChannels = [];
+  let isEmpty = null;
 
   if (selectedId === null) {
-    currentChannels = channels?.channelsWithoutFolder || [];
+    currentChannels = channels.channelsWithoutFolder || [];
     isEmpty = currentChannels.length === 0;
   } else {
-    const selectedFolder = channels?.folders?.find(folder => folder.id == selectedId);
+    const selectedFolder = channels.folders?.find(folder => folder.id == selectedId);
     currentChannels = selectedFolder?.channels || [];
-    isEmpty = currentChannels.length === 0;
+    isEmpty = !selectedFolder || currentChannels.length === 0;
   }
 
   if (isEmpty) {
