@@ -21,7 +21,7 @@ const LoadingSpinner = styled.div`
   align-items: center;
   justify-content: center;
   gap: 24px;
-  min-height: 300px;
+  height: calc(100% - 150px);
   width: 100%;
   height: 100%;
   flex: 1;
