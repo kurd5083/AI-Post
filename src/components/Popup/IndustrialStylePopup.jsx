@@ -10,7 +10,6 @@ import { useUpdateChannelGlobalPrompt } from "@/lib/channels/global-prompt/useUp
 import { useUpdateChannelCreativity } from "@/lib/channels/creativity/useUpdateChannelCreativity";
 import { useUpdateChannelCaption } from "@/lib/channels/caption/useUpdateChannelCaption";
 
-
 const MAX_PROMPT_LENGTH = 100;
 
 const IndustrialStylePopup = () => {
@@ -29,15 +28,9 @@ const IndustrialStylePopup = () => {
 
   useEffect(() => {
     // if (globalPrompt.globalPrompt !== undefined) setLocalPrompt(globalPrompt.globalPrompt);
-  }, [globalPrompt]);
-
-  useEffect(() => {
-    if (caption.caption !== undefined) setLocalCaption(caption.caption);
-  }, [caption]);
-
-  useEffect(() => {
-    if (creativity.creativity !== undefined) setLocalCreativity(creativity.creativity);
-  }, [creativity]);
+    if (caption !== undefined) setLocalCaption(caption.caption);
+    if (creativity !== undefined) setLocalCreativity(creativity.creativity);
+  }, [globalPrompt, caption, creativity]);
 
   const handlePromptChange = (e) => {
     if (e.target.value.length <= MAX_PROMPT_LENGTH) {
@@ -54,9 +47,9 @@ const IndustrialStylePopup = () => {
   const { mutate: updateCaption } = useUpdateChannelCaption();
 
   const handleSave = () => {
-    updateGlobalPrompt({channelId, value: localPrompt});
-    updateCreativity({channelId, value: localCreativity});
-    updateCaption({channelId, value: localCaption});
+    updateGlobalPrompt({ channelId, value: localPrompt });
+    updateCreativity({ channelId, value: localCreativity });
+    updateCaption({ channelId, value: localCaption });
   };
 
   return (
@@ -84,9 +77,9 @@ const IndustrialStylePopup = () => {
           <IndustrialStyleDesc>Введите промпт — это задание для генерации поста. <mark>Чем точнее формулировка, тем лучше результат.</mark></IndustrialStyleDesc>
           <IndustrialStyleTitle>Подпись</IndustrialStyleTitle>
           <IndustrialStyleInputContainer>
-            <IndustrialStyleInput 
-              type="text" 
-              placeholder="Описание канала" 
+            <IndustrialStyleInput
+              type="text"
+              placeholder="Описание канала"
               value={localCaption}
               onChange={(e) => setLocalCaption(e.target.value)}
             />
