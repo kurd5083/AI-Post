@@ -11,9 +11,9 @@ const ImageGenerationPopup = () => {
   const channelId = popup?.data?.channelId;
 
   const { imagePresets } = useImagePresets();
-  const { imageChannelPreset } = useGetChannelImagePreset();
+  const { imageChannelPreset } = useGetChannelImagePreset(channelId);
   const [selectedPresetId, setSelectedPresetId] = useState(null);
-
+  console.log(imageChannelPreset)
   useEffect(() => {
     if (imageChannelPreset) {
       setSelectedPresetId(imageChannelPreset.id);
