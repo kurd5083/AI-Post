@@ -14,7 +14,6 @@ const CreatePostPopup = () => {
   const {
     mutate: generatePost,
     isPending, 
-    isLoading,
     isSuccess,
     isError,
   } = useGeneratePost();
@@ -31,9 +30,7 @@ const CreatePostPopup = () => {
       {isPending && (
         <>
           <CreatePostTitle>Генерируем пост</CreatePostTitle>
-          <CreatePostText>
-            Это может занять несколько минут. Пожалуйста, не закрывайте окно
-          </CreatePostText>
+          <CreatePostText>Это может занять несколько минут...</CreatePostText>
           <BtnBase $color="#AC60FD" $bg="#201F39" onClick={goBack}>
             Отменить генерацию
           </BtnBase>
@@ -46,7 +43,7 @@ const CreatePostPopup = () => {
           <CreatePostText>
             Пост успешно сгенерирован и готов к публикации
           </CreatePostText>
-          <BtnBase $color="#D6DCEC" $bg="#336CFF" onClick={closePopup}>
+          <BtnBase $color="#AC60FD" $bg="#201F39" onClick={closePopup}>
             Продолжить
           </BtnBase>
         </>
@@ -58,7 +55,7 @@ const CreatePostPopup = () => {
           <CreatePostText>
             Не удалось сгенерировать пост. Попробуйте ещё раз
           </CreatePostText>
-          <BtnBase $color="#D6DCEC" $bg="#336CFF" onClick={goBack}>
+          <BtnBase $color="#AC60FD" $bg="#201F39" onClick={goBack}>
             Назад
           </BtnBase>
         </>
