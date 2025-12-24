@@ -5,10 +5,13 @@ import arrow from "@/assets/arrow.svg";
 import { usePopupStore } from "@/store/popupStore"
 import { popupDatas } from "@/data/popupDatas";
 import CloseIcon from "@/icons/CloseIcon";
+import { useUser } from "@/lib/useUser";
 
 const PopupHead = () => {
 	const { popup, closePopup, goBack } = usePopupStore()
 	const foundItem = popupDatas.find(elem => elem.key == popup.content)
+  const { user } = useUser();
+  console.log(user)
 	return (
 		<>
 			{popup.content !== 'notifications' && popup.content !== 'replenish' && popup.content !== 'upload_media' && popup.content !== 'profile' && (
@@ -16,7 +19,7 @@ const PopupHead = () => {
 					{popup.content != 'settings' && <PopupArrow src={arrow} alt="arrow icon" width={8} height={16} onClick={goBack} />}
 					<PopupListAva src={ava_icon} alt="ava icon" width={48} height={48} />
 					<PopupListInfoContent>
-						<p>Antropia Digital</p>
+						<p>{user?.firstName} {user?.lastName}</p>
 						<span>14.670 Подписчиков</span>
 					</PopupListInfoContent>
 				</PopupListInfo>
@@ -58,6 +61,7 @@ const PopupHead = () => {
 		</>
 	)
 }
+
 const PopupListInfo = styled.section`
   display: flex;
   align-items: center;
@@ -140,7 +144,6 @@ const IconSettingsMain = styled.img`
     height: 24px;
   }
 `
-
 const IconBac = styled.div`
 	display: flex;
 	align-items: center;
