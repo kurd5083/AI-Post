@@ -5,7 +5,7 @@ export const useUpdateChannelImagePreset = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ channelId, data }) => updateChannelImagePreset(channelId, data),
+    mutationFn: ({ channelId, presetId }) => updateChannelImagePreset(channelId, presetId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["channel-image-preset"] });
     },
