@@ -21,7 +21,7 @@ const MyTeamPopup = () => {
       </BtnBase>
       <TableWrapper>
         {!membersLoading && channelName ? (
-          // members?.team?.length > 0 ? (
+          members?.team?.length > 0 ? (
           //   <Table>
           //     <colgroup>
           //       <col />
