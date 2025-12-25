@@ -32,9 +32,7 @@ const TableGroups = () => {
   }
   if (isEmpty) {
     return (
-      <Table>
-        <NoChannels>Каналы отсутствуют</NoChannels>
-      </Table>
+      <NoChannels>Каналы отсутствуют</NoChannels>
     );
   }
 
@@ -368,7 +366,7 @@ const ButtonDel = styled(BaseButton)`
     background-color: rgba(239, 98, 132, 0.08);
   }
 `;
-const NoChannels = styled.td`
+const NoChannels = styled.div`
   border-radius: 24px !important;
   text-align: center;
   color: #6A7080;
