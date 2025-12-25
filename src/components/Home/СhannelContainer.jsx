@@ -21,7 +21,7 @@ const TableContainer = styled.div`
     padding: 0;
   }
   
-  &::after {
+  /* &::after {
     content: '';
     position: absolute;
     bottom: 0;
@@ -37,12 +37,12 @@ const TableContainer = styled.div`
     @media(max-width: 1400px) {
       display: none;
     }
-  }
+  } */
 `;
 const TableWrapper = styled.div`
   box-sizing: border-box;
   width: 100%;
-  max-height: calc(100dvh - 600px); 
+  max-height: 400px; 
   /* min-height: 400px; */
   /* max-height: 400px;  */
   overflow-y: auto;

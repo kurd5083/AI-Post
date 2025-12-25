@@ -101,7 +101,7 @@ const TapeContainer = styled(Swiper)`
   @media (max-width: 768px) {
     padding: 0 24px;
   }
-  ${({ $forceHorizontal, $fadeVisible }) =>
+  /* ${({ $forceHorizontal, $fadeVisible }) =>
     !$forceHorizontal &&
     `
       &::after {
@@ -122,7 +122,7 @@ const TapeContainer = styled(Swiper)`
           display: none;
         }
       }
-  `}
+  `} */
 `
 const TapeItem = styled(SwiperSlide)`
   box-sizing: border-box;
