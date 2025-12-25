@@ -140,9 +140,9 @@ const CreatePostManuallyPopup = () => {
           <DeleteButton>
             <img src={del} alt="del icon" width={14} height={16} />
           </DeleteButton>
-          <BtnBase $padding="19px 46px">
+          {/* <BtnBase $padding="19px 46px">
             Сохранить
-          </BtnBase>
+          </BtnBase> */}
         </Buttons>
       </PostRight>
     </PostManually>

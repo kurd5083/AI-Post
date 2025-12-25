@@ -3,8 +3,12 @@ import { useState, useEffect } from "react";
 import CustomSelectSec from "@/shared/CustomSelectSec";
 import arrow from "@/assets/arrow.svg";
 import BtnBase from "@/shared/BtnBase";
+import { usePopupStore } from "@/store/popupStore";
+import { useCreateCalendarEvent } from "@/lib/calendar/useCreateCalendarEvent";
 
 const CalendarPopup = () => {
+    const { popup } = usePopupStore()
+    const channelId = popup?.data?.channelId;
     const [currentDate, setCurrentDate] = useState(new Date(2026, 8, 22));
     const [selectedDate, setSelectedDate] = useState(new Date(2026, 8, 22));
     const [currentWeek, setCurrentWeek] = useState([]);
@@ -138,6 +142,23 @@ const CalendarPopup = () => {
     };
     const dayOptions = getDayOptions(currentDate.getFullYear(), currentDate.getMonth());
 
+    const { mutate: createEvent, isPending } = useCreateCalendarEvent();
+    const handleAddPost = () => {
+    createEvent({
+        channelId: channelId, 
+        eventType: "POST_SCHEDULED",
+        title: "Scheduled Post",
+        description: "Post description",
+        scheduledAt: selectedDate.toISOString(),
+        timezone: "UTC",
+        duration: 60,
+        priority: 0,
+        metadata: {
+            source: "calendar",
+        },
+    });
+};
+
     return (
         <div>
             <CalendarHead>
@@ -194,7 +215,14 @@ const CalendarPopup = () => {
                     })}
                 </WeekGrid>
                 <CalendarButton>
-                    <BtnBase $color="#AC60FD" $bg="#1F203D">Добавить пост</BtnBase>
+                    <BtnBase
+                        $color="#AC60FD"
+                        $bg="#1F203D"
+                        onClick={handleAddPost}
+                        disabled={isPending}
+                    >
+                        {isPending ? "Создание..." : "Добавить пост"}
+                    </BtnBase>
                 </CalendarButton>
                 <CalendarText>На этот день нету запланированных постов</CalendarText>
             </CalendarContent>
