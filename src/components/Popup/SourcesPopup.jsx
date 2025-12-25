@@ -4,17 +4,17 @@ import { usePopupStore } from "@/store/popupStore"
 import BtnBase from "@/shared/BtnBase";
 import InputPlus from "@/shared/InputPlus";
 import BlocksItems from "@/shared/BlocksItems";
-import { useChannelSources } from "@/lib/channels/sources/useChannelSources";
+// import { useChannelSources } from "@/lib/channels/sources/useChannelSources";
+import { useChannelById } from "@/lib/channels/useChannelById";
 import { useAddChannelSource } from "@/lib/channels/sources/useAddChannelSource";
 import { useDeleteChannelSource } from "@/lib/channels/sources/useDeleteChannelSource";
 
 const SourcesPopup = () => {
   const { popup, changeContent } = usePopupStore()
   const channelId = popup?.data?.channelId;
-  const { sources } = useChannelSources(channelId);
-
+  const { channel } = useChannelById(channelId);
   const [url, setUrl] = useState("");
-
+  console.log(channel)
   const { mutate: addSource } = useAddChannelSource();
   const { mutate: deleteSource } = useDeleteChannelSource();
 
@@ -39,7 +39,7 @@ const SourcesPopup = () => {
           <p>Источники не добавлены</p>
         ) : (
           <BlocksItems
-            items={sources ? sources.map((source) => ({ value: source.name, id: source.id })) : []} 
+            items={channel.sources.map((source) => ({ value: source.name, id: source.id }))} 
             color="#2B89ED"
             onRemove={(id) =>
               deleteSource({ channelId, sourceId: id })
