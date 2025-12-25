@@ -36,7 +36,7 @@ const SourcesPopup = () => {
           }}
         />
         {channel.sources.length === 0 ? (
-          <p>Источники не добавлены</p>
+          <EmptyText>Источники не добавлены</EmptyText>
         ) : (
           <BlocksItems
             items={channel.sources.map((source) => ({ value: source.name, id: source.id }))} 
@@ -86,6 +86,12 @@ const SourcesKeyTitle = styled.h2`
   font-size: 24px;
   margin-bottom: 40px;
 `
+const EmptyText = styled.p`
+  font-size: 16px;
+  font-weight: 600;
+  color: #6A7080;
+  margin-top: 32px;
+`;
 const SourcesButtons = styled.div`
   display: flex;
   flex-direction: column;
