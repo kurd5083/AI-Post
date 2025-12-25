@@ -17,7 +17,6 @@ const PublicationsPopup = () => {
   const channelId = popup?.data?.channelId;
 
   const { posts, loadingPosts } = usePostsByChannel(channelId);
-  if (!channelId) return <p>Channel ID не определён</p>;
   console.log(loadingPosts)
   useEffect(() => {
     const handleResize = () => {
@@ -51,7 +50,7 @@ const PublicationsPopup = () => {
         <PublicationsFilter>Архив <span>0</span></PublicationsFilter>
         <PublicationsFilter>По дате</PublicationsFilter>
       </PublicationsHead>
-      {!loadingPosts ? (
+      {!loadingPosts || channelId ? (
         <>
           <PublicationsList>
             {currentItems?.length > 0 ? (
