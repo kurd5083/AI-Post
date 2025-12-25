@@ -1,5 +1,7 @@
 import styled from "styled-components";
 import { useState, useEffect } from "react";
+
+import CustomSelect from "@/shared/CustomSelect";
 import CustomSelectSec from "@/shared/CustomSelectSec";
 import BtnBase from "@/shared/BtnBase";
 import arrow from "@/assets/arrow.svg";
@@ -120,7 +122,7 @@ const CalendarPopup = () => {
 	return (
 		<div>
 			<CalendarHead>
-				<CustomSelectSec
+				<CustomSelect
 					placeholder="День"
 					options={dayOptions}
 					value={dayOptions.find(
