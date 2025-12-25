@@ -32,7 +32,9 @@ const TableGroups = () => {
   }
   if (isEmpty) {
     return (
-      <NoChannels>Каналы отсутствуют</NoChannels>
+      <NoChannelsContainer>
+        <NoChannels>Каналы отсутствуют</NoChannels>
+      </NoChannelsContainer>
     );
   }
 
@@ -366,13 +368,23 @@ const ButtonDel = styled(BaseButton)`
     background-color: rgba(239, 98, 132, 0.08);
   }
 `;
-const NoChannels = styled.div`
-  border-radius: 24px !important;
+const NoChannelsContainer = styled.div`
+  padding: 0 24px;
+  @media (max-width: 1600px) {
+    padding: 0;
+  }
+
+  @media (max-width: 768px) {
+    padding: 0 24px;
+  }
+`;
+const NoChannels = styled.p`
   text-align: center;
   color: #6A7080;
-  padding: 40px 0 !important;
+  padding: 48px 0;
   font-weight: 600;
   background-color: #1C2438;
+  border-radius: 16px;
 `;
 
 export default TableGroups;
