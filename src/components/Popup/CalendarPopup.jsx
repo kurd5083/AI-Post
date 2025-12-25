@@ -1,233 +1,197 @@
 import styled from "styled-components";
 import { useState, useEffect } from "react";
 import CustomSelectSec from "@/shared/CustomSelectSec";
-import arrow from "@/assets/arrow.svg";
 import BtnBase from "@/shared/BtnBase";
+import arrow from "@/assets/arrow.svg";
+
 import { usePopupStore } from "@/store/popupStore";
 import { useCreateCalendarEvent } from "@/lib/calendar/useCreateCalendarEvent";
 
-const CalendarPopup = () => {
-    const { popup } = usePopupStore()
-    const channelId = popup?.data?.channelId;
-    const [currentDate, setCurrentDate] = useState(new Date(2026, 8, 22));
-    const [selectedDate, setSelectedDate] = useState(new Date(2026, 8, 22));
-    const [currentWeek, setCurrentWeek] = useState([]);
+const DAYS_OF_WEEK = [
+  "ПОНЕДЕЛЬНИК",
+  "ВТОРНИК",
+  "СРЕДА",
+  "ЧЕТВЕРГ",
+  "ПЯТНИЦА",
+  "СУББОТА",
+  "ВОСКРЕСЕНЬЕ",
+];
 
-    const daysOfWeek = [
-        'ПОНЕДЕЛЬНИК', 'ВТОРНИК', 'СРЕДА',
-        'ЧЕТВЕРГ', 'ПЯТНИЦА', 'СУББОТА', 'ВОСКРЕСЕНЬЕ'
-    ];
+const MONTH_OPTIONS = [
+  "Январь", "Февраль", "Март", "Апрель",
+  "Май", "Июнь", "Июль", "Август",
+  "Сентябрь", "Октябрь", "Ноябрь", "Декабрь",
+].map((label, value) => ({ value, label }));
 
-    const getDaysInMonth = (year, month) => {
-        return new Date(year, month + 1, 0).getDate();
-    };
+const YEAR_OPTIONS = [2024, 2025, 2026, 2027].map((y) => ({
+  value: y,
+  label: String(y),
+}));
 
-    const getDayOptions = (year, month) => {
-        return Array.from(
-            { length: getDaysInMonth(year, month) },
-            (_, i) => ({ value: i + 1, label: String(i + 1) })
-        );
-    };
+const getDaysInMonth = (year, month) =>
+  new Date(year, month + 1, 0).getDate();
 
-    const monthOptions = [
-        "Январь", "Февраль", "Март", "Апрель", "Май", "Июнь",
-        "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"
-    ].map((m, i) => ({ value: i, label: m }));
+const getDayOptions = (year, month) =>
+  Array.from(
+    { length: getDaysInMonth(year, month) },
+    (_, i) => ({ value: i + 1, label: String(i + 1) })
+  );
 
-    const yearOptions = [
-        { value: 2024, label: "2024" },
-        { value: 2025, label: "2025" },
-        { value: 2026, label: "2026" },
-        { value: 2027, label: "2027" }
-    ];
+const generateWeek = (date) => {
+  const monday = new Date(date);
+  const diff = date.getDay() === 0 ? -6 : 1 - date.getDay();
+  monday.setDate(date.getDate() + diff);
 
-    const generateWeek = (date) => {
-        const week = [];
-        const dayOfWeek = date.getDay();
-        const monday = new Date(date);
-
-        const diff = dayOfWeek === 0 ? -6 : 1 - dayOfWeek;
-        monday.setDate(date.getDate() + diff);
-
-        for (let i = 0; i < 7; i++) {
-            const day = new Date(monday);
-            day.setDate(monday.getDate() + i);
-            week.push(day);
-        }
-
-        return week;
-    };
-
-    useEffect(() => {
-        setCurrentWeek(generateWeek(currentDate));
-    }, [currentDate]);
-
-    const prevWeek = () => {
-        const newDate = new Date(currentDate);
-        newDate.setDate(currentDate.getDate() - 7);
-        setCurrentDate(newDate);
-    };
-
-    const nextWeek = () => {
-        const newDate = new Date(currentDate);
-        newDate.setDate(currentDate.getDate() + 7);
-        setCurrentDate(newDate);
-    };
-
-    const formatWeekRange = () => {
-        if (currentWeek.length === 0) return "";
-        const first = currentWeek[0];
-        const last = currentWeek[6];
-
-        const firstDay = first.getDate().toString().padStart(2, "0");
-        const firstMonth = (first.getMonth() + 1).toString().padStart(2, "0");
-        const lastDay = last.getDate().toString().padStart(2, "0");
-        const lastMonth = (last.getMonth() + 1).toString().padStart(2, "0");
-        const year = first.getFullYear();
-
-        if (first.getMonth() === last.getMonth()) {
-            return `${firstDay}-${lastDay}.${firstMonth}.${year}`;
-        } else {
-            return `${firstDay}.${firstMonth} - ${lastDay}.${lastMonth}.${year}`;
-        }
-    };
-
-    const handleDayChange = (value) => {
-        const newDate = new Date(
-            currentDate.getFullYear(),
-            currentDate.getMonth(),
-            value
-        );
-        setSelectedDate(newDate);
-
-        const weekStart = new Date(currentWeek[0]);
-        const weekEnd = new Date(currentWeek[6]);
-        weekEnd.setHours(23, 59, 59, 999);
-
-        if (newDate < weekStart || newDate > weekEnd) {
-            setCurrentDate(newDate);
-        }
-    };
-
-    const handleMonthChange = (value) => {
-        const newDate = new Date(
-            currentDate.getFullYear(),
-            value,
-            Math.min(selectedDate.getDate(), getDaysInMonth(currentDate.getFullYear(), value))
-        );
-        setSelectedDate(newDate);
-        setCurrentDate(newDate);
-    };
-
-    const handleYearChange = (value) => {
-        const newDate = new Date(
-            value,
-            currentDate.getMonth(),
-            Math.min(selectedDate.getDate(), getDaysInMonth(value, currentDate.getMonth()))
-        );
-        setSelectedDate(newDate);
-        setCurrentDate(newDate);
-    };
-
-
-    const handleDateClick = (date) => {
-        setSelectedDate(date);
-        const weekStart = new Date(currentWeek[0]);
-        const weekEnd = new Date(currentWeek[6]);
-        weekEnd.setHours(23, 59, 59, 999);
-
-        if (date < weekStart || date > weekEnd) {
-            setCurrentDate(date);
-        }
-    };
-    const dayOptions = getDayOptions(currentDate.getFullYear(), currentDate.getMonth());
-
-    const { mutate: createEvent, isPending } = useCreateCalendarEvent();
-    const handleAddPost = () => {
-    createEvent({
-        channelId: channelId, 
-        eventType: "POST_SCHEDULED",
-        title: "Scheduled Post",
-        description: "Post description",
-        scheduledAt: selectedDate.toISOString(),
-        timezone: "UTC",
-        duration: 60,
-        priority: 0,
-        metadata: {
-            source: "calendar",
-        },
-    });
+  return Array.from({ length: 7 }, (_, i) => {
+    const d = new Date(monday);
+    d.setDate(monday.getDate() + i);
+    return d;
+  });
 };
 
-    return (
-        <div>
-            <CalendarHead>
-                <CustomSelectSec
-                    placeholder="День"
-                    options={dayOptions}
-                    value={dayOptions.find(o => o.value === selectedDate.getDate())}
-                    onChange={(option) => handleDayChange(option.value)}
-                    width="165px"
-					fs="22px"
-                />
-                <CustomSelectSec
-                    placeholder="Месяц"
-                    options={monthOptions}
-                    value={monthOptions.find(o => o.value === selectedDate.getMonth())}
-                    onChange={(option) => handleMonthChange(option.value)}
-                    width="180px"
-					fs="22px"
-                />
-                <CustomSelectSec
-                    placeholder="Год"
-                    options={yearOptions}
-                    value={yearOptions.find(o => o.value === selectedDate.getFullYear())}
-                    onChange={(option) => handleYearChange(option.value)}
-                    width="165px"
-					fs="22px"
-                />
-            </CalendarHead>
-            <CalendarContent>
-                <Header>
-                    <NavButton onClick={prevWeek}><img src={arrow} alt="arrow icon" /></NavButton>
-                    <DateDisplay>{formatWeekRange()}</DateDisplay>
-                    <NavButton onClick={nextWeek}><img src={arrow} alt="arrow icon" /></NavButton>
-                </Header>
-                
-                <WeekGrid>
-                    {currentWeek.map((day, index) => {
-                        const isSelected = day.toDateString() === selectedDate.toDateString();
-                        const dayOfWeekName = daysOfWeek[index];
+const CalendarPopup = () => {
+  const { popup } = usePopupStore();
+  const channelId = popup?.data?.channelId;
 
-                        return (
-                            <DayColumn key={index}>
-                                <DayOfWeek>{dayOfWeekName}</DayOfWeek>
-                                <DayCell
-                                    isSelected={isSelected}
-                                    onClick={() => handleDateClick(day)}
-                                >
-                                    <DayNumber isSelected={isSelected}>
-                                        {day.getDate()}
-                                    </DayNumber>
-                                </DayCell>
-                            </DayColumn>
-                        );
-                    })}
-                </WeekGrid>
-                <CalendarButton>
-                    <BtnBase
-                        $color="#AC60FD"
-                        $bg="#1F203D"
-                        onClick={handleAddPost}
-                        disabled={isPending}
-                    >
-                        {isPending ? "Создание..." : "Добавить пост"}
-                    </BtnBase>
-                </CalendarButton>
-                <CalendarText>На этот день нету запланированных постов</CalendarText>
-            </CalendarContent>
-        </div>
-    );
+  const [currentDate, setCurrentDate] = useState(new Date(2026, 8, 22));
+  const [selectedDate, setSelectedDate] = useState(new Date(2026, 8, 22));
+  const [currentWeek, setCurrentWeek] = useState([]);
+
+  useEffect(() => {
+    setCurrentWeek(generateWeek(currentDate));
+  }, [currentDate]);
+
+  const { mutate: createEvent, isPending } = useCreateCalendarEvent();
+
+  const changeWeek = (direction) => {
+    const next = new Date(currentDate);
+    next.setDate(currentDate.getDate() + direction * 7);
+    setCurrentDate(next);
+  };
+
+  const syncDate = (date) => {
+    setSelectedDate(date);
+    const [start, end] = [currentWeek[0], currentWeek[6]];
+    end?.setHours(23, 59, 59, 999);
+
+    if (date < start || date > end) {
+      setCurrentDate(date);
+    }
+  };
+
+  const handleAddPost = () => {
+    createEvent({
+      channelId,
+      eventType: "POST_SCHEDULED",
+      title: "Scheduled Post",
+      description: "Post description",
+      scheduledAt: selectedDate.toISOString(),
+      timezone: "UTC",
+      duration: 60,
+      priority: 0,
+      metadata: { source: "calendar" },
+    });
+  };
+
+  const dayOptions = getDayOptions(
+    currentDate.getFullYear(),
+    currentDate.getMonth()
+  );
+
+  const weekRange = () => {
+    if (!currentWeek.length) return "";
+    const [first, last] = currentWeek;
+    const y = first.getFullYear();
+
+    const f = `${String(first.getDate()).padStart(2, "0")}.${String(first.getMonth() + 1).padStart(2, "0")}`;
+    const l = `${String(last.getDate()).padStart(2, "0")}.${String(last.getMonth() + 1).padStart(2, "0")}`;
+
+    return first.getMonth() === last.getMonth()
+      ? `${f.split(".")[0]}-${l}.${y}`
+      : `${f} - ${l}.${y}`;
+  };
+
+  return (
+    <div>
+      <CalendarHead>
+        <CustomSelectSec
+          placeholder="День"
+          options={dayOptions}
+          value={dayOptions.find(o => o.value === selectedDate.getDate())}
+          onChange={(o) =>
+            syncDate(new Date(currentDate.getFullYear(), currentDate.getMonth(), o.value))
+          }
+          width="165px"
+          fs="22px"
+        />
+
+        <CustomSelectSec
+          placeholder="Месяц"
+          options={MONTH_OPTIONS}
+          value={MONTH_OPTIONS.find(o => o.value === selectedDate.getMonth())}
+          onChange={(o) =>
+            syncDate(new Date(currentDate.getFullYear(), o.value, selectedDate.getDate()))
+          }
+          width="180px"
+          fs="22px"
+        />
+
+        <CustomSelectSec
+          placeholder="Год"
+          options={YEAR_OPTIONS}
+          value={YEAR_OPTIONS.find(o => o.value === selectedDate.getFullYear())}
+          onChange={(o) =>
+            syncDate(new Date(o.value, currentDate.getMonth(), selectedDate.getDate()))
+          }
+          width="165px"
+          fs="22px"
+        />
+      </CalendarHead>
+
+      <CalendarContent>
+        <Header>
+          <NavButton onClick={() => changeWeek(-1)}>
+            <img src={arrow} alt="" />
+          </NavButton>
+
+          <DateDisplay>{weekRange()}</DateDisplay>
+
+          <NavButton onClick={() => changeWeek(1)}>
+            <img src={arrow} alt="" />
+          </NavButton>
+        </Header>
+
+        <WeekGrid>
+          {currentWeek.map((day, i) => {
+            const selected = day.toDateString() === selectedDate.toDateString();
+            return (
+              <DayColumn key={i}>
+                <DayOfWeek>{DAYS_OF_WEEK[i]}</DayOfWeek>
+                <DayCell isSelected={selected} onClick={() => syncDate(day)}>
+                  <DayNumber isSelected={selected}>{day.getDate()}</DayNumber>
+                </DayCell>
+              </DayColumn>
+            );
+          })}
+        </WeekGrid>
+
+        <CalendarButton>
+          <BtnBase
+            $color="#AC60FD"
+            $bg="#1F203D"
+            onClick={handleAddPost}
+            disabled={isPending}
+          >
+            {isPending ? "Создание..." : "Добавить пост"}
+          </BtnBase>
+        </CalendarButton>
+
+        <CalendarText>
+          На этот день нету запланированных постов
+        </CalendarText>
+      </CalendarContent>
+    </div>
+  );
 };
 
 const CalendarHead = styled.div`
