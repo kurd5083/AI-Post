@@ -37,7 +37,7 @@ const MainLayout = () => {
   )
 }
 const MainContainer = styled.section`
-  position: relative;
+  /* position: relative; */
   display: flex;
   max-height: 100dvh;
   @media(max-width: 1400px) {
