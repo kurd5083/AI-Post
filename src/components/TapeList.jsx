@@ -47,7 +47,9 @@ const TapeList = ({ forceHorizontal = false, padding }) => {
                   <p>{news.sourceName}</p>
                 </TapeItemHead>
                 <Link to={`/news/${news.id}`}>
-                  <TapeItemText>{news.title}</TapeItemText>
+                  <Dotdotdot clamp={3}>
+                    <TapeItemText>{news.title}</TapeItemText>
+                  </Dotdotdot>
                 </Link>
                 <TapeItemAction onClick={() => openPopup("select_channel", "popup_window", { newsId: news.id })}>
                   Сохранить в канал
@@ -179,13 +181,13 @@ const TapeItemText = styled.div`
   font-size: 20px;
   line-height: 20px;
   font-weight: 700;
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
+  /* display: -webkit-box; */
+  /* -webkit-line-clamp: 3; */
+  /* -webkit-box-orient: vertical; */
+  /* overflow: hidden; */
 `
 const TapeItemAction = styled.span`
-  color: #6A7080;
+  color: #336CFF;
   margin-bottom: 18px;
   line-height: 14px;
   cursor: pointer;

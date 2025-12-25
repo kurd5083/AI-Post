@@ -6,7 +6,7 @@ const Auth = () => {
   const navigate = useNavigate();
   const { search } = useLocation();
   const { mutate: telegramAuth } = useAuthTelegram();
-
+  console.log(telegramAuth)
   useEffect(() => {
     const params = new URLSearchParams(search);
     const data = {
@@ -20,7 +20,7 @@ const Auth = () => {
     };
 
     telegramAuth(data, {
-        onSuccess: () => navigate("https://ai-post-test-2.netlify.app/"),
+        onSuccess: () => navigate("/"),
     });
   }, [search, navigate, telegramAuth]);
 

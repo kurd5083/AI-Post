@@ -18,10 +18,14 @@ const CardPablish = ({ item, bg }) => {
 					{item.time}
 				</CardPablishItemTime>
 			</CardPablishItemHead>
-			<CardPablishText>{item.title}</CardPablishText>
-			<CardPablishSubtext
-        dangerouslySetInnerHTML={{__html: formattedText}}
-      />
+      <Dotdotdot clamp={2}>
+			  <CardPablishText>{item.title}</CardPablishText>
+      </Dotdotdot>
+      <Dotdotdot clamp={1}>
+        <CardPablishSubtext
+          dangerouslySetInnerHTML={{__html: formattedText}}
+        />
+      </Dotdotdot>
 			<CardPablishOpen>
 				<img src={arrow} alt="arrow icon" />
 			</CardPablishOpen>
