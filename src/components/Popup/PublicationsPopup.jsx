@@ -110,24 +110,21 @@ const PublicationsList = styled.div`
   margin-top: 50px;
   gap: 16px 24px;
   padding: 0 56px;
-  //
-  grid-template-columns: repeat(5, 1fr);
-  @media (max-width: 2000px) {
-    grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(3, 1fr);
+  
+  @media(max-width: 1600px) {
+    grid-template-columns: repeat(2, 1fr);
+    padding: 0 32px;
   }
-  @media (max-width: 1800px) {
+   @media(max-width: 1400px) {
     grid-template-columns: repeat(3, 1fr);
   }
-
   @media (max-width: 991px) {
     grid-template-columns: repeat(2, 1fr);
   }
-  //
-  @media(max-width: 1600px) {
-    padding: 0 32px;
-  }
   @media(max-width: 768px) {
     padding: 0 24px;
+    grid-template-columns: 1fr;
   }
 `;
 const EmptyState = styled.p`
