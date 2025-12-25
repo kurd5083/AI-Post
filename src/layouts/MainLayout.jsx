@@ -41,7 +41,6 @@ const MainContainer = styled.section`
   display: flex;
   max-height: 100dvh;
   @media(max-width: 1400px) {
-    position: static;
     flex-direction: column;
     max-height: fit-content;
   }
@@ -58,6 +57,9 @@ const Main = styled.main`
   scrollbar-width: none;
   @media(max-width: 1600px) {
     padding: 0;
+  }
+  @media(max-width: 1400px) {
+    position: static;
   }
 `
 export default MainLayout

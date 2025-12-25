@@ -73,7 +73,7 @@ const TapeContainer = styled.section`
   width: 100%;
   padding: 35px 43px 0 0;
   overflow: hidden;
-  z-index: -1;
+  z-index: 0;
 
   @media (max-width: 1600px) {
     max-width: 370px;
