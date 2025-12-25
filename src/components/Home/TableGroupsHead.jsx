@@ -15,6 +15,8 @@ import ListIcon from "@/icons/ListIcon";
 import DirIcon from "@/icons/DirIcon";
 import { useSendAddChannelButton } from "@/lib/channels/useSendAddChannelButton";
 import { useNavigate } from "react-router";
+import { useTelegramBotInfo } from "@/lib/useTelegramBotInfo";
+
 const TableGroups = () => {
   const { openPopup } = usePopupStore();
   const { isSwipe } = useSwipeAllowed(768);
@@ -25,6 +27,8 @@ const TableGroups = () => {
   const { mutate: deleteFolder } = useDeleteFolder();
   const { mutate: addChannel } = useSendAddChannelButton();
   const navigate = useNavigate()
+  
+  const { botInfo } = useTelegramBotInfo();
   return (
     <TableGroupsContainer>
       <TableGroupsHead>
@@ -70,7 +74,7 @@ const TableGroups = () => {
         </TableGroupsHeadLeft>
         <TableGroupsHeadRight>
           <TableGroupsHeadAdd
-            onClick={navigate('https://t.me/AIPOSTINGOBOT?startgroup=true')}
+            onClick={navigate(`https://t.me/${botInfo.username}?startgroup=true`)}
             // onClick={addChannel}
           // onClick={() => openPopup("create_channel", "popup_window")}
           >{isSmall ? "+ Добавить" : "+ Добавить канал"}</TableGroupsHeadAdd>
