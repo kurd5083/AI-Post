@@ -17,6 +17,7 @@ const PublicationsPopup = () => {
   const channelId = popup?.data?.channelId;
 
   const { posts, loadingPosts } = usePostsByChannel(channelId);
+  if (!channelId) return <p>Channel ID не определён</p>;
   console.log(loadingPosts)
   useEffect(() => {
     const handleResize = () => {
