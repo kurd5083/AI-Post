@@ -6,7 +6,6 @@ import CloseIcon from "@/icons/CloseIcon";
 
 const ChangeTimePopup = () => {
   const { popup, goBack } = usePopupStore();
-  console.log(popup)
   const onSave = popup?.data?.onSave;
   const currentTime = popup?.data?.currentTime;
 

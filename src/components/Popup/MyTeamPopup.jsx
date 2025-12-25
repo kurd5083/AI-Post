@@ -7,9 +7,8 @@ import del from "@/assets/del.svg";
 const MyTeamPopup = () => {
   const { popup, changeContent } = usePopupStore();
   const channelName = popup?.data?.channelName;
-  console.log(channelName, 'hdfhd')
   const { members } = useChannelMembers(channelName);
-  console.log(members, 'hhhh')
+  
   return (
     <MyTeamContainer>
       <BtnBase

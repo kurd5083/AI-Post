@@ -11,7 +11,6 @@ const IndustrialLibraryPopup = () => {
   const channelId = popup?.data?.channelId;
   const { promptLibrary } = usePromptLibrary();
   const { mutate: updateGlobalPrompt } = useUpdateChannelGlobalPrompt();
-  console.log(promptLibrary)
 
   const handleSave = () => {
     updateGlobalPrompt({ channelId, value: localPrompt });

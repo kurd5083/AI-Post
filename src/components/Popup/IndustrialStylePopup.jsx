@@ -24,8 +24,6 @@ const IndustrialStylePopup = () => {
   const { creativity } = useGetChannelCreativity(channelId);
   const { caption } = useGetChannelCaption(channelId);
 
-  console.log(channelId, globalPrompt, creativity, caption, 'asd12')
-
   useEffect(() => {
     if (globalPrompt !== undefined) setLocalPrompt(globalPrompt.globalPromt);
     if (caption !== undefined) setLocalCaption(caption.caption);
@@ -39,7 +37,6 @@ const IndustrialStylePopup = () => {
   };
   const handleTest = () => {
     if (!localPrompt?.trim()) return;
-    console.log("Тестирование промпта:", prompt);
   };
 
   const { mutate: updateGlobalPrompt } = useUpdateChannelGlobalPrompt();

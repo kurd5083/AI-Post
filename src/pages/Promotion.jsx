@@ -8,7 +8,7 @@ import { usePromotionServices } from "@/lib/promotion/usePromotionServices";
 
 const Promotion = () => {
 	const { servicesData } = usePromotionServices();
-	console.log(servicesData)
+
 	return (
 		<PromotionContainer>
 			<PageHead />

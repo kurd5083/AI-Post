@@ -99,10 +99,10 @@ const CardPablishText = styled.p`
   font-size: 24px;
   line-height: 24px;
   font-weight: 700;
-  display: -webkit-box;
+  /* display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
-  overflow: hidden;
+  overflow: hidden; */
   padding-right: 40px;
 `
 const CardPablishSubtext = styled.p`
@@ -112,9 +112,9 @@ const CardPablishSubtext = styled.p`
   line-height: 14px;
   font-weight: 600;
   color: #6A7080;
-  overflow: hidden;
+  /* overflow: hidden;
   white-space: nowrap;
-  text-overflow: ellipsis;
+  text-overflow: ellipsis; */
   padding-right: 60px;
 `
 

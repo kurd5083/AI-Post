@@ -10,7 +10,6 @@ import { useCopyNewsToChannel } from "@/lib/news/useCopyNewsToChannel";
 const SelectChannelsPopup = () => {
 	const { popup, closePopup } = usePopupStore();
 	const { userChannels } = useUserChannels();
-	console.log(userChannels, 'asgsdgsd')
 	const [selectedChannelId, setSelectedChannelId] = useState(null);
 
 	const { mutate: copyToChannel, isLoading: isCopying } = useCopyNewsToChannel();

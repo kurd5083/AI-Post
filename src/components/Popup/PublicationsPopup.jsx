@@ -15,7 +15,7 @@ const PublicationsPopup = () => {
   const channelId = popup?.data?.channelId;
 
   const { posts } = usePostsByChannel(channelId);
-  console.log(posts)
+
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth < 768) {
@@ -40,7 +40,7 @@ const PublicationsPopup = () => {
   const indexOfLast = currentPage * itemsPerPage;
   const indexOfFirst = indexOfLast - itemsPerPage;
   const currentItems = posts?.slice(indexOfFirst, indexOfLast);
-  console.log(currentItems)
+
   return (
     <>
       <PublicationsHead>
@@ -106,12 +106,23 @@ const PublicationsFilter = styled.p`
 `;
 const PublicationsList = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
   grid-template-rows: max-content;
   margin-top: 50px;
   gap: 16px 24px;
   padding: 0 56px;
+  //
+  grid-template-columns: repeat(5, 1fr);
+  @media (max-width: 2000px) {
+    grid-template-columns: repeat(4, 1fr);
+  }
+  @media (max-width: 1800px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
 
+  @media (max-width: 991px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  //
   @media(max-width: 1600px) {
     padding: 0 32px;
   }

@@ -12,7 +12,6 @@ const SourcesPopup = () => {
   const { popup, changeContent } = usePopupStore()
   const channelId = popup?.data?.channelId;
   const { sources } = useChannelSources(channelId);
-  console.log(sources)
 
   const [url, setUrl] = useState("");
 
