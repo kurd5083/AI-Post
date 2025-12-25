@@ -79,6 +79,9 @@ const MyTeamPopup = () => {
 };
 
 const MyTeamContainer = styled.div`
+  display: flex;
+  height: 100%;
+  flex-direction: column;
   padding: 0 56px;
 
   @media(max-width: 1600px) {
@@ -89,7 +92,7 @@ const MyTeamContainer = styled.div`
   }
 `;
 const TableWrapper = styled.div`
-
+  height: 100%;
   margin-top: 48px;
   @media (max-width: 480px) {
     margin-top: 24px;
