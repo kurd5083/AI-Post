@@ -45,7 +45,7 @@ const MyTeamPopup = () => {
                         <img src={member.user.avatarUrl} alt="avatar" />
                         <NameBlock>
                           <p>
-                            {member.user.firstName} {member.user.lastName}
+                            {member.user.firstName} {member.user.lastName.charAt()}.
                           </p>
                           {/* {member.username && (
                           <span>@{member.username}</span>
