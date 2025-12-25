@@ -50,7 +50,7 @@ const PublicationsPopup = () => {
         <PublicationsFilter>Архив <span>0</span></PublicationsFilter>
         <PublicationsFilter>По дате</PublicationsFilter>
       </PublicationsHead>
-      {loadingPosts ? (
+      {!loadingPosts ? (
         <>
           <PublicationsList>
             {currentItems?.length > 0 ? (
