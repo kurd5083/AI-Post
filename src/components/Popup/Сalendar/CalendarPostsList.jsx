@@ -1,16 +1,20 @@
 import styled from "styled-components";
-import { format } from "date-fns";
 
 const CalendarPostsList = ({ posts }) => {
     if (!posts || posts.length === 0) {
         return <EmptyText>На этот день нет запланированных постов</EmptyText>;
     }
-
+    const formatTime = (dateStr) => {
+        const d = new Date(dateStr);
+        const hours = String(d.getHours()).padStart(2, "0");
+        const minutes = String(d.getMinutes()).padStart(2, "0");
+        return `${hours}:${minutes}`;
+    };
     return (
         <ListContainer>
             {posts.map((post) => (
                 <PostItem key={post.id}>
-                    <Time>{format(new Date(post.scheduledAt), "HH:mm")}</Time>
+                    <Time>{formatTime(post.scheduledAt)}</Time>
                     <Content>
                         <Title>{post.title}</Title>
                         <Description>{post.description}</Description>
