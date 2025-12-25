@@ -32,9 +32,9 @@ const TableGroups = () => {
   }
   if (isEmpty) {
     return (
-      <TableItem>
-        <NoChannels colSpan={4}>Каналы отсутствуют</NoChannels>
-      </TableItem>
+      <Table>
+        <NoChannels>Каналы отсутствуют</NoChannels>
+      </Table>
     );
   }
 
