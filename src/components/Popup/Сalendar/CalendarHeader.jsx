@@ -19,6 +19,8 @@ export const CalendarHeader = ({ currentDate, selectedDate, syncDate }) => {
         onChange={(o) =>
           syncDate(new Date(currentDate.getFullYear(), currentDate.getMonth(), o.value))
         }
+        width="165px" 
+        fs="22px"
       />
 
       <CustomSelectSec
@@ -28,6 +30,8 @@ export const CalendarHeader = ({ currentDate, selectedDate, syncDate }) => {
         onChange={(o) =>
           syncDate(new Date(currentDate.getFullYear(), o.value, selectedDate.getDate()))
         }
+        width="180px" 
+        fs="22px"
       />
 
       <CustomSelectSec
@@ -37,6 +41,8 @@ export const CalendarHeader = ({ currentDate, selectedDate, syncDate }) => {
         onChange={(o) =>
           syncDate(new Date(o.value, currentDate.getMonth(), selectedDate.getDate()))
         }
+        width="165px" 
+        fs="22px"
       />
     </CalendarHead>
   );

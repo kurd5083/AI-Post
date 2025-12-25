@@ -16,7 +16,12 @@ export const CalendarFooter = ({
   return (
     <>
       <CalendarButton>
-        <BtnBase onClick={onAdd} disabled={isPending}>
+        <BtnBase 
+            onClick={onAdd} 
+            disabled={isPending}
+            $color="#AC60FD" 
+            $bg="#1F203D"
+        >
           {isPending ? "Создание..." : "Добавить пост"}
         </BtnBase>
       </CalendarButton>
