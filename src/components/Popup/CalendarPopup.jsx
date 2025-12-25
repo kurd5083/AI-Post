@@ -68,12 +68,12 @@ const CalendarPopup = () => {
 		).toISOString()
 		: null;
 
-	const { data: events = [] } = useCalendarEventsByRange({
+	const { events = [] } = useCalendarEventsByRange({
 		channelId,
 		startDate,
 		endDate,
 	});
-
+	console.log(events)
 	const { mutate: createEvent, isPending } =
 		useCreateCalendarEvent();
 
