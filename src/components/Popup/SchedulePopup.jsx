@@ -41,6 +41,7 @@ const SchedulePopup = () => {
       setPublicationTimes(channelSchedule.publicationTimes);
       setSelectedDays(channelSchedule.postDays);
     }
+    console.log(publicationTimes, 'asdasfd')
   }, [channelSchedule]);
 
   const handleAddTime = () => {
@@ -118,9 +119,10 @@ const SchedulePopup = () => {
             <BlocksItems
               items={publicationTimes.map((t, index) => ({ value: t, id: index }))}
               color="#FFF980"
-              onRemove={(id) => {
-                setPublicationTimes(publicationTimes.filter((_, i) => i !== id));
-              }}
+           
+              // onRemove={(id) => {
+              //   setPublicationTimes(publicationTimes.filter((_, i) => i !== id));
+              // }}
             />
           )}
         </ScheduleKey>
