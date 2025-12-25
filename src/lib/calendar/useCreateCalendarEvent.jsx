@@ -8,7 +8,7 @@ export const useCreateCalendarEvent = () => {
     mutationFn: (data) => createCalendarEvent(data),
 
     onSuccess: () => {
-      queryClient.invalidateQueries({queryKey: ['calendar']});
+      queryClient.invalidateQueries({queryKey: ['calendar-events']});
     },
   });
 };
