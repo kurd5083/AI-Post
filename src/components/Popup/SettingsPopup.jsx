@@ -115,7 +115,7 @@ const SettingsPopup = () => {
                     <img src={arrow} alt="arrow icon" height={12} width={6} />
                   </PopupContentRight>
                 ) : (
-                  <PopupContentCounter>{posts?.length} || 0</PopupContentCounter>
+                  <PopupContentCounter>{posts?.length || 0}</PopupContentCounter>
                 )}
               </PopupContentItem>
             ))}
