@@ -3,6 +3,8 @@ import styled from "styled-components";
 import CardPablish from "@/components/CardPablish";
 import { usePopupStore } from "@/store/popupStore"
 import { usePostsByChannel } from "@/lib/posts/usePostsByChannel";
+import ModernLoading from "@/components/ModernLoading";
+
 const itemsPerPageDefault = 9;
 const itemsPerPageSmall = 6;
 const itemsPerPageMob = 4;
@@ -14,7 +16,7 @@ const PublicationsPopup = () => {
   const { popup } = usePopupStore();
   const channelId = popup?.data?.channelId;
 
-  const { posts } = usePostsByChannel(channelId);
+  const { posts, loadingPosts } = usePostsByChannel(channelId);
 
   useEffect(() => {
     const handleResize = () => {
@@ -48,28 +50,35 @@ const PublicationsPopup = () => {
         <PublicationsFilter>Архив <span>0</span></PublicationsFilter>
         <PublicationsFilter>По дате</PublicationsFilter>
       </PublicationsHead>
-      <PublicationsList>
-        {currentItems?.length > 0 ? (
-          currentItems?.map((item) => (
-            <CardPablish key={item.id} item={item} bg />
-          ))
-        ) : (
-          <EmptyState>Публикаций пока нет</EmptyState>
-        )}
-      </PublicationsList>
-      {totalPages > 1 && (
-        <PaginationWrapper>
-          {Array.from({ length: totalPages }, (_, i) => (
-            <PageBtn
-              key={i}
-              onClick={() => setCurrentPage(i + 1)}
-              active={currentPage === i + 1}
-            >
-              {i + 1}
-            </PageBtn>
-          ))}
-        </PaginationWrapper>
+      {loadingPosts ? (
+        <>
+          <PublicationsList>
+            {currentItems?.length > 0 ? (
+              currentItems?.map((item) => (
+                <CardPablish key={item.id} item={item} bg />
+              ))
+            ) : (
+              <EmptyState>Публикаций пока нет</EmptyState>
+            )}
+          </PublicationsList>
+          {totalPages > 1 && (
+            <PaginationWrapper>
+              {Array.from({ length: totalPages }, (_, i) => (
+                <PageBtn
+                  key={i}
+                  onClick={() => setCurrentPage(i + 1)}
+                  active={currentPage === i + 1}
+                >
+                  {i + 1}
+                </PageBtn>
+              ))}
+            </PaginationWrapper>
+          )}
+        </>
+      ) : (
+        <ModernLoading text="Загрузка публикаций..." />
       )}
+
     </>
   );
 };
