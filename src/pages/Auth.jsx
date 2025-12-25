@@ -20,7 +20,7 @@ const Auth = () => {
     };
 
     telegramAuth(data, {
-        onSuccess: () => navigate("/"),
+        onSuccess: () => navigate("https://ai-post-test-2.netlify.app/"),
     });
   }, [search, navigate, telegramAuth]);
 
