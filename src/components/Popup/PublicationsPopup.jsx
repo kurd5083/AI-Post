@@ -78,7 +78,6 @@ const PublicationsPopup = () => {
       ) : (
         <ModernLoading text="Загрузка публикаций..." />
       )}
-
     </>
   );
 };
