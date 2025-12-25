@@ -50,7 +50,7 @@ const PublicationsPopup = () => {
         <PublicationsFilter>Архив <span>0</span></PublicationsFilter>
         <PublicationsFilter>По дате</PublicationsFilter>
       </PublicationsHead>
-      {!loadingPosts || channelId ? (
+      {!loadingPosts && channelId ? (
         <>
           <PublicationsList>
             {currentItems?.length > 0 ? (
