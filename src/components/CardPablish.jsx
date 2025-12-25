@@ -117,6 +117,7 @@ const CardPablishSubtext = styled.p`
   white-space: nowrap;
   text-overflow: ellipsis;
   padding-right: 60px;
+  max-width: 300px;
 `
 
 export default CardPablish
