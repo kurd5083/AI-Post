@@ -85,7 +85,7 @@ const PublicationsPopup = () => {
 const PublicationsHead = styled.div`
   display: flex;
   gap: 64px;
-  overflow-x: auto;
+  /* overflow-x: auto; */
   scrollbar-width: none;
   padding: 0 56px;
 
