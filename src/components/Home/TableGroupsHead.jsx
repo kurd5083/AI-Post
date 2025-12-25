@@ -14,7 +14,7 @@ import GridIcon from "@/icons/GridIcon";
 import ListIcon from "@/icons/ListIcon";
 import DirIcon from "@/icons/DirIcon";
 import { useSendAddChannelButton } from "@/lib/channels/useSendAddChannelButton";
-
+import { useNavigate } from "react-router";
 const TableGroups = () => {
   const { openPopup } = usePopupStore();
   const { isSwipe } = useSwipeAllowed(768);
@@ -24,7 +24,7 @@ const TableGroups = () => {
   const { channels } = useChannelsGroupedByFolders();
   const { mutate: deleteFolder } = useDeleteFolder();
   const { mutate: addChannel } = useSendAddChannelButton();
-
+  const navigate = useNavigate()
   return (
     <TableGroupsContainer>
       <TableGroupsHead>
@@ -70,7 +70,8 @@ const TableGroups = () => {
         </TableGroupsHeadLeft>
         <TableGroupsHeadRight>
           <TableGroupsHeadAdd
-            onClick={addChannel}
+            onClick={navigate('https://t.me/AIPOSTINGOBOT?startgroup=true')}
+            // onClick={addChannel}
           // onClick={() => openPopup("create_channel", "popup_window")}
           >{isSmall ? "+ Добавить" : "+ Добавить канал"}</TableGroupsHeadAdd>
           <TableGroupsHeadShow $active={viewType === "grid"} onClick={setGridView}>
