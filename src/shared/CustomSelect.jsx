@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
 import arrow from "@/assets/arrow.svg";
 
-const CustomSelect = ({ options, value, onChange, placeholder = "Выберите значение", padding, border=true }) => {
+const CustomSelect = ({ options, value, onChange, placeholder = "Выберите значение", padding=true, border=true }) => {
   const [open, setOpen] = useState(false);
   const selectRef = useRef(null);
 
