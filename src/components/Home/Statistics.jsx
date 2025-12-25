@@ -40,8 +40,10 @@ const Statistics = () => {
 };
 
 const StatisticsContainer = styled.section`
+  position: relative;
   margin-top: 24px;
   padding: 0 56px;
+  z-index: -1;
     
   @media (max-width: 1600px) {
     padding: 0 32px;
