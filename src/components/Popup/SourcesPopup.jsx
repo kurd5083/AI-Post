@@ -4,7 +4,6 @@ import { usePopupStore } from "@/store/popupStore"
 import BtnBase from "@/shared/BtnBase";
 import InputPlus from "@/shared/InputPlus";
 import BlocksItems from "@/shared/BlocksItems";
-// import { useChannelSources } from "@/lib/channels/sources/useChannelSources";
 import { useChannelById } from "@/lib/channels/useChannelById";
 import { useAddChannelSource } from "@/lib/channels/sources/useAddChannelSource";
 import { useDeleteChannelSource } from "@/lib/channels/sources/useDeleteChannelSource";
@@ -14,7 +13,6 @@ const SourcesPopup = () => {
   const channelId = popup?.data?.channelId;
   const { channel } = useChannelById(channelId);
   const [url, setUrl] = useState("");
-  console.log(channel)
   const { mutate: addSource } = useAddChannelSource();
   const { mutate: deleteSource } = useDeleteChannelSource();
 

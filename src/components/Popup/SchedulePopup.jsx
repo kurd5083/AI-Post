@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import styled from "styled-components";
-
 import CustomSelect from "@/shared/CustomSelect";
 import Checkbox from "@/shared/Checkbox";
 import TimeInput from "@/shared/TimeInput";
@@ -8,9 +7,9 @@ import BtnBase from "@/shared/BtnBase";
 import BlocksItems from "@/shared/BlocksItems";
 import PlusIcon from "@/icons/PlusIcon";
 import { usePopupStore } from "@/store/popupStore";
-import { useCreateChannelSchedule } from "@/lib/channels/useCreateChannelSchedule";
+import { useCreateChannelSchedule } from "@/lib/channels/schedule/useCreateChannelSchedule";
 import { useChannelSchedule } from "@/lib/channels/useChannelSchedule";
-import { useUpdateChannelSchedule } from "@/lib/channels/useUpdateChannelSchedule";
+import { useUpdateChannelSchedule } from "@/lib/channels/schedule/useUpdateChannelSchedule";
 
 const DAYS = [
   { label: "Понедельник", value: "MONDAY" },
@@ -36,7 +35,7 @@ const SchedulePopup = () => {
   const [publicationTimes, setPublicationTimes] = useState([]);
   const [selectedDays, setSelectedDays] = useState([]);
   const [currentTime, setCurrentTime] = useState({ hours: 0, minutes: 0 });
-
+  console.log(publicationTimes)
   useEffect(() => {
     if (channelSchedule) {
       setTimezone(channelSchedule.timezone);
@@ -113,16 +112,20 @@ const SchedulePopup = () => {
               <PlusIcon color="#FFF980" />
             </ScheduleBtn>
           </ScheduleInputContainer>
-
-          <BlocksItems
-            items={publicationTimes.map((t) => ({ value: t }))}
-            color="#FFF980"
-          />
+          {publicationTimes.length === 0 ? (
+            <EmptyText>Интервалы не добавлены</EmptyText>
+          ) : (
+            <BlocksItems
+              items={publicationTimes.map((t, index) => ({ value: t, id: index }))}
+              color="#FFF980"
+              onRemove={(id) => {
+                setPublicationTimes(publicationTimes.filter((_, i) => i !== id));
+              }}
+            />
+          )}
         </ScheduleKey>
-
         <ScheduleKey>
           <ScheduleKeyTitle>ДНИ НЕДЕЛИ</ScheduleKeyTitle>
-
           <ScheduleDays>
             {DAYS.map((day) => (
               <ScheduleDaysBlock key={day.value}>
@@ -159,7 +162,6 @@ const ScheduleContainer = styled.div`
     padding: 0 24px;
   }
 `;
-
 const ScheduleHead = styled.div`
   display: flex;
   gap: 32px;
@@ -168,7 +170,6 @@ const ScheduleHead = styled.div`
     margin-bottom: 40px;
   }
 `;
-
 const ScheduleHeadText = styled.p`
   color: ${({ $active }) => ($active ? "#D6DCEC" : "#6A7080")};
   padding-bottom: 32px;
@@ -179,22 +180,18 @@ const ScheduleHeadText = styled.p`
   padding-right: 40px;
   cursor: pointer;
 `;
-
 const ScheduleContent = styled.div`
   display: flex;
   flex-direction: column;
 `;
-
 const ScheduleTitle = styled.h2`
   font-size: 24px;
   font-weight: 700;
   margin-bottom: 32px;
 `;
-
 const ScheduleKey = styled.div`
   margin-top: 40px;
 `;
-
 const ScheduleKeyTitle = styled.h2`
   text-transform: uppercase;
   font-weight: 700;
@@ -202,13 +199,11 @@ const ScheduleKeyTitle = styled.h2`
   color: #6a7080;
   margin-bottom: 26px;
 `;
-
 const ScheduleInputContainer = styled.div`
   display: flex;
   align-items: center;
   gap: 24px;
 `;
-
 const ScheduleBtn = styled.button`
   display: flex;
   align-items: center;
@@ -217,7 +212,12 @@ const ScheduleBtn = styled.button`
   background-color: #262a2d;
   border-radius: 50%;
 `;
-
+const EmptyText = styled.p`
+  font-size: 16px;
+  font-weight: 600;
+  color: #6A7080;
+  margin-top: 32px;
+`;
 const ScheduleDays = styled.div`
   display: flex;
   flex-wrap: wrap;
@@ -229,7 +229,6 @@ const ScheduleDays = styled.div`
     width: 120px;
   }
 `;
-
 const ScheduleDaysBlock = styled.div`
   display: flex;
   flex-direction: column;

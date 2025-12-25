@@ -7,7 +7,6 @@ import PlusIcon from "@/icons/PlusIcon";
 import { useChannelInterval } from "@/lib/channels/useChannelInterval";
 import { usePopupStore } from "@/store/popupStore"
 import { useUpdateChannelInterval } from "@/lib/channels/useUpdateChannelInterval";
-import { useUpdateChannelSchedule } from "@/lib/channels/useUpdateChannelSchedule";
 
 const SchedulePopup = () => {
   const { popup, changeContent, goBack } = usePopupStore()

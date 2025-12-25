@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { createSchedule } from "@/api/channels/createSchedule";
+import { createSchedule } from "@/api/channels/schedule/createSchedule";
 
 export const useCreateChannelSchedule = (channelId) => {
     const queryClient = useQueryClient();
