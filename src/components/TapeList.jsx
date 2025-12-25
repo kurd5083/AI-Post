@@ -47,9 +47,9 @@ const TapeList = ({ forceHorizontal = false, padding }) => {
                   <p>{news.sourceName}</p>
                 </TapeItemHead>
                 <Link to={`/news/${news.id}`}>
-                  <Dotdotdot clamp={3}>
+                  {/* <Dotdotdot clamp={3}>
                     <TapeItemText>{news.title}</TapeItemText>
-                  </Dotdotdot>
+                  </Dotdotdot> */}
                 </Link>
                 <TapeItemAction onClick={() => openPopup("select_channel", "popup_window", { newsId: news.id })}>
                   Сохранить в канал
