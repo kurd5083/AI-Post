@@ -47,7 +47,6 @@ const SourcesPopup = () => {
       </SourcesKey>
       <SourcesButtons>
         <BtnBase $margin="40" onClick={() => changeContent("compilation")} $color="#D6DCEC" $bg="#2B89ED">Подборки источников</BtnBase>
-        <BtnBase $margin="64">Сохранить</BtnBase>
       </SourcesButtons>
     </SourcesContainer>
   )

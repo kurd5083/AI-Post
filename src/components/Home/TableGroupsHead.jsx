@@ -29,6 +29,7 @@ const TableGroups = () => {
   const navigate = useNavigate()
   
   const { botInfo } = useTelegramBotInfo();
+  console.log(botInfo)
   return (
     <TableGroupsContainer>
       <TableGroupsHead>
