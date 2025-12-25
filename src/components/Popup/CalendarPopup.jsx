@@ -3,11 +3,11 @@ import { useState, useEffect } from "react";
 import { usePopupStore } from "@/store/popupStore";
 import { useCreateCalendarEvent } from "@/lib/calendar/useCreateCalendarEvent";
 import { useCalendarEventsByRange } from "@/lib/calendar/useCalendarEventsByRange";
-
 import { generateWeek } from "@/lib/generateWeek";
-import { CalendarHeader } from "@/components/Popup/Сalendar/CalendarHeader";
-import { CalendarWeek } from "@/components/Popup/Сalendar/CalendarWeek";
-import { CalendarFooter } from "@/components/Popup/Сalendar/CalendarFooter";
+import CalendarHeader from "@/components/Popup/Сalendar/CalendarHeader";
+import CalendarWeek from "@/components/Popup/Сalendar/CalendarWeek";
+import CalendarFooter from "@/components/Popup/Сalendar/CalendarFooter";
+import CalendarPostsList from "@/components/Popup/Сalendar/CalendarPostsList";
 
 const CalendarPopup = () => {
   const { popup } = usePopupStore();
@@ -56,7 +56,6 @@ const CalendarPopup = () => {
         selectedDate={selectedDate}
         syncDate={syncDate}
       />
-
       <CalendarWeek
         currentWeek={currentWeek}
         selectedDate={selectedDate}
@@ -71,7 +70,6 @@ const CalendarPopup = () => {
           )
         }
       />
-
       <CalendarFooter
         events={events}
         selectedDate={selectedDate}
@@ -85,6 +83,13 @@ const CalendarPopup = () => {
           })
         }
       />
+			 <CalendarPostsList
+				posts={events.filter(
+					(e) =>
+						new Date(e.scheduledAt).toDateString() ===
+						selectedDate.toDateString()
+				)}
+			/>
     </CalendarContent>
   );
 };
