@@ -21,56 +21,57 @@ const MyTeamPopup = () => {
       </BtnBase>
       <TableWrapper>
         {!membersLoading && channelName ? (
-          members?.team?.length > 0 ? (
-            <Table>
-              <colgroup>
-                <col />
-                <col />
-                <col />
-                <col />
-              </colgroup>
-              <thead>
-                <tr>
-                  <HeaderCell>Имя</HeaderCell>
-                  <HeaderCell>Роль</HeaderCell>
-                  <HeaderCell>Дата вступления</HeaderCell>
-                  <HeaderCell />
-                </tr>
-              </thead>
-              <tbody>
-                {members?.team?.map((member, index) => (
-                  <TableItem key={index}>
-                    <TableCell>
-                      <TableCellName>
-                        <img src={member.user.avatarUrl} alt="avatar" />
-                        <NameBlock>
-                          <p>
-                            {member.user.firstName} {member.user.lastName.charAt()}.
-                          </p>
-                          {/* {member.username && (
-                          <span>@{member.username}</span>
-                        )} */}
-                        </NameBlock>
-                      </TableCellName>
-                    </TableCell>
-                    <TableCell>{member.role}</TableCell>
-                    <TableCell>
-                      {/* {new Date(member.createdAt).toLocaleDateString()} */}
-                    </TableCell>
-                    <TableCell>
-                      <ButtonDel title="Удалить">
-                        <img src={del} alt="del icon" width={14} height={16} />
-                      </ButtonDel>
-                    </TableCell>
-                  </TableItem>
-                ))}
-              </tbody>
-            </Table>
+          // members?.team?.length > 0 ? (
+          //   <Table>
+          //     <colgroup>
+          //       <col />
+          //       <col />
+          //       <col />
+          //       <col />
+          //     </colgroup>
+          //     <thead>
+          //       <tr>
+          //         <HeaderCell>Имя</HeaderCell>
+          //         <HeaderCell>Роль</HeaderCell>
+          //         <HeaderCell>Дата вступления</HeaderCell>
+          //         <HeaderCell />
+          //       </tr>
+          //     </thead>
+          //     <tbody>
+          //       {members?.team?.map((member, index) => (
+          //         <TableItem key={index}>
+          //           <TableCell>
+          //             <TableCellName>
+          //               <img src={member.user.avatarUrl} alt="avatar" />
+          //               <NameBlock>
+          //                 <p>
+          //                   {member.user.firstName} {member.user.lastName.charAt()}.
+          //                 </p>
+          //                 {/* {member.username && (
+          //                 <span>@{member.username}</span>
+          //               )} */}
+          //               </NameBlock>
+          //             </TableCellName>
+          //           </TableCell>
+          //           <TableCell>{member.role}</TableCell>
+          //           <TableCell>
+          //             {/* {new Date(member.createdAt).toLocaleDateString()} */}
+          //           </TableCell>
+          //           <TableCell>
+          //             <ButtonDel title="Удалить">
+          //               <img src={del} alt="del icon" width={14} height={16} />
+          //             </ButtonDel>
+          //           </TableCell>
+          //         </TableItem>
+          //       ))}
+          //     </tbody>
+          //   </Table>
+            <ModernLoading  text="Загрузка команды..."/>
           ) : (
             <p>В команде пока нет участников</p>
           )
         ) : (
-          <ModernLoading />
+          <ModernLoading text="Загрузка команды..."/>
         )}
       </TableWrapper>
     </MyTeamContainer>
