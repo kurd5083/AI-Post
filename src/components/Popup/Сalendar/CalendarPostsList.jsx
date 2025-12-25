@@ -1,9 +1,8 @@
 import styled from "styled-components";
 
 const CalendarPostsList = ({ posts }) => {
-    if (!posts || posts.length === 0) {
-        return <EmptyText>На этот день нет запланированных постов</EmptyText>;
-    }
+    if (!posts || posts.length === 0) return;
+    
     const formatTime = (dateStr) => {
         const d = new Date(dateStr);
         const hours = String(d.getHours()).padStart(2, "0");
