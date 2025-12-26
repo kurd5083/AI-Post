@@ -45,14 +45,10 @@ deploy:
     - echo "DEPLOY_HOST=$DEPLOY_HOST"
     - echo "DEPLOY_USER=$DEPLOY_USER"
     - echo "DEPLOY_PATH=$DEPLOY_PATH"
-    - |
-      if [ ! -d build ]; then
-        echo "ERROR: build folder not found!"
-        exit 1
-      fi
-    - |
-      echo "Starting rsync..."
-      rsync -avz --delete build/ "$DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATH"
+    # проверка, что папка build существует (sh-совместимо)
+    - '[ -d build ] || { echo "ERROR: build folder not found!"; exit 1; }'
+    - echo "Starting rsync..."
+    - rsync -avz --delete build/ "$DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATH"
     - echo "Deployment finished successfully!"
   only:
     - main
