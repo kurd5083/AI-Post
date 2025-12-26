@@ -9,14 +9,17 @@ import { usePopupStore } from "@/store/popupStore";
 import { useAvailableCategories } from "@/lib/channels/categories/useAvailableCategories";
 
 const CompilationUploadPopup = () => {
-  const { goBack } = usePopupStore()
+  const { popup, goBack } = usePopupStore()
   const { categories, categoriesLoading } = useAvailableCategories();
 
+  const categoryId = popup?.data?.id;
+  const category = categories.find(cat => cat.id === categoryId);
+  console.log(category)
   return (
     <CompilationContainer>
       <InputPlus title="ИСТОЧНИК" placeholder="Введите свой источник" bg="#2B243C" color="#FF55AD" />
       <BlocksItems
-        items={categories?.sources?.map((source) => ({ value: source }))}
+        items={category?.sources?.map((source) => ({ value: source }))}
         color="#EF6284"
         onRemove={(value) =>
           removeKeyword({ channelId, source: value })
