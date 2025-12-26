@@ -15,7 +15,7 @@ const CompilationPopup = () => {
   const { popup, changeContent } = usePopupStore()
   const channelId = popup?.data?.channelId;
 
-  const { mutate: applyCategory, isLoading  } = useApplyCategory();
+  const { mutate: applyCategory, isLoading } = useApplyCategory();
 
   const { categories, categoriesLoading } = useAvailableCategories();
   console.log(categories, categoriesLoading)
@@ -32,42 +32,45 @@ const CompilationPopup = () => {
 
   return (
     <CompilationContainer>
-      <CompilationList>
-        {!categoriesLoading ? (
-          <ModernLoading text="Загрузка категорий..."/>
-        ) : categories?.length > 0 ? (
-          categories.map((item) => (
-            <CompilationItem key={item.id}>
-              <Checkbox
-                checked={selectedCategory === item.name}
-                onChange={() => setSelectedCategory(item.name)}
-              >
-                <CompilationText>{item.name}</CompilationText>
-              </Checkbox>
-              <CompilationSubtext>
-                {item.description || "Описание категории"}
-              </CompilationSubtext>
-              <CompilationFooter>
-                <p>{item.sourceCount ?? 0} источника</p>
-
-                <CompilationOpen
-                  onClick={() =>
-                    changeContent(
-                      "compilation_upload",
-                      item.name,
-                      "Здесь вы можете добавить свой источник"
-                    )
-                  }
+      {!categoriesLoading ? (
+        <ModernLoading text="Загрузка категорий..." />
+      ) : (
+        categories?.length > 0 ? (
+          <CompilationList>
+            {categories.map((item) => (
+              <CompilationItem key={item.id}>
+                <Checkbox
+                  checked={selectedCategory === item.name}
+                  onChange={() => setSelectedCategory(item.name)}
                 >
-                  <img src={arrow} alt="arrow icon" />
-                </CompilationOpen>
-              </CompilationFooter>
-            </CompilationItem>
-          ))
+                  <CompilationText>{item.name}</CompilationText>
+                </Checkbox>
+                <CompilationSubtext>
+                  {item.description || "Описание категории"}
+                </CompilationSubtext>
+                <CompilationFooter>
+                  <p>{item.sourceCount ?? 0} источника</p>
+
+                  <CompilationOpen
+                    onClick={() =>
+                      changeContent(
+                        "compilation_upload",
+                        item.name,
+                        "Здесь вы можете добавить свой источник"
+                      )
+                    }
+                  >
+                    <img src={arrow} alt="arrow icon" />
+                  </CompilationOpen>
+                </CompilationFooter>
+              </CompilationItem>
+            ))}
+          </CompilationList>
         ) : (
           <p>Категории не найдены</p>
-        )}
-      </CompilationList>
+        )
+      )}
+
       <BtnBase
         $margin="64"
         onClick={handleSave}
@@ -80,6 +83,9 @@ const CompilationPopup = () => {
 }
 
 const CompilationContainer = styled.div`
+  display: flex;
+  height: 100%;
+  flex-direction: column;
   padding: 0 56px;
 
   @media(max-width: 1600px) {
