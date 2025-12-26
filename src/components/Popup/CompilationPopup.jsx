@@ -4,11 +4,29 @@ import BtnBase from "@/shared/BtnBase";
 import { usePopupStore } from "@/store/popupStore"
 import { useAvailableCategories } from "@/lib/channels/categories/useAvailableCategories";
 import ModernLoading from "@/components/ModernLoading";
+import Checkbox from "@/shared/Checkbox";
+import { useApplyCategory } from "@/lib/channelSources/useApplyCategory";
 
 const CompilationPopup = () => {
-  const { changeContent } = usePopupStore()
+  const [selectedCategory, setSelectedCategory] = useState(null);
+
+  const { popup, changeContent } = usePopupStore()
+  const channelId = popup?.data?.channelId;
+
+  const { mutate: applyCategory, isLoading  } = useApplyCategory();
+
   const { categories, categoriesLoading } = useAvailableCategories();
-  console.log(categories)
+  console.log(categories, categoriesLoading)
+
+  const handleSave = () => {
+    if (!selectedCategory || !channelId) return;
+
+    applyCategory({
+      channelId,
+      category: selectedCategory,
+    });
+  };
+
   return (
     <CompilationContainer>
       <CompilationList>
@@ -17,14 +35,19 @@ const CompilationPopup = () => {
         ) : categories?.length > 0 ? (
           categories.map((item) => (
             <CompilationItem key={item.id}>
-              <CompilationText>{item.name}</CompilationText>
-
+              <Checkbox
+                checked={selectedCategory === item.name}
+                onChange={() => setSelectedCategory(item.name)}
+              >
+                <CompilationText>{item.name}</CompilationText>
+              </Checkbox>
+              
               <CompilationSubtext>
                 {item.description || "Описание категории"}
               </CompilationSubtext>
 
               <CompilationFooter>
-                <p>{item.sourcesCount ?? 0} источника</p>
+                <p>{item.sourceCount ?? 0} источника</p>
 
                 <CompilationOpen
                   onClick={() =>
@@ -44,7 +67,13 @@ const CompilationPopup = () => {
           <p>Категории не найдены</p>
         )}
       </CompilationList>
-      <BtnBase $margin="64">Сохранить</BtnBase>
+      <BtnBase
+        $margin="64"
+        onClick={handleSave}
+        disabled={!selectedCategory || isLoading}
+      >
+        {isLoading ? "Сохраняем..." : "Сохранить"}
+      </BtnBase>
     </CompilationContainer>
   )
 }
@@ -104,6 +133,11 @@ const CompilationItem = styled.div`
       }
     }
   }
+`
+const CompilationHead = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 `
 const CompilationText = styled.p`
   font-size: 24px;

@@ -7,5 +7,5 @@ export const useAvailableCategories = () => {
     queryFn: getAvailableCategories,
   });
 
-  return { categories };
+  return { categories, categoriesLoading };
 };
