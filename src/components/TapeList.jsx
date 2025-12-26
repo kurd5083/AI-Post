@@ -57,7 +57,7 @@ const TapeList = ({ forceHorizontal = false, padding }) => {
                   <span>{news.readingTime}</span>
                 </TapeTime>
               </TapeItemContent>
-              <TapePostImg src={`/.netlify/functions/api-proxy/${news.images[0]}`} alt="post img" $forceHorizontal={forceHorizontal} />
+              <TapePostImg src={`http://77.37.65.40:3000/${news.images[0]}`} alt="post img" $forceHorizontal={forceHorizontal} />
             </TapeItem>
           ))}
           {(forceHorizontal || isSwipe) && (
