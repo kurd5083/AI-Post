@@ -10,7 +10,7 @@ import { usePopupStore } from "@/store/popupStore"
 import TimeIcons from "@/icons/TimeIcons";
 import arrow from "@/assets/arrow.svg";
 import ModernLoading from "@/components/ModernLoading";
-// import Dotdotdot from 'react-dotdotdot'
+import { useClampText } from "@/lib/useClampText";
 
 const TapeList = ({ forceHorizontal = false, padding }) => {
   const { openPopup } = usePopupStore();
@@ -40,7 +40,10 @@ const TapeList = ({ forceHorizontal = false, padding }) => {
             prevEl: ".TapePrev",
           }}
         >
-          {newsData?.data?.map((news) => (
+          {newsData?.data?.map((news) => {
+            const { clampedText, ref: textRef } = useClampText(news.title, 3);
+
+            return (
             <TapeItem key={news.id} $forceHorizontal={forceHorizontal}>
               <TapeItemContent $forceHorizontal={forceHorizontal}>
                 <TapeItemHead>
@@ -49,7 +52,10 @@ const TapeList = ({ forceHorizontal = false, padding }) => {
                 </TapeItemHead>
                 <Link to={`/news/${news.id}`}>
                   {/* <Dotdotdot clamp={3}> */}
-                    <TapeItemText>{news.title}</TapeItemText>
+                    <TapeItemText ref={textRef}>
+                      {/* {news.title} */}
+                      {clampedText}
+                      </TapeItemText>
                   {/* </Dotdotdot> */}
                 </Link>
                 <TapeItemAction onClick={() => openPopup("select_channel", "popup_window", { newsId: news.id })}>
@@ -62,7 +68,8 @@ const TapeList = ({ forceHorizontal = false, padding }) => {
               </TapeItemContent>
               <TapePostImg src={`/.netlify/functions/api-proxy/${news.images[0]}`} alt="post img" $forceHorizontal={forceHorizontal} />
             </TapeItem>
-          ))}
+           );
+          })}
           {(forceHorizontal || isSwipe) && (
             <div>
               <TapePostButton className="TapePrev">
