@@ -8,6 +8,7 @@ import { usePopupStore } from "@/store/popupStore"
 import { useNewsById } from "@/lib/news/useNewsById";
 import { useFormattedHtml } from "@/lib/useFormattedHtml";
 import ModernLoading from "@/components/ModernLoading";
+import news_stub from "@/assets/news-stub.png";
 
 const NewsDetail = () => {
 	const { openPopup } = usePopupStore();
@@ -48,7 +49,12 @@ const NewsDetail = () => {
 								<PostTime><TimeIcons color="#336CFF" />{news.readingTime}</PostTime>
 							</PostFooter>
 						</PostLeft>
-						<NewsImg src={`/.netlify/functions/api-proxy/${news.images[0]}`} alt={news.title} />
+						<NewsImg 
+							src={news.images && news.images[0] 
+									? `/.netlify/functions/api-proxy/${news.images[0]}` 
+									: news_stub} 
+							alt={news.title} 
+						/>
 					</NewsPost>
 				</>
 			) : (

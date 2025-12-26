@@ -10,6 +10,7 @@ import { usePopupStore } from "@/store/popupStore"
 import TimeIcons from "@/icons/TimeIcons";
 import arrow from "@/assets/arrow.svg";
 import ModernLoading from "@/components/ModernLoading";
+import news_stub from "@/assets/news-stub.png";
 
 const TapeList = ({ forceHorizontal = false, padding }) => {
   const { openPopup } = usePopupStore();
@@ -57,7 +58,11 @@ const TapeList = ({ forceHorizontal = false, padding }) => {
                   <span>{news.readingTime}</span>
                 </TapeTime>
               </TapeItemContent>
-              <TapePostImg src={`http://77.37.65.40:3000/${news.images[0]}`} alt="post img" $forceHorizontal={forceHorizontal} />
+              <TapePostImg 
+                src={news.images && news.images[0] ? `http://77.37.65.40:3000/${news.images[0]}` : news_stub} 
+                alt="post img" 
+                $forceHorizontal={forceHorizontal} 
+              />
             </TapeItem>
           ))}
           {(forceHorizontal || isSwipe) && (
