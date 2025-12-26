@@ -15,7 +15,7 @@ const SourcesPopup = () => {
   const [url, setUrl] = useState("");
   const { mutate: addSource } = useAddChannelSource();
   const { mutate: deleteSource } = useDeleteChannelSource();
-
+  console.log(channel)
   return (
     <SourcesContainer>
       <SourcesText>Здесь вы можете добавить источник, откуда сервис будет брать посты. Отображается <mark>имя и URL.</mark></SourcesText>

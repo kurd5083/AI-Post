@@ -42,11 +42,9 @@ const CompilationPopup = () => {
               >
                 <CompilationText>{item.name}</CompilationText>
               </Checkbox>
-              
               <CompilationSubtext>
                 {item.description || "Описание категории"}
               </CompilationSubtext>
-
               <CompilationFooter>
                 <p>{item.sourceCount ?? 0} источника</p>
 
@@ -135,16 +133,13 @@ const CompilationItem = styled.div`
     }
   }
 `
-const CompilationHead = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-`
 const CompilationText = styled.p`
   font-size: 24px;
   line-height: 24px;
   font-weight: 700;
   padding-right: 40px;
+  display: flex;
+  align-items: center;
 `
 const CompilationSubtext = styled.p`
   margin-top: 16px;
