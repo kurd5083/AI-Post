@@ -10,7 +10,7 @@ import { usePopupStore } from "@/store/popupStore"
 import TimeIcons from "@/icons/TimeIcons";
 import arrow from "@/assets/arrow.svg";
 import ModernLoading from "@/components/ModernLoading";
-import Dotdotdot from 'react-dotdotdot'
+// import Dotdotdot from 'react-dotdotdot'
 
 const TapeList = ({ forceHorizontal = false, padding }) => {
   const { openPopup } = usePopupStore();
