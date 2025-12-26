@@ -31,7 +31,6 @@ deploy:
     - chmod 600 ~/.ssh/id_ed25519
     - ssh-keyscan -H "$DEPLOY_HOST" >> ~/.ssh/known_hosts
   script:
-    - '[ -d build ] || (echo "ERROR: build folder not found" && exit 1)'
     - rsync -avz --delete build/ "$DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATH"
   only:
     - main
