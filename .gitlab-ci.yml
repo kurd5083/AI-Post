@@ -25,8 +25,11 @@ deploy:
   before_script:
     - apk add --no-cache openssh rsync
     - mkdir -p ~/.ssh
-    - echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_ed25519
+    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' > ~/.ssh/id_ed25519
     - chmod 600 ~/.ssh/id_ed25519
+    - echo "DEPLOY_HOST='$DEPLOY_HOST'"
+    - echo "DEPLOY_USER='$DEPLOY_USER'"
+    - echo "DEPLOY_PATH='$DEPLOY_PATH'"
     - ssh-keyscan -H "$DEPLOY_HOST" >> ~/.ssh/known_hosts
   script:
     - rsync -avz --delete build/ "$DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATH"
