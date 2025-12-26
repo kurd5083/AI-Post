@@ -5,7 +5,7 @@ import { usePopupStore } from "@/store/popupStore"
 import { useAvailableCategories } from "@/lib/channels/categories/useAvailableCategories";
 import ModernLoading from "@/components/ModernLoading";
 import Checkbox from "@/shared/Checkbox";
-import { useApplyCategory } from "@/lib/channelSources/useApplyCategory";
+import { useApplyCategory } from "@/lib/channels/categories/useApplyCategory";
 
 const CompilationPopup = () => {
   const [selectedCategory, setSelectedCategory] = useState(null);
