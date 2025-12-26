@@ -2,35 +2,40 @@ stages:
   - build
   - deploy
 
-image: node:18
-
-cache:
-  paths:
-    - node_modules/
-
-before_script:
-  - npm ci
-
 build:
   stage: build
+  image: node:18
+  cache:
+    paths:
+      - node_modules/
+  before_script:
+    - npm ci
   script:
     - npm run build
   artifacts:
     paths:
-      - build
+      - dist
     expire_in: 1 hour
+  only:
+    - main
 
 deploy:
   stage: deploy
-  image: alpine
+  image: alpine:latest
+  dependencies:
+    - build
   before_script:
-    - apk add --no-cache openssh rsync
+    - apk add --no-cache openssh rsync bash
     - mkdir -p ~/.ssh
-    - echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_ed25519
+    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' > ~/.ssh/id_ed25519
     - chmod 600 ~/.ssh/id_ed25519
-    - ssh-keyscan $DEPLOY_HOST >> ~/.ssh/known_hosts
+    - ssh-keyscan -H "$DEPLOY_HOST" >> ~/.ssh/known_hosts
   script:
-    - rsync -avz --delete build/ $DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATH
+    - echo "Listing files in deploy job for debug:"
+    - ls -la
+    - '[ -d dist ] || { echo "ERROR: dist folder not found!"; exit 1; }'
+    - echo "Starting rsync..."
+    - rsync -avz --delete dist/ "$DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATH"
+    - echo "Deployment finished successfully!"
   only:
     - main
-    - dev
