@@ -119,10 +119,9 @@ const SchedulePopup = () => {
             <BlocksItems
               items={publicationTimes.map((t, index) => ({ value: t, id: index }))}
               color="#FFF980"
-           
-              // onRemove={(id) => {
-              //   setPublicationTimes(publicationTimes.filter((_, i) => i !== id));
-              // }}
+              onRemove={(id) => {
+                setPublicationTimes(publicationTimes.filter((index) => index !== id));
+              }}
             />
           )}
         </ScheduleKey>

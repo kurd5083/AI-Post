@@ -2,6 +2,7 @@ import styled from "styled-components";
 import { usePopupStore } from "@/store/popupStore"
 
 const BlocksItems = ({ items, color, onRemove }) => {
+  console.log(items)
 	const { popup } = usePopupStore();
 	return (
 		<ItemsContainer>
