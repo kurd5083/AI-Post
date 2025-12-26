@@ -41,14 +41,16 @@ const Sidebar = () => {
                 <SidebarListItem
                   key={item.id}
                   $isActive={activePage === item.id}
-                  onClick={() => {
-                    setActivePage(item.id)
-                    closePopup()
-                  }}
                   $isSidebarVisible={isSidebarVisible}
                 >
                   {item.to ? (
-                    <Link to={item.to}>
+                    <Link 
+                    to={item.to}
+                    onClick={() => {
+                      setActivePage(item.id)
+                      closePopup()
+                    }}
+                    >
                       {item.icon(activePage === item.id)}
                       {isSidebarVisible && item.text}
                     </Link>
