@@ -48,7 +48,7 @@ const FilteringPopup = () => {
             onRemove={(value) =>
               removeKeyword({ channelId, keyword: value })
             }
-        />
+          />
         )}
       </FilteringKey>
       <FilteringText>Добавьте стоп-слова, чтобы исключить нежелательные новости по заголовкам. <br />
