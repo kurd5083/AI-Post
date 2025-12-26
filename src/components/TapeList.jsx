@@ -10,7 +10,6 @@ import { usePopupStore } from "@/store/popupStore"
 import TimeIcons from "@/icons/TimeIcons";
 import arrow from "@/assets/arrow.svg";
 import ModernLoading from "@/components/ModernLoading";
-import { useClampText } from "@/lib/useClampText";
 
 const TapeList = ({ forceHorizontal = false, padding }) => {
   const { openPopup } = usePopupStore();
@@ -40,10 +39,7 @@ const TapeList = ({ forceHorizontal = false, padding }) => {
             prevEl: ".TapePrev",
           }}
         >
-          {newsData?.data?.map((news) => {
-            const { clampedText, ref: textRef } = useClampText(news.title, 3);
-
-            return (
+          {newsData?.data?.map((news) => (
             <TapeItem key={news.id} $forceHorizontal={forceHorizontal}>
               <TapeItemContent $forceHorizontal={forceHorizontal}>
                 <TapeItemHead>
@@ -51,12 +47,7 @@ const TapeList = ({ forceHorizontal = false, padding }) => {
                   <p>{news.sourceName}</p>
                 </TapeItemHead>
                 <Link to={`/news/${news.id}`}>
-                  {/* <Dotdotdot clamp={3}> */}
-                    <TapeItemText ref={textRef}>
-                      {/* {news.title} */}
-                      {clampedText}
-                      </TapeItemText>
-                  {/* </Dotdotdot> */}
+                    <TapeItemText>{news.title}</TapeItemText>
                 </Link>
                 <TapeItemAction onClick={() => openPopup("select_channel", "popup_window", { newsId: news.id })}>
                   Сохранить в канал
@@ -68,8 +59,7 @@ const TapeList = ({ forceHorizontal = false, padding }) => {
               </TapeItemContent>
               <TapePostImg src={`/.netlify/functions/api-proxy/${news.images[0]}`} alt="post img" $forceHorizontal={forceHorizontal} />
             </TapeItem>
-           );
-          })}
+          ))}
           {(forceHorizontal || isSwipe) && (
             <div>
               <TapePostButton className="TapePrev">
@@ -189,10 +179,10 @@ const TapeItemText = styled.div`
   font-size: 20px;
   line-height: 20px;
   font-weight: 700;
-  /* display: -webkit-box; */
-  /* -webkit-line-clamp: 3; */
-  /* -webkit-box-orient: vertical; */
-  /* overflow: hidden; */
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 `
 const TapeItemAction = styled.span`
   color: #336CFF;
