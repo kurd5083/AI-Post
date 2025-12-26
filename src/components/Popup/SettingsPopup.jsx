@@ -13,6 +13,7 @@ import { usePostsByChannel } from "@/lib/posts/usePostsByChannel";
 
 const SettingsPopup = () => {
   const { changeContent, popup } = usePopupStore();
+  console.log(popup)
   const channelId = popup?.data?.channelId;
   const channelName = popup?.data?.channelName;
   const { channel } = useChannelById(channelId);

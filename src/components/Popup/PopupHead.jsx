@@ -8,59 +8,66 @@ import CloseIcon from "@/icons/CloseIcon";
 import { useChannelById } from "@/lib/channels/useChannelById";
 
 const PopupHead = () => {
-	const { popup, closePopup, goBack } = usePopupStore()
+  const { popup, closePopup, goBack } = usePopupStore()
   const channelId = popup?.data?.channelId;
-	const foundItem = popupDatas.find(elem => elem.key == popup.content)
+  const foundItem = popupDatas.find(elem => elem.key == popup.content)
   const { channel } = useChannelById(channelId);
 
-	return (
-		<>
-			{popup.content !== 'notifications' && popup.content !== 'replenish' && popup.content !== 'upload_media' && popup.content !== 'profile' && (
-				<PopupListInfo>
-					{popup.content != 'settings' && <PopupArrow src={arrow} alt="arrow icon" width={8} height={16} onClick={goBack} />}
-					<PopupListAva src={channel?.avatarUrl} alt="ava icon" width={48} height={48} />
-					<PopupListInfoContent>
-						<p>{channel?.name}</p>
-						<span>{channel?.subscribersCount} Подписчиков</span>
-					</PopupListInfoContent>
-				</PopupListInfo>
-			)}
-			{popup.content !== 'profile' && (
-				<PopupListHead>
-					<PopupListHeadContent>
-						{popup.content == 'settings' ? (
-							<>
-								<IconSettingsMain src={setting} alt="setting icon" width={48} height={48} />
-								<h2>Настройки</h2>
-							</>
-						) : (
-							<>
-								{foundItem.extra && (
-									<IconBac $bg={foundItem.extra.background}>
-										{foundItem.extra.image ? (
-											<IconSettings src={foundItem.extra.image} alt={`${foundItem.key} icon`} />
-										) : (
-											<>
-												{foundItem.extra.svg}
-											</>
-										)}
-									</IconBac>
-								)}
-								<PopupTitle>
-									<h2>{popup.name ? popup.name : foundItem.name}</h2>
-									{popup.text && <p>{popup.text}</p>}
-								</PopupTitle>
-							</>
-						)}
-					</PopupListHeadContent>
-					<PopupListHeadBtn $absolute={popup.content === 'replenish' || popup.content === 'upload_media' || popup.content === 'notifications'} onClick={() => closePopup()}>
-            <CloseIcon color="#336CFF"/>
-						<span>Закрыть окно</span>
-					</PopupListHeadBtn>
-				</PopupListHead>
-			)}
-		</>
-	)
+  return (
+    <>
+      {popup.content !== 'notifications' && popup.content !== 'replenish' && popup.content !== 'upload_media' && popup.content !== 'profile' && (
+        <PopupListInfo>
+          {popup.content != 'settings' && <PopupArrow src={arrow} alt="arrow icon" width={8} height={16} onClick={goBack} />}
+          <PopupListAva src={channel?.avatarUrl} alt="ava icon" width={48} height={48} />
+          <PopupListInfoContent>
+            <p>{channel?.name}</p>
+            <span>{channel?.subscribersCount} Подписчиков</span>
+          </PopupListInfoContent>
+        </PopupListInfo>
+      )}
+      {popup.content !== 'profile' && (
+        <PopupListHead>
+          <PopupListHeadContent>
+            {popup.content == 'settings' ? (
+              <>
+                <IconSettingsMain src={setting} alt="setting icon" width={48} height={48} />
+                <h2>Настройки</h2>
+              </>
+            ) : (
+              <>
+                {foundItem.extra && (
+                  <IconBac $bg={foundItem.extra.background}>
+                    {foundItem.extra.image ? (
+                      <IconSettings src={foundItem.extra.image} alt={`${foundItem.key} icon`} />
+                    ) : (
+                      <>
+                        {foundItem.extra.svg}
+                      </>
+                    )}
+                  </IconBac>
+                )}
+                {popup.content !== 'compilation_upload' ? (
+                  <PopupTitle>
+                    <h2>{popup.name ? popup.name : foundItem.name}</h2>
+                    {popup.text && <p>{popup.text}</p>}
+                  </PopupTitle>
+                ) : (
+                  <PopupTitle>
+                    <h2>{popup.data.name && popup.data.name}</h2>
+                    {popup.data.text && <p>{popup.data.text}</p>}
+                  </PopupTitle>
+                )}
+              </>
+            )}
+          </PopupListHeadContent>
+          <PopupListHeadBtn $absolute={popup.content === 'replenish' || popup.content === 'upload_media' || popup.content === 'notifications'} onClick={() => closePopup()}>
+            <CloseIcon color="#336CFF" />
+            <span>Закрыть окно</span>
+          </PopupListHeadBtn>
+        </PopupListHead>
+      )}
+    </>
+  )
 }
 
 const PopupListInfo = styled.section`
@@ -186,8 +193,8 @@ const PopupListHeadBtn = styled.button`
     
 	@media (max-width: 768px) {
     ${({ $absolute }) =>
-		!$absolute &&
-		`
+    !$absolute &&
+    `
         position: absolute;
         top: -88px;
         right: 24px;

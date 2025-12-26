@@ -8,8 +8,7 @@ import youtube from "@/assets/youtube.png";
 import facebook from "@/assets/facebook.png";
 
 const CompilationUploadPopup = () => {
-  const { popup, goBack } = usePopupStore()
-  console.log(popup)
+  const { goBack } = usePopupStore()
   return (
     <CompilationContainer>
       <InputPlus title="ИСТОЧНИК" placeholder="Введите свой источник" bg="#2B243C" color="#FF55AD"/>
