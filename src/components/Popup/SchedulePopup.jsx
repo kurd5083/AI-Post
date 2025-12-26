@@ -35,13 +35,13 @@ const SchedulePopup = () => {
   const [publicationTimes, setPublicationTimes] = useState([]);
   const [selectedDays, setSelectedDays] = useState([]);
   const [currentTime, setCurrentTime] = useState({ hours: 0, minutes: 0 });
+
   useEffect(() => {
     if (channelSchedule) {
       setTimezone(channelSchedule.timezone);
       setPublicationTimes(channelSchedule.publicationTimes);
       setSelectedDays(channelSchedule.postDays);
     }
-    console.log(publicationTimes, 'asdasfd')
   }, [channelSchedule]);
 
   const handleAddTime = () => {
@@ -77,7 +77,6 @@ const SchedulePopup = () => {
       createSchedule.mutate(payload);
     }
   };
-  console.log(publicationTimes, 'asdasfd')
 
   return (
     <ScheduleContainer>
