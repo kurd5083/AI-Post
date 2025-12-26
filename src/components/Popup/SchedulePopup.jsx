@@ -120,7 +120,7 @@ const SchedulePopup = () => {
               items={publicationTimes.map((t, index) => ({ value: t, id: index }))}
               color="#FFF980"
               onRemove={(id) => {
-                setPublicationTimes(publicationTimes.filter((index) => index !== id));
+                setPublicationTimes(publicationTimes.filter((item) => item.id !== id));
               }}
             />
           )}
