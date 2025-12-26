@@ -32,7 +32,7 @@ const CompilationPopup = () => {
 
   return (
     <CompilationContainer>
-      {!categoriesLoading ? (
+      {categoriesLoading ? (
         <ModernLoading text="Загрузка категорий..." />
       ) : (
         categories?.length > 0 ? (
