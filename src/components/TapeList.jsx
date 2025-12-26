@@ -10,6 +10,7 @@ import { usePopupStore } from "@/store/popupStore"
 import TimeIcons from "@/icons/TimeIcons";
 import arrow from "@/assets/arrow.svg";
 import ModernLoading from "@/components/ModernLoading";
+import Dotdotdot from 'react-dotdotdot'
 
 const TapeList = ({ forceHorizontal = false, padding }) => {
   const { openPopup } = usePopupStore();
@@ -43,13 +44,13 @@ const TapeList = ({ forceHorizontal = false, padding }) => {
             <TapeItem key={news.id} $forceHorizontal={forceHorizontal}>
               <TapeItemContent $forceHorizontal={forceHorizontal}>
                 <TapeItemHead>
-                  {/* <img src={news.ava} alt="ava icon" /> */}
+                  <img src={news.ava} alt="ava icon" />
                   <p>{news.sourceName}</p>
                 </TapeItemHead>
                 <Link to={`/news/${news.id}`}>
-                  {/* <Dotdotdot clamp={3}>
+                  <Dotdotdot clamp={3}>
                     <TapeItemText>{news.title}</TapeItemText>
-                  </Dotdotdot> */}
+                  </Dotdotdot>
                 </Link>
                 <TapeItemAction onClick={() => openPopup("select_channel", "popup_window", { newsId: news.id })}>
                   Сохранить в канал
