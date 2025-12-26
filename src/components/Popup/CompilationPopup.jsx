@@ -2,47 +2,47 @@ import styled from "styled-components";
 import arrow from "@/assets/arrow.svg";
 import BtnBase from "@/shared/BtnBase";
 import { usePopupStore } from "@/store/popupStore"
+import { useAvailableCategories } from "@/lib/channels/categories/useAvailableCategories";
+import ModernLoading from "@/components/ModernLoading";
 
 const CompilationPopup = () => {
   const { changeContent } = usePopupStore()
-  const compilation = [
-    {
-      text: "Спорт",
-      subtext: "Качественные источники для вашего канала с релевантным контентом",
-      sourcesCount: 2
-    },
-    {
-      text: "Новости",
-      subtext: "Актуальные новостные агрегаторы для вашего канала",
-      sourcesCount: 5
-    },
-    {
-      text: "Технологии",
-      subtext: "Свежие статьи и обзоры из мира IT и гаджетов",
-      sourcesCount: 3
-    },
-    {
-      text: "Финансы",
-      subtext: "Курсы валют, биржевые сводки и финансовые аналитика",
-      sourcesCount: 4
-    }
-  ]
-
+  const { categories, categoriesLoading } = useAvailableCategories();
+  console.log(categories)
   return (
     <CompilationContainer>
       <CompilationList>
-        {compilation.map((item, index) => (
-          <CompilationItem key={index}>
-            <CompilationText>{item.text}</CompilationText>
-            <CompilationSubtext>{item.subtext}</CompilationSubtext>
-            <CompilationFooter>
-              <p>{item.sourcesCount} источника</p>
-              <CompilationOpen onClick={() => changeContent('compilation_upload', item.text, 'Здесь вы можете добавить свой источник')}>
-                <img src={arrow} alt="arrow icon" />
-              </CompilationOpen>
-            </CompilationFooter>
-          </CompilationItem>
-        ))}
+        {categoriesLoading ? (
+          <ModernLoading text="Загрузка категорий..."/>
+        ) : categories?.length > 0 ? (
+          categories.map((item) => (
+            <CompilationItem key={item.id}>
+              <CompilationText>{item.name}</CompilationText>
+
+              <CompilationSubtext>
+                {item.description || "Описание категории"}
+              </CompilationSubtext>
+
+              <CompilationFooter>
+                <p>{item.sourcesCount ?? 0} источника</p>
+
+                <CompilationOpen
+                  onClick={() =>
+                    changeContent(
+                      "compilation_upload",
+                      item.name,
+                      "Здесь вы можете добавить свой источник"
+                    )
+                  }
+                >
+                  <img src={arrow} alt="arrow icon" />
+                </CompilationOpen>
+              </CompilationFooter>
+            </CompilationItem>
+          ))
+        ) : (
+          <p>Категории не найдены</p>
+        )}
       </CompilationList>
       <BtnBase $margin="64">Сохранить</BtnBase>
     </CompilationContainer>
