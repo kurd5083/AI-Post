@@ -3,14 +3,11 @@ import BlocksItems from '@/shared/BlocksItems'
 import BtnBase from '@/shared/BtnBase'
 import InputPlus from '@/shared/InputPlus'
 import { usePopupStore } from "@/store/popupStore";
-// import habr from "@/assets/habr.png";
-// import youtube from "@/assets/youtube.png";
-// import facebook from "@/assets/facebook.png";
 import { useAvailableCategories } from "@/lib/channels/categories/useAvailableCategories";
 
 const CompilationUploadPopup = () => {
   const { popup, goBack } = usePopupStore()
-  const { categories, categoriesLoading } = useAvailableCategories();
+  const { categories } = useAvailableCategories();
 
   const categoryId = popup?.data?.id;
   const category = categories.find(cat => cat.id === categoryId);
@@ -19,7 +16,7 @@ const CompilationUploadPopup = () => {
     <CompilationContainer>
       <InputPlus title="ИСТОЧНИК" placeholder="Введите свой источник" bg="#2B243C" color="#FF55AD" />
       <BlocksItems
-        items={category?.sources?.map((source) => ({ value: source }))}
+        items={category?.sources?.map((source) => ({ value: source.name }))}
         color="#EF6284"
         onRemove={(value) =>
           removeKeyword({ channelId, source: value })
