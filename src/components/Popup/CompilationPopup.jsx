@@ -12,7 +12,7 @@ import { useAllSources } from "@/lib/channels/sources/useAllSources";
 const CompilationPopup = () => {
   const [selectedCategory, setSelectedCategory] = useState(null);
 
-  const { popup, changeContent } = usePopupStore()
+  const { popup, changeContent, goBack } = usePopupStore()
   const channelId = popup?.data?.channelId;
 
   const { mutate: applyCategory, isLoading } = useApplyCategory();
@@ -21,13 +21,20 @@ const CompilationPopup = () => {
   console.log(categories, categoriesLoading)
   const { sources } = useAllSources();
   console.log(sources)
+  
   const handleSave = () => {
-    if (!selectedCategory || !channelId) return;
-
-    applyCategory({
-      channelId,
-      category: selectedCategory,
-    });
+  if (!selectedCategory || !channelId) return;
+    applyCategory(
+      {
+        channelId,
+        category: selectedCategory,
+      },
+      {
+        onSuccess: () => {
+          goBack(); 
+        },
+      }
+    );
   };
 
   return (

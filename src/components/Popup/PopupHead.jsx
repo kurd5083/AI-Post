@@ -46,17 +46,12 @@ const PopupHead = () => {
                     )}
                   </IconBac>
                 )}
-                {popup.content !== 'compilation_upload' ? (
-                  <PopupTitle>
-                    <h2>{popup.name ? popup.name : foundItem.name}</h2>
-                    {popup.text && <p>{popup.text}</p>}
-                  </PopupTitle>
-                ) : (
-                  <PopupTitle>
-                    <h2>{popup.data.name && popup.data.name}</h2>
-                    {popup.data.text && <p>{popup.data.text}</p>}
-                  </PopupTitle>
-                )}
+                <PopupTitle>
+                  <h2>{popup.content !== 'compilation_upload' ? (popup.name || foundItem.name) : popup.data.name}</h2>
+                  {(popup.content !== 'compilation_upload' ? popup.text : popup.data.text) && (
+                    <p>{popup.content !== 'compilation_upload' ? popup.text : popup.data.text}</p>
+                  )}
+                </PopupTitle>
               </>
             )}
           </PopupListHeadContent>
