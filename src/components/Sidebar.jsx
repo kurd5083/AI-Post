@@ -10,7 +10,7 @@ import BtnBase from "@/shared/BtnBase";
 import TgIcon from "@/icons/TgIcon";
 
 const Sidebar = () => {
-  const { openPopup } = usePopupStore()
+  const { openPopup, closePopup } = usePopupStore()
   const { user } = useUser();
   console.log(user)
   const { botLinkData } = useTelegramBotLink();
@@ -41,7 +41,10 @@ const Sidebar = () => {
                 <SidebarListItem
                   key={item.id}
                   $isActive={activePage === item.id}
-                  onClick={() => setActivePage(item.id)}
+                  onClick={() => {
+                    setActivePage(item.id)
+                    closePopup()
+                  }}
                   $isSidebarVisible={isSidebarVisible}
                 >
                   {item.to ? (
