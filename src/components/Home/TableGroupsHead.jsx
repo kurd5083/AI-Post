@@ -75,7 +75,12 @@ const TableGroups = () => {
         </TableGroupsHeadLeft>
         <TableGroupsHeadRight>
           <TableGroupsHeadAdd
-            onClick={() => navigate(`https://t.me/${botInfo?.username}?startgroup=true`)}
+            onClick={() =>
+              window.open(
+                `https://t.me/${botInfo?.username}?startgroup=true`
+              )
+            }
+      
             // onClick={addChannel}
           // onClick={() => openPopup("create_channel", "popup_window")}
           >{isSmall ? "+ Добавить" : "+ Добавить канал"}</TableGroupsHeadAdd>
