@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { usePopupStore } from "@/store/popupStore"
 import BtnBase from "@/shared/BtnBase";
@@ -12,10 +12,20 @@ const SourcesPopup = () => {
   const { popup, changeContent } = usePopupStore()
   const channelId = popup?.data?.channelId;
   const { channel } = useChannelById(channelId);
+   
   const [url, setUrl] = useState("");
+  const [localSources, setLocalSources] = useState([]);
+
   const { mutate: addSource } = useAddChannelSource();
   const { mutate: deleteSource } = useDeleteChannelSource();
+
   console.log(channel)
+  useEffect(() => {
+    if (channel?.sources) {
+      setLocalSources(channel.sources);
+    }
+  }, [channel]);
+
   return (
     <SourcesContainer>
       <SourcesText>Здесь вы можете добавить источник, откуда сервис будет брать посты. Отображается <mark>имя и URL.</mark></SourcesText>
@@ -29,6 +39,8 @@ const SourcesPopup = () => {
           value={url}
           onChange={setUrl}
           onSubmit={() => {
+            if (!url.trim()) return;
+            setLocalSources((prev) => [...prev, { id: `temp-${Date.now()}`, name: url },]);
             addSource({ channelId, url });
             setUrl("");
           }}
@@ -37,11 +49,14 @@ const SourcesPopup = () => {
           <EmptyText>Источники не добавлены</EmptyText>
         ) : (
           <BlocksItems
-            items={channel?.sources.map((source) => ({ value: source.name, id: source.id }))} 
+            items={localSources.map((source) => ({ value: source.name, id: source.id }))}
             color="#2B89ED"
-            onRemove={(id) =>
-              deleteSource({ channelId, sourceId: id })
-            }
+            onRemove={(id) => {
+              setLocalSources((prev) => prev.filter((s) => s.id !== id));
+              if (!String(id).startsWith("temp-")) {
+                deleteSource({ channelId, sourceId: id });
+              }
+            }}
           />
         )}
       </SourcesKey>
