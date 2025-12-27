@@ -7,7 +7,6 @@ import CloseIcon from "@/icons/CloseIcon";
 const ChangeTimePopup = () => {
   const { popup, goBack } = usePopupStore();
   console.log(popup, 'ttttttttttttt')
-  const onSave = popup?.data?.onSave;
   const currentTime = popup?.data?.currentTime;
 
   const [hours, setHours] = useState('');
@@ -18,9 +17,6 @@ const ChangeTimePopup = () => {
       const [h, m] = currentTime.split(":");
       setHours(h);
       setMinutes(m);
-    } else {
-      setHours("00");
-      setMinutes("00");
     }
   }, [currentTime]);
 
@@ -44,8 +40,9 @@ const ChangeTimePopup = () => {
 
   const handleSave = () => {
     if (!hours || !minutes) return;
-
-    onSave?.(`${hours.padStart(2, "0")}:${minutes.padStart(2, "0")}`);
+    if (popup?.data?.onSave) {
+      popup.data.onSave(`${hours.padStart(2, "0")}:${minutes.padStart(2, "0")}`);
+    }
     goBack();
   };
   return (
