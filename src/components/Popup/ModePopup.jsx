@@ -8,14 +8,13 @@ const ModePopup = () => {
 	const { popup } = usePopupStore();
     const channelId = popup?.data?.channelId;
     const { mutate: setWorkMode } = useUpdateWorkMode(channelId);
-    const [selectedMode, setSelectedMode] = useState("AUTOPOSTING");
+    const [selectedMode, setSelectedMode] = useState(null);
     const [premoderationMinutes, setPremoderationMinutes] = useState(30);
 
     useEffect(() => {
         const mode = popup?.data?.workMode;
-        if (!mode) return;
 
-        setSelectedMode((prev) => prev ?? mode);
+        if (mode) setSelectedMode((prev) => prev ?? mode);
     }, [popup?.data?.workMode]);
 
     const handleSelectMode = (mode) => {
