@@ -13,16 +13,16 @@ export const CalendarWeek = ({
 }) => (
   <>
     <Header>
-      <NavButton onClick={() => changeWeek(-1)}>
-        <img src={arrow} alt="" />
-      </NavButton>
+      <NavButtonLeft onClick={() => changeWeek(-1)}>
+        <img src={arrow} alt="arrow icon" />
+      </NavButtonLeft>
 
       <DateDisplay>
         {startDate && endDate ? formatRange(startDate, endDate) : ""}
       </DateDisplay>
 
       <NavButton onClick={() => changeWeek(1)}>
-        <img src={arrow} alt="" />
+        <img src={arrow} alt="arrow icon" />
       </NavButton>
     </Header>
 
@@ -57,6 +57,9 @@ const DateDisplay = styled.h1`
 `;
 
 const NavButton = styled.button`
+  display: flex;
+  align-items: center;
+  justify-content: center;
   background: transparent;
   border: 2px solid #6a7080;
   width: 40px;
@@ -68,7 +71,11 @@ const NavButton = styled.button`
     border-color: #ac60fd;
   }
 `;
+const NavButtonLeft = styled(NavButton)`
+  transform: rotate(180deg);
+`;
 
+NavButtonRight
 const WeekGrid = styled.div`
   display: flex;
   gap: 56px;
