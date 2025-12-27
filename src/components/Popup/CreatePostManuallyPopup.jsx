@@ -25,6 +25,7 @@ import PreviewBG from "@/assets/ai-generator/PreviewBG.png";
 import eye_blue from "@/assets/eye-blue.svg";
 import arrow from "@/assets/arrow.svg";
 import TimeInput from "@/shared/TimeInput";
+import PlusIcon from "@/icons/PlusIcon";
 
 const CreatePostManuallyPopup = () => {
   const { isSmall } = useResolution(480);
