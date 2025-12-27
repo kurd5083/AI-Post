@@ -29,7 +29,7 @@ const CalendarPopup = () => {
       0, 0, 0, 0
     )).toISOString()
   : null;
-
+    console.log(startDate)
   const endDate = currentWeek[6]
   ? new Date(Date.UTC(
       currentWeek[6].getFullYear(),
@@ -40,8 +40,8 @@ const CalendarPopup = () => {
   : null;
   const { events = [] } = useCalendarEventsByRange({
     channelId,
-    startDate,
-    endDate,
+    startDate: '2025-09-24T00:00:00Z',
+    endDate: '2025-09-25T23:59:59Z',
   });
 
   const { mutate, isPending } = useCreateCalendarEvent();
