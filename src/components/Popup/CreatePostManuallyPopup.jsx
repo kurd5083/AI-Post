@@ -166,7 +166,7 @@ const CreatePostManuallyPopup = () => {
           </PreviewHead>
           {!collapsed && (
             <>
-              <PreviewSelect>
+              {/* <PreviewSelect>
                 <CustomSelect
                   placeholder="Все платформы"
                   options={[
@@ -179,7 +179,7 @@ const CreatePostManuallyPopup = () => {
                 <PreviewHeadButton>
                   <BtnBase $padding="16px 24px">Telegram</BtnBase>
                 </PreviewHeadButton>
-              </PreviewSelect>
+              </PreviewSelect> */}
               <PreviewInfo>
                 <PreviewInfoBG src={PreviewBG} alt="bg" />
                 <PreviewInfoContent>
@@ -539,17 +539,17 @@ const HeadArrow = styled.img`
 //     text-align: center;
 //   }
 // `
-const PreviewSelect = styled.div`
-  margin-top: 28px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-`
-const PreviewHeadButton = styled.div`
-  @media(max-width: 480px) {
-    display: none;
-  }
-`
+// const PreviewSelect = styled.div`
+//   margin-top: 28px;
+//   display: flex;
+//   align-items: center;
+//   justify-content: space-between;
+// `
+// const PreviewHeadButton = styled.div`
+//   @media(max-width: 480px) {
+//     display: none;
+//   }
+// `
 const PreviewInfo = styled.div`
   position: relative;
   margin-top: 55px;
