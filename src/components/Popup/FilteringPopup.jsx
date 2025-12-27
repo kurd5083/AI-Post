@@ -26,12 +26,15 @@ const FilteringPopup = () => {
   const { mutate: removeStopWord } = useRemoveChannelStopWord();
 
   useEffect(() => {
-    if (channel) {
-      setLocalKeywords(channel.keywords ?? []);
-      setLocalStopWords(channel.stopWords ?? []);
-    }
-  }, [channel]);
+    if (!channel) return;
 
+    setLocalKeywords((prev) =>
+      prev.length ? prev : channel.keywords ?? []
+    );
+    setLocalStopWords((prev) =>
+      prev.length ? prev : channel.stopWords ?? []
+    );
+  }, [channel]);
   return (
     <FilteringContainer>
       <FilteringText>
