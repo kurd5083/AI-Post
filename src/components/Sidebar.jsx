@@ -14,6 +14,7 @@ const Sidebar = () => {
   const { user } = useUser();
   console.log(user)
   const { botLinkData } = useTelegramBotLink();
+  console.log(botLinkData)
   const {
     activePage,
     setActivePage,
@@ -87,7 +88,7 @@ const Sidebar = () => {
               $color="#fff"
               $radius="20px"
               onClick={() => {
-                if (!botLinkData) return;
+              if (!botLinkData) return;
                 window.location.href = botLinkData.botLink;
               }}
             >

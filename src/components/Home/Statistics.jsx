@@ -11,7 +11,7 @@ const Statistics = () => {
   return (
     <StatisticsContainer>
       <StatisticsTitle>
-        <img src={rating} alt="rating icon" />Статистика test1
+        <img src={rating} alt="rating icon" />Статистика
       </StatisticsTitle>
 
       <StatisticsList
