@@ -33,7 +33,7 @@ const NewsDetail = () => {
 								{/* <img src={news.ava} alt="ava icon" /> */}
 								<p>{news.sourceName}</p>
 							</PostHead>
-							<NewsImgMobile src={`/.netlify/functions/api-proxy/${news.images[0]}`} alt={news.title} />
+							<NewsImgMobile src={`http://77.37.65.40:3000/${news.images[0]}`} alt={news.title} />
 							<PostTimeMobile ><TimeIcons color="#336CFF" />{news.readingTime}</PostTimeMobile>
 							<PostTilte dangerouslySetInnerHTML={{ __html: formattedTitle }} />
 							<PostDescription dangerouslySetInnerHTML={{ __html: formattedContent }} />
@@ -51,7 +51,7 @@ const NewsDetail = () => {
 						</PostLeft>
 						<NewsImg 
 							src={news.images && news.images[0] 
-									? `/.netlify/functions/api-proxy/${news.images[0]}` 
+									? `http://77.37.65.40:3000/${news.images[0]}` 
 									: news_stub} 
 							alt={news.title} 
 						/>
