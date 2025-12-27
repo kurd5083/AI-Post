@@ -29,6 +29,7 @@ const PopupWindow = () => {
         </PopupContainer>
     )
 }
+
 const PopupContainer = styled.section`
     display: flex;
     flex-direction: column;

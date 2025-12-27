@@ -8,7 +8,7 @@ const ChangeTimePopup = () => {
   const { popup, goBack } = usePopupStore();
   console.log(popup, 'ttttttttttttt')
   const onSave = popup?.data?.onSave;
-  const currentTime = popup?.data?.currentTime;
+  const currentTime = popup?.data?.currentTime || "00:00";
 
   const [hours, setHours] = useState('');
   const [minutes, setMinutes] = useState('');
@@ -69,7 +69,7 @@ const ChangeTimePopup = () => {
           $bg="#336CFF"
           onClick={() => {
             if (hours && minutes) {
-              onSave?.(`${hours.padStart(2, "0")}:${minutes.padStart(2, "0")}`);
+              onSave(`${hours.padStart(2, "0")}:${minutes.padStart(2, "0")}`);
               goBack();
             }
           }}

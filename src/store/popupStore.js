@@ -19,7 +19,7 @@ export const usePopupStore = create((set, get) => ({
   },
 
   closePopup: () => {
-    document.body.style.overflow = "";
+    document.body.style.overflow = "";  
     set({ popup: null });
   },
 
