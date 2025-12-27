@@ -12,10 +12,10 @@ const ModePopup = () => {
     const [premoderationMinutes, setPremoderationMinutes] = useState(30);
 
     useEffect(() => {
-        const mode = popup?.data?.workMode;
-
-        if (mode) setSelectedMode((prev) => prev ?? mode);
-    }, [popup?.data?.workMode]);
+        if (!popup?.data) return;
+        const mode = popup.data.workMode;
+        if (mode) setSelectedMode(mode);
+    }, [popup?.data]);
 
     const handleSelectMode = (mode) => {
         setSelectedMode(mode);
