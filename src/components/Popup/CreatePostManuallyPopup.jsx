@@ -69,8 +69,8 @@ const CreatePostManuallyPopup = () => {
             $border={true}
             onClick={() =>
               changeContent("change_time", "popup_window", {
-                onSave: (time) => setPostTime(time),
                 currentTime: postTime,
+                onSave: (time) => setPostTime(time),
               })
             }
           >
