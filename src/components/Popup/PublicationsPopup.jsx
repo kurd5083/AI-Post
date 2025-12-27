@@ -44,8 +44,6 @@ const PublicationsPopup = () => {
     if (!posts) return [];
     let result = [...posts];
 
-    result.reverse();
-
     if (filter === "archive") {
       result = result.filter(post => post.archived);
     } else if (filter === "date") {
@@ -69,15 +67,16 @@ const PublicationsPopup = () => {
         </PublicationsFilter>
         <CustomSelectSec
           placeholder="По дате"
+          value={filter}
+          onChange={(option) => setFilter(option.value)} // получаем option и сохраняем option.value
           options={[
             { label: "Сначала новые", value: "date" },
             { label: "Сначала старые", value: "old" }
           ]}
-          value={filter ? { label: filter === "date" ? "Сначала новые" : "Сначала старые", value: filter } : null}
-          onChange={(option) => setFilter(option.value)}
           width="240px"
           fs="24px"
         />
+    
       </PublicationsHead>
       {!loadingPosts && channelId ? (
         <>
