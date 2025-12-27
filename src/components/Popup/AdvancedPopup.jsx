@@ -20,13 +20,17 @@ const AdvancedPopup = () => {
   });
 
   useEffect(() => {
-    setLocalSwitches({
-      forced_posting: channel?.forcePosting || false,
-      disable_media: channel?.disableMedia || false,
-      transferring_source_text: channel?.preserveOriginalText || false,
-      add_link_post: channel?.addLinkPost || false,
-      add_source_post: channel?.includeSourceLink || false, 
-    });
+    if (!channel) return;
+
+    setLocalSwitches((prev) =>
+      prev ? prev : {
+        forced_posting: channel.forcePosting || false,
+        disable_media: channel.disableMedia || false,
+        transferring_source_text: channel.preserveOriginalText || false,
+        add_link_post: channel.addLinkPost || false,
+        add_source_post: channel.includeSourceLink || false,
+      }
+    );
   }, [channel]);
 
   const { mutate: toggleField } = useUpdateChannelField();
