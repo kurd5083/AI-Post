@@ -12,7 +12,7 @@ const PopupHead = () => {
   const channelId = popup?.data?.channelId;
   const foundItem = popupDatas.find(elem => elem.key == popup.content)
   const { channel } = useChannelById(channelId);
-
+  console.log(popup)
   return (
     <>
       {popup.content !== 'notifications' && popup.content !== 'replenish' && popup.content !== 'upload_media' && popup.content !== 'profile' && (
