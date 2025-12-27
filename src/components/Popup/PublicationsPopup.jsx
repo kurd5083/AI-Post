@@ -13,6 +13,7 @@ const itemsPerPageMob = 4;
 const PublicationsPopup = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(itemsPerPageDefault);
+  const [filter, setFilter] = useState("all");
 
   const { popup } = usePopupStore();
   const channelId = popup?.data?.channelId;
@@ -62,8 +63,8 @@ const PublicationsPopup = () => {
   return (
     <>
       <PublicationsHead>
-        <PublicationsFilter active={filter === "all"} onClick={() => setFilter("all")}>Все</PublicationsFilter>
-        <PublicationsFilter active={filter === "archive"} onClick={() => setFilter("archive")}>
+        <PublicationsFilter $active={filter === "all"} onClick={() => setFilter("all")}>Все</PublicationsFilter>
+        <PublicationsFilter $active={filter === "archive"} onClick={() => setFilter("archive")}>
           Архив <span>{posts?.filter(p => p.archived).length || 0}</span>
         </PublicationsFilter>
         <CustomSelectSec
