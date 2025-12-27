@@ -7,7 +7,7 @@ export const useUpdateChannelField = () => {
   return useMutation({
     mutationFn: ({ channelId, field }) => updateChannelField(channelId, field),
 
-    onSuccess: (_, { channelId }) => {
+    onSuccess: ({channelId}) => {
       queryClient.invalidateQueries(["channel", channelId]);
     },
   });
