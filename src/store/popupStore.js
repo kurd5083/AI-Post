@@ -19,11 +19,11 @@ export const usePopupStore = create((set, get) => ({
   },
 
   closePopup: () => {
-    document.body.style.overflow = "";  
+    document.body.style.overflow = "";
     set({ popup: null });
   },
 
-  changeContent: (content, view = null, data = null) => {
+  changeContent: (content, view = 'popup', data = null) => {
     const currentPopup = get().popup;
 
     set({
@@ -49,7 +49,7 @@ export const usePopupStore = create((set, get) => ({
 
     set({
       popup: {
-        ...lastPage, 
+        ...lastPage,
         previousPage: previousPages,
       },
     });
