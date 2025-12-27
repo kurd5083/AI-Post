@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import CustomSelectSec from "@/shared/CustomSelect";
+import CustomSelectSec from "@/shared/CustomSelectSec";
 import { MONTH_OPTIONS, YEAR_OPTIONS } from "@/data/calendarDatas";
 
 const getDaysInMonth = (y, m) => new Date(y, m + 1, 0).getDate();
