@@ -20,7 +20,7 @@ const SchedulePopup = () => {
   const [activeEndHour, setActiveEndHour] = useState(null); 
   const [isEnabled, setIsEnabled] = useState(false);
   const [avoidNight, setAvoidNight] = useState(false);
-
+  console.log(channelInterval)
   const startHour = activeStartHour ?? 0;
   const endHour = activeEndHour ?? 0;
 
@@ -92,7 +92,8 @@ const SchedulePopup = () => {
               <PlusIcon color="#FFF980" />
             </ScheduleBtn>
           </ScheduleInputContainer>
-          {showResultInterval && finalMinutes !== null && (
+          {/* {showResultInterval && finalMinutes !== null */}
+          {channelInterval && (
             <ScheduleResult>
               Будет публиковаться каждые{" "}
               <mark>
