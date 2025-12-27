@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import CustomSelectSec from "@/shared/CustomSelectSec";
+import CustomSelect from "@/shared/CustomSelect";
 import { MONTH_OPTIONS, YEAR_OPTIONS } from "@/data/calendarDatas";
 
 const getDaysInMonth = (y, m) => new Date(y, m + 1, 0).getDate();
@@ -13,7 +13,7 @@ export const CalendarHeader = ({ currentDate, selectedDate, syncDate }) => {
   console.log()
   return (
     <CalendarHead>
-      <CustomSelectSec
+      <CustomSelect
         placeholder="День"
         options={dayOptions}
         value={dayOptions.find(o => o.value === selectedDate.getDate())}
@@ -24,7 +24,7 @@ export const CalendarHeader = ({ currentDate, selectedDate, syncDate }) => {
         fs="22px"
       />
 
-      <CustomSelectSec
+      <CustomSelect
         placeholder="Месяц"
         options={MONTH_OPTIONS}
         value={MONTH_OPTIONS.find(o => o.value === selectedDate.getMonth())}
@@ -35,7 +35,7 @@ export const CalendarHeader = ({ currentDate, selectedDate, syncDate }) => {
         fs="22px"
       />
 
-      <CustomSelectSec
+      <CustomSelect
         placeholder="Год"
         options={YEAR_OPTIONS}
         value={YEAR_OPTIONS.find(o => o.value === selectedDate.getFullYear())}
