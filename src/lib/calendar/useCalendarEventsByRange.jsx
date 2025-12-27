@@ -3,9 +3,9 @@ import { getCalendarEventsByRange } from "@/api/calendar/getCalendarEventsByRang
 
 export const useCalendarEventsByRange = ({ channelId, startDate, endDate }) => {
     const { data: events } = useQuery({
-        queryKey: ["calendar-events", channelId, startDate, endDate],
+        queryKey: ["calendar-events", channelId],
         queryFn: () => getCalendarEventsByRange({ channelId, startDate, endDate }),
-        enabled: Boolean(channelId && startDate && endDate),
+        enabled: !!channelId,
     });
 
     return { events };
