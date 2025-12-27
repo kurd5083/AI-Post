@@ -6,7 +6,7 @@ const getDaysInMonth = (y, m) => new Date(y, m + 1, 0).getDate();
 
 export const CalendarHeader = ({ currentDate, selectedDate, syncDate }) => {
   const dayOptions = Array.from(
-    { length: getDaysInMonth(currentDate.getFullYear(), currentDate.getMonth()) },
+    { length: getDaysInMonth(selectedDate.getFullYear(), selectedDate.getMonth()) },
     (_, i) => ({ value: i + 1, label: String(i + 1) })
   );
   console.log(currentDate.getFullYear(), currentDate.getMonth(), currentDate, 'asfasg')
@@ -16,33 +16,33 @@ export const CalendarHeader = ({ currentDate, selectedDate, syncDate }) => {
       <CustomSelectSec
         placeholder="День"
         options={dayOptions}
-        value={dayOptions.find(o => o.value === selectedDate.getDate())}
+        value={selectedDate.getDate()}
         onChange={(o) =>
-          syncDate(new Date(currentDate.getFullYear(), currentDate.getMonth(), o.value))
+          syncDate(new Date(selectedDate.getFullYear(), selectedDate.getMonth(), o.value))
         }
-        width="165px" 
+        width="165px"
         fs="22px"
       />
 
       <CustomSelectSec
         placeholder="Месяц"
         options={MONTH_OPTIONS}
-        value={MONTH_OPTIONS.find(o => o.value === selectedDate.getMonth())}
+        value={selectedDate.getMonth()}
         onChange={(o) =>
-          syncDate(new Date(currentDate.getFullYear(), o.value, selectedDate.getDate()))
+          syncDate(new Date(selectedDate.getFullYear(), o.value, selectedDate.getDate()))
         }
-        width="180px" 
+        width="180px"
         fs="22px"
       />
 
       <CustomSelectSec
         placeholder="Год"
         options={YEAR_OPTIONS}
-        value={YEAR_OPTIONS.find(o => o.value === selectedDate.getFullYear())}
+        value={selectedDate.getFullYear()}
         onChange={(o) =>
-          syncDate(new Date(o.value, currentDate.getMonth(), selectedDate.getDate()))
+          syncDate(new Date(o.value, selectedDate.getMonth(), selectedDate.getDate()))
         }
-        width="165px" 
+        width="165px"
         fs="22px"
       />
     </CalendarHead>

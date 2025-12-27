@@ -35,7 +35,7 @@ const CustomSelect = ({
 
   useEffect(() => {
     if (value !== undefined && options) {
-      const sel = options.find(opt => String(opt.value) === String(value));
+      const sel = options.find(opt => opt.value === value);
       setSelected(sel || null);
     }
   }, [value, options]);
