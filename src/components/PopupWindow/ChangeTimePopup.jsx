@@ -41,6 +41,7 @@ const ChangeTimePopup = () => {
   const handleSave = () => {
     if (!hours || !minutes) return;
     if (popup?.data?.onSave) {
+      console.log(`${hours.padStart(2, "0")}:${minutes.padStart(2, "0")}`)
       popup.data.onSave(`${hours.padStart(2, "0")}:${minutes.padStart(2, "0")}`);
     }
     goBack();

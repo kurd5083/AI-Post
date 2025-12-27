@@ -21,18 +21,42 @@ import useResolution from "@/lib/useResolution";
 import { useCreatePost } from "@/lib/posts/useCreatePost";
 import CustomSelect from "@/shared/CustomSelect";
 import { useChannelSources } from "@/lib/channels/sources/useChannelSources";
+import PreviewBG from "@/assets/ai-generator/PreviewBG.png";
+import eye_blue from "@/assets/eye-blue.svg";
+import arrow from "@/assets/arrow.svg";
 
 const CreatePostManuallyPopup = () => {
   const { isSmall } = useResolution(480);
   const { popup, changeContent, goBack } = usePopupStore()
   console.log(popup, 'ttttttttttttt')
+
   const channelId = popup?.data?.channelId;
+
   const { sources } = useChannelSources(channelId);
+
   const [postTitle, setPostTitle] = useState("");
   const [postSource, setPostSource] = useState("");
   const [postText, setPostText] = useState("");
   const [postTime, setPostTime] = useState("");
+
   const { mutate: createPost } = useCreatePost();
+
+  console.log(postTime, 'fhhdfh')
+
+  const [collapsed, setCollapsed] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth > 1400) {
+        setCollapsed(false);
+      }
+    };
+
+    handleResize();
+    window.addEventListener("resize", handleResize);
+
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   const handleSave = () => {
     createPost({
@@ -133,6 +157,75 @@ const CreatePostManuallyPopup = () => {
           </BtnBase> */}
         </Buttons>
       </PostRight>
+
+      <GeneratorPreview $collapsed={collapsed}>
+        <PreviewContent>
+          <PreviewHead>
+            <HeadLeft><img src={eye_blue} alt="eye icon" />Лайв превью</HeadLeft>
+            <HeadArrow src={arrow} alt="arrow icon" onClick={() => setCollapsed(prev => !prev)} $collapsed={collapsed} />
+          </PreviewHead>
+          {!collapsed && (
+            <>
+              <PreviewSelect>
+                <CustomSelect
+                  placeholder="Все платформы"
+                  options={[
+                    { value: "Telegram", label: "Telegram" },
+                  ]}
+                  width="220px"
+                  fs="14px"
+                  padding="16px"
+                />
+                <PreviewHeadButton>
+                  <BtnBase $padding="16px 24px">Telegram</BtnBase>
+                </PreviewHeadButton>
+              </PreviewSelect>
+              <PreviewInfo>
+                <PreviewInfoBG src={PreviewBG} alt="bg" />
+                <PreviewInfoContent>
+                  <PreviewInfoText>
+                    🎯 Breaking: Sustainable<br /><br />
+                    Technology reaches new milestone! We're
+                    excited to share this incredible
+                    achievement with our community. This
+                    wouldn't be possible without your continued
+                    support and feedback.<br /><br />
+                    🔥 What's next? • Enhanced features • Expanded
+                    capabilities • Even better user experience Stay
+                    tuned for more updates! 🚀
+                  </PreviewInfoText>
+                  <BtnBase $padding="17px" $bg="#243D56" $color="#D6DCEC">🚀 Начать</BtnBase>
+                </PreviewInfoContent>
+              </PreviewInfo>
+              {/* <PreviewButtons>
+                <ButtonBlock>
+                  <PreviewButton><img src={text} alt="text icon" width={24} height={17} /></PreviewButton>
+                  <p>EDIT TEXT</p>
+                </ButtonBlock>
+                <ButtonBlock>
+                  <PreviewButton><img src={img} alt="img icon" width={14} height={16} /></PreviewButton>
+                  <p>EDIT IMAGE</p>
+                </ButtonBlock>
+                <ButtonBlock>
+                  <PreviewButton><img src={copy} alt="copy icon" width={24} height={17} /></PreviewButton>
+                  <p>COPY TEXT</p>
+                </ButtonBlock>
+              </PreviewButtons> */}
+            </>
+          )}
+        </PreviewContent>
+        {/* <PreviewPublish>
+          <BtnBase $padding="32px" $bg="#336CFF" $color="#D6DCEC">
+            <img src={publish} alt="publish icon" />
+            Опубликовать записи
+          </BtnBase>
+        </PreviewPublish> */}
+        {/* <AddPost>
+          <BtnBase $padding="21px 24px">
+            + Добавить пост
+          </BtnBase>
+        </AddPost> */}
+      </GeneratorPreview>
       <PostLeftButtons>
         <PostGenerate>
           <BtnBase $color="#FF7F48" $bg="#28222B"><AiGeneratorIcon color="#FF7F48" />Перегенерировать пост</BtnBase>
@@ -372,4 +465,128 @@ const DeleteButton = styled(BaseButton)`
   }
 `
 
+/////////////////////////////////////
+const GeneratorPreview = styled.div`
+  padding-bottom: 30px;
+  grid-column: 4 / span 2;
+  grid-row: 1 / span 2;
+
+  @media(max-width: 1400px) {
+    grid-column: 1 /span 5;
+    grid-row: 2;
+    padding-bottom: 0px;
+  }
+`;
+const PreviewContent = styled.div`
+  background-color: #181E30;
+  border-radius: 24px;
+  padding: 32px;
+`;
+const PreviewHead = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+`
+const HeadLeft = styled.h2`
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  font-size: 24px;
+  font-weight: 800;
+`
+const HeadArrow = styled.img`
+  display: none;
+  transform: rotate(90deg);
+  cursor: pointer;
+  transition: transform 0.3s ease;
+  ${({ $collapsed }) => $collapsed && `transform: rotate(270deg);`}
+  @media(max-width: 1400px) {
+    display: block;
+  }
+`
+// const PreviewButtons = styled.div`
+//   display: flex;
+//   justify-content: space-around;
+//   margin-top: 55px;
+// `;
+// const ButtonBlock = styled.div`
+//   display: flex;
+//   flex-direction: column;
+//   align-items: center;
+//   gap: 16px;
+//   p {
+//     color: #6A7080;
+//     font-size: 12px;
+//     font-weight: 700;
+//     text-transform: uppercase;
+//   }
+// `;
+// const PreviewButton = styled(BaseButton)`
+//   border: 2px solid #2D3241;
+// `;
+// const PreviewPublish = styled.div`
+//   display: flex;
+//   align-items: center;
+//   gap: 16px;
+//   font-size: 24px;
+//   font-weight: 800;
+//   button {
+//     margin-top: 16px;
+//     display: flex;
+//     justify-content: center;
+//     width: 100%;
+//     text-align: center;
+//   }
+// `
+const PreviewSelect = styled.div`
+  margin-top: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+`
+const PreviewHeadButton = styled.div`
+  @media(max-width: 480px) {
+    display: none;
+  }
+`
+const PreviewInfo = styled.div`
+  position: relative;
+  margin-top: 55px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`
+const PreviewInfoBG = styled.img`
+  position: absolute;
+  border-radius: 24px;
+  width: 100%;
+  height: calc(100% + 46px);
+  object-fit: cover;
+`
+const PreviewInfoContent = styled.div`
+  position: relative;
+  width: calc(100% - 104px);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  z-index: 1;
+  button {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+  }
+  @media(max-width: 1600px) {
+    width: calc(100% - 28px);
+  } 
+`
+const PreviewInfoText = styled.p`
+  box-sizing: border-box;
+  padding: 24px;
+  background-color: #131C22;
+  border-radius: 24px;
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: 600;
+`
 export default CreatePostManuallyPopup
