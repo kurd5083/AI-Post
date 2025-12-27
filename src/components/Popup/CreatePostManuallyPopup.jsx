@@ -94,7 +94,10 @@ const CreatePostManuallyPopup = () => {
             onClick={() =>
               changeContent("change_time", "popup_window", {
                 currentTime: postTime,
-                onSave: (time) => setPostTime(time),
+                onSave: (time) => {
+                  console.log("onSave received:", time);
+                  setPostTime(time, 'gggggggggg');
+                },
               })
             }
           >
@@ -145,17 +148,17 @@ const CreatePostManuallyPopup = () => {
             </CreateActionsAdd>
           </PostCreateContainer>
         </PostCreate>
-        <Buttons>
-          <HideButton>
+        {/* <Buttons> */}
+          {/* <HideButton>
             <img src={hide} alt="hide icon" width={24} height={17} />
           </HideButton>
           <DeleteButton>
             <img src={del} alt="del icon" width={14} height={16} />
-          </DeleteButton>
+          </DeleteButton> */}
           {/* <BtnBase $padding="19px 46px">
             Сохранить
           </BtnBase> */}
-        </Buttons>
+        {/* </Buttons> */}
       </PostRight>
 
       <GeneratorPreview $collapsed={collapsed}>
@@ -437,33 +440,33 @@ const CreateActionsAdd = styled.div`
     cursor: pointer;
   }
 `
-const Buttons = styled.div`
-  display: flex;
-  margin-top: 16px;
-`;
-const BaseButton = styled.button`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 56px;
-  height: 56px;
-  border-radius: 12px;
-  flex-shrink: 0;
-  transition: all 0.2s;
-`;
-const HideButton = styled(BaseButton)`
-  border: 2px solid #2D3241;
-  margin-right: 8px;
-`;
-const DeleteButton = styled(BaseButton)`
-  border: 2px solid #2D3241;
-  margin-right: 16px;
+// const Buttons = styled.div`
+//   display: flex;
+//   margin-top: 16px;
+// `;
+// const BaseButton = styled.button`
+//   display: flex;
+//   align-items: center;
+//   justify-content: center;
+//   width: 56px;
+//   height: 56px;
+//   border-radius: 12px;
+//   flex-shrink: 0;
+//   transition: all 0.2s;
+// `;
+// const HideButton = styled(BaseButton)`
+//   border: 2px solid #2D3241;
+//   margin-right: 8px;
+// `;
+// const DeleteButton = styled(BaseButton)`
+//   border: 2px solid #2D3241;
+//   margin-right: 16px;
 
-  &:hover {
-    border: none;
-    background-color: rgba(239, 98, 132, 0.08);
-  }
-`
+//   &:hover {
+//     border: none;
+//     background-color: rgba(239, 98, 132, 0.08);
+//   }
+// `
 
 /////////////////////////////////////
 const GeneratorPreview = styled.div`
