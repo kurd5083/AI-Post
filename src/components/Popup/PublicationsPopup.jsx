@@ -18,7 +18,7 @@ const PublicationsPopup = () => {
   const channelId = popup?.data?.channelId;
 
   const { posts, loadingPosts } = usePostsByChannel(channelId);
-  
+  console.log(posts)
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth < 768) {
