@@ -20,6 +20,8 @@ const CalendarPopup = () => {
   useEffect(() => {
     setCurrentWeek(generateWeek(currentDate));
   }, [currentDate]);
+  
+  const normalize = (iso) => iso.replace(/\.\d{3}Z$/, 'Z');
 
   const startDate = currentWeek[0]
     ? normalize(
