@@ -469,11 +469,11 @@ const DeleteButton = styled(BaseButton)`
 const GeneratorPreview = styled.div`
   padding-bottom: 30px;
   grid-column: 4 / span 3;
-  grid-row: 1;
+  grid-row: 1 /span 2;
 
-  @media(max-width: 1400px) {
-    grid-column: 1 /span 5;
-    grid-row: 2;
+  @media(max-width: 768px) {
+    grid-column: 1 /span 6;
+    grid-row: 4;
     padding-bottom: 0px;
   }
 `;
@@ -501,7 +501,7 @@ const HeadArrow = styled.img`
   cursor: pointer;
   transition: transform 0.3s ease;
   ${({ $collapsed }) => $collapsed && `transform: rotate(270deg);`}
-  @media(max-width: 1400px) {
+  @media(max-width: 768px) {
     display: block;
   }
 `
