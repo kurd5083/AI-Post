@@ -13,9 +13,9 @@ const ModePopup = () => {
 
     useEffect(() => {
         const mode = popup?.data?.workMode;
-        if (mode) {
-            setSelectedMode(mode);
-        }
+        if (!mode) return;
+
+        setSelectedMode((prev) => prev ?? mode);
     }, [popup?.data?.workMode]);
 
     const handleSelectMode = (mode) => {
