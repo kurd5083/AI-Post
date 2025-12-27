@@ -10,6 +10,7 @@ export const CalendarHeader = ({ currentDate, selectedDate, syncDate }) => {
     (_, i) => ({ value: i + 1, label: String(i + 1) })
   );
   console.log(currentDate.getFullYear(), currentDate.getMonth(), o.value, 'asfasg')
+  console.log(selectedDate)
   return (
     <CalendarHead>
       <CustomSelectSec
