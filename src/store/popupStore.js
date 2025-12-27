@@ -23,13 +23,14 @@ export const usePopupStore = create((set, get) => ({
     set({ popup: null });
   },
 
-  changeContent: (content, data = null) => {
+  changeContent: (content, view = null, data = null) => {
     const currentPopup = get().popup;
 
     set({
       popup: {
         status: true,
         content,
+        view: view ?? currentPopup?.view,
         data: data ?? currentPopup?.data,
         previousPage: currentPopup
           ? [...(currentPopup.previousPage || []), currentPopup]
