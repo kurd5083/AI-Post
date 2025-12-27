@@ -17,7 +17,7 @@ const PublicationsPopup = () => {
   const channelId = popup?.data?.channelId;
 
   const { posts, loadingPosts } = usePostsByChannel(channelId);
-  console.log(loadingPosts, channelId)
+
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth < 768) {
@@ -41,7 +41,7 @@ const PublicationsPopup = () => {
   const totalPages = posts?.length ? Math.ceil(posts.length / itemsPerPage) : 0;
   const indexOfLast = currentPage * itemsPerPage;
   const indexOfFirst = indexOfLast - itemsPerPage;
-  const currentItems = posts?.slice(indexOfFirst, indexOfLast);
+  const currentItems = posts?.reverse().slice(indexOfFirst, indexOfLast);
 
   return (
     <>
