@@ -10,6 +10,7 @@ import { useTelegramBotLink } from "@/lib/useTelegramBotLink";
 import BtnBase from "@/shared/BtnBase";
 import useResolution from "@/lib/useResolution";
 import { useSidebarStore } from "@/store/sidebarStore";
+import TgIcon from "@/icons/TgIcon";
 
 const Header = () => {
 	const { setActivePage } = useSidebarStore();
@@ -22,7 +23,7 @@ const Header = () => {
 	const { balance } = useUserBalance();
 	const { botLinkData } = useTelegramBotLink();
 	const isAuthorized = !!localStorage.getItem("accessToken");
-	
+
 	return (
 		<HeaderContainer>
 			{isAuthorized ? (
@@ -51,7 +52,7 @@ const Header = () => {
 					$color="#fff"
 					$radius="20px"
 					onClick={() => {
-						if (!botLinkData) return;
+					if (!botLinkData) return;
 						window.location.href = botLinkData.botLink;
 					}}
 				>
