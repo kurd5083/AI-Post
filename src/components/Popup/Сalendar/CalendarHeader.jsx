@@ -1,9 +1,16 @@
 import styled from "styled-components";
 import CustomSelectSec from "@/shared/CustomSelectSec";
-import { dayOptions, MONTH_OPTIONS, YEAR_OPTIONS } from "@/data/calendarDatas";
+import { MONTH_OPTIONS, YEAR_OPTIONS } from "@/data/calendarDatas";
 
-export const CalendarHeader = ({ selectedDate, syncDate }) => {
-  return (  
+const getDaysInMonth = (y, m) => new Date(y, m + 1, 0).getDate();
+
+export const CalendarHeader = ({ currentDate, selectedDate, syncDate }) => {
+  const dayOptions = Array.from(
+    { length: getDaysInMonth(currentDate.getFullYear(), currentDate.getMonth()) },
+    (_, i) => ({ value: i + 1, label: String(i + 1) })
+  );
+
+  return (
     <CalendarHead>
       <CustomSelectSec
   placeholder="День"

@@ -52,7 +52,7 @@ const CalendarPopup = () => {
   return (
     <CalendarContent>
       <CalendarHeader
-        // currentDate={currentDate}
+        currentDate={currentDate}
         selectedDate={selectedDate}
         syncDate={syncDate}
       />
