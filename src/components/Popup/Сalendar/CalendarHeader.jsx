@@ -9,7 +9,7 @@ export const CalendarHeader = ({ currentDate, selectedDate, syncDate }) => {
     { length: getDaysInMonth(currentDate.getFullYear(), currentDate.getMonth()) },
     (_, i) => ({ value: i + 1, label: String(i + 1) })
   );
-  console.log(currentDate.getFullYear(), currentDate.getMonth(), dayOptions, 'asfasg')
+  console.log(currentDate.getFullYear(), currentDate.getMonth(), currentDate, 'asfasg')
   console.log()
   return (
     <CalendarHead>
