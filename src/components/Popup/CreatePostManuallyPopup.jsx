@@ -112,9 +112,9 @@ const CreatePostManuallyPopup = () => {
               </PostTimeBtn>
             </PostTimeContainer>
             {postTime && (
-              <PostTime>
+              <PostTimeResult>
                 Будет публиковаться в <mark>{postTime}</mark>
-              </PostTime>
+              </PostTimeResult>
             )}
           </PostTime>
           {/* <BtnBase
@@ -330,9 +330,7 @@ const PostSetting = styled.div`
    }
   }
 `
-const PostTime = styled.div`
-  margin-top: 40px;
-`
+
 const PostTimeTitle = styled.h2`
   text-transform: uppercase;
   font-weight: 700;
@@ -344,6 +342,7 @@ const PostTimeContainer = styled.div`
   display: flex;
   gap: 24px;
   align-items: center;
+  width: min-content;
 `
 const PostTimeResult = styled.p`
   font-weight: 700;
