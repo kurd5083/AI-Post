@@ -77,7 +77,7 @@ const TableGroups = () => {
           <TableGroupsHeadAdd
             onClick={() =>
               window.open(
-                `https://t.me/${botInfo?.username}?startgroup=true`
+                `https://t.me/${botInfo?.username}?startchannel=1&admin=change_info+post_messages+edit_messages+invite+users+pin_messages+manage_chat`
               )
             }
       
