@@ -14,7 +14,6 @@ const Sidebar = () => {
   const { user } = useUser();
   console.log(user)
   const { botLinkData } = useTelegramBotLink();
-  console.log(botLinkData)
   const {
     activePage,
     setActivePage,
