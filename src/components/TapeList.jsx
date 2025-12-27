@@ -20,6 +20,13 @@ const TapeList = ({ forceHorizontal = false, padding }) => {
   const direction = forceHorizontal ? "horizontal" : (isSwipe ? "horizontal" : "vertical");
 
   const { newsData, newsLoding } = useNews();
+  const handleClick = () => {
+    if (popup && popup.status) {
+      changeContent("select_channel", "popup_window", { newsId: news.id });
+    } else {
+      openPopup("select_channel", "popup_window", { newsId: news.id });
+    }
+  };
 
   return (
     <>
@@ -50,7 +57,7 @@ const TapeList = ({ forceHorizontal = false, padding }) => {
                 <Link to={`/news/${news.id}`}>
                     <TapeItemText>{news.title}</TapeItemText>
                 </Link>
-                <TapeItemAction onClick={() => openPopup("select_channel", "popup_window", { newsId: news.id })}>
+                <TapeItemAction onClick={handleClick}>
                   Сохранить в канал
                 </TapeItemAction>
                 <TapeTime>
