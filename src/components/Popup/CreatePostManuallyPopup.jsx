@@ -1,4 +1,4 @@
-import { useState, useEffect  } from "react";
+import { useState, useEffect } from "react";
 import styled from "styled-components";
 import BtnBase from "@/shared/BtnBase";
 import { usePopupStore } from "@/store/popupStore";
@@ -24,6 +24,7 @@ import { useChannelSources } from "@/lib/channels/sources/useChannelSources";
 import PreviewBG from "@/assets/ai-generator/PreviewBG.png";
 import eye_blue from "@/assets/eye-blue.svg";
 import arrow from "@/assets/arrow.svg";
+import TimeInput from "@/shared/TimeInput";
 
 const CreatePostManuallyPopup = () => {
   const { isSmall } = useResolution(480);
@@ -38,6 +39,8 @@ const CreatePostManuallyPopup = () => {
   const [postSource, setPostSource] = useState("");
   const [postText, setPostText] = useState("");
   const [postTime, setPostTime] = useState("");
+  const [hours, setHours] = useState(0);
+  const [minutes, setMinutes] = useState(0);
 
   const { mutate: createPost } = useCreatePost();
 
@@ -87,7 +90,33 @@ const CreatePostManuallyPopup = () => {
               <PromotionIcon color="#336CFF" />{!isSmall ? 'Опубликовать сейчас' : 'Опубликовать'}
             </BtnBase>
           </PostSettingTop>
-          <BtnBase
+          <PostTime>
+            <PostTimeTitle>Выберите время публикации</PostTimeTitle>
+            <PostTimeContainer>
+              <TimeInput
+                hours={hours}
+                minutes={minutes}
+                onChange={(newHours, newMinutes) => {
+                  setHours(newHours);
+                  setMinutes(newMinutes);
+                }}
+              />
+              <PostTimeBtn
+                onClick={() => {
+                  const formattedTime = `${hours.toString().padStart(2, "0")}:${minutes.toString().padStart(2, "0")}`;
+                  setPostTime(formattedTime);
+                }}
+              >
+                <PlusIcon color="#FFF980" />
+              </PostTimeBtn>
+            </PostTimeContainer>
+            {postTime && (
+              <PostTime>
+                Будет публиковаться в <mark>{postTime}</mark>
+              </PostTime>
+            )}
+          </PostTime>
+          {/* <BtnBase
             $color="#6A7080"
             $bg="transparent"
             $border={true}
@@ -103,7 +132,7 @@ const CreatePostManuallyPopup = () => {
           >
             <TimeIcons />
             {postTime ? `Время: ${postTime}` : "Изменить время"}
-          </BtnBase>
+          </BtnBase> */}
         </PostSetting>
       </NewPostLeft>
       <PostRight>
@@ -149,13 +178,13 @@ const CreatePostManuallyPopup = () => {
           </PostCreateContainer>
         </PostCreate>
         {/* <Buttons> */}
-          {/* <HideButton>
+        {/* <HideButton>
             <img src={hide} alt="hide icon" width={24} height={17} />
           </HideButton>
           <DeleteButton>
             <img src={del} alt="del icon" width={14} height={16} />
           </DeleteButton> */}
-          {/* <BtnBase $padding="19px 46px">
+        {/* <BtnBase $padding="19px 46px">
             Сохранить
           </BtnBase> */}
         {/* </Buttons> */}
@@ -299,6 +328,40 @@ const PostSetting = styled.div`
     width: 100%;
    }
   }
+`
+const PostTime = styled.div`
+  margin-top: 40px;
+`
+const PostTimeTitle = styled.h2`
+  text-transform: uppercase;
+  font-weight: 700;
+  font-size: 12px;
+  color: #6A7080;
+  margin-bottom: 26px;
+`
+const PostTimeContainer = styled.div`
+  display: flex;
+  gap: 24px;
+  align-items: center;
+`
+const PostTimeResult = styled.p`
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 24px;
+  margin-top: 32px;
+
+  mark {
+    color: #FFF980;
+  }
+`
+const PostTimeBtn = styled.button`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px;
+  background-color: #262A2D;
+  border-radius: 50%;
+  cursor: pointer;
 `
 const PostSettingTop = styled.div`
   display: flex;
