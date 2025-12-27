@@ -26,6 +26,7 @@ const CreatePostManuallyPopup = () => {
   const { isSmall } = useResolution(480);
 
   const { popup, openPopup, goBack } = usePopupStore()
+  console.log(popup, 'ttttttttttttt')
   const channelId = popup?.data?.channelId;
   const { sources } = useChannelSources(channelId);
   const [postTitle, setPostTitle] = useState("");
