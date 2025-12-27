@@ -9,59 +9,41 @@ export const CalendarHeader = ({ currentDate, selectedDate, syncDate }) => {
     { length: getDaysInMonth(currentDate.getFullYear(), currentDate.getMonth()) },
     (_, i) => ({ value: i + 1, label: String(i + 1) })
   );
-
+  console.log(currentDate.getFullYear(), currentDate.getMonth(), o.value, 'asfasg')
   return (
     <CalendarHead>
       <CustomSelectSec
-  placeholder="День"
-  options={dayOptions}
-  value={dayOptions.find(o => o.value === selectedDate.getDate())}
-  onChange={(o) =>
-    syncDate(
-      new Date(
-        selectedDate.getFullYear(),
-        selectedDate.getMonth(),
-        o.value
-      )
-    )
-  }
-  width="165px"
-  fs="22px"
-/>
+        placeholder="День"
+        options={dayOptions}
+        value={dayOptions.find(o => o.value === selectedDate.getDate())}
+        onChange={(o) =>
+          syncDate(new Date(currentDate.getFullYear(), currentDate.getMonth(), o.value))
+        }
+        width="165px" 
+        fs="22px"
+      />
 
-<CustomSelectSec
-  placeholder="Месяц"
-  options={MONTH_OPTIONS}
-  value={MONTH_OPTIONS.find(o => o.value === selectedDate.getMonth())}
-  onChange={(o) =>
-    syncDate(
-      new Date(
-        selectedDate.getFullYear(),
-        o.value,
-        selectedDate.getDate()
-      )
-    )
-  }
-  width="180px"
-  fs="22px"
-/>
+      <CustomSelectSec
+        placeholder="Месяц"
+        options={MONTH_OPTIONS}
+        value={MONTH_OPTIONS.find(o => o.value === selectedDate.getMonth())}
+        onChange={(o) =>
+          syncDate(new Date(currentDate.getFullYear(), o.value, selectedDate.getDate()))
+        }
+        width="180px" 
+        fs="22px"
+      />
 
-<CustomSelectSec
-  placeholder="Год"
-  options={YEAR_OPTIONS}
-  value={YEAR_OPTIONS.find(o => o.value === selectedDate.getFullYear())}
-  onChange={(o) =>
-    syncDate(
-      new Date(
-        o.value,
-        selectedDate.getMonth(),
-        selectedDate.getDate()
-      )
-    )
-  }
-  width="165px"
-  fs="22px"
-/>
+      <CustomSelectSec
+        placeholder="Год"
+        options={YEAR_OPTIONS}
+        value={YEAR_OPTIONS.find(o => o.value === selectedDate.getFullYear())}
+        onChange={(o) =>
+          syncDate(new Date(o.value, currentDate.getMonth(), selectedDate.getDate()))
+        }
+        width="165px" 
+        fs="22px"
+      />
     </CalendarHead>
   );
 };
