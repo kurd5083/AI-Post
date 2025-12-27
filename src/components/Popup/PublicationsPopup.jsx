@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo  } from "react";
+import { useState, useEffect, useMemo } from "react";
 import styled from "styled-components";
 import CardPablish from "@/components/CardPablish";
 import { usePopupStore } from "@/store/popupStore"
@@ -73,9 +73,9 @@ const PublicationsPopup = () => {
             { label: "Сначала новые", value: "date" },
             { label: "Сначала старые", value: "old" }
           ]}
-          value={filter === "date" ? "date" : filter === "old" ? "old" : ""}
-          onChange={val => setFilter(val)}
-          width="min-width"
+          value={filter ? { label: filter === "date" ? "Сначала новые" : "Сначала старые", value: filter } : null}
+          onChange={(option) => setFilter(option.value)}
+          width="240px"
           fs="24px"
         />
       </PublicationsHead>
@@ -135,6 +135,7 @@ const PublicationsFilter = styled.p`
   font-weight: 700;
   color: #6a7080;
   flex-shrink: 0;
+  cursor: pointer;
     
   span {
     color: #6a7080;
