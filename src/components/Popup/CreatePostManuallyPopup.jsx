@@ -79,16 +79,6 @@ const CreatePostManuallyPopup = () => {
           </BtnBase>
         </PostSetting>
       </NewPostLeft>
-      <PostLeftButtons>
-        <PostGenerate>
-          <BtnBase $color="#FF7F48" $bg="#28222B"><AiGeneratorIcon color="#FF7F48" />Перегенерировать пост</BtnBase>
-          <BtnBase $color="#FF7F48" $bg="#28222B"><img src={create} alt="create icon" />Сгенерировать изображение</BtnBase>
-        </PostGenerate>
-        <PostButtons>
-          <BtnBase $color="#D6DCEC" $bg="#336CFF" onClick={handleSave}>Сохранить</BtnBase>
-          <BtnBase onClick={goBack} $color="#D6DCEC" $bg="#242A3A">Отменить</BtnBase>
-        </PostButtons>
-      </PostLeftButtons>
       <PostRight>
         <PostCreate>
           <PostSourceSelect>
@@ -143,6 +133,16 @@ const CreatePostManuallyPopup = () => {
           </BtnBase> */}
         </Buttons>
       </PostRight>
+      <PostLeftButtons>
+        <PostGenerate>
+          <BtnBase $color="#FF7F48" $bg="#28222B"><AiGeneratorIcon color="#FF7F48" />Перегенерировать пост</BtnBase>
+          <BtnBase $color="#FF7F48" $bg="#28222B"><img src={create} alt="create icon" />Сгенерировать изображение</BtnBase>
+        </PostGenerate>
+        <PostButtons>
+          <BtnBase $color="#D6DCEC" $bg="#336CFF" onClick={handleSave}>Сохранить</BtnBase>
+          <BtnBase onClick={goBack} $color="#D6DCEC" $bg="#242A3A">Отменить</BtnBase>
+        </PostButtons>
+      </PostLeftButtons>
     </PostManually>
   )
 }
@@ -165,7 +165,7 @@ const PostManually = styled.div`
   }
 `
 const NewPostLeft = styled.div`
-  max-width: 420px;
+  max-width: 470px;
   grid-column: 1 /span 3;
   grid-row: 1;
 
@@ -181,9 +181,9 @@ const NewPostLeft = styled.div`
 
 `
 const PostLeftButtons = styled.div`
-  max-width: 420px;
+  max-width: 470px;
   grid-column: 1 /span 3;
-  grid-row: 2;
+  grid-row: 3;
 
   @media(max-width: 768px) {
     grid-column: 1 /span 6;
@@ -227,8 +227,8 @@ const PostButtons = styled.div`
   }
 `
 const PostRight = styled.div`
-  grid-column: 4 /span 3;
-  grid-row: 1 / span 2;
+  grid-column: 1 /span 3;
+  grid-row: 2;
   max-width: 470px;
   width: 100%;
 

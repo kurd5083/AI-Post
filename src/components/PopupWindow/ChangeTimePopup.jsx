@@ -8,7 +8,7 @@ const ChangeTimePopup = () => {
   const { popup, goBack } = usePopupStore();
   console.log(popup, 'ttttttttttttt')
   const onSave = popup?.data?.onSave;
-  const currentTime = popup?.data?.currentTime || "00:00";
+  const currentTime = popup?.data?.currentTime;
 
   const [hours, setHours] = useState('');
   const [minutes, setMinutes] = useState('');
@@ -18,6 +18,9 @@ const ChangeTimePopup = () => {
       const [h, m] = currentTime.split(":");
       setHours(h);
       setMinutes(m);
+    } else {
+      setHours("00");
+      setMinutes("00");
     }
   }, [currentTime]);
 
@@ -39,6 +42,12 @@ const ChangeTimePopup = () => {
     }
   };
 
+  const handleSave = () => {
+    if (!hours || !minutes) return;
+
+    onSave?.(`${hours.padStart(2, "0")}:${minutes.padStart(2, "0")}`);
+    goBack();
+  };
   return (
     <div>
       <ChangeTimeHead>
@@ -64,16 +73,7 @@ const ChangeTimePopup = () => {
         />
       </TimeWrapper>
       <ChangeTimeButtons>
-        <BtnBase
-          $color="#D6DCEC"
-          $bg="#336CFF"
-          onClick={() => {
-            if (hours && minutes) {
-              onSave(`${hours.padStart(2, "0")}:${minutes.padStart(2, "0")}`);
-              goBack();
-            }
-          }}
-        >
+        <BtnBase $color="#D6DCEC" $bg="#336CFF" onClick={handleSave}>
           Сохранить
         </BtnBase>
         <BtnBase onClick={goBack} $color="#D6DCEC" $bg="#242A3A">Отменить</BtnBase>
