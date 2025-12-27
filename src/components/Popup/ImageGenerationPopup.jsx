@@ -16,9 +16,11 @@ const ImageGenerationPopup = () => {
   const [selectedPresetId, setSelectedPresetId] = useState(null);
 
   useEffect(() => {
-    if (imageChannelPreset) {
-      setSelectedPresetId(imageChannelPreset.id);
-    }
+    if (!imageChannelPreset) return;
+
+    setSelectedPresetId((prev) =>
+      prev ?? imageChannelPreset.id
+    );
   }, [imageChannelPreset]);
 
   const { mutate: updateImagePreset } = useUpdateChannelImagePreset();
