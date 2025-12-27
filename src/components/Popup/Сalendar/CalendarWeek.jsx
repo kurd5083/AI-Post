@@ -74,8 +74,6 @@ const NavButton = styled.button`
 const NavButtonLeft = styled(NavButton)`
   transform: rotate(180deg);
 `;
-
-NavButtonRight
 const WeekGrid = styled.div`
   display: flex;
   gap: 56px;
