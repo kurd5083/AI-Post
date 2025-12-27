@@ -70,7 +70,10 @@ const Sidebar = () => {
       </SidebarNavContainer>
       <SidebarFooter $isSidebarVisible={isSidebarVisible}>
         {isAuthorized ? (
-          <SidebarFooterTop onClick={() => openPopup("profile")}>
+          <SidebarFooterTop onClick={() => {
+            openPopup("profile")
+            setActivePage(6);
+          }}>
             <SidebarAvaContainer>
               <SidebarAva src={user?.avatarUrl} alt={user?.username} />
             </SidebarAvaContainer>
