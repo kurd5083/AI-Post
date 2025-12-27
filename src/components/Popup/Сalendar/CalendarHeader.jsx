@@ -1,49 +1,54 @@
 import styled from "styled-components";
 import CustomSelectSec from "@/shared/CustomSelectSec";
-import { MONTH_OPTIONS, YEAR_OPTIONS } from "@/data/calendarDatas";
-
-const getDaysInMonth = (y, m) => new Date(y, m + 1, 0).getDate();
+import { dayOptions, MONTH_OPTIONS, YEAR_OPTIONS } from "@/data/calendarDatas";
 
 export const CalendarHeader = ({ currentDate, selectedDate, syncDate }) => {
-  const dayOptions = Array.from(
-    { length: getDaysInMonth(currentDate.getFullYear(), currentDate.getMonth()) },
-    (_, i) => ({ value: i + 1, label: String(i + 1) })
-  );
-
   return (
     <CalendarHead>
       <CustomSelectSec
-  placeholder="День"
-  options={dayOptions}
-  value={selectedDate.getDate()} // передаем число, а не объект
-  onChange={(val) =>
-    syncDate(new Date(currentDate.getFullYear(), currentDate.getMonth(), val))
-  }
-  width="165px"
-  fs="22px"
-/>
+        placeholder="День"
+        options={dayOptions}
+        value={dayOptions.find(o => o.value === selectedDate.getDate())}
+        onChange={(o) =>
+          syncDate(new Date(
+            selectedDate.getFullYear(),
+            selectedDate.getMonth(),
+            o.value
+          ))
+        }
+        width="165px"
+        fs="22px"
+      />
 
-<CustomSelectSec
-  placeholder="Месяц"
-  options={MONTH_OPTIONS}
-  value={selectedDate.getMonth()} // передаем число месяца
-  onChange={(val) =>
-    syncDate(new Date(currentDate.getFullYear(), val, selectedDate.getDate()))
-  }
-  width="180px"
-  fs="22px"
-/>
+      <CustomSelectSec
+        placeholder="Месяц"
+        options={MONTH_OPTIONS}
+        value={MONTH_OPTIONS.find(o => o.value === selectedDate.getMonth())}
+        onChange={(o) =>
+          syncDate(new Date(
+            selectedDate.getFullYear(),
+            o.value,
+            selectedDate.getDate()
+          ))
+        }
+        width="180px"
+        fs="22px"
+      />
 
-<CustomSelectSec
-  placeholder="Год"
-  options={YEAR_OPTIONS}
-  value={selectedDate.getFullYear()} // передаем число года
-  onChange={(val) =>
-    syncDate(new Date(val, currentDate.getMonth(), selectedDate.getDate()))
-  }
-  width="165px"
-  fs="22px"
-/>
+      <CustomSelectSec
+        placeholder="Год"
+        options={YEAR_OPTIONS}
+        value={YEAR_OPTIONS.find(o => o.value === selectedDate.getFullYear())}
+        onChange={(o) =>
+          syncDate(new Date(
+            o.value,
+            selectedDate.getMonth(),
+            selectedDate.getDate()
+          ))
+        }
+        width="165px"
+        fs="22px"
+      />
     </CalendarHead>
   );
 };

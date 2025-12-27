@@ -7,7 +7,11 @@ export const DAYS_OF_WEEK = [
   "СУББОТА",
   "ВОСКРЕСЕНЬЕ",
 ];
-
+const getDaysInMonth = (y, m) => new Date(y, m + 1, 0).getDate();
+export const dayOptions = Array.from(
+  { length: getDaysInMonth(currentDate.getFullYear(), currentDate.getMonth()) },
+  (_, i) => ({ value: i + 1, label: String(i + 1) })
+);
 export const MONTH_OPTIONS = [
   "Январь", "Февраль", "Март", "Апрель",
   "Май", "Июнь", "Июль", "Август",
