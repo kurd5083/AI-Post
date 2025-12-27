@@ -21,13 +21,23 @@ const CalendarPopup = () => {
     setCurrentWeek(generateWeek(currentDate));
   }, [currentDate]);
 
-  const startDate = currentWeek[0]?.toISOString();
-  const endDate = currentWeek[6]
-    ? new Date(
-        new Date(currentWeek[6]).setHours(23, 59, 59, 999)
-      ).toISOString()
-    : null;
+  const startDate = currentWeek[0]
+  ? new Date(Date.UTC(
+      currentWeek[0].getFullYear(),
+      currentWeek[0].getMonth(),
+      currentWeek[0].getDate(),
+      0, 0, 0, 0
+    )).toISOString()
+  : null;
 
+  const endDate = currentWeek[6]
+  ? new Date(Date.UTC(
+      currentWeek[6].getFullYear(),
+      currentWeek[6].getMonth(),
+      currentWeek[6].getDate(),
+      23, 59, 59, 999
+    )).toISOString()
+  : null;
   const { events = [] } = useCalendarEventsByRange({
     channelId,
     startDate,
