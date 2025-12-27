@@ -4,6 +4,7 @@ import CardPablish from "@/components/CardPablish";
 import { usePopupStore } from "@/store/popupStore"
 import { usePostsByChannel } from "@/lib/posts/usePostsByChannel";
 import ModernLoading from "@/components/ModernLoading";
+import CustomSelectSec from "@/shared/CustomSelectSec";
 
 const itemsPerPageDefault = 9;
 const itemsPerPageSmall = 6;
@@ -17,7 +18,7 @@ const PublicationsPopup = () => {
   const channelId = popup?.data?.channelId;
 
   const { posts, loadingPosts } = usePostsByChannel(channelId);
-
+  
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth < 768) {
@@ -38,10 +39,25 @@ const PublicationsPopup = () => {
     setCurrentPage(1);
   }, [itemsPerPage]);
 
-  const totalPages = posts?.length ? Math.ceil(posts.length / itemsPerPage) : 0;
+  const filteredPosts = useMemo(() => {
+    if (!posts) return [];
+    let result = [...posts];
+
+    result.reverse();
+
+    if (filter === "archive") {
+      result = result.filter(post => post.archived);
+    } else if (filter === "date") {
+      result.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    }
+
+    return result;
+  }, [posts, filter]);
+
+  const totalPages = filteredPosts.length ? Math.ceil(filteredPosts.length / itemsPerPage) : 0;
   const indexOfLast = currentPage * itemsPerPage;
   const indexOfFirst = indexOfLast - itemsPerPage;
-  const currentItems = posts?.reverse().slice(indexOfFirst, indexOfLast);
+  const currentItems = filteredPosts.slice(indexOfFirst, indexOfLast);
 
   return (
     <>
@@ -49,6 +65,17 @@ const PublicationsPopup = () => {
         <PublicationsFilter>Все</PublicationsFilter>
         <PublicationsFilter>Архив <span>0</span></PublicationsFilter>
         <PublicationsFilter>По дате</PublicationsFilter>
+        <CustomSelectSec
+          placeholder="По дате"
+          options={[
+            { label: "Сначала новые", value: "date" },
+            { label: "Сначала старые", value: "old" }
+          ]}
+          value={filter === "date" ? "date" : filter === "old" ? "old" : ""}
+          onChange={val => setFilter(val)}
+          width="min-width"
+          fs="24px"
+        />
       </PublicationsHead>
       {!loadingPosts && channelId ? (
         <>
@@ -85,7 +112,6 @@ const PublicationsPopup = () => {
 const PublicationsHead = styled.div`
   display: flex;
   gap: 64px;
-  /* overflow-x: auto; */
   scrollbar-width: none;
   padding: 0 56px;
 

@@ -9,8 +9,6 @@ import CalendarWeek from "@/components/Popup/Сalendar/CalendarWeek";
 import CalendarFooter from "@/components/Popup/Сalendar/CalendarFooter";
 import CalendarPostsList from "@/components/Popup/Сalendar/CalendarPostsList";
 
-/* ===== helpers ===== */
-
 const safeDate = (value) => {
   const d = new Date(value);
   return isNaN(d.getTime()) ? null : d;
@@ -18,8 +16,6 @@ const safeDate = (value) => {
 
 const dayKeyUTC = (d) =>
   `${d.getUTCFullYear()}-${d.getUTCMonth()}-${d.getUTCDate()}`;
-
-/* =================== */
 
 const CalendarPopup = () => {
   const { popup } = usePopupStore();
@@ -77,7 +73,6 @@ const CalendarPopup = () => {
     d.setDate(d.getDate() + dir * 7);
     setCurrentDate(d);
   };
- /* ===== posts for selected day ===== */
 
   const postsForDay = useMemo(() => {
     const selectedKey = dayKeyUTC(selectedDate);
@@ -90,7 +85,6 @@ const CalendarPopup = () => {
     });
   }, [events, selectedDate]);
 
-  /* ================================= */
   return (
     <CalendarContent>
       <CalendarHeader
