@@ -264,7 +264,7 @@ const NewPostLeft = styled.div`
 
   @media(max-width: 768px) {
     grid-column: 1 /span 6;
-    grid-row: 1;
+    grid-row: 2;
     max-width: 100%;
     width: 100%;
   }
@@ -280,7 +280,7 @@ const PostLeftButtons = styled.div`
 
   @media(max-width: 768px) {
     grid-column: 1 /span 6;
-    grid-row: 3;
+    grid-row: 4;
     max-width: 100%;
     width: 100%;
   }
@@ -328,7 +328,7 @@ const PostRight = styled.div`
   @media(max-width: 768px) {
     max-width: 100%;
     grid-column: 1 /span 6;
-    grid-row: 2;
+    grid-row: 3;
   }
 `
 const PostCreate = styled.div`
@@ -473,7 +473,7 @@ const GeneratorPreview = styled.div`
 
   @media(max-width: 768px) {
     grid-column: 1 /span 6;
-    grid-row: 4;
+    grid-row: 1;
     padding-bottom: 0px;
   }
 `;
