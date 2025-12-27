@@ -24,8 +24,7 @@ import { useChannelSources } from "@/lib/channels/sources/useChannelSources";
 
 const CreatePostManuallyPopup = () => {
   const { isSmall } = useResolution(480);
-
-  const { popup, openPopup, goBack } = usePopupStore()
+  const { popup, changeContent, goBack } = usePopupStore()
   console.log(popup, 'ttttttttttttt')
   const channelId = popup?.data?.channelId;
   const { sources } = useChannelSources(channelId);
@@ -69,7 +68,7 @@ const CreatePostManuallyPopup = () => {
             $bg="transparent"
             $border={true}
             onClick={() =>
-              openPopup("change_time", "popup_window", {
+              changeContent("change_time", "popup_window", {
                 onSave: (time) => setPostTime(time),
                 currentTime: postTime,
               })
