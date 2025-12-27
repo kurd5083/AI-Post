@@ -39,10 +39,10 @@ const CalendarPopup = () => {
     )).toISOString()
   : null;
   const { events = [] } = useCalendarEventsByRange({
-    channelId: 29,
-    startDate: "2025-12-22T00:00:00.000Z",
-    endDate: "2025-12-28T23:59:59.999Z" ,
-  });
+  channelId: 29,
+  startDate: new Date("2025-12-22T00:00:00Z"),
+  endDate: new Date("2025-12-28T23:59:59Z"),
+});
 
   const { mutate, isPending } = useCreateCalendarEvent();
 
