@@ -8,7 +8,7 @@ const ModePopup = () => {
 	const { popup } = usePopupStore();
     const channelId = popup?.data?.channelId;
     const { mutate: setWorkMode } = useUpdateWorkMode(channelId);
-    const [selectedMode, setSelectedMode] = useState(null);
+    const [selectedMode, setSelectedMode] = useState(() => popup?.data?.workMode || null);
     const [premoderationMinutes, setPremoderationMinutes] = useState(30);
 
     useEffect(() => {

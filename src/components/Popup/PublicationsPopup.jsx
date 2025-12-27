@@ -68,12 +68,12 @@ const PublicationsPopup = () => {
         <CustomSelectSec
           placeholder="По дате"
           value={filter}
-          onChange={(option) => setFilter(option.value)} // получаем option и сохраняем option.value
+          onChange={(option) => setFilter(option.value)} 
           options={[
             { label: "Сначала новые", value: "date" },
             { label: "Сначала старые", value: "old" }
           ]}
-          width="240px"
+          width="250px"
           fs="24px"
         />
     
