@@ -62,9 +62,10 @@ const PublicationsPopup = () => {
   return (
     <>
       <PublicationsHead>
-        <PublicationsFilter>Все</PublicationsFilter>
-        <PublicationsFilter>Архив <span>0</span></PublicationsFilter>
-        <PublicationsFilter>По дате</PublicationsFilter>
+        <PublicationsFilter active={filter === "all"} onClick={() => setFilter("all")}>Все</PublicationsFilter>
+        <PublicationsFilter active={filter === "archive"} onClick={() => setFilter("archive")}>
+          Архив <span>{posts?.filter(p => p.archived).length || 0}</span>
+        </PublicationsFilter>
         <CustomSelectSec
           placeholder="По дате"
           options={[
