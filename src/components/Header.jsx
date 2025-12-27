@@ -9,8 +9,10 @@ import { useUserBalance } from "@/lib/useUserBalance";
 import { useTelegramBotLink } from "@/lib/useTelegramBotLink";
 import BtnBase from "@/shared/BtnBase";
 import useResolution from "@/lib/useResolution";
+import { useSidebarStore } from "@/store/sidebarStore";
 
 const Header = () => {
+	const { setActivePage } = useSidebarStore();
 	const { openPopup } = usePopupStore();
 	const { menu, openMenu, closeMenu } = useMenuStore();
 
@@ -19,12 +21,16 @@ const Header = () => {
 	const { user } = useUser();
 	const { balance } = useUserBalance();
 	const { botLinkData } = useTelegramBotLink();
-
+	const isAuthorized = !!localStorage.getItem("accessToken");
+	
 	return (
 		<HeaderContainer>
 			{isAuthorized ? (
 				<HeaderContent>
-					<HeaderAvaContainer onClick={() => openPopup("profile")}>
+					<HeaderAvaContainer onClick={() => {
+						openPopup("profile")
+						setActivePage(6);
+					}}>
 						<HeaderAva src={user?.avatarUrl} alt={user?.username} />
 					</HeaderAvaContainer>
 					<HeaderBalanceImg src={money} alt="money icon" />
