@@ -10,7 +10,6 @@ export const CalendarWeek = ({
   endDate,
   changeWeek,
   syncDate,
-  hasEventsOnDay,
 }) => (
   <>
     <Header>

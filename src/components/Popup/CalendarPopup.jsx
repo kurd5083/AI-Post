@@ -52,7 +52,7 @@ const CalendarPopup = () => {
   return (
     <CalendarContent>
       <CalendarHeader
-        currentDate={currentDate}
+        // currentDate={currentDate}
         selectedDate={selectedDate}
         syncDate={syncDate}
       />
@@ -63,12 +63,6 @@ const CalendarPopup = () => {
         endDate={endDate}
         changeWeek={changeWeek}
         syncDate={syncDate}
-        hasEventsOnDay={(d) =>
-          events.some(
-            (e) =>
-              new Date(e.scheduledAt).toDateString() === d.toDateString()
-          )
-        }
       />
       <CalendarFooter
         events={events}
