@@ -468,8 +468,8 @@ const DeleteButton = styled(BaseButton)`
 /////////////////////////////////////
 const GeneratorPreview = styled.div`
   padding-bottom: 30px;
-  grid-column: 4 / span 2;
-  grid-row: 1 / span 2;
+  grid-column: 4 / span 3;
+  grid-row: 1;
 
   @media(max-width: 1400px) {
     grid-column: 1 /span 5;
