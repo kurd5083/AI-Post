@@ -7,17 +7,28 @@ import { mediasDatas } from "@/data/mediasDatas";
 import download from "@/assets/media/download.svg";
 import del from "@/assets/del.svg";
 import { usePopupStore } from "@/store/popupStore";
+import { useGetMediaLibrary } from "@/lib/mediaLibrary/useGetMediaLibrary";
 
 const Media = () => {
   const [activeFilter, setActiveFilter] = useState("all");
   const [activeCategory, setActiveCategory] = useState("all");
   const { openPopup } = usePopupStore();
+  const { mediaItems, mediaLoading } = useGetMediaLibrary();
+  
   const categoryButtons = [
     { id: "all", label: "Вся медиа" },
     { id: "images", label: "Изображения" },
     { id: "gifs", label: "Гиф" },
     { id: "videos", label: "Видео" }
   ];
+  
+   const filteredMedia = mediaItems.filter(item => {
+    if (activeCategory === "all") return true;
+    if (activeCategory === "images") return item.mimeType.startsWith("image/");
+    if (activeCategory === "gifs") return item.mimeType === "image/gif";
+    if (activeCategory === "videos") return item.mimeType.startsWith("video/");
+    return true;
+  });
 
   return (
     <MediaContainer>
@@ -48,32 +59,40 @@ const Media = () => {
         ))}
       </MediaHead>
       <MediaCards>
-        {mediasDatas.map((item) => (
-          <MediaCard key={item.id}>
-            <MediaCardImage src={item.image} alt="image" />
-            <h4>{item.title}</h4>
-            <MediaCardSize>
-              <img src={download} alt="download icon" width={16} height={16} />
-              {item.size} MB
-            </MediaCardSize>
-            <MediaHash>
-              {item.hash.map((elem, index) => <li key={index}>#{elem}</li>)}
-            </MediaHash>
-            <CardActions>
-              <LeftActions>
-                <BtnBase $bg="transparent" $color="#fff" $border={true} $padding="13px 24px">
-                  Скачать
+        {isLoading ? (
+          <p>Загрузка...</p>
+        ) : filteredMedia.length === 0 ? (
+          <p>Медиа отсутствует</p>
+        ) : (
+          filteredMedia.map((item) => (
+            <MediaCard key={item.id}>
+              <MediaCardImage src={item.url} alt={item.originalName} />
+              <h4>{item.originalName}</h4>
+              <MediaCardSize>
+                <img src={download} alt="download icon" width={16} height={16} />
+                {(item.size / 1024 / 1024).toFixed(2)} MB
+              </MediaCardSize>
+              {item.tags?.length > 0 && (
+                <MediaHash>
+                  {item.tags.map((tag, index) => <li key={index}>#{tag}</li>)}
+                </MediaHash>
+              )}
+              <CardActions>
+                <LeftActions>
+                  <BtnBase $bg="transparent" $color="#fff" $border={true} $padding="13px 24px">
+                    Скачать
+                  </BtnBase>
+                  <DeleteButton>
+                    <img src={del} alt="del icon" width={14} height={16}/>
+                  </DeleteButton>
+                </LeftActions>
+                <BtnBase $bg="#336CFF" $color="#fff" $padding="16px 19px">
+                  Добавить в пост
                 </BtnBase>
-                <DeleteButton>
-                  <img src={del} alt="del icon" width={14} height={16}/>
-                </DeleteButton>
-              </LeftActions>
-              <BtnBase $bg="#336CFF" $color="#fff" $padding="16px 19px">
-                Добавить в пост
-              </BtnBase>
-            </CardActions>
-          </MediaCard>
-        ))}
+              </CardActions>
+            </MediaCard>
+          ))
+        )}
       </MediaCards>
     </MediaContainer>
   )
