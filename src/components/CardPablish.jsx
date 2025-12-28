@@ -2,6 +2,7 @@ import styled from "styled-components";
 import arrow from "@/assets/arrow.svg";
 import TimeIcons from "@/icons/TimeIcons";
 import { useFormattedHtml } from "@/lib/useFormattedHtml";
+import timeAgo from "@/lib/timeAgo";
 
 const CardPablish = ({ item, bg }) => {
   const formattedText = useFormattedHtml(item.summary);
@@ -15,7 +16,7 @@ const CardPablish = ({ item, bg }) => {
 				</CardPablishItemName>
 				<CardPablishItemTime>
           <TimeIcons/>
-					{item.time}
+          {timeAgo(item.createdAt)}
 				</CardPablishItemTime>
 			</CardPablishItemHead>
 			  <CardPablishText>{item.title}</CardPablishText>
