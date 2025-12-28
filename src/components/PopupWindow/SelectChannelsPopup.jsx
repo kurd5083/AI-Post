@@ -28,14 +28,14 @@ const SelectChannelsPopup = () => {
 			},
 		});
 		
-		popup && popup.status ? goBack() : closePopup();
+		popup && popup?.status ? goBack() : closePopup();
 	};
 
 	return (
 		<div>
 			<SelectChannelsHead>
 				<HeadTitle>Выбрать канал</HeadTitle>
-				<CloseButton onClick={popup && popup.status ? goBack() : closePopup()}>
+				<CloseButton onClick={popup && popup?.status ? goBack() : closePopup()}>
 					<CloseIcon color="#336CFF" />
 				</CloseButton>
 			</SelectChannelsHead>
@@ -51,7 +51,7 @@ const SelectChannelsPopup = () => {
 			/>
 			<SelectChannelsButtons>
 				<BtnBase onClick={handleSave} $color="#D6DCEC" $bg="#336CFF">{isCopying ? "Сохраняем..." : "Сохранить"}</BtnBase>
-				<BtnBase onClick={popup && popup.status ? goBack() : closePopup()} $color="#D6DCEC" $bg="#242A3A">Отменить</BtnBase>
+				<BtnBase onClick={popup && popup?.status ? goBack() : closePopup()} $color="#D6DCEC" $bg="#242A3A">Отменить</BtnBase>
 			</SelectChannelsButtons>
 		</div>
 	);
