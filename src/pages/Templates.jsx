@@ -37,6 +37,8 @@ const Templates = () => {
 	const handleSaveTemplate = (templateData) => {
 		const dataToSend = { ...templateData };
 		delete dataToSend.isEditing;
+		dataToSend.hashtags = dataToSend.hashtags.map(h => h.startsWith('#') ? h : `#${h}`);
+		
 		createTemplate(dataToSend, {
 			onSuccess: (savedTemplate) => {
 				setLocalTemplates(prev =>
