@@ -7,6 +7,7 @@ import EditCard from "@/components/Templates/EditCard";
 import BtnBase from "@/shared/BtnBase";
 import { useCreatePostTemplate } from "@/lib/template/useCreatePostTemplate";
 import { useGetPostTemplates } from "@/lib/template/useGetPostTemplates";
+import ModernLoading from "@/components/ModernLoading";
 
 const Templates = () => {
 	const [activeFilter, setActiveFilter] = useState("all");
@@ -38,7 +39,7 @@ const Templates = () => {
 		const dataToSend = { ...templateData };
 		delete dataToSend.isEditing;
 		dataToSend.hashtags = dataToSend.hashtags.map(h => h.startsWith('#') ? h : `#${h}`);
-		
+
 		createTemplate(dataToSend, {
 			onSuccess: (savedTemplate) => {
 				setLocalTemplates(prev =>
@@ -76,7 +77,7 @@ const Templates = () => {
 			/>
 			<TemplatesCards>
 				{templatesLoading ? (
-					<p>Загрузка...</p>
+					<ModernLoading text="Загрузка шаблонов..."/>
 				) : filteredTemplates.length === 0 ? (
 					<p>Шаблоны отсутствует</p>
 				) : (

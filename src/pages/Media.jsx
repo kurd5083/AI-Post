@@ -3,11 +3,11 @@ import styled from "styled-components";
 import PageHead from '@/components/PageHead'
 import PageFilter from "@/components/PageFilter";
 import BtnBase from "@/shared/BtnBase";
-import { mediasDatas } from "@/data/mediasDatas";
 import download from "@/assets/media/download.svg";
 import del from "@/assets/del.svg";
 import { usePopupStore } from "@/store/popupStore";
 import { useGetMediaLibrary } from "@/lib/mediaLibrary/useGetMediaLibrary";
+import ModernLoading from "@/components/ModernLoading";
 
 const Media = () => {
   const [activeFilter, setActiveFilter] = useState("all");
@@ -60,7 +60,7 @@ const Media = () => {
       </MediaHead>
       <MediaCards>
         {mediaLoading ? (
-          <p>Загрузка...</p>
+          <ModernLoading text="Загрузка медиа..."/>
         ) : filteredMedia?.length === 0 ? (
           <p>Медиа отсутствует</p>
         ) : (
