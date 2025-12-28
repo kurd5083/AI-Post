@@ -13,12 +13,12 @@ const Templates = () => {
 
 	const { templates, templatesLoading } = useGetPostTemplates({ category: activeFilter === "all" ? undefined : activeFilter.toUpperCase() });
 	console.log(templates)
-	const [localTemplates, setLocalTemplates] = useState(templates || []);
+	const [localTemplates, setLocalTemplates] = useState([]);
 
 	useEffect(() => {
-		if (!templates) return;
-		setLocalTemplates(templates);
-	}, [templates]);
+		if (!templates.data) return;
+		setLocalTemplates(templates.data);
+	}, [templates?.data]);
 
 	const { mutate: createTemplate, isLoading: templateLoading } = useCreatePostTemplate();
 
@@ -42,7 +42,6 @@ const Templates = () => {
 		delete dataToSend.isEditing;
 		createTemplate(dataToSend, {
 			onSuccess: (savedTemplate) => {
-				console.log(templates)
 				setLocalTemplates(prev =>
 					prev.map(t =>
 						t === templateData
