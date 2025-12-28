@@ -1,14 +1,19 @@
 import apiClient from "@/api/apiClient";
 
-export const uploadMediaLibrary = async (files) => {
-    console.log(files)
-  const formData = new FormData();
-
-  files.forEach((file) => {
-    formData.append("files", file);
+const fileToBase64 = (file) =>
+  new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = (err) => reject(err);
   });
 
-  const response = await apiClient.post("/media-library/upload", formData);
+export const uploadMediaLibrary = async (files) => {
+  const base64Files = await Promise.all(files.map(file => fileToBase64(file)));
+    console.log(base64Files)
+  const response = await apiClient.post("/media-library/upload", {
+    files: base64Files
+  });
 
   return response.data;
 };
