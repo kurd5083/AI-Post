@@ -61,7 +61,7 @@ const EditCard = ({ template, onSave }) => {
 					items={hashtags.map((h, index) => ({ value: h, id: index }))} 
 					color="#EF6284" 
 					onRemove={(id) => {
-          	setHashtags(hashtags.filter((h) => h.id !== id));
+          	setHashtags((prev) => prev.filter((h) => h.id !== id));
           }}
 				/>
       </CardBlock>
