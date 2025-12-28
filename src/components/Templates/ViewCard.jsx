@@ -24,20 +24,12 @@ const TemplatesCard = ({template}) => {
         <HeadContent>
           <HeadTitle>{template.title}</HeadTitle>
           <HeadUses>
-            Всего <mark>{template.uses} использований</mark>
+            {/* Всего <mark>{template.uses} использований</mark> */}
           </HeadUses>
         </HeadContent>
       </CardHead>
       <CardInfo>
-        <p>{template.content.intro}</p>
-        <p>{template.content.description}</p>
-        <ul>
-          {template.content.benefits.map((benefit, index) => (
-            <li key={index}>{benefit}</li>
-          ))}
-        </ul>
-        <p>{template.content.offer}</p>
-        <p>{template.content.hashtags}</p>
+        <p>{template.content}</p>
       </CardInfo>
       <CardHash>
         {template.hashtags.map((hashtag, index) => (

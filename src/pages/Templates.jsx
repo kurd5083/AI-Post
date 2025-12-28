@@ -78,10 +78,10 @@ const Templates = () => {
 			<TemplatesCards>
 				{templatesLoading ? (
 					<p>Загрузка...</p>
-				) : filteredTemplates?.length === 0 ? (
+				) : filteredTemplates.length === 0 ? (
 					<p>Шаблоны отсутствует</p>
 				) : (
-					filteredTemplates?.map((template) => (
+					filteredTemplates.map((template) => (
 						<TemplatesCard key={template.id}>
 							{template.isEditing ? (
 								<EditCard
