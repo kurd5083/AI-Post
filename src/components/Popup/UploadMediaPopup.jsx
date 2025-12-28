@@ -6,9 +6,12 @@ import BlocksItems from "@/shared/BlocksItems";
 import preview_img from "@/assets/popup/preview-img.png";
 import upload_media from "@/assets/upload-media.svg";
 import { usePopupStore } from "@/store/popupStore";
+import { useUploadMediaLibrary } from '@/lib/mediaLibrary/useUploadMediaLibrary';
 
 const UploadMediaPopup = () => {
 	const { closePopup } = usePopupStore()
+	const { uploadMedia, uploadMediaLoading } = useUploadMediaLibrary();
+	console.log(uploadMedia)
 	const fileInputRef = useRef(null);
 	const [selectedFile, setSelectedFile] = useState(null);
 	const [preview, setPreview] = useState(preview_img);
@@ -18,23 +21,23 @@ const UploadMediaPopup = () => {
 		fileInputRef.current?.click();
 	};
 
+	const processFile = (file) => {
+		if (!file) return;
+
+		setSelectedFile(file);
+
+		if (file.type.startsWith('image/')) {
+			const reader = new FileReader();
+			reader.onloadend = () => setPreview(reader.result);
+			reader.readAsDataURL(file);
+		}
+
+		uploadMedia([file]);
+	};
+
 	const handleFileChange = (event) => {
 		const file = event.target.files?.[0];
 		processFile(file);
-	};
-
-	const processFile = (file) => {
-		if (file) {
-			setSelectedFile(file);
-
-			if (file.type.startsWith('image/')) {
-				const reader = new FileReader();
-				reader.onloadend = () => {
-					setPreview(reader.result);
-				};
-				reader.readAsDataURL(file);
-			}
-		}
 	};
 
 	const handleDragOver = useCallback((e) => {
@@ -50,11 +53,8 @@ const UploadMediaPopup = () => {
 	const handleDrop = useCallback((e) => {
 		e.preventDefault();
 		setIsDragOver(false);
-
 		const files = e.dataTransfer.files;
-		if (files && files.length > 0) {
-			processFile(files[0]);
-		}
+		if (files && files.length > 0) processFile(files[0]);
 	}, []);
 
 	const removeFile = () => {
@@ -83,7 +83,6 @@ const UploadMediaPopup = () => {
 						/>
 						<BtnBase
 							onClick={handleFileButtonClick}
-							style={{ cursor: 'pointer' }}
 							$bg={isDragOver ? "#2B3B6E" : "#1E2A48"}
 						>
 							Загрузить файлы
@@ -94,28 +93,27 @@ const UploadMediaPopup = () => {
 					<img src={upload_media} alt="upload media img" />
 					<h2>Выберите медиа для загрузки</h2>
 					<BtnBase
-							onClick={handleFileButtonClick}
-							style={{ cursor: 'pointer' }}
-							$bg={isDragOver ? "#2B3B6E" : "#1E2A48"}
-						>
-							Загрузить файлы
-						</BtnBase>
+						onClick={handleFileButtonClick}
+						$bg={isDragOver ? "#2B3B6E" : "#1E2A48"}
+					>
+						{uploadMediaLoading ? "Загрузка..." : "Загрузить файлы"}
+					</BtnBase>
 				</UploadMediaMobile>
-				
 			</UploadMediaDownload>
+			
 			{selectedFile && (
-							<SelectedFileInfo>
-								<span>Выбран файл: {selectedFile.name} ({(selectedFile.size / 1024 / 1024).toFixed(2)} MB)</span>
-								<RemoveButton onClick={removeFile}>×</RemoveButton>
-							</SelectedFileInfo>
-						)}
-			<UploadMediaItem>
+				<SelectedFileInfo>
+				<span>Выбран файл: {selectedFile.name} ({(selectedFile.size / 1024 / 1024).toFixed(2)} MB)</span>
+				<RemoveButton onClick={removeFile}>×</RemoveButton>
+				</SelectedFileInfo>
+			)}
+			 <UploadMediaItem>
 				<ItemTitle>Название <mark>(необязательное)</mark></ItemTitle>
 				<ItemDesc><mark>Название ссылки</mark> будут видеть только администраторы.</ItemDesc>
 				<ItemInput
-					type="text"
-					placeholder="Название"
-					defaultValue={selectedFile?.name?.replace(/\.[^/.]+$/, "") || ""}
+				type="text"
+				placeholder="Название"
+				defaultValue={selectedFile?.name?.replace(/\.[^/.]+$/, "") || ""}
 				/>
 			</UploadMediaItem>
 			<UploadMediaBlock>
@@ -123,8 +121,12 @@ const UploadMediaPopup = () => {
 				<BlocksItems items={[{ value: 'Технологии' }, { value: 'Программирование' }, { value: 'Деньги' }]} color="#EF6284" />
 			</UploadMediaBlock>
 			<UploadMediaButtons>
-				<BtnBase $color="#D6DCEC" $bg="#336CFF">Сохранить</BtnBase>
-				<BtnBase $color="#D6DCEC" $bg="#242A3A" onClick={() => closePopup()}>Отменить</BtnBase>
+				<BtnBase $color="#D6DCEC" $bg="#336CFF" disabled={uploadMediaLoading}>
+					{uploadMediaLoading ? "Загрузка..." : "Сохранить"}
+				</BtnBase>
+				<BtnBase $color="#D6DCEC" $bg="#242A3A" onClick={() => closePopup()}>
+					Отменить
+				</BtnBase>
 			</UploadMediaButtons>
 		</UploadMediaContainer>
 	)

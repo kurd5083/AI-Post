@@ -1,39 +1,76 @@
 import styled from "styled-components";
 import rating from "@/assets/statistics/rating.svg";
-import { statisticsDatas } from "@/data/statisticsDatas";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import useSwipeAllowed from "@/lib/useSwipeAllowed";
+import { usePopupStore } from "@/store/popupStore";
+import { useChannelStat } from "@/lib/tgStat/useChannelStat";
+import channels from "@/assets/statistics/channels.svg";
+import views from "@/assets/statistics/views.svg";
+import generated from "@/assets/statistics/generated.svg";
+import mentions from "@/assets/statistics/mentions.svg";
 
 const Statistics = () => {
   const { isSwipe } = useSwipeAllowed(1600);
+  const { popup } = usePopupStore();
+  const channelId = popup?.data?.channelId;
+
+  const { channelStat, channelStatLoading } = useChannelStat(channelId);
+  console.log(channelStat)
+  if (channelStatLoading || !channelStat) return null;
 
   return (
     <StatisticsContainer>
       <StatisticsTitle>
-        <img src={rating} alt="rating icon" />Статистика
+        <img src={rating} alt="rating icon" />
+        Статистика
       </StatisticsTitle>
 
       <StatisticsList
         key={isSwipe}
         spaceBetween={16}
-        slidesPerView={isSwipe ? "auto" : statisticsDatas.length}
+        slidesPerView={isSwipe ? "auto" : 5}
         allowTouchMove={isSwipe}
       >
-        {statisticsDatas.map((item, index) => (
-          <StatisticsItem key={index}>
-            <StatisticsItemHead>
-              <StatisticsItemImg $bgColor={item.bgColor}>
-                <img
-                  src={item.image}
-                  alt={item.text}
-                />
-              </StatisticsItemImg>
-              <p>{item.number}</p>
-            </StatisticsItemHead>
-            <StatisticsText>{item.text}</StatisticsText>
-          </StatisticsItem>
-        ))}
+        <StatisticsItem>
+          <StatisticsItemHead>
+            <StatisticsItemImg $bgColor="#203442">
+              <img src={channels} alt="channels icon" />
+            </StatisticsItemImg>
+            {/* <p>{channelStat.participants_count.toLocaleString()}</p> */}
+          </StatisticsItemHead>
+          <StatisticsText>Подключено каналов</StatisticsText>
+        </StatisticsItem>
+
+        <StatisticsItem>
+          <StatisticsItemHead>
+            <StatisticsItemImg $bgColor="#20356E">
+              <img src={views} alt="views icon" />
+            </StatisticsItemImg>
+            {/* <p>{channelStat.posts_count.toLocaleString()}</p> */}
+          </StatisticsItemHead>
+          <StatisticsText>Общие просмотры постов</StatisticsText>
+        </StatisticsItem>
+
+        <StatisticsItem>
+          <StatisticsItemHead>
+            <StatisticsItemImg $bgColor="#522943">
+              <img src={generated} alt="generated icon" />
+            </StatisticsItemImg>
+            {/* <p>{channelStat.posts_count.toLocaleString()}</p> */}
+          </StatisticsItemHead>
+          <StatisticsText>Сгенерировано постов</StatisticsText>
+        </StatisticsItem>
+
+        <StatisticsItem>
+          <StatisticsItemHead>
+            <StatisticsItemImg $bgColor="#5D443B">
+              <img src={mentions} alt="mentions icon" />
+            </StatisticsItemImg>
+            {/* <p>{channelStat.ci_index.toFixed(0)}</p> */}
+          </StatisticsItemHead>
+          <StatisticsText>Упоминаний всего</StatisticsText>
+        </StatisticsItem>
       </StatisticsList>
     </StatisticsContainer>
   );
