@@ -48,7 +48,7 @@ const EditCard = ({ template, onSave }) => {
           fs="16px"
           padding="16px"
         />
-        <BlocksItems items={hashtags.map((h) => ({ value: h }))} color="#EF6284" />
+        <BlocksItems items={hashtags?.map((h) => ({ value: h }))} color="#EF6284" />
       </CardBlock>
 
       <CardBtns>

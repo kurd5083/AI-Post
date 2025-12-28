@@ -53,7 +53,7 @@ const Templates = () => {
 				placeholder="Поиск по шаблонам"
 			/>
 			<TemplatesCards>
-			{templates.map((template) => (
+			{templates?.map((template) => (
 				<TemplatesCard key={template.id}>
 					{template.isEditing ? (
 						<EditCard
