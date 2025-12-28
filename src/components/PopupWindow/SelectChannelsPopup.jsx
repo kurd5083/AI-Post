@@ -35,7 +35,7 @@ const SelectChannelsPopup = () => {
 		<div>
 			<SelectChannelsHead>
 				<HeadTitle>Выбрать канал</HeadTitle>
-				<CloseButton onClick={popup && popup.status ? goBack() : closePopup();}>
+				<CloseButton onClick={popup && popup.status ? goBack() : closePopup()}>
 					<CloseIcon color="#336CFF" />
 				</CloseButton>
 			</SelectChannelsHead>
