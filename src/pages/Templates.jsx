@@ -16,8 +16,8 @@ const Templates = () => {
 	const [localTemplates, setLocalTemplates] = useState([]);
 
 	useEffect(() => {
-		if (!templates.data) return;
-		setLocalTemplates(templates.data);
+		if (!templates?.data) return;
+		setLocalTemplates(templates?.data);
 	}, [templates?.data]);
 
 	const { mutate: createTemplate, isLoading: templateLoading } = useCreatePostTemplate();
