@@ -16,9 +16,7 @@ export const uploadMediaLibrary = async (files) => {
   "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD..."   // и так далее
 ];
 
-    const response = await apiClient.post("/media-library/upload", {
-      files: testFiles // тупо передаем массив строк
-    });
+    const response = await apiClient.post("/media-library/upload", testFiles);
 //   const response = await apiClient.post("/media-library/upload", {
 //     files: base64Files
 //   });
