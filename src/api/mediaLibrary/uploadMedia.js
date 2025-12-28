@@ -4,18 +4,25 @@ const fileToBase64 = (file) =>
   new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.readAsDataURL(file);
-    reader.onload = () => {
-      // убираем префикс data:image/...;base64,
-      const base64String = reader.result.split(',')[1];
-      resolve(base64String);
-    };
+    reader.onload = () => resolve(reader.result);
     reader.onerror = (err) => reject(err);
   });
 
 export const uploadMediaLibrary = async (files) => {
   const base64Files = await Promise.all(files.map(file => fileToBase64(file)));
+    console.log(base64Files)
+    const testFiles = [
+      "test-file-1",
+      "test-file-2",
+      "test-file-3"
+    ];
 
-  const response = await apiClient.post("/media-library/upload", {base64Files});
+    const response = await apiClient.post("/media-library/upload", {
+      files: testFiles // тупо передаем массив строк
+    });
+//   const response = await apiClient.post("/media-library/upload", {
+//     files: base64Files
+//   });
 
   return response.data;
 };
