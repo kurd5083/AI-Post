@@ -22,7 +22,7 @@ const Media = () => {
     { id: "videos", label: "Видео" }
   ];
   
-   const filteredMedia = mediaItems?.filter(item => {
+   const filteredMedia = mediaItems?.items?.filter(item => {
     if (activeCategory === "all") return true;
     if (activeCategory === "images") return item.mimeType.startsWith("image/");
     if (activeCategory === "gifs") return item.mimeType === "image/gif";
