@@ -59,7 +59,7 @@ const Media = () => {
         ))}
       </MediaHead>
       <MediaCards>
-        {isLoading ? (
+        {mediaLoading ? (
           <p>Загрузка...</p>
         ) : filteredMedia.length === 0 ? (
           <p>Медиа отсутствует</p>
