@@ -14,14 +14,14 @@ import news_stub from "@/assets/news-stub.png";
 
 const TapeList = ({ forceHorizontal = false, padding }) => {
   const { popup, changeContent, openPopup } = usePopupStore();
-  
+
   const { fadeVisible, ref } = useFadeOnScroll(20);
   const { isSwipe } = useSwipeAllowed(1400);
 
   const direction = forceHorizontal ? "horizontal" : (isSwipe ? "horizontal" : "vertical");
-
+  console.log(popup)
   const { newsData, newsLoding } = useNews();
-   const handleClick = (id) => {
+  const handleClick = (id) => {
     if (popup && popup.status) {
       changeContent("select_channel", "popup_window", { newsId: id });
     } else {
