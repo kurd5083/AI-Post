@@ -6,31 +6,42 @@ import ViewCard from "@/components/Templates/ViewCard";
 import EditCard from "@/components/Templates/EditCard";
 import BtnBase from "@/shared/BtnBase";
 import { templatesDatas } from "@/data/templatesDatas";
+import { useCreatePostTemplate } from "@/lib/template/useCreatePostTemplate";
 
 const Templates = () => {
 	const [activeFilter, setActiveFilter] = useState("all");
 	const [templates, setTemplates] = useState(templatesDatas);
-
-	const handleCreateTemplate = () => {
+	const { mutate: createTemplate, isLoading: templateLoading } = useCreatePostTemplate();
+	const handleCreateTemplate = async () => {
 		const newTemplate = {
-			id: Date.now(),
+			category: "MARKETING",
 			title: "",
-			category: "",
-			rating: 0,
-			uses: 0,
-			content: {
-				intro: "",
-				description: "",
-				benefits: [],
-				offer: "",
-				hashtags: "",
-			},
+			content: "",
 			hashtags: [],
-			isEditing: true, 
+			rating: 0,
+			isActive: true,
+			isEditing: true, // локально помечаем как редактируемый
 		};
 
-		setTemplates((prev) => [newTemplate, ...prev]);
+		// Сохраняем локально сразу
+		setTemplates(prev => [newTemplate, ...prev]);
 	};
+	const handleSaveTemplate = async (templateData) => {
+		try {
+			const savedTemplate = await createTemplate(templateData);
+
+			setTemplates(prev =>
+				prev.map(t =>
+					t === templateData
+						? { ...savedTemplate, isEditing: false }
+						: t
+				)
+			);
+		} catch (err) {
+			console.error("Ошибка при сохранении шаблона:", err);
+		}
+	};
+
 	return (
 		<>
 			<PageHead>
@@ -39,13 +50,14 @@ const Templates = () => {
 					$bg="#336CFF"
 					$color="#FFFFFF"
 					onClick={handleCreateTemplate}
+					disabled={isLoading}
 				>
-					+ Создать шаблон
+					{isLoading ? "Создание..." : "+ Создать шаблон"}
 				</BtnBase>
 			</PageHead>
 			<PageFilter
 				activeFilter={activeFilter}
-        setActiveFilter={setActiveFilter}
+        		setActiveFilter={setActiveFilter}
 				placeholder="Поиск по шаблонам"
 			/>
 			<TemplatesCards>
@@ -53,17 +65,9 @@ const Templates = () => {
 				<TemplatesCard key={template.id}>
 					{template.isEditing ? (
 						<EditCard
-							template={template}
-							onSave={(updated) => {
-								setTemplates((prev) =>
-									prev.map((t) =>
-										t.id === updated.id
-											? { ...updated, isEditing: false }
-											: t
-									)
-								);
-							}}
-						/>
+								template={template}
+								onSave={handleSaveTemplate}
+							/>
 					) : (
 						<ViewCard template={template}/>
 					)}
