@@ -19,7 +19,7 @@ const TapeList = ({ forceHorizontal = false, padding }) => {
   const { isSwipe } = useSwipeAllowed(1400);
 
   const direction = forceHorizontal ? "horizontal" : (isSwipe ? "horizontal" : "vertical");
-  console.log(popup)
+  console.log(popup && popup.status, 'adhfdjdfjzzzzzzzz')
   const { newsData, newsLoding } = useNews();
   const handleClick = (id) => {
     if (popup && popup.status) {
