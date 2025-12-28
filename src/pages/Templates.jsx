@@ -52,7 +52,7 @@ const Templates = () => {
 					onClick={handleCreateTemplate}
 					disabled={isLoading}
 				>
-					{isLoading ? "Создание..." : "+ Создать шаблон"}
+					{templateLoading ? "Создание..." : "+ Создать шаблон"}
 				</BtnBase>
 			</PageHead>
 			<PageFilter
