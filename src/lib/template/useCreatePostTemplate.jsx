@@ -6,7 +6,7 @@ export const useCreatePostTemplate = () => {
 
   return useMutation({
     mutationFn: ({templateData}) => createPostTemplate(templateData),
-    onSuccess: (newTemplate) => {
+    onSuccess: () => {
       queryClient.invalidateQueries(["postTemplates"]);
     },
   });
