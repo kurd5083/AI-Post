@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import fire from "@/assets/tape/fire.svg";
 import TimeIcons from "@/icons/TimeIcons";
 import TapeList from "@/components/TapeList";
@@ -13,7 +13,6 @@ import news_stub from "@/assets/news-stub.png";
 const NewsDetail = () => {
 	const { openPopup } = usePopupStore();
 	const { id } = useParams();
-	const navigate = useNavigate();
 	const { news, newsLoading } = useNewsById(id);
 	console.log(news)
 	const formattedTitle = useFormattedHtml(news?.title);

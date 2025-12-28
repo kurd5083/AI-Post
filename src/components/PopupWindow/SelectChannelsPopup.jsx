@@ -8,7 +8,7 @@ import { useUserChannels } from "@/lib/channels/useUserChannels";
 import { useCopyNewsToChannel } from "@/lib/news/useCopyNewsToChannel";
 
 const SelectChannelsPopup = () => {
-	const { popup, closePopup } = usePopupStore();
+	const { popup, goBack, closePopup } = usePopupStore();
 	const { userChannels } = useUserChannels();
 	const [selectedChannelId, setSelectedChannelId] = useState(null);
 
@@ -27,14 +27,15 @@ const SelectChannelsPopup = () => {
 				calendarScheduledAt: new Date().toISOString(),
 			},
 		});
-		closePopup();
+		
+		popup && popup.status ? goBack() : closePopup();
 	};
 
 	return (
 		<div>
 			<SelectChannelsHead>
 				<HeadTitle>Выбрать канал</HeadTitle>
-				<CloseButton onClick={closePopup}>
+				<CloseButton onClick={popup && popup.status ? goBack() : closePopup();}>
 					<CloseIcon color="#336CFF" />
 				</CloseButton>
 			</SelectChannelsHead>
@@ -50,7 +51,7 @@ const SelectChannelsPopup = () => {
 			/>
 			<SelectChannelsButtons>
 				<BtnBase onClick={handleSave} $color="#D6DCEC" $bg="#336CFF">{isCopying ? "Сохраняем..." : "Сохранить"}</BtnBase>
-				<BtnBase onClick={closePopup} $color="#D6DCEC" $bg="#242A3A">Отменить</BtnBase>
+				<BtnBase onClick={popup && popup.status ? goBack() : closePopup()} $color="#D6DCEC" $bg="#242A3A">Отменить</BtnBase>
 			</SelectChannelsButtons>
 		</div>
 	);
