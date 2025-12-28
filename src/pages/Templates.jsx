@@ -29,15 +29,18 @@ const Templates = () => {
 		console.log(templateData)
 		const dataToSend = { ...templateData };
   	delete dataToSend.isEditing;
-		const savedTemplate = createTemplate(dataToSend);
-
-		setTemplates(prev =>
-			prev.map(t =>
-				t === templateData
-					? { ...savedTemplate, isEditing: false }
-					: t
-			)
-		);
+		createTemplate(dataToSend, {
+			onSuccess: (savedTemplate) => {
+				console.log(templates)
+				setTemplates(prev =>
+					prev.map(t =>
+						t === templateData
+							? { ...savedTemplate }
+							: t
+					)
+				);
+			}
+		});
 	};
 
 	return (
