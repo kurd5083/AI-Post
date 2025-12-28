@@ -14,7 +14,7 @@ const Media = () => {
   const [activeCategory, setActiveCategory] = useState("all");
   const { openPopup } = usePopupStore();
   const { mediaItems, mediaLoading } = useGetMediaLibrary();
-  
+  console.log(mediaItems)
   const categoryButtons = [
     { id: "all", label: "Вся медиа" },
     { id: "images", label: "Изображения" },
