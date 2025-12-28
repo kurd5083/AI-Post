@@ -50,7 +50,7 @@ const Templates = () => {
 					$bg="#336CFF"
 					$color="#FFFFFF"
 					onClick={handleCreateTemplate}
-					disabled={isLoading}
+					disabled={templateLoading}
 				>
 					{templateLoading ? "Создание..." : "+ Создать шаблон"}
 				</BtnBase>
