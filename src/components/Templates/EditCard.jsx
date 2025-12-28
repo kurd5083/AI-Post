@@ -8,32 +8,66 @@ import InputPlus from "@/shared/InputPlus";
 import BlocksItems from "@/shared/BlocksItems";
 
 const EditCard = ({ template, onSave }) => {
+	 const [title, setTitle] = useState(template.title);
+  const [content, setContent] = useState(template.content?.description || "");
+  const [hashtags, setHashtags] = useState(template.hashtags || []);
+  const handleSave = () => {
+    onSave({
+      ...template,
+      title,
+      content: { ...template.content, description: content },
+      hashtags
+    });
+  };
 	return (
 		<CardContainer>
-			<CardHead>
-				<img src={icon} alt={template.title} width={24} height={20} />
-				<CardInput type="text" placeholder="Название" />
-				<HeadTitle>{template.title}</HeadTitle>
-			</CardHead>
-			<CardTextarea placeholder="Заполните текст">
-				<Textarea placeholder="Заполните текст"></Textarea>
-			</CardTextarea>
-			<CardBlock>
-				<InputPlus title="ХЕШТЕГИ" placeholder="Ключевое слово" bg="#2B243C" color="#FF55AD" fs="16px" padding="16px"/>
-				<BlocksItems items={[{value: 'Война'}, {value: 'Новости'}]} color="#EF6284" />
-			</CardBlock>
-			<CardBtns>
-				<BtnBase $padding="23px" $bg="#336CFF" $color="#D6DCEC">
-					Сохранить
-				</BtnBase>
-				<ButtonCopy>
-					<img src={copy} alt="copy icon" width={14} height={16} />
-				</ButtonCopy>
-				<ButtonEdit>
-					<img src={edit} alt="edit icon" width={18} height={16} />
-				</ButtonEdit>
-			</CardBtns>
-		</CardContainer>
+      <CardHead>
+        <img src={icon} alt={template.title} width={24} height={20} />
+        <CardInput
+          type="text"
+          placeholder="Название"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+        />
+      </CardHead>
+
+      <CardTextarea>
+        <Textarea
+          placeholder="Заполните текст"
+          value={content}
+          onChange={(e) => setContent(e.target.value)}
+        />
+      </CardTextarea>
+
+      <CardBlock>
+        <InputPlus
+          title="ХЕШТЕГИ"
+          placeholder="Ключевое слово"
+          bg="#2B243C"
+          color="#FF55AD"
+          fs="16px"
+          padding="16px"
+        />
+        <BlocksItems items={hashtags.map((h) => ({ value: h }))} color="#EF6284" />
+      </CardBlock>
+
+      <CardBtns>
+        <BtnBase
+          $padding="23px"
+          $bg="#336CFF"
+          $color="#D6DCEC"
+          onClick={handleSave}
+        >
+          Сохранить
+        </BtnBase>
+        <ButtonCopy>
+          <img src={copy} alt="copy icon" width={14} height={16} />
+        </ButtonCopy>
+        <ButtonEdit>
+          <img src={edit} alt="edit icon" width={18} height={16} />
+        </ButtonEdit>
+      </CardBtns>
+    </CardContainer>
 	)
 }
 const CardContainer = styled.div`
