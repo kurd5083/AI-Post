@@ -5,15 +5,14 @@ import PageFilter from "@/components/PageFilter";
 import ViewCard from "@/components/Templates/ViewCard";
 import EditCard from "@/components/Templates/EditCard";
 import BtnBase from "@/shared/BtnBase";
-import { templatesDatas } from "@/data/templatesDatas";
 import { useCreatePostTemplate } from "@/lib/template/useCreatePostTemplate";
 import { useGetPostTemplates } from "@/lib/template/useGetPostTemplates";
 
 const Templates = () => {
 	const [activeFilter, setActiveFilter] = useState("all");
-	
-	const { templates, templatesLoading } = useGetPostTemplates({category: activeFilter === "all" ? undefined : activeFilter.toUpperCase()});
 
+	const { templates, templatesLoading } = useGetPostTemplates({ category: activeFilter === "all" ? undefined : activeFilter.toUpperCase() });
+	console.log(templates)
 	const [localTemplates, setLocalTemplates] = useState(templates || []);
 
 	useEffect(() => {
@@ -40,7 +39,7 @@ const Templates = () => {
 	const handleSaveTemplate = (templateData) => {
 		console.log(templateData)
 		const dataToSend = { ...templateData };
-  	delete dataToSend.isEditing;
+		delete dataToSend.isEditing;
 		createTemplate(dataToSend, {
 			onSuccess: (savedTemplate) => {
 				console.log(templates)
@@ -78,18 +77,24 @@ const Templates = () => {
 				placeholder="Поиск по шаблонам"
 			/>
 			<TemplatesCards>
-				{filteredTemplates.map((template) => (
-					<TemplatesCard key={template.id}>
-						{template.isEditing ? (
-							<EditCard
-								template={template}
-								onSave={handleSaveTemplate}
-							/>
-						) : (
-							<ViewCard template={template} />
-						)}
-					</TemplatesCard>
-				))}
+				{templatesLoading ? (
+					<p>Загрузка...</p>
+				) : filteredTemplates?.length === 0 ? (
+					<p>Шаблоны отсутствует</p>
+				) : (
+					filteredTemplates?.map((template) => (
+						<TemplatesCard key={template.id}>
+							{template.isEditing ? (
+								<EditCard
+									template={template}
+									onSave={handleSaveTemplate}
+								/>
+							) : (
+								<ViewCard template={template} />
+							)}
+						</TemplatesCard>
+					))
+				)}
 			</TemplatesCards>
 		</>
 	)
