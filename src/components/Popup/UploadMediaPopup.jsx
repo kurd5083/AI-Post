@@ -10,8 +10,7 @@ import { useUploadMediaLibrary } from '@/lib/mediaLibrary/useUploadMediaLibrary'
 
 const UploadMediaPopup = () => {
   const { closePopup } = usePopupStore();
-  const { uploadMedia, uploadMediaLoading } = useUploadMediaLibrary();
-
+	const { mutate: uploadMedia, isLoading: uploadMediaLoading } = useUploadMediaLibrary();
   const fileInputRef = useRef(null);
   const [selectedFile, setSelectedFile] = useState(null);
   const [preview, setPreview] = useState(preview_img);
