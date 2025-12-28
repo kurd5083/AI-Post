@@ -9,127 +9,141 @@ import { usePopupStore } from "@/store/popupStore";
 import { useUploadMediaLibrary } from '@/lib/mediaLibrary/useUploadMediaLibrary';
 
 const UploadMediaPopup = () => {
-	const { closePopup } = usePopupStore()
-	const { uploadMedia, uploadMediaLoading } = useUploadMediaLibrary();
-	console.log(uploadMedia)
-	const fileInputRef = useRef(null);
-	const [selectedFile, setSelectedFile] = useState(null);
-	const [preview, setPreview] = useState(preview_img);
-	const [isDragOver, setIsDragOver] = useState(false);
+  const { closePopup } = usePopupStore();
+  const { uploadMedia, uploadMediaLoading } = useUploadMediaLibrary();
 
-	const handleFileButtonClick = () => {
-		fileInputRef.current?.click();
-	};
+  const fileInputRef = useRef(null);
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [preview, setPreview] = useState(preview_img);
+  const [isDragOver, setIsDragOver] = useState(false);
 
-	const processFile = (file) => {
-		if (!file) return;
+  const handleFileButtonClick = () => {
+    fileInputRef.current?.click();
+  };
 
-		setSelectedFile(file);
+  const processFile = (file) => {
+    if (!file) return;
 
-		if (file.type.startsWith('image/')) {
-			const reader = new FileReader();
-			reader.onloadend = () => setPreview(reader.result);
-			reader.readAsDataURL(file);
-		}
+    setSelectedFile(file);
 
-		uploadMedia([file]);
-	};
+    if (file.type.startsWith('image/')) {
+      const reader = new FileReader();
+      reader.onloadend = () => setPreview(reader.result);
+      reader.readAsDataURL(file);
+    }
+  };
 
-	const handleFileChange = (event) => {
-		const file = event.target.files?.[0];
-		processFile(file);
-	};
+  const handleFileChange = (event) => {
+    const file = event.target.files?.[0];
+    processFile(file);
+  };
 
-	const handleDragOver = useCallback((e) => {
-		e.preventDefault();
-		setIsDragOver(true);
-	}, []);
+  const handleDragOver = useCallback((e) => {
+    e.preventDefault();
+    setIsDragOver(true);
+  }, []);
 
-	const handleDragLeave = useCallback((e) => {
-		e.preventDefault();
-		setIsDragOver(false);
-	}, []);
+  const handleDragLeave = useCallback((e) => {
+    e.preventDefault();
+    setIsDragOver(false);
+  }, []);
 
-	const handleDrop = useCallback((e) => {
-		e.preventDefault();
-		setIsDragOver(false);
-		const files = e.dataTransfer.files;
-		if (files && files.length > 0) processFile(files[0]);
-	}, []);
+  const handleDrop = useCallback((e) => {
+    e.preventDefault();
+    setIsDragOver(false);
+    const files = e.dataTransfer.files;
+    if (files && files.length > 0) processFile(files[0]);
+  }, []);
 
-	const removeFile = () => {
-		setSelectedFile(null);
-		setPreview(preview_img);
-	};
+  const removeFile = () => {
+    setSelectedFile(null);
+    setPreview(preview_img);
+  };
 
-	return (
-		<UploadMediaContainer>
-			<UploadMediaDownload
-				onDragOver={handleDragOver}
-				onDragLeave={handleDragLeave}
-				onDrop={handleDrop}
-				$isDragOver={isDragOver}
-			>
-				<UploadMediaDesc>
-					<UploadDescImg src={preview} alt="preview img" />
-					<UploadDescContent>
-						<h2>Перетяните файлы сюда</h2>
-						<p>Для загрузки медиа загрузите файлы на этой странице</p>
-						<HiddenInput
-							type="file"
-							ref={fileInputRef}
-							onChange={handleFileChange}
-							id="file-upload"
-						/>
-						<BtnBase
-							onClick={handleFileButtonClick}
-							$bg={isDragOver ? "#2B3B6E" : "#1E2A48"}
-						>
-							Загрузить файлы
-						</BtnBase>
-					</UploadDescContent>
-				</UploadMediaDesc>
-				<UploadMediaMobile>
-					<img src={upload_media} alt="upload media img" />
-					<h2>Выберите медиа для загрузки</h2>
-					<BtnBase
-						onClick={handleFileButtonClick}
-						$bg={isDragOver ? "#2B3B6E" : "#1E2A48"}
-					>
-						{uploadMediaLoading ? "Загрузка..." : "Загрузить файлы"}
-					</BtnBase>
-				</UploadMediaMobile>
-			</UploadMediaDownload>
-			
-			{selectedFile && (
-				<SelectedFileInfo>
-				<span>Выбран файл: {selectedFile.name} ({(selectedFile.size / 1024 / 1024).toFixed(2)} MB)</span>
-				<RemoveButton onClick={removeFile}>×</RemoveButton>
-				</SelectedFileInfo>
-			)}
-			 <UploadMediaItem>
-				<ItemTitle>Название <mark>(необязательное)</mark></ItemTitle>
-				<ItemDesc><mark>Название ссылки</mark> будут видеть только администраторы.</ItemDesc>
-				<ItemInput
-				type="text"
-				placeholder="Название"
-				defaultValue={selectedFile?.name?.replace(/\.[^/.]+$/, "") || ""}
-				/>
-			</UploadMediaItem>
-			<UploadMediaBlock>
-				<InputPlus title="ХЕШТЕГИ" placeholder="Введите хештег" bg="#2B243C" color="#FF55AD" />
-				<BlocksItems items={[{ value: 'Технологии' }, { value: 'Программирование' }, { value: 'Деньги' }]} color="#EF6284" />
-			</UploadMediaBlock>
-			<UploadMediaButtons>
-				<BtnBase $color="#D6DCEC" $bg="#336CFF" disabled={uploadMediaLoading}>
-					{uploadMediaLoading ? "Загрузка..." : "Сохранить"}
-				</BtnBase>
-				<BtnBase $color="#D6DCEC" $bg="#242A3A" onClick={() => closePopup()}>
-					Отменить
-				</BtnBase>
-			</UploadMediaButtons>
-		</UploadMediaContainer>
-	)
+  const handleSave = async () => {
+    if (!selectedFile) return;
+
+    try {
+      await uploadMedia([selectedFile]); // загружаем файл
+      closePopup(); // закрываем попап после успешной загрузки
+    } catch (err) {
+      console.error("Ошибка загрузки файла", err);
+      alert("Ошибка при загрузке файла");
+    }
+  };
+
+  return (
+    <UploadMediaContainer>
+      <UploadMediaDownload
+        onDragOver={handleDragOver}
+        onDragLeave={handleDragLeave}
+        onDrop={handleDrop}
+        $isDragOver={isDragOver}
+      >
+        <UploadMediaDesc>
+          <UploadDescImg src={preview} alt="preview img" />
+          <UploadDescContent>
+            <h2>Перетяните файлы сюда</h2>
+            <p>Для загрузки медиа загрузите файлы на этой странице</p>
+            <HiddenInput
+              type="file"
+              ref={fileInputRef}
+              onChange={handleFileChange}
+              id="file-upload"
+            />
+            <BtnBase
+              onClick={handleFileButtonClick}
+              $bg={isDragOver ? "#2B3B6E" : "#1E2A48"}
+            >
+              Загрузить файлы
+            </BtnBase>
+          </UploadDescContent>
+        </UploadMediaDesc>
+
+        <UploadMediaMobile>
+          <img src={upload_media} alt="upload media img" />
+          <h2>Выберите медиа для загрузки</h2>
+          <BtnBase
+            onClick={handleFileButtonClick}
+            $bg={isDragOver ? "#2B3B6E" : "#1E2A48"}
+          >
+            Загрузить файлы
+          </BtnBase>
+        </UploadMediaMobile>
+      </UploadMediaDownload>
+
+      {selectedFile && (
+        <SelectedFileInfo>
+          <span>Выбран файл: {selectedFile.name} ({(selectedFile.size / 1024 / 1024).toFixed(2)} MB)</span>
+          <RemoveButton onClick={removeFile}>×</RemoveButton>
+        </SelectedFileInfo>
+      )}
+
+      <UploadMediaItem>
+        <ItemTitle>Название <mark>(необязательное)</mark></ItemTitle>
+        <ItemDesc><mark>Название ссылки</mark> будут видеть только администраторы.</ItemDesc>
+        <ItemInput
+          type="text"
+          placeholder="Название"
+          defaultValue={selectedFile?.name?.replace(/\.[^/.]+$/, "") || ""}
+        />
+      </UploadMediaItem>
+
+      <UploadMediaBlock>
+        <InputPlus title="ХЕШТЕГИ" placeholder="Введите хештег" bg="#2B243C" color="#FF55AD" />
+        <BlocksItems items={[{ value: 'Технологии' }, { value: 'Программирование' }, { value: 'Деньги' }]} color="#EF6284" />
+      </UploadMediaBlock>
+
+      <UploadMediaButtons>
+        <BtnBase $color="#D6DCEC" $bg="#336CFF" onClick={handleSave} disabled={uploadMediaLoading}>
+          {uploadMediaLoading ? "Загрузка..." : "Сохранить"}
+        </BtnBase>
+        <BtnBase $color="#D6DCEC" $bg="#242A3A" onClick={() => closePopup()}>
+          Отменить
+        </BtnBase>
+      </UploadMediaButtons>
+    </UploadMediaContainer>
+  )
 }
 
 const UploadMediaContainer = styled.div`
