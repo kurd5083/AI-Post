@@ -20,18 +20,26 @@ const Templates = () => {
 			hashtags: ['1', '2'],
 			rating: 2,
 			isActive: true,
+			isEditing: true, // локально помечаем как редактируемый
 		};
 
+		// Сохраняем локально сразу
 		setTemplates(prev => [newTemplate, ...prev]);
-
 	};
-	const handleSaveTemplate = (templateData) => {
-		createTemplate(templateData); 
-		// const savedTemplate = createTemplate(templateData);
-		// setTemplates(prev =>
-		// 	prev.map(t => t === templateData ? { ...savedTemplate }: t)
-		// );
-	
+	const handleSaveTemplate = async (templateData) => {
+		try {
+			const savedTemplate = await createTemplate(templateData);
+
+			setTemplates(prev =>
+				prev.map(t =>
+					t === templateData
+						? { ...savedTemplate, isEditing: false }
+						: t
+				)
+			);
+		} catch (err) {
+			console.error("Ошибка при сохранении шаблона:", err);
+		}
 	};
 
 	return (
@@ -53,7 +61,7 @@ const Templates = () => {
 				placeholder="Поиск по шаблонам"
 			/>
 			<TemplatesCards>
-			{templates?.map((template) => (
+			{templates.map((template) => (
 				<TemplatesCard key={template.id}>
 					{template.isEditing ? (
 						<EditCard
