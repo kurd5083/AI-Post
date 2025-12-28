@@ -1,6 +1,7 @@
 import apiClient from "@/api/apiClient";
 
 export const uploadMediaLibrary = async (files) => {
+    console.log(files)
   const formData = new FormData();
 
   files.forEach((file) => {
