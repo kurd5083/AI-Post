@@ -27,7 +27,9 @@ const Templates = () => {
 	};
 	const handleSaveTemplate = (templateData) => {
 		console.log(templateData)
-		const savedTemplate = createTemplate(templateData);
+		const dataToSend = { ...templateData };
+  	delete dataToSend.isEditing;
+		const savedTemplate = createTemplate(dataToSend);
 
 		setTemplates(prev =>
 			prev.map(t =>
