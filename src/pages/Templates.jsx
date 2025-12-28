@@ -20,26 +20,22 @@ const Templates = () => {
 			hashtags: ['1', '2'],
 			rating: 2,
 			isActive: true,
-			isEditing: true, // локально помечаем как редактируемый
+			isEditing: true,
 		};
 
-		// Сохраняем локально сразу
 		setTemplates(prev => [newTemplate, ...prev]);
 	};
-	const handleSaveTemplate = async (templateData) => {
-		try {
-			const savedTemplate = await createTemplate(templateData);
+	const handleSaveTemplate = (templateData) => {
+		console.log(templateData)
+		const savedTemplate = createTemplate(templateData);
 
-			setTemplates(prev =>
-				prev.map(t =>
-					t === templateData
-						? { ...savedTemplate, isEditing: false }
-						: t
-				)
-			);
-		} catch (err) {
-			console.error("Ошибка при сохранении шаблона:", err);
-		}
+		setTemplates(prev =>
+			prev.map(t =>
+				t === templateData
+					? { ...savedTemplate, isEditing: false }
+					: t
+			)
+		);
 	};
 
 	return (
@@ -57,22 +53,22 @@ const Templates = () => {
 			</PageHead>
 			<PageFilter
 				activeFilter={activeFilter}
-        		setActiveFilter={setActiveFilter}
+				setActiveFilter={setActiveFilter}
 				placeholder="Поиск по шаблонам"
 			/>
 			<TemplatesCards>
-			{templates.map((template) => (
-				<TemplatesCard key={template.id}>
-					{template.isEditing ? (
-						<EditCard
+				{templates.map((template) => (
+					<TemplatesCard key={template.id}>
+						{template.isEditing ? (
+							<EditCard
 								template={template}
 								onSave={handleSaveTemplate}
 							/>
-					) : (
-						<ViewCard template={template}/>
-					)}
-				 </TemplatesCard>
-			))}
+						) : (
+							<ViewCard template={template} />
+						)}
+					</TemplatesCard>
+				))}
 			</TemplatesCards>
 		</>
 	)

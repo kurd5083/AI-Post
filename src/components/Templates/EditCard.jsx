@@ -8,7 +8,7 @@ import InputPlus from "@/shared/InputPlus";
 import BlocksItems from "@/shared/BlocksItems";
 
 const EditCard = ({ template, onSave }) => {
-	 const [title, setTitle] = useState(template.title);
+	const [title, setTitle] = useState(template.title);
   const [content, setContent] = useState(template.content);
   const [hashtags, setHashtags] = useState(template.hashtags || []);
   const handleSave = () => {

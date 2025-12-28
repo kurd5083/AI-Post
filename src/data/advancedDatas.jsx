@@ -1,7 +1,6 @@
 import posting from "@/assets/popup/posting.svg";
 import image_generation from "@/assets/popup/image-generation.svg";
 import text from "@/assets/popup/text.svg";
-import activate_promotion from "@/assets/popup/activate-promotion.svg";
 import SourcePost from "@/icons/SourcePost";
 
 export const advancedDatas = [
@@ -31,15 +30,6 @@ export const advancedDatas = [
     extra: {
       background: "#562F43",
       image: text
-    }
-  },
-  {
-    key: "add_link_post",
-    title: "Добавить ссылку в пост",
-    desc: "В посте будет указан URL исходной статьи",
-    extra: {
-      background: "#4A6455",
-      image: activate_promotion
     }
   },
   {
