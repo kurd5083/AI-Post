@@ -17,7 +17,7 @@ const NewsDetail = () => {
 	const { news, newsLoading } = useNewsById(id);
 	console.log(news)
 	const formattedTitle = useFormattedHtml(news?.title);
-	const formattedContent = useFormattedHtml(news?.content);
+	const formattedContent = useFormattedHtml(news?.summary);
 
 	return (
 		<NewsContainer>
