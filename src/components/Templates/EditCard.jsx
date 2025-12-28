@@ -9,13 +9,13 @@ import BlocksItems from "@/shared/BlocksItems";
 
 const EditCard = ({ template, onSave }) => {
 	 const [title, setTitle] = useState(template.title);
-  const [content, setContent] = useState(template.content?.description || "");
+  const [content, setContent] = useState(template.content);
   const [hashtags, setHashtags] = useState(template.hashtags || []);
   const handleSave = () => {
     onSave({
       ...template,
       title,
-      content: { ...template.content, description: content },
+      content,
       hashtags
     });
   };

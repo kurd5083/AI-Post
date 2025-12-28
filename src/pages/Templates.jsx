@@ -17,8 +17,8 @@ const Templates = () => {
 			category: "MARKETING",
 			title: "",
 			content: "",
-			hashtags: [],
-			rating: 0,
+			hashtags: ['1', '2'],
+			rating: 2,
 			isActive: true,
 			isEditing: true, // локально помечаем как редактируемый
 		};
