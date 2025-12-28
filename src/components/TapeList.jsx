@@ -13,7 +13,7 @@ import ModernLoading from "@/components/ModernLoading";
 import news_stub from "@/assets/news-stub.png";
 
 const TapeList = ({ forceHorizontal = false, padding }) => {
-  const { openPopup } = usePopupStore();
+  const { popup, changeContent, openPopup } = usePopupStore();
   const { fadeVisible, ref } = useFadeOnScroll(20);
   const { isSwipe } = useSwipeAllowed(1400);
 
