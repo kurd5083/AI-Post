@@ -61,11 +61,12 @@ const UploadMediaPopup = () => {
   };
 
   const handleSave = async () => {
+	console.log("aasd", selectedFile)
     if (!selectedFile) return;
 
     try {
-      await uploadMedia([selectedFile]); // загружаем файл
-      closePopup(); // закрываем попап после успешной загрузки
+      await uploadMedia([selectedFile]); 
+      closePopup(); 
     } catch (err) {
       console.error("Ошибка загрузки файла", err);
       alert("Ошибка при загрузке файла");
