@@ -39,7 +39,7 @@ const EditCard = ({ template, onSave }) => {
         />
       </CardTextarea>
 
-      <CardBlock>
+      {/* <CardBlock>
         <InputPlus
           title="ХЕШТЕГИ"
           placeholder="Ключевое слово"
@@ -49,7 +49,7 @@ const EditCard = ({ template, onSave }) => {
           padding="16px"
         />
         <BlocksItems items={hashtags?.map((h) => ({ value: h }))} color="#EF6284" />
-      </CardBlock>
+      </CardBlock> */}
 
       <CardBtns>
         <BtnBase
