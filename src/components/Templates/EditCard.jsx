@@ -10,7 +10,8 @@ import BlocksItems from "@/shared/BlocksItems";
 const EditCard = ({ template, onSave }) => {
 	const [title, setTitle] = useState(template.title);
   const [content, setContent] = useState(template.content);
-  const [hashtags, setHashtags] = useState(template.hashtags || []);
+	const [hashtags, setHashtags] = useState(template.hashtags);
+  const [hashtag, setHashtag] = useState('');
   const handleSave = () => {
     onSave({
       ...template,
@@ -39,7 +40,7 @@ const EditCard = ({ template, onSave }) => {
         />
       </CardTextarea>
 
-      {/* <CardBlock>
+      <CardBlock>
         <InputPlus
           title="ХЕШТЕГИ"
           placeholder="Ключевое слово"
@@ -47,9 +48,23 @@ const EditCard = ({ template, onSave }) => {
           color="#FF55AD"
           fs="16px"
           padding="16px"
+					value={hashtag}
+          onChange={setHashtag}
+          onSubmit={() => {
+            if (!hashtag.trim()) return;
+
+            setHashtags((prev) => [...prev, hashtag]);
+            setHashtag("");
+          }}
         />
-        <BlocksItems items={hashtags?.map((h) => ({ value: h }))} color="#EF6284" />
-      </CardBlock> */}
+        <BlocksItems 
+					items={hashtags?.map((h, index) => ({ value: h, id: index }))} 
+					color="#EF6284" 
+					onRemove={(id) => {
+          	setHashtags(hashtags.filter((_, i) => i !== id));
+          }}
+				/>
+      </CardBlock>
 
       <CardBtns>
         <BtnBase

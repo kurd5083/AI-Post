@@ -12,7 +12,6 @@ const Templates = () => {
 	const [activeFilter, setActiveFilter] = useState("all");
 
 	const { templates, templatesLoading } = useGetPostTemplates({ category: activeFilter === "all" ? undefined : activeFilter.toUpperCase() });
-	console.log(templates)
 	const [localTemplates, setLocalTemplates] = useState([]);
 
 	useEffect(() => {
@@ -22,22 +21,20 @@ const Templates = () => {
 
 	const { mutate: createTemplate, isLoading: templateLoading } = useCreatePostTemplate();
 
-
 	const handleCreateTemplate = async () => {
 		const newTemplate = {
 			category: "MARKETING",
 			title: "",
 			content: "",
-			hashtags: ['1', '2'],
+			hashtags: [],
 			rating: 2,
 			isActive: true,
 			isEditing: true,
 		};
-
 		setLocalTemplates(prev => [newTemplate, ...prev]);
 	};
+
 	const handleSaveTemplate = (templateData) => {
-		console.log(templateData)
 		const dataToSend = { ...templateData };
 		delete dataToSend.isEditing;
 		createTemplate(dataToSend, {
