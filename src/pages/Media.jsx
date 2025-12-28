@@ -61,10 +61,10 @@ const Media = () => {
       <MediaCards>
         {mediaLoading ? (
           <p>Загрузка...</p>
-        ) : filteredMedia.length === 0 ? (
+        ) : filteredMedia?.length === 0 ? (
           <p>Медиа отсутствует</p>
         ) : (
-          filteredMedia.map((item) => (
+          filteredMedia?.map((item) => (
             <MediaCard key={item.id}>
               <MediaCardImage src={item.url} alt={item.originalName} />
               <h4>{item.originalName}</h4>
