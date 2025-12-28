@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import styled from "styled-components";
 import PageHead from '@/components/PageHead'
 import PageFilter from "@/components/PageFilter";
@@ -7,11 +7,23 @@ import EditCard from "@/components/Templates/EditCard";
 import BtnBase from "@/shared/BtnBase";
 import { templatesDatas } from "@/data/templatesDatas";
 import { useCreatePostTemplate } from "@/lib/template/useCreatePostTemplate";
+import { useGetPostTemplates } from "@/lib/template/useGetPostTemplates";
 
 const Templates = () => {
 	const [activeFilter, setActiveFilter] = useState("all");
-	const [templates, setTemplates] = useState(templatesDatas);
+	
+	const { templates, templatesLoading } = useGetPostTemplates({category: activeFilter === "all" ? undefined : activeFilter.toUpperCase()});
+
+	const [localTemplates, setLocalTemplates] = useState(templates || []);
+
+	useEffect(() => {
+		if (!templates) return;
+		setLocalTemplates(templates);
+	}, [templates]);
+
 	const { mutate: createTemplate, isLoading: templateLoading } = useCreatePostTemplate();
+
+
 	const handleCreateTemplate = async () => {
 		const newTemplate = {
 			category: "MARKETING",
@@ -23,7 +35,7 @@ const Templates = () => {
 			isEditing: true,
 		};
 
-		setTemplates(prev => [newTemplate, ...prev]);
+		setLocalTemplates(prev => [newTemplate, ...prev]);
 	};
 	const handleSaveTemplate = (templateData) => {
 		console.log(templateData)
@@ -32,7 +44,7 @@ const Templates = () => {
 		createTemplate(dataToSend, {
 			onSuccess: (savedTemplate) => {
 				console.log(templates)
-				setTemplates(prev =>
+				setLocalTemplates(prev =>
 					prev.map(t =>
 						t === templateData
 							? { ...savedTemplate }
@@ -42,6 +54,10 @@ const Templates = () => {
 			}
 		});
 	};
+
+	const filteredTemplates = activeFilter === "all"
+		? localTemplates
+		: localTemplates.filter(t => t.category.toLowerCase() === activeFilter.toLowerCase());
 
 	return (
 		<>
@@ -62,7 +78,7 @@ const Templates = () => {
 				placeholder="Поиск по шаблонам"
 			/>
 			<TemplatesCards>
-				{templates.map((template) => (
+				{filteredTemplates.map((template) => (
 					<TemplatesCard key={template.id}>
 						{template.isEditing ? (
 							<EditCard
