@@ -15,9 +15,7 @@ const fileToBase64 = (file) =>
 export const uploadMediaLibrary = async (files) => {
   const base64Files = await Promise.all(files.map(file => fileToBase64(file)));
 
-  const response = await apiClient.post("/media-library/upload", {
-    files: base64Files
-  });
+  const response = await apiClient.post("/media-library/upload", {base64Files});
 
   return response.data;
 };

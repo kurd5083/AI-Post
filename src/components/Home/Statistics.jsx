@@ -29,7 +29,7 @@ const Statistics = () => {
       <StatisticsList
         key={isSwipe}
         spaceBetween={16}
-        slidesPerView={isSwipe ? "auto" : 5}
+        slidesPerView={isSwipe ? "auto" : 4}
         allowTouchMove={isSwipe}
       >
         <StatisticsItem>
