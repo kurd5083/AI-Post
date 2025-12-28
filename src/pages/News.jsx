@@ -131,12 +131,12 @@ const PostLeft = styled.div`
 	display: flex;
 	flex-direction: column;
 	gap: 24px;
-	max-width: 620px;
+	/* max-width: 620px; */
 	width: 100%;
 
-	@media (max-width: 1400px) {
-    max-width: 100%;
-  }
+	/* @media (max-width: 1400px) {
+    max-width: 100%; */
+  /* } */
 `
 const PostHead = styled.div`
   display: flex;
