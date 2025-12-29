@@ -27,6 +27,7 @@ import ProfilePopup from "@/components/Popup/ProfilePopup";
 import UploadMediaPopup from "@/components/Popup/UploadMediaPopup";
 import CompilationUploadPopup from "@/components/Popup/CompilationUploadPopup";
 import AdvancedPopup from "@/components/Popup/AdvancedPopup";
+import AiGeneratorPopup from "@/components/Popup/AiGeneratorPopup";
 
 const Popup = () => {
     const { popup } = usePopupStore()

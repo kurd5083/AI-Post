@@ -16,7 +16,6 @@ import advanced from "@/assets/popup/advanced.svg";
 import replenish from "@/assets/popup/replenish.svg";
 import bell from "@/assets/bell.svg";
 import media from "@/assets/media.svg";
-import PlusIcon from "@/icons/PlusIcon";
 
 export const popupDatas = [
     {
@@ -221,14 +220,6 @@ export const popupDatas = [
             image: replenish
         }
     },
-    // {
-    //     key: "choose_post",
-    //     name: "Выбрать пост",
-    //     extra: {
-    //         background: "#445837",
-    //         image: choose_post
-    //     }
-    // },
     {
         key: "upload_media",
         name: "Загрузить медиа",
