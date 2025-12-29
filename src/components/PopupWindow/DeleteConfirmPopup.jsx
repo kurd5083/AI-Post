@@ -33,7 +33,7 @@ const DeleteConfirmPopup = () => {
           Удалить
         </BtnBase>
         <BtnBase
-          onClick={() => popup && popup?.previousPage.length > 0 ? goBack() : closePopup()}
+          onClick={() => popup && popup?.previousPage.length > 0 ? closePopup() : goBack()}
           $color="#D6DCEC"
           $bg="#242A3A"
         >
