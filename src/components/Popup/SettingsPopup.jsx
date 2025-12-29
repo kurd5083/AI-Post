@@ -18,7 +18,7 @@ const SettingsPopup = () => {
   const channelName = popup?.data?.channelName;
   const { channel } = useChannelById(channelId);
   const { posts } = usePostsByChannel(channelId);
-
+  console.log(channel)
   const [localSwitches, setLocalSwitches] = useState({
     posting: channel?.posting || false,
     activate_promotion: channel?.promotionEnabled || false,

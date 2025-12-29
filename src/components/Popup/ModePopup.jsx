@@ -55,6 +55,19 @@ const ModePopup = () => {
                     </Checkbox>
                 </ModeContentItem>
             </div>
+            <ModeContentTitle>Параметры премодерации</ModeContentTitle>
+            {/* <ModeContentItem>
+                    <Checkbox  
+                        checked={selectedMode === "PREMODERATION"} 
+                        onChange={() => handleSelectMode("PREMODERATION")}
+                    >
+                        <div>
+                            <h4>Премодерация</h4>
+                            <p>Наш бот будет отправлять вам посты на предварительную модерацию за указанное
+                                вами время, предоставляя возможность принять решение о публикации</p>
+                        </div>
+                    </Checkbox>
+                </ModeContentItem> */}
         </ModeContent>
     )
 }
