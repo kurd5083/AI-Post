@@ -7,6 +7,8 @@ import BtnBase from "@/shared/BtnBase";
 
 const Preview = ({ collapsed, testResult }) => {
 	console.log(testResult)
+	const { title, summary, url, savedFiles } = testResult || {};
+
 	return (
 		<GeneratorPreview $collapsed={collapsed}>
 			<PreviewContent>
@@ -34,15 +36,13 @@ const Preview = ({ collapsed, testResult }) => {
 							<PreviewInfoBG src={PreviewBG} alt="bg" />
 							<PreviewInfoContent>
 								<PreviewInfoText>
-									🎯 Breaking: Sustainable<br /><br />
-									Technology reaches new milestone! We're
-									excited to share this incredible
-									achievement with our community. This
-									wouldn't be possible without your continued
-									support and feedback.<br /><br />
-									🔥 What's next? • Enhanced features • Expanded
-									capabilities • Even better user experience Stay
-									tuned for more updates! 🚀
+									{title && <strong>{title}</strong>}<br /><br />
+                  {summary}
+									{url && (
+										<a href={url} target="_blank" rel="noopener noreferrer">
+											Источник: {url}
+										</a>
+									)}
 								</PreviewInfoText>
 								<BtnBase $padding="17px" $bg="#243D56" $color="#D6DCEC">🚀 Начать</BtnBase>
 							</PreviewInfoContent>
@@ -54,11 +54,6 @@ const Preview = ({ collapsed, testResult }) => {
 					</>
 				)}
 			</PreviewContent>
-			<AddPost>
-				<BtnBase $padding="21px 24px">
-					+ Добавить пост
-				</BtnBase>
-			</AddPost>
 		</GeneratorPreview>
 	)
 }
@@ -111,7 +106,6 @@ const PreviewButton = styled.button`
     font-weight: 700;
   }
 `;
-
 const PreviewSelect = styled.div`
   margin-top: 28px;
   display: flex;
@@ -162,14 +156,5 @@ const PreviewInfoText = styled.p`
   line-height: 16px;
   font-weight: 600;
 `
-const AddPost = styled.div`
-  display: none;
-  margin-top: 32px;
-  align-items: center;
-  justify-content: center;
-  
-  @media(max-width: 768px) {
-    display: flex;
-  }
-`
+
 export default Preview
