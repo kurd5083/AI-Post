@@ -1,10 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
 import { getNews } from "@/api/news/getNews";
 
-export const useNews = (filter) => {
+export const useNews = (filters) => {
   const { data: newsData, isLoading: newsLoding } = useQuery({
-    queryKey: ["news", filter], 
-    queryFn: () => getNews(filter),
+    queryKey: ["news", filters], 
+    queryFn: () => getNews(filters),
     enabled: !!localStorage.getItem("accessToken"),
   });
 

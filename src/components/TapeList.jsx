@@ -201,7 +201,12 @@ const TapeItemText = styled.div`
 const TapeItemAction = styled.span`
   color: #336CFF;
   margin-bottom: 18px;
-  line-height: 14px;
+  line-height: 12px;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background-color: #1F305C;
   cursor: pointer;
 `
 const TapeTime = styled.div`
