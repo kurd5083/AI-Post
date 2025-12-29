@@ -14,7 +14,7 @@ const PopupHead = () => {
   console.log(popup)
   return (
     <>
-      {popup.content !== 'notifications' && popup.content !== 'replenish' && popup.content !== 'upload_media' && popup.content !== 'profile' && (
+      {popup.content !== 'notifications' && popup.content !== 'replenish' && popup.content !== 'upload_media' && popup.content !== 'profile' && popup.content !== 'create_post' && (
         <PopupListInfo>
           {popup.content != 'settings' && <PopupArrow src={arrow} alt="arrow icon" width={8} height={16} onClick={goBack} />}
           <PopupListAva src={channel?.avatarUrl} alt="ava icon" width={48} height={48} />
@@ -24,7 +24,7 @@ const PopupHead = () => {
           </PopupListInfoContent>
         </PopupListInfo>
       )}
-      {popup.content !== 'profile' || popup.content !== 'create_post' && (
+      {popup.content !== 'profile' && popup.content !== 'create_post' && (
         <PopupListHead>
           <PopupListHeadContent>
             {popup.content == 'settings' ? (
