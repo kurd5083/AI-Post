@@ -15,7 +15,7 @@ import CheckboxCircle from "@/shared/CheckboxCircle";
 import AiGeneratorIcon from "@/icons/AiGeneratorIcon";
 import useFadeOnScroll from "@/lib/useFadeOnScroll";
 
-const AiGenerator = () => {
+const AiGeneratorPopup = () => {
   const [collapsed, setCollapsed] = useState(false);
   const [posts, setPosts] = useState([]);
 
@@ -292,4 +292,4 @@ const DeleteButton = styled(BaseButton)`
   }
 `
 
-export default AiGenerator;
+export default AiGeneratorPopup;

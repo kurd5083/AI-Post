@@ -15,7 +15,6 @@ const Calendar = () => {
           $padding="16px 32px"
           $bg="#336CFF"
           $color="#FFFFFF"
-          onClick={() => openPopup("create_post_common")}
         >
           + Создать новый пост
         </BtnBase>

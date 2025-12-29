@@ -51,7 +51,7 @@ export const settingsDatas = {
                     }
                 },
                 {
-                    key: "create_post_common",
+                    key: "create_post",
                     name: "Создать пост",
                     right: 'arrow',
                     size: true,

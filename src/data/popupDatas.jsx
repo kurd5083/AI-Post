@@ -15,7 +15,6 @@ import post_style from "@/assets/popup/post-style.svg";
 import advanced from "@/assets/popup/advanced.svg";
 import replenish from "@/assets/popup/replenish.svg";
 import bell from "@/assets/bell.svg";
-import choose_post from "@/assets/popup/choose-post.svg";
 import media from "@/assets/media.svg";
 import PlusIcon from "@/icons/PlusIcon";
 
@@ -198,29 +197,6 @@ export const popupDatas = [
     },
     {
         key: "create_post",
-        name: "Создать пост",
-        extra: {
-            background: "#44336D",
-            image: '',
-            svg: <PlusIcon color="#D6DCEC"/>
-        }
-    },
-    {
-        key: "create_post_common",
-        name: "Создать пост",
-        extra: {
-            background: "#44336D",
-            image: '',
-            svg: <PlusIcon color="#D6DCEC"/>
-        }
-    },
-    {
-        key: "create_post_manually",
-        name: "Создать пост вручную",
-        extra: {
-            background: "#5F3C36",
-            image: post_style
-        }
     },
     {
         key: "notifications",
@@ -245,14 +221,14 @@ export const popupDatas = [
             image: replenish
         }
     },
-    {
-        key: "choose_post",
-        name: "Выбрать пост",
-        extra: {
-            background: "#445837",
-            image: choose_post
-        }
-    },
+    // {
+    //     key: "choose_post",
+    //     name: "Выбрать пост",
+    //     extra: {
+    //         background: "#445837",
+    //         image: choose_post
+    //     }
+    // },
     {
         key: "upload_media",
         name: "Загрузить медиа",

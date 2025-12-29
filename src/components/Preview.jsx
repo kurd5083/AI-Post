@@ -35,17 +35,16 @@ const Preview = ({ collapsed, testResult }) => {
 						<PreviewInfo>
 							<PreviewInfoBG src={PreviewBG} alt="bg" />
 							<PreviewInfoContainer>
-									 {savedFiles?.images?.length > 0 && (
-										<ImagesContainer>
-											{savedFiles.images.map((img, index) => (
-												<img key={index} src={img} alt={`image-${index}`} />
-											))}
-										</ImagesContainer>
-									)}
-									<PreviewInfoText>
-
+								{savedFiles?.images?.length > 0 && (
+									<ImagesContainer>
+										{savedFiles.images.map((img, index) => (
+											<img key={index} src={img} alt={`image-${index}`} />
+										))}
+									</ImagesContainer>
+								)}
+								<PreviewInfoText>
 									{title && <strong>{title}</strong>}<br /><br />
-                  {summary}<br /><br />
+									{summary}<br /><br />
 									{url && (
 										<a href={url} target="_blank" rel="noopener noreferrer">
 											Источник: {url}

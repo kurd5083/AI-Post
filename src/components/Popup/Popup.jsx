@@ -9,8 +9,6 @@ import MyTeamAddPopup from "@/components/Popup/MyTeamAddPopup";
 import MyTeamPopup from "@/components/Popup/MyTeamPopup";
 import ImageGenerationPopup from "@/components/Popup/ImageGenerationPopup";
 import IndustrialLibraryPopup from "@/components/Popup/IndustrialLibraryPopup";
-import CreatePostСommonPopup from "@/components/Popup/CreatePostСommonPopup";
-import CreatePostPopup from "@/components/Popup/CreatePostPopup";
 import LinkGenerationPrevPopup from "@/components/Popup/LinkGenerationPrevPopup";
 import LinkGenerationPopup from "@/components/Popup/LinkGenerationPopup";
 import LinkGenerationMyPopup from "@/components/Popup/LinkGenerationMyPopup";
@@ -26,10 +24,8 @@ import CalendarPopup from "@/components/Popup/CalendarPopup";
 import NotificationsPopup from "@/components/Popup/NotificationsPopup";
 import ReplenishPopup from "@/components/Popup/ReplenishPopup";
 import ProfilePopup from "@/components/Popup/ProfilePopup";
-import ChoosePostPopup from "@/components/Popup/ChoosePostPopup";
 import UploadMediaPopup from "@/components/Popup/UploadMediaPopup";
 import CompilationUploadPopup from "@/components/Popup/CompilationUploadPopup";
-import CreatePostManuallyPopup from "@/components/Popup/CreatePostManuallyPopup";
 import AdvancedPopup from "@/components/Popup/AdvancedPopup";
 
 const Popup = () => {
@@ -61,10 +57,6 @@ const Popup = () => {
                 <ImageGenerationPopup/>
             ) : popup.content == 'industrial_library' ? (
                 <IndustrialLibraryPopup/>
-            ) : popup.content == 'create_post_common' ? (
-                <CreatePostСommonPopup/>
-            ) : popup.content == 'create_post' ? (
-                <CreatePostPopup/>
             ) : popup.content == 'link_generation_prev' ? (
                 <LinkGenerationPrevPopup/>
             ) : popup.content == 'link_generation' ? (
@@ -95,16 +87,14 @@ const Popup = () => {
                 <ReplenishPopup/>
             ) : popup.content == 'profile' ? (
                 <ProfilePopup/>
-            ) : popup.content == 'choose_post' ? (
-                <ChoosePostPopup/>
             ) : popup.content == 'upload_media' ? (
                 <UploadMediaPopup/>
             ) : popup.content == 'compilation_upload' ? (
                 <CompilationUploadPopup/>
-            ) : popup.content == 'create_post_manually' ? (
-                <CreatePostManuallyPopup/>
             ) : popup.content == 'advanced' ? (
                 <AdvancedPopup/>
+            ) : popup.content == 'create_post' ? (
+                <AiGeneratorPopup/>
             ) : (
                 2
             )}

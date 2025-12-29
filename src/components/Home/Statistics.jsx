@@ -15,8 +15,8 @@ const Statistics = () => {
   const { popup } = usePopupStore();
   const channelId = popup?.data?.channelId;
 
-  const { channelStat, channelStatLoading } = useChannelStat(channelId);
-  console.log(channelStat, 'aadgag')
+  // const { channelStat, channelStatLoading } = useChannelStat(channelId);
+  // console.log(channelStat, 'aadgag')
 
 
   return (

@@ -3,7 +3,6 @@ import MainLayout from "@/layouts/MainLayout";
 import OtherLayout from "@/layouts/OtherLayout";
 import Home from '@/pages/Home';
 import Analytics from '@/pages/Analytics';
-import AiGenerator from '@/pages/AiGenerator';
 import Templates from '@/pages/Templates';
 import Calendar from '@/pages/Calendar';
 import Promotion from '@/pages/Promotion';
@@ -26,13 +25,6 @@ export const router = createBrowserRouter([
         element: <OtherLayout />,
         children: [
             { index: true, element: <Analytics /> }, 
-        ],
-    },
-    {
-        path: '/ai-generator', 
-        element: <OtherLayout />,
-        children: [
-            { index: true, element: <AiGenerator /> }, 
         ],
     },
     {

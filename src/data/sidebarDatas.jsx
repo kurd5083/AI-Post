@@ -22,7 +22,8 @@ export const sidebarDatas = [
         id: 2, 
         icon: (isActive) => <AiGeneratorIcon color={isActive ? "#336CFF" : "#6A7080"} />,
         text: "AI Генератор", 
-        to: "/ai-generator" 
+        to: "" ,
+        popup: 'create_post'
       },
       { 
         id: 3, 
