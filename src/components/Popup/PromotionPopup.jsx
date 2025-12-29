@@ -79,32 +79,31 @@ const PromotionPopup = () => {
           <Counter placeholder="Макс." value={maxViews} onChange={setMaxViews} />
         </PostContainer>
       </ViewsPost>
-
       <PromotePost>
         <PostTitle>Продвинуть пост</PostTitle>
         <PromoteText>
           Введите ссылку на пост и количество просмотров для ручного продвижения
         </PromoteText>
         {manualPosts.map((post, index) => (
-    <PostContainer key={index}>
-      <CounterContainer>
-        <CounterTitle>Ссылка на пост:</CounterTitle>
-        <PostInput value={post.link} readOnly />
-      </CounterContainer>
-      <CounterContainer>
-        <CounterTitle>Количество просмотров</CounterTitle>
-        <Counter value={post.views} readOnly />
-      </CounterContainer>
-      <ButtonDel
-        onClick={() => {
-          setManualPosts((prev) => prev.filter((_, i) => i !== index));
-        }}
-        title="Удалить"
-      >
-        <img src={del} alt="del icon" width={14} height={16} />
-      </ButtonDel>
-    </PostContainer>
-  ))}
+          <PostContainer key={index}>
+            <CounterContainer>
+              <CounterTitle>Ссылка на пост:</CounterTitle>
+              <PostInput value={post.link} readOnly />
+            </CounterContainer>
+            <CounterContainer>
+              <CounterTitle>Количество просмотров</CounterTitle>
+              <Counter value={post.views} readOnly />
+            </CounterContainer>
+            <ButtonDel
+              onClick={() => {
+                setManualPosts((prev) => prev.filter((_, i) => i !== index));
+              }}
+              title="Удалить"
+            >
+              <img src={del} alt="del icon" width={14} height={16} />
+            </ButtonDel>
+          </PostContainer>
+        ))}
         <PostContainer>
           <CounterContainer>
             <CounterTitle>Ссылка на пост:</CounterTitle>
@@ -118,15 +117,15 @@ const PromotionPopup = () => {
             <CounterTitle>Количество просмотров</CounterTitle>
             <Counter placeholder="" value={postViews} onChange={setPostViews} />
           </CounterContainer>
-           <BtnBase
-          $padding="17px 31px"
-          $color="#fff"
-          $bg="#336CFF"
-          onClick={handleAddPost}
-          disabled={!postLink || !postViews}
-        >
-          + Добавить ссылку на пост
-        </BtnBase>
+          <BtnBase
+            $padding="17px 31px"
+            $color="#fff"
+            $bg="#336CFF"
+            onClick={handleAddPost}
+            disabled={!postLink || !postViews}
+          >
+            + Добавить ссылку на пост
+          </BtnBase>
           <ButtonDel
             onClick={(e) => {
               e.stopPropagation();

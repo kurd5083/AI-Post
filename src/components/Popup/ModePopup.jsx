@@ -31,7 +31,7 @@ const ModePopup = () => {
         if (popup?.data?.premoderationMinutes) {
             setPremoderationMinutes(popup.data.premoderationMinutes);
         }
-    }, [popup?.data]);
+    }, [popup?.data?.workMode, popup?.data?.canPublishWithoutApproval, popup?.data?.premoderationMinutes]);
 
 
     const handleSelectMode = (mode) => {
