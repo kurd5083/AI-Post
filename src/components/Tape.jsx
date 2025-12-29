@@ -71,13 +71,18 @@ const Tape = () => {
                 setStopWord("");
               }}
             />
-            <BlocksItems
-              items={stopWords.map((word, index) => ({ value: word, id: index }))}
-              color="#EF6284"
-              onRemove={(id) => {
-                setStopWords(prev => prev.filter((_, index) => index !== id));
-              }}
-            />
+            {stopWords.length === 0 ? (
+              <EmptyText>Стоп-слова не добавлены</EmptyText>
+            ) : (
+              <BlocksItems
+                items={stopWords.map((word, index) => ({ value: word, id: index }))}
+                color="#EF6284"
+                onRemove={(id) => {
+                  setStopWords(prev => prev.filter((_, index) => index !== id));
+                }}
+              />
+            )}
+
           </FilterKey>
           <FilterKey>
             <InputPlus
@@ -95,14 +100,18 @@ const Tape = () => {
                 setPriorityWord("");
               }}
             />
-
-            <BlocksItems
-              items={priorityWords.map((word, index) => ({ id: index, value: word }))}
-              color="#EF6284"
-              onRemove={(id) => {
-                setPriorityWords(prev => prev.filter((_, index) => index !== id));
-              }}
-            />
+            {priorityWords.length === 0 ? (
+              <EmptyText>Приоритетные слова не добавлены</EmptyText>
+            ) : (
+              <BlocksItems
+                items={priorityWords.map((word, index) => ({ id: index, value: word }))}
+                color="#EF6284"
+                onRemove={(id) => {
+                  setPriorityWords(prev => prev.filter((_, index) => index !== id));
+                }}
+              />
+            )}
+            
           </FilterKey>
           <BtnBase
             $color="#D6DCEC"
@@ -280,5 +289,10 @@ const FilterTitle = styled.h3`
 const FilterKey = styled.div`
   margin-top: 40px;
 `
-
+const EmptyText = styled.p`
+  font-size: 16px;
+  font-weight: 600;
+  color: #6A7080;
+  margin-top: 32px;
+`;
 export default Tape;
