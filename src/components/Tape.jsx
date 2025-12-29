@@ -40,6 +40,7 @@ const Tape = () => {
       isPublished,
       search,
     });
+    setIsFilterOpen(false);
   };
 
   return (
@@ -151,16 +152,9 @@ const Tape = () => {
             $color="#D6DCEC"
             $bg="#336CFF"
             $margin="40"
-            onClick={() => {
-              setFilters({
-                stopWords: stopWords.join(","),
-                priorityWords: priorityWords.join(","),
-              });
-
-              setIsFilterOpen(false);
-            }}
+            onClick={handleSave}
           >
-            Сохранить
+            Применить
           </BtnBase>
         </FilterWrapper>
       )}
@@ -327,6 +321,7 @@ const FilterKeyCheckbox = styled.div`
   display: flex;
   flex-direction: column;
   margin-top: 40px;
+  gap: 20px;
 `
 const CheckboxText = styled.p`
   display: flex;
