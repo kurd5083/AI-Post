@@ -18,6 +18,7 @@ const IndustrialStylePopup = () => {
   const { popup, changeContent } = usePopupStore();
   const channelId = popup?.data?.channelId;
 
+  const [result, setResult] = useState(null);
   const [localPrompt, setLocalPrompt] = useState("");
   const [localCaption, setLocalCaption] = useState("");
   const [localCreativity, setLocalCreativity] = useState(0);
@@ -27,7 +28,8 @@ const IndustrialStylePopup = () => {
   const { caption } = useGetChannelCaption(channelId);
 
   const { mutate: testDrive, isLoading } = useTestDrivePrompt();
-  
+
+
   useEffect(() => {
     if (globalPrompt !== undefined) setLocalPrompt(globalPrompt.globalPromt);
     if (caption !== undefined) setLocalCaption(caption.caption);
@@ -39,12 +41,13 @@ const IndustrialStylePopup = () => {
       setLocalPrompt(e.target.value);
     }
   };
-  const handleTest = () => {
-    testDrive({
-      topic: "Сказка",
+  const handleTest = async () => {
+    const data = await testDrive({
+      topic: "Спорт",
       promtManage: localPrompt,
       channelId,
     });
+    setResult(data);
   };
 
   const { mutate: updateGlobalPrompt } = useUpdateChannelGlobalPrompt();
@@ -92,21 +95,21 @@ const IndustrialStylePopup = () => {
           <IndustrialStyleDesc>Подпись будет добавлена в <mark>конец каждого поста.</mark> Например: ссылка или призыв подписаться.</IndustrialStyleDesc>
         </IndustrialStyleLeft>
         <IndustrialStyleRight>
-          <Preview collapsed={false}/>
+          <Preview collapsed={false} testResult={result} />
         </IndustrialStyleRight>
       </IndustrialStyleContent>
       <IndustrialStyleTitle>Креативность</IndustrialStyleTitle>
-          <IndustrialStyleBlock>
-            <Drag
-              value={localCreativity}
-              onChange={setLocalCreativity}
-            />
-            <IndustrialStyleDesc>Ползунок <mark>«Креативность»</mark> регулирует, насколько
-              оригинальным и неожиданным будет текст поста.
-              Высокие значения <mark>увеличивают</mark> вариативность, что
-              может привести к менее предсказуемым результатам
-            </IndustrialStyleDesc>
-          </IndustrialStyleBlock>
+      <IndustrialStyleBlock>
+        <Drag
+          value={localCreativity}
+          onChange={setLocalCreativity}
+        />
+        <IndustrialStyleDesc>Ползунок <mark>«Креативность»</mark> регулирует, насколько
+          оригинальным и неожиданным будет текст поста.
+          Высокие значения <mark>увеличивают</mark> вариативность, что
+          может привести к менее предсказуемым результатам
+        </IndustrialStyleDesc>
+      </IndustrialStyleBlock>
       <IndustrialStyleButton>
         <BtnBase onClick={handleSave}>Сохранить</BtnBase>
       </IndustrialStyleButton>
@@ -139,9 +142,7 @@ const IndustrialStyleLeft = styled.div`
   }
 `
 const IndustrialStyleInputContainer = styled.div`
-  /* display: flex;
-  align-items: center;
-  gap: 24px; */
+
 `
 const IndustrialStyleTitle = styled.h2`
   font-size: 12px;
@@ -154,6 +155,7 @@ const IndustrialStyleBlock = styled.div`
   display: flex;
   align-items: center;
   gap: 32px;
+
 `
 
 const IndustrialStyleDesc = styled.p`

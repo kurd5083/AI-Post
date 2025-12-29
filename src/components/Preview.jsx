@@ -5,7 +5,8 @@ import arrow from "@/assets/arrow.svg";
 import CustomSelect from "@/shared/CustomSelectSec";
 import BtnBase from "@/shared/BtnBase";
 
-const Preview = ({ collapsed }) => {
+const Preview = ({ collapsed, testResult }) => {
+	console.log(testResult)
 	return (
 		<GeneratorPreview $collapsed={collapsed}>
 			<PreviewContent>
