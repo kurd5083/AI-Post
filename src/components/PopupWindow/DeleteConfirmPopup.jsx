@@ -4,20 +4,20 @@ import CloseIcon from "@/icons/CloseIcon";
 import { usePopupStore } from "@/store/popupStore";
 
 const DeleteConfirmPopup = () => {
-  const { popup, closePopup } = usePopupStore();
+  const { popup, goBack, closePopup } = usePopupStore();
 
   const handleDelete = () => {
     if (popup?.data?.onDelete) {
       popup.data.onDelete();
     }
-    closePopup();
+    popup && popup?.previousPage.length > 0 ? goBack() : closePopup()
   };
 
   return (
     <div>
       <DeleteHead>
         <HeadTitle>Подтвердите удаление</HeadTitle>
-        <CloseButton onClick={closePopup}>
+        <CloseButton onClick={() => popup && popup?.previousPage.length > 0 ? goBack() : closePopup()}>
           <CloseIcon color="#336CFF"/>
         </CloseButton>
       </DeleteHead>
@@ -33,7 +33,7 @@ const DeleteConfirmPopup = () => {
           Удалить
         </BtnBase>
         <BtnBase
-          onClick={closePopup}
+          onClick={() => popup && popup?.previousPage.length > 0 ? goBack() : closePopup()}
           $color="#D6DCEC"
           $bg="#242A3A"
         >
