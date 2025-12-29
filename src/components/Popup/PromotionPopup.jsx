@@ -72,98 +72,94 @@ const PromotionPopup = () => {
           Просмотры на пост по ссылке
         </PostTitle>
       </PromotionViews>
-      <ViewsPost>
-        <PostTitle>Просмотры на пост</PostTitle>
-        <PostContainer>
-          <Counter placeholder="Мин." value={minViews} onChange={setMinViews} />
-          <Counter placeholder="Макс." value={maxViews} onChange={setMaxViews} />
-        </PostContainer>
-      </ViewsPost>
-      <PromotePost>
-        <PostTitle>Продвинуть пост</PostTitle>
-        <PromoteText>
-          Введите ссылку на пост и количество просмотров для ручного продвижения
-        </PromoteText>
-        {manualPosts.map((post, index) => (
-          <PostContainer key={index}>
+
+      {autoViews && (
+        <ViewsPost>
+          <PostTitle>Просмотры на пост</PostTitle>
+          <PostContainer>
+            <Counter placeholder="Мин." value={minViews} onChange={setMinViews} />
+            <Counter placeholder="Макс." value={maxViews} onChange={setMaxViews} />
+          </PostContainer>
+        </ViewsPost>
+      )}
+      {autoViewsLink && (
+        <PromotePost>
+          <PostTitle>Продвинуть пост</PostTitle>
+          <PromoteText>
+            Введите ссылку на пост и количество просмотров для ручного продвижения
+          </PromoteText>
+          {manualPosts.map((post, index) => (
+            <PostContainer key={index}>
+              <CounterContainer>
+                <CounterTitle>Ссылка на пост:</CounterTitle>
+                <PostInput
+                  value={post.link}
+                  onChange={(e) => {
+                    const newPosts = [...manualPosts];
+                    newPosts[index].link = e.target.value;
+                    setManualPosts(newPosts);
+                  }}
+                />
+              </CounterContainer>
+              <CounterContainer>
+                <CounterTitle>Количество просмотров</CounterTitle>
+                <Counter
+                  value={post.views}
+                  onChange={(value) => {
+                    const newPosts = [...manualPosts];
+                    newPosts[index].views = value;
+                    setManualPosts(newPosts);
+                  }}
+                />
+              </CounterContainer>
+              {manualPosts.length <= 1 ? (
+                <></>
+              ) : (
+                <ButtonDel
+                  onClick={() => setManualPosts((prev) => prev.filter((_, i) => i !== index))}
+                  title="Удалить"
+                >
+                  <img src={del} alt="del icon" width={14} height={16} />
+                </ButtonDel>
+              )}
+
+            </PostContainer>
+          ))}
+
+          <PostContainer>
             <CounterContainer>
               <CounterTitle>Ссылка на пост:</CounterTitle>
               <PostInput
-                value={post.link}
-                onChange={(e) => {
-                  const newPosts = [...manualPosts];
-                  newPosts[index].link = e.target.value;
-                  setManualPosts(newPosts);
-                }}
+                placeholder="https://"
+                value={postLink}
+                onChange={(e) => setPostLink(e.target.value)}
               />
             </CounterContainer>
             <CounterContainer>
               <CounterTitle>Количество просмотров</CounterTitle>
-              <Counter
-                value={post.views}
-                onChange={(value) => {
-                  const newPosts = [...manualPosts];
-                  newPosts[index].views = value;
-                  setManualPosts(newPosts);
-                }}
-              />
+              <Counter placeholder="" value={postViews} onChange={setPostViews} />
             </CounterContainer>
-            {manualPosts.length <= 1 ? (
-              <></>
-            ) : (
-              <ButtonDel
-                onClick={(e) => {
-                  e.stopPropagation();
-                  changeContent("delete_confirm", "popup_window", {
-                    itemName: manualPosts[index].link, 
-                    onDelete: () => {
-                      setManualPosts((prev) => prev.filter((_, i) => i !== index));
-                    },
-                  });
-                }}
-                title="Удалить"
-              >
-                <img src={del} alt="del icon" width={14} height={16} />
-              </ButtonDel>
-            )}
 
+            <BtnBase
+              $padding="17px 31px"
+              $color="#fff"
+              $bg="#336CFF"
+              onClick={handleAddPost}
+              disabled={!postLink || !postViews}
+            >
+              + Добавить ссылку на пост
+            </BtnBase>
           </PostContainer>
-        ))}
-
-        <PostContainer>
-          <CounterContainer>
-            <CounterTitle>Ссылка на пост:</CounterTitle>
-            <PostInput
-              placeholder="https://"
-              value={postLink}
-              onChange={(e) => setPostLink(e.target.value)}
-            />
-          </CounterContainer>
-          <CounterContainer>
-            <CounterTitle>Количество просмотров</CounterTitle>
-            <Counter placeholder="" value={postViews} onChange={setPostViews} />
-          </CounterContainer>
-
           <BtnBase
-            $padding="17px 31px"
-            $color="#fff"
-            $bg="#336CFF"
-            onClick={handleAddPost}
-            disabled={!postLink || !postViews}
+            $margin="8"
+            $padding="21px 24px"
+            $color="#EF6284"
+            $bg="#241F31"
           >
-            + Добавить ссылку на пост
+            Начать продвижение
           </BtnBase>
-        </PostContainer>
-        <BtnBase
-          $margin="8"
-          $padding="21px 24px"
-          $color="#EF6284"
-          $bg="#241F31"
-        >
-          Начать продвижение
-        </BtnBase>
-      </PromotePost>
-
+        </PromotePost>
+      )}
       <BtnBase
         $margin="64"
         onClick={handleSave}
