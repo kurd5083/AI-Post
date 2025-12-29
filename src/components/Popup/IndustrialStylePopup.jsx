@@ -26,7 +26,7 @@ const IndustrialStylePopup = () => {
   const { creativity } = useGetChannelCreativity(channelId);
   const { caption } = useGetChannelCaption(channelId);
 
-  const { mutate: runTestDrive, isLoading } = useTestDrivePrompt();
+  const { mutate: testDrive, isLoading } = useTestDrivePrompt();
   
   useEffect(() => {
     if (globalPrompt !== undefined) setLocalPrompt(globalPrompt.globalPromt);
@@ -40,7 +40,11 @@ const IndustrialStylePopup = () => {
     }
   };
   const handleTest = () => {
-    if (!localPrompt?.trim()) return;
+    testDrive({
+      topic: "Сказка",
+      promtManage: localPrompt,
+      channelId,
+    });
   };
 
   const { mutate: updateGlobalPrompt } = useUpdateChannelGlobalPrompt();
@@ -68,10 +72,10 @@ const IndustrialStylePopup = () => {
               ></textarea>
             </div>
             <button
-              disabled={!localPrompt?.trim()}
+              disabled={!localPrompt?.trim() || isLoading}
               onClick={handleTest}
             >
-              Тест
+              {isLoading ? "Тестируем..." : "Тест"}
             </button>
             <p>{localPrompt?.length} / {MAX_PROMPT_LENGTH}</p>
           </IndustrialStyleInfo>
@@ -158,6 +162,7 @@ const IndustrialStyleDesc = styled.p`
   font-weight: 700;
   color: #6A7080;
   max-width: 420px;
+  margin-top: 24px;
 
   mark {
     color: #FF7F48;
@@ -243,7 +248,6 @@ const IndustrialStyleInput = styled.input`
   }
 `
 const IndustrialStyleRight = styled.div`
-margin-top: 42px;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
