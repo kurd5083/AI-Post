@@ -9,6 +9,7 @@ import useFadeOnScroll from "@/lib/useFadeOnScroll";
 import { usePopupStore } from "@/store/popupStore"
 import TimeIcons from "@/icons/TimeIcons";
 import arrow from "@/assets/arrow.svg";
+import dzen_icon from "@/assets/dzen-icon.svg";
 import ModernLoading from "@/components/ModernLoading";
 import news_stub from "@/assets/news-stub.png";
 
@@ -53,7 +54,7 @@ const TapeList = ({ forceHorizontal = false, padding, newsData, loding }) => {
             <TapeItem key={news.id} $forceHorizontal={forceHorizontal}>
               <TapeItemContent $forceHorizontal={forceHorizontal}>
                 <TapeItemHead>
-                  <img src={news.ava} alt="ava icon" />
+                  <img src={dzen_icon} alt="ava icon" />
                   <p>{news.sourceName}</p>
                 </TapeItemHead>
                 <Link to={`/news/${news.id}`}>

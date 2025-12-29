@@ -10,6 +10,7 @@ import { useNewsById } from "@/lib/news/useNewsById";
 import { useFormattedHtml } from "@/lib/useFormattedHtml";
 import ModernLoading from "@/components/ModernLoading";
 import news_stub from "@/assets/news-stub.png";
+import dzen_icon from "@/assets/dzen-icon.svg";
 
 const NewsDetail = () => {
 	const { openPopup } = usePopupStore();
@@ -30,7 +31,7 @@ const NewsDetail = () => {
 					<NewsPost>
 						<PostLeft>
 							<PostHead>
-								{/* <img src={news.ava} alt="ava icon" /> */}
+								<img src={dzen_icon} alt="ava icon" />
 								<p>{news?.sourceName}</p>
 							</PostHead>
 							<NewsImgMobile src={`http://77.37.65.40:3000/${news?.images[0]}`} alt={news?.title} />
