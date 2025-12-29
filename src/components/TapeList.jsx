@@ -5,14 +5,14 @@ import { Navigation } from "swiper/modules";
 import "swiper/css";
 import useSwipeAllowed from "@/lib/useSwipeAllowed";
 import useFadeOnScroll from "@/lib/useFadeOnScroll";
-import { useNews } from "@/lib/news/useNews";
+
 import { usePopupStore } from "@/store/popupStore"
 import TimeIcons from "@/icons/TimeIcons";
 import arrow from "@/assets/arrow.svg";
 import ModernLoading from "@/components/ModernLoading";
 import news_stub from "@/assets/news-stub.png";
 
-const TapeList = ({ forceHorizontal = false, padding }) => {
+const TapeList = ({ forceHorizontal = false, padding, newsData, loding }) => {
   const { popup, changeContent, openPopup } = usePopupStore();
 
   const { fadeVisible, ref } = useFadeOnScroll(20);
@@ -20,7 +20,8 @@ const TapeList = ({ forceHorizontal = false, padding }) => {
 
   const direction = forceHorizontal ? "horizontal" : (isSwipe ? "horizontal" : "vertical");
   console.log(popup, popup?.status, 'adhfdjdfjzzzzzzzz')
-  const { newsData, newsLoding } = useNews();
+
+  
   const handleClick = (id) => {
     if (popup && popup?.status) {
       changeContent("select_channel", "popup_window", { newsId: id });
@@ -31,7 +32,7 @@ const TapeList = ({ forceHorizontal = false, padding }) => {
 
   return (
     <>
-      {!newsLoding ? (
+      {!loding ? (
         <TapeContainer
           ref={ref}
           key={isSwipe}
@@ -48,7 +49,7 @@ const TapeList = ({ forceHorizontal = false, padding }) => {
             prevEl: ".TapePrev",
           }}
         >
-          {newsData?.data?.map((news) => (
+          {newsData?.map((news) => (
             <TapeItem key={news.id} $forceHorizontal={forceHorizontal}>
               <TapeItemContent $forceHorizontal={forceHorizontal}>
                 <TapeItemHead>

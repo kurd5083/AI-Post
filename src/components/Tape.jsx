@@ -7,9 +7,13 @@ import InputPlus from "@/shared/InputPlus";
 import BlocksItems from "@/shared/BlocksItems";
 import CustomSelect from "@/shared/CustomSelectSec";
 import BtnBase from "@/shared/BtnBase";
+import { useNews } from "@/lib/news/useNews";
 
 const Tape = () => {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const { newsData, newsLoding } = useNews({});
+  const [stopWord, setStopWord] = useState("");
+  const [stopWords, setStopWords] = useState([]);
 
   const handleFilterClick = () => {
     setIsFilterOpen(!isFilterOpen);
@@ -49,8 +53,39 @@ const Tape = () => {
             padding="24px"
           />
           <FilterKey>
-            <InputPlus title="Стоп-слова" placeholder="Ключевое слово"  bg="#2B243C" color="#FF55AD" fs="16px" padding="16px"/>
-            <BlocksItems items={[{value: 'Война'}, {value: 'Новости'}, {value: 'Криптовалюта'}]} color="#EF6284" />
+            <InputPlus
+              title="Стоп-слова"
+              placeholder="Ключевое слово"
+              bg="#2B243C"
+              color="#FF55AD"
+              fs="16px"
+              padding="16px"
+              value={stopWord}
+              onChange={setStopWord}
+              onSubmit={() => {
+                if (!stopWord.trim()) return;
+
+                setStopWords(prev =>
+                  prev.includes(value) ? prev : [...prev, value]
+                );
+
+                setStopWord("");
+              }}
+            />
+            {/* <BlocksItems 
+              items={hashtags.map((h, index) => ({ value: h, id: index }))} 
+              color="#EF6284" 
+              onRemove={(id) => {
+                setHashtags((prev) => prev.filter((h) => h.id !== id));
+              }}
+            /> */}
+            <BlocksItems
+              items={stopWords.map((word, index) => ({ value: word, id: index }))}
+              color="#EF6284"
+              onRemove={(id) => {
+                setStopWords((prev) => prev.filter((w) => w.id !== id));
+              }}
+            />
           </FilterKey>
           <FilterKey>
             <InputPlus title="Приоритетные слова" placeholder="Ключевое слово"  bg="#2B243C" color="#FF55AD" fs="16px" padding="16px"/>
@@ -59,7 +94,10 @@ const Tape = () => {
           <BtnBase $color="#D6DCEC" $bg="#336CFF" $margin="40">Сохранить</BtnBase>
         </FilterWrapper>
       )}
-      <TapeList />
+      <TapeList 
+        newsData={newsData?.data || []}
+        loading={newsLoding}
+      />
     </TapeContainer>
   );
 };
