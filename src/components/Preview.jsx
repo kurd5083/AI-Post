@@ -47,7 +47,7 @@ const Preview = ({ collapsed }) => {
 							</PreviewInfoContent>
 						</PreviewInfo>
 						<PreviewButton>
-							<img src={text} alt="text icon" width={24} height={17} />
+							{/* <img src={text} alt="text icon" width={24} height={17} /> */}
 							<p>Отправить в Telegram</p>
 						</PreviewButton>
 					</>
