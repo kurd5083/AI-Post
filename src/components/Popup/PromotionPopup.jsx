@@ -85,6 +85,26 @@ const PromotionPopup = () => {
         <PromoteText>
           Введите ссылку на пост и количество просмотров для ручного продвижения
         </PromoteText>
+        {manualPosts.map((post, index) => (
+    <PostContainer key={index}>
+      <CounterContainer>
+        <CounterTitle>Ссылка на пост:</CounterTitle>
+        <PostInput value={post.link} readOnly />
+      </CounterContainer>
+      <CounterContainer>
+        <CounterTitle>Количество просмотров</CounterTitle>
+        <Counter value={post.views} readOnly />
+      </CounterContainer>
+      <ButtonDel
+        onClick={() => {
+          setManualPosts((prev) => prev.filter((_, i) => i !== index));
+        }}
+        title="Удалить"
+      >
+        <img src={del} alt="del icon" width={14} height={16} />
+      </ButtonDel>
+    </PostContainer>
+  ))}
         <PostContainer>
           <CounterContainer>
             <CounterTitle>Ссылка на пост:</CounterTitle>
@@ -98,26 +118,28 @@ const PromotionPopup = () => {
             <CounterTitle>Количество просмотров</CounterTitle>
             <Counter placeholder="" value={postViews} onChange={setPostViews} />
           </CounterContainer>
-          <BtnBase
-            $padding="17px 31px"
-            $color="#fff"
-            $bg="#336CFF"
-          >
-            + Добавить ссылку на пост
-          </BtnBase>
+           <BtnBase
+          $padding="17px 31px"
+          $color="#fff"
+          $bg="#336CFF"
+          onClick={handleAddPost}
+          disabled={!postLink || !postViews}
+        >
+          + Добавить ссылку на пост
+        </BtnBase>
           <ButtonDel
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          changeContent("delete_confirm", "popup_window", {
-                            // itemName: channel.name,
-                            // onDelete: () => deleteChannel(channel.id),
+            onClick={(e) => {
+              e.stopPropagation();
+              changeContent("delete_confirm", "popup_window", {
+                // itemName: channel.name,
+                // onDelete: () => deleteChannel(channel.id),
 
-                          });
-                        }}
-                        title="Удалить"
-                      >
-                        <img src={del} alt="del icon" width={14} height={16} />
-                      </ButtonDel>
+              });
+            }}
+            title="Удалить"
+          >
+            <img src={del} alt="del icon" width={14} height={16} />
+          </ButtonDel>
         </PostContainer>
         <BtnBase
           $margin="8"
@@ -165,7 +187,7 @@ const PromotionViews = styled.div`
   @media(max-width: 480px) { align-items: flex-start; }
 `;
 const PostTitle = styled.h2` font-size: 24px; font-weight: 700; `;
-const PostContainer = styled.div` display: flex; gap: 16px; `;
+const PostContainer = styled.div` display: flex; gap: 16px; align-items: flex-end;`;
 const ViewsPost = styled.div`
   margin-top: 64px;
   display: flex;
@@ -197,8 +219,8 @@ const ButtonDel = styled.button`
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 48px;
-  height: 48px;
+  width: 56px;
+  height: 56px;
   border-radius: 12px;
   flex-shrink: 0;
   transition: all 0.2s;
