@@ -33,7 +33,14 @@ const LinkGenerationPopup = () => {
           now.setDate(now.getDate() + 7);
           break;
       }
-      customExpireDate = now.toISOString();
+      const yyyy = now.getUTCFullYear();
+      const mm = String(now.getUTCMonth() + 1).padStart(2, "0");
+      const dd = String(now.getUTCDate()).padStart(2, "0");
+      const hh = String(now.getUTCHours()).padStart(2, "0");
+      const min = String(now.getUTCMinutes()).padStart(2, "0");
+      const ss = String(now.getUTCSeconds()).padStart(2, "0");
+
+      customExpireDate = `${yyyy}-${mm}-${dd}T${hh}:${min}:${ss}Z`;
     }
 
     createInviteLink.mutate(
