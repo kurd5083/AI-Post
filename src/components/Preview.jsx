@@ -64,15 +64,8 @@ const Preview = ({ collapsed, testResult }) => {
 	)
 }
 const GeneratorPreview = styled.div`
-  padding-bottom: 30px;
-  grid-column: 4 / span 2;
-  grid-row: 1 / span 2;
-
-  @media(max-width: 1400px) {
-    grid-column: 1 /span 5;
-    grid-row: 2;
-    padding-bottom: 0px;
-  }
+  width: 100%;
+	max-width: 800px;
 `;
 const PreviewContent = styled.div`
   background-color: #181E30;
