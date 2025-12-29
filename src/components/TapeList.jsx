@@ -208,6 +208,7 @@ const TapeItemAction = styled.span`
   border-radius: 8px;
   background-color: #1F305C;
   cursor: pointer;
+  width: fit-content;
 `
 const TapeTime = styled.div`
   display: flex;

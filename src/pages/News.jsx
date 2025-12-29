@@ -14,8 +14,8 @@ import news_stub from "@/assets/news-stub.png";
 const NewsDetail = () => {
 	const { openPopup } = usePopupStore();
 	const { id } = useParams();
-	const { news, newsIdLoading } = useNewsById(id);
 	const { newsData, newsLoding } = useNews({});
+	const { news, newsIdLoading } = useNewsById(id);
 	const formattedTitle = useFormattedHtml(news?.title);
 	const formattedContent = useFormattedHtml(news?.summary);
 
@@ -33,8 +33,8 @@ const NewsDetail = () => {
 								{/* <img src={news.ava} alt="ava icon" /> */}
 								<p>{news?.sourceName}</p>
 							</PostHead>
-							<NewsImgMobile src={`http://77.37.65.40:3000/${news.images[0]}`} alt={news.title} />
-							<PostTimeMobile ><TimeIcons color="#336CFF" />{news.readingTime}</PostTimeMobile>
+							<NewsImgMobile src={`http://77.37.65.40:3000/${news?.images[0]}`} alt={news?.title} />
+							<PostTimeMobile ><TimeIcons color="#336CFF" />{news?.readingTime}</PostTimeMobile>
 							<PostTilte dangerouslySetInnerHTML={{ __html: formattedTitle }} />
 							<PostDescription dangerouslySetInnerHTML={{ __html: formattedContent }} />
 							<PostFooter className="news-meta">
@@ -46,14 +46,14 @@ const NewsDetail = () => {
 								>
 									Сохранить в канал
 								</BtnBase>
-								<PostTime><TimeIcons color="#336CFF" />{news.readingTime}</PostTime>
+								<PostTime><TimeIcons color="#336CFF" />{news?.readingTime}</PostTime>
 							</PostFooter>
 						</PostLeft>
 						<NewsImg 
-							src={news.images && news.images[0] 
-									? `http://77.37.65.40:3000/${news.images[0]}` 
+							src={news?.images && news?.images[0] 
+									? `http://77.37.65.40:3000/${news?.images[0]}` 
 									: news_stub} 
-							alt={news.title} 
+							alt={news?.title} 
 						/>
 					</NewsPost>
 				</>
