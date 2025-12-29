@@ -340,6 +340,10 @@ const FilterInput = styled.input`
   font-size: 16px;
   font-weight: 700;
   border: none;
+  max-width: 340px;
+  width: 100%;
+  border-bottom: 2px solid rgb(46, 57, 84);
+  padding-bottom: 16px;
 
   &::placeholder {
     color: #6A7080;
