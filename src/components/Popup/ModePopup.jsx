@@ -9,7 +9,7 @@ import { useUpdateChannelField } from "@/lib/channels/useUpdateChannelField";
 
 
 const ModePopup = () => {
-	const { popup } = usePopupStore();
+    const { popup } = usePopupStore();
     const channelId = popup?.data?.channelId;
 
     const [selectedMode, setSelectedMode] = useState(null);
@@ -32,7 +32,7 @@ const ModePopup = () => {
             setPremoderationMinutes(popup.data.premoderationMinutes);
         }
     }, [popup?.data]);
-   
+
 
     const handleSelectMode = (mode) => {
         setSelectedMode(mode);
@@ -53,7 +53,7 @@ const ModePopup = () => {
             <ModeContentTitle>Выберите один режим работы</ModeContentTitle>
             <div>
                 <ModeContentItem>
-                    <Checkbox 
+                    <Checkbox
                         checked={selectedMode === "AUTOPOSTING"}
                         onChange={() => handleSelectMode("AUTOPOSTING")}
                     >
@@ -65,8 +65,8 @@ const ModePopup = () => {
                     </Checkbox>
                 </ModeContentItem>
                 <ModeContentItem>
-                    <Checkbox  
-                        checked={selectedMode === "PREMODERATION"} 
+                    <Checkbox
+                        checked={selectedMode === "PREMODERATION"}
                         onChange={() => handleSelectMode("PREMODERATION")}
                     >
                         <div>
@@ -77,29 +77,37 @@ const ModePopup = () => {
                     </Checkbox>
                 </ModeContentItem>
             </div>
-            <ModeContentTitle>Параметры премодерации</ModeContentTitle>
-             <CustomSelectSec
-                value={premoderationMinutes}
-                onChange={handleChangeMinutes}
-                options={[
-                    { label: "15 минут", value: 15 },
-                    { label: "30 минут", value: 30 },
-                ]}
-                width="215px"
-                fs="24px"
-            />
-            <ModeContentItem>
-                    <Checkbox 
-                        checked={requireApproval}
-                        onChange={handleToggleApproval}
-                    >
-                    <div>
-                        <h4>Не публиковать без одобрения</h4>
-                        <p>Сервис сформирует пост и отправит вам через бота.
-                            Решение о публикации будете принимать вы</p>
-                    </div>
-                </Checkbox>
-            </ModeContentItem>
+            {selectedMode === "PREMODERATION" && (
+                <>
+                    <ModeContentTitle>Параметры премодерации</ModeContentTitle>
+
+                    <CustomSelectSec
+                        value={premoderationMinutes}
+                        onChange={handleChangeMinutes}
+                        options={[
+                            { label: "15 минут", value: 15 },
+                            { label: "30 минут", value: 30 },
+                        ]}
+                        width="215px"
+                        fs="24px"
+                    />
+
+                    <ModeContentItem>
+                        <Checkbox
+                            checked={requireApproval}
+                            onChange={handleToggleApproval}
+                        >
+                            <div>
+                                <h4>Не публиковать без одобрения</h4>
+                                <p>
+                                    Сервис сформирует пост и отправит вам через бота.
+                                    Решение о публикации будете принимать вы
+                                </p>
+                            </div>
+                        </Checkbox>
+                    </ModeContentItem>
+                </>
+            )}
         </ModeContent>
     )
 }
