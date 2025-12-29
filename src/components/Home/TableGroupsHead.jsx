@@ -155,7 +155,7 @@ const baseFolderStyles = css`
   display: flex;
   align-items: center;
   gap: 16px;
-  border-bottom: 2px solid #1F273B;
+  border-bottom: 2px solid  ${({ $active }) => ($active ? "#FFFFFF" : "#1F273B")};
   color: ${({ $active }) => ($active ? "#FFFFFF" : "#6A7080")};
   padding-bottom: 18px;
   font-size: 14px;
