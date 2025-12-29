@@ -33,8 +33,7 @@ const Preview = ({ collapsed, testResult }) => {
 						</PreviewSelect>
 						<PreviewInfo>
 							<PreviewInfoBG src={PreviewBG} alt="bg" />
-							<PreviewInfoContent>
-								<PreviewInfoText>
+							<PreviewInfoContainer>
 									 {savedFiles?.images?.length > 0 && (
 										<ImagesContainer>
 											{savedFiles.images.map((img, index) => (
@@ -42,6 +41,8 @@ const Preview = ({ collapsed, testResult }) => {
 											))}
 										</ImagesContainer>
 									)}
+									<PreviewInfoText>
+
 									{title && <strong>{title}</strong>}<br /><br />
                   {summary}<br /><br />
 									{url && (
@@ -51,7 +52,7 @@ const Preview = ({ collapsed, testResult }) => {
 									)}
 								</PreviewInfoText>
 								<BtnBase $padding="17px" $bg="#243D56" $color="#D6DCEC">🚀 Начать</BtnBase>
-							</PreviewInfoContent>
+							</PreviewInfoContainer>
 						</PreviewInfo>
 						<PreviewButton>
 							{/* <img src={text} alt="text icon" width={24} height={17} /> */}
@@ -130,7 +131,7 @@ const PreviewInfoBG = styled.img`
   height: calc(100% + 46px);
   object-fit: cover;
 `
-const PreviewInfoContent = styled.div`
+const PreviewInfoContainer = styled.div`
   position: relative;
   width: calc(100% - 104px);
   display: flex;
@@ -146,26 +147,30 @@ const PreviewInfoContent = styled.div`
     width: calc(100% - 28px);
   } 
 `
-const PreviewInfoText = styled.p`
-  box-sizing: border-box;
-  padding: 24px;
-  background-color: #131C22;
-  border-radius: 24px;
-  font-size: 12px;
-  line-height: 16px;
-  font-weight: 600;
-`
 const ImagesContainer = styled.div`
+	background-color: #131C22;
+	padding: 8px;
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
-  margin-top: 16px;
+  margin-bottom: 4px;
+	border-radius: 16px;
 
   img {
-    width: 80px;
-    height: 80px;
+    width: 100%;
+		max-width: 250px;
     object-fit: cover;
     border-radius: 12px;
   }
 `;
+const PreviewInfoText = styled.p`
+	box-sizing: border-box;
+  padding: 24px;
+  background-color: #131C22;
+  border-radius: 24px;
+	font-size: 12px;
+  line-height: 16px;
+  font-weight: 600;
+
+`
 export default Preview
