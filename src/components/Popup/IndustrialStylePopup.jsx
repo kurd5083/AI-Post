@@ -83,7 +83,12 @@ const IndustrialStylePopup = () => {
             />
           </IndustrialStyleInputContainer>
           <IndustrialStyleDesc>Подпись будет добавлена в <mark>конец каждого поста.</mark> Например: ссылка или призыв подписаться.</IndustrialStyleDesc>
-          <IndustrialStyleTitle>Креативность</IndustrialStyleTitle>
+        </IndustrialStyleLeft>
+        <IndustrialStyleRight>
+          <Preview collapsed={false}/>
+        </IndustrialStyleRight>
+      </IndustrialStyleContent>
+      <IndustrialStyleTitle>Креативность</IndustrialStyleTitle>
           <IndustrialStyleBlock>
             <Drag
               value={localCreativity}
@@ -95,11 +100,6 @@ const IndustrialStylePopup = () => {
               может привести к менее предсказуемым результатам
             </IndustrialStyleDesc>
           </IndustrialStyleBlock>
-        </IndustrialStyleLeft>
-        <IndustrialStyleRight>
-          <Preview collapsed={false}/>
-        </IndustrialStyleRight>
-      </IndustrialStyleContent>
       <IndustrialStyleButton>
         <BtnBase onClick={handleSave}>Сохранить</BtnBase>
       </IndustrialStyleButton>
