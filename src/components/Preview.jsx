@@ -4,6 +4,7 @@ import PreviewBG from "@/assets/ai-generator/PreviewBG.png";
 import arrow from "@/assets/arrow.svg";
 import CustomSelect from "@/shared/CustomSelectSec";
 import BtnBase from "@/shared/BtnBase";
+import TgIcon from "@/icons/TgIcon";
 
 const Preview = ({ collapsed, testResult }) => {
 	const { title, summary, url, savedFiles } = testResult || {};
@@ -55,7 +56,7 @@ const Preview = ({ collapsed, testResult }) => {
 							</PreviewInfoContainer>
 						</PreviewInfo>
 						<PreviewButton>
-							{/* <img src={text} alt="text icon" width={24} height={17} /> */}
+							<TgIcon width="24" height="20" />
 							<p>Отправить в Telegram</p>
 						</PreviewButton>
 					</>
@@ -99,7 +100,11 @@ const HeadArrow = styled.img`
 const PreviewButton = styled.button`
   display: flex;
   align-items: center;
+	justify-content: center;
+	width: 100%;
   gap: 16px;
+	margin-top: 40px;
+	color: #D6DCEC;
 
   p {
     font-size: 14px;
