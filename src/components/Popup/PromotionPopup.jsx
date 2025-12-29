@@ -17,13 +17,13 @@ const PromotionPopup = () => {
 
   const [autoViews, setAutoViews] = useState(false);
   const [autoViewsLink, setAutoViewsLink] = useState(false);
-  const [minViews, setMinViews] = useState(null);
-  const [maxViews, setMaxViews] = useState(null);
+  const [minViews, setMinViews] = useState("");
+  const [maxViews, setMaxViews] = useState("");
 
   const [postLink, setPostLink] = useState("");
-  const [postViews, setPostViews] = useState(null);
+  const [postViews, setPostViews] = useState("");
   const [manualPosts, setManualPosts] = useState([]);
-
+  console.log(manualPosts)
   useEffect(() => {
     if (promotionConfig) {
       setAutoViews(promotionConfig.isEnabled || false);
@@ -38,7 +38,7 @@ const PromotionPopup = () => {
     if (manualPosts.length >= 10) return;
     setManualPosts(prev => [...prev, { link: postLink, views: postViews }]);
     setPostLink("");
-    setPostViews(null);
+    setPostViews("");
   };
 
   const handleSave = () => {
