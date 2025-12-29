@@ -61,7 +61,7 @@ const Tape = () => {
           <CustomSelectSec
             options={[{ value: "test", label: "test" }]}
             value={topic}
-            onChange={setTopic(option.value)}
+            onChange={(option) => setTopic(option.value)}
             width="340px"
             fs="16px"
             padding="24px"
@@ -70,7 +70,7 @@ const Tape = () => {
           <CustomSelectSec
             options={[{ value: "ru", label: "Русский" }, { value: "en", label: "Английский" }]}
             value={language}
-            onChange={setLanguage(option.value)}
+            onChange={(option) => setLanguage(option.value)}
             width="340px"
             fs="16px"
             padding="24px"
