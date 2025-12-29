@@ -1,7 +1,7 @@
 import apiClient from "@/api/apiClient";
 
 export const getNews = async (filter) => {
-  console.log(filter)
+  console.log({params: filter})
   const response = await apiClient.get("/news", {
     params: filter,
   });
