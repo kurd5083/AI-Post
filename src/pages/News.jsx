@@ -31,7 +31,7 @@ const NewsDetail = () => {
 						<PostLeft>
 							<PostHead>
 								{/* <img src={news.ava} alt="ava icon" /> */}
-								<p>{news.sourceName}</p>
+								<p>{news?.sourceName}</p>
 							</PostHead>
 							<NewsImgMobile src={`http://77.37.65.40:3000/${news.images[0]}`} alt={news.title} />
 							<PostTimeMobile ><TimeIcons color="#336CFF" />{news.readingTime}</PostTimeMobile>
