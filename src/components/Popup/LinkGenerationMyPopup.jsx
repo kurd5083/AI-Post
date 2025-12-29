@@ -54,14 +54,14 @@ const LinkGenerationMyPopup = () => {
                       Активно
                     </CellStatus>
                   </TableCell>
-                  <TableCell>
+                  <TableCellActions>
                     <HideButton>
                       <img src={hide} alt="hide icon" width={24} height={17} />
                     </HideButton>
                     <DeleteButton>
                       <img src={del} alt="del icon" width={14} height={16} />
                     </DeleteButton>
-                  </TableCell>
+                  </TableCellActions>
                 </tr>
               ))}
             </tbody>
@@ -116,7 +116,7 @@ const Table = styled.table`
     width: 160px;
   }
   & colgroup col:nth-child(7) {
-    width: 94px;
+    width: 105px;
   }
 
 `;
@@ -126,8 +126,6 @@ const HeaderCell = styled.th`
   color: #6A7080;
   font-size: 12px;
   text-transform: uppercase;
-  position: sticky;
-  top: 0px;
   z-index: 2;
   padding: 20px 0;
 `;
@@ -135,6 +133,10 @@ const TableCell = styled.td`
   font-size: 14px;
   font-weight: 700;
   color: #6A7080;
+  padding: 15px 0;
+`;
+const TableCellActions = styled.td`
+  display: flex;
   padding: 15px 0;
 `;
 
