@@ -110,6 +110,7 @@ const PromotionPopup = () => {
     </CounterContainer>
     <ButtonDel
       onClick={() => {
+        if (manualPosts.length <= 1) return; // нельзя удалить, если остался один
         setManualPosts((prev) => prev.filter((_, i) => i !== index));
       }}
       title="Удалить"
@@ -119,7 +120,6 @@ const PromotionPopup = () => {
   </PostContainer>
 ))}
 
-{/* Блок для нового поста */}
 <PostContainer>
   <CounterContainer>
     <CounterTitle>Ссылка на пост:</CounterTitle>
