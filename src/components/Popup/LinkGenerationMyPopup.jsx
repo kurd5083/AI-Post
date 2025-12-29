@@ -80,7 +80,6 @@ const TableWrapper = styled.div`
   height: 100%;
   flex-direction: column;
   padding: 0 56px;
-  margin-top: 48px;
 
   @media(max-width: 1600px) {
     padding: 0 32px;
@@ -88,38 +87,29 @@ const TableWrapper = styled.div`
   @media(max-width: 768px) {
     padding: 0 24px;
   }
-
-  @media (max-width: 480px) {
-    margin-top: 24px;
-  }
 `;
 const Table = styled.table`
   width: 100%;
   border-collapse: separate;
-  border-spacing: 0 20px;
   table-layout: fixed;
 
-  @media(max-width: 768px) {
-    border-spacing: 0;
-  }
-
   & colgroup col:first-child {
-    width: 58px;
+    width: 130px;
   }
   & colgroup col:nth-child(2) {
-    width: 276px;
+    width: 290px;
   }
   & colgroup col:nth-child(3) {
-    width: 163px;
+    width: 160px;
   }
   & colgroup col:nth-child(4) {
-    width: 209px;
+    width: 160px;
   }
   & colgroup col:nth-child(5) {
-    width: 152px;
+    width: 120px;
   }
   & colgroup col:nth-child(6) {
-    width: 176px;
+    width: 160px;
   }
   & colgroup col:nth-child(7) {
     width: 94px;
