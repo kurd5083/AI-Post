@@ -35,6 +35,7 @@ const PromotionPopup = () => {
 
   const handleAddPost = () => {
     if (!postLink || !postViews) return;
+    if (manualPosts.length >= 10) return;
     setManualPosts(prev => [...prev, { link: postLink, views: postViews }]);
     setPostLink("");
     setPostViews(null);

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import styled from "styled-components";
+import Checkbox from "@/shared/Checkbox";
 import fire from "@/assets/tape/fire.svg";
 import filter from "@/assets/tape/filter.svg";
 import TapeList from "@/components/TapeList";
@@ -14,13 +15,31 @@ const Tape = () => {
   const [filters, setFilters] = useState({});
   const { newsData, newsLoding } = useNews(filters);
   console.log(newsData)
+
   const [stopWord, setStopWord] = useState("");
   const [stopWords, setStopWords] = useState([]);
   const [priorityWord, setPriorityWord] = useState("");
   const [priorityWords, setPriorityWords] = useState([]);
+  const [topic, setTopic] = useState(filters.topic || "");
+  const [language, setLanguage] = useState(filters.language || "");
+  const [isProcessed, setIsProcessed] = useState(filters.isProcessed || false);
+  const [isPublished, setIsPublished] = useState(filters.isPublished || false);
+  const [search, setSearch] = useState(filters.search || "");
 
   const handleFilterClick = () => {
     setIsFilterOpen(!isFilterOpen);
+  };
+
+  const handleSave = () => {
+    setFilters({
+      stopWords: stopWords.join(","),
+      priorityWords: priorityWords.join(","),
+      topic,
+      language,
+      isProcessed,
+      isPublished,
+      search,
+    });
   };
 
   return (
@@ -38,24 +57,32 @@ const Tape = () => {
 
       {isFilterOpen && (
         <FilterWrapper>
-          <FilterTitle>Выбор источника</FilterTitle>
+          <FilterTitle>Тема</FilterTitle>
           <CustomSelect
+            options={[{ value: "test", label: "test" }]}
+            value={topic}
+            onChange={setTopic}
             width="340px"
-            options={[
-              { value: "test", label: "test" },
-            ]}
             fs="16px"
             padding="24px"
           />
           <FilterTitle>ЯЗЫК</FilterTitle>
           <CustomSelect
+            options={[{ value: "ru", label: "Русский" }, { value: "en", label: "Английский" }]}
+            value={language}
+            onChange={setLanguage}
             width="340px"
-            options={[
-              { value: "test", label: "test" },
-            ]}
             fs="16px"
             padding="24px"
           />
+          <FilterKey>
+            <Checkbox checked={isProcessed} onChange={() => setIsProcessed(!isProcessed)}>
+              Обработано
+            </Checkbox>
+            <Checkbox checked={isPublished} onChange={() => setIsPublished(!isPublished)}>
+              Опубликовано
+            </Checkbox>
+          </FilterKey>
           <FilterKey>
             <InputPlus
               title="Стоп-слова"
@@ -113,6 +140,14 @@ const Tape = () => {
               />
             )}
             
+          </FilterKey>
+           <FilterKey>
+            <InputPlus
+              title="Поиск"
+              placeholder="Поиск по заголовку и содержимому"
+              value={search}
+              onChange={setSearch}
+            />
           </FilterKey>
           <BtnBase
             $color="#D6DCEC"
