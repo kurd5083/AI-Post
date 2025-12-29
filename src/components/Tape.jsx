@@ -6,7 +6,7 @@ import filter from "@/assets/tape/filter.svg";
 import TapeList from "@/components/TapeList";
 import InputPlus from "@/shared/InputPlus";
 import BlocksItems from "@/shared/BlocksItems";
-import CustomSelect from "@/shared/CustomSelectSec";
+import CustomSelectSec from "@/shared/CustomSelectSec";
 import BtnBase from "@/shared/BtnBase";
 import { useNews } from "@/lib/news/useNews";
 
@@ -58,31 +58,31 @@ const Tape = () => {
       {isFilterOpen && (
         <FilterWrapper>
           <FilterTitle>Тема</FilterTitle>
-          <CustomSelect
+          <CustomSelectSec
             options={[{ value: "test", label: "test" }]}
             value={topic}
-            onChange={setTopic}
+            onChange={setTopic(option.value)}
             width="340px"
             fs="16px"
             padding="24px"
           />
           <FilterTitle>ЯЗЫК</FilterTitle>
-          <CustomSelect
+          <CustomSelectSec
             options={[{ value: "ru", label: "Русский" }, { value: "en", label: "Английский" }]}
             value={language}
-            onChange={setLanguage}
+            onChange={setLanguage(option.value)}
             width="340px"
             fs="16px"
             padding="24px"
           />
-          <FilterKey>
+          <FilterKeyCheckbox>
             <Checkbox checked={isProcessed} onChange={() => setIsProcessed(!isProcessed)}>
-              Обработано
+              <CheckboxText>Обработано</CheckboxText>
             </Checkbox>
             <Checkbox checked={isPublished} onChange={() => setIsPublished(!isPublished)}>
-              Опубликовано
+              <CheckboxText>Опубликовано</CheckboxText>
             </Checkbox>
-          </FilterKey>
+          </FilterKeyCheckbox>
           <FilterKey>
             <InputPlus
               title="Стоп-слова"
@@ -324,6 +324,15 @@ const FilterTitle = styled.h3`
 `
 const FilterKey = styled.div`
   margin-top: 40px;
+`
+const FilterKeyCheckbox = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin-top: 40px;
+`
+const CheckboxText = styled.p`
+  display: flex;
+  align-items: center;
 `
 const EmptyText = styled.p`
   font-size: 16px;
