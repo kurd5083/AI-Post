@@ -4,7 +4,7 @@ import { usePopupStore } from "@/store/popupStore";
 import CheckboxText from "@/shared/CheckboxText";
 import CustomSelect from "@/shared/CustomSelect";
 import BtnBase from "@/shared/BtnBase";
-import { useCreateChannelInviteLink } from "@/lib/channels/useCreateChannelInviteLink";
+import { useCreateChannelInviteLink } from "@/lib/channels/invite-link/useCreateChannelInviteLink";
 
 const LinkGenerationPopup = () => {
   const { popup, goBack } = usePopupStore();

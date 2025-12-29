@@ -93,6 +93,14 @@ export const popupDatas = [
         }
     },
     {
+        key: "my_link_generation",
+        name: "Генерация ссылок",
+        extra: {
+            background: "#603642",
+            image: link_generation
+        }
+    },
+    {
         key: "my_team",
         name: "Моя команда",
         extra: {

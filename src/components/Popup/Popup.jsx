@@ -13,6 +13,7 @@ import CreatePostСommonPopup from "@/components/Popup/CreatePostСommonPopup";
 import CreatePostPopup from "@/components/Popup/CreatePostPopup";
 import LinkGenerationPrevPopup from "@/components/Popup/LinkGenerationPrevPopup";
 import LinkGenerationPopup from "@/components/Popup/LinkGenerationPopup";
+import LinkGenerationMyPopup from "@/components/Popup/LinkGenerationMyPopup";
 import PromotionPopup from "@/components/Popup/PromotionPopup";
 import BoostsPopup from "@/components/Popup/BoostsPopup";
 import FilteringPopup from "@/components/Popup/FilteringPopup";
@@ -68,6 +69,8 @@ const Popup = () => {
                 <LinkGenerationPrevPopup/>
             ) : popup.content == 'link_generation' ? (
                 <LinkGenerationPopup/>
+            ) : popup.content == 'my_link_generation' ? (
+                <LinkGenerationMyPopup/>
             ) : popup.content == 'promotion' ? (
                 <PromotionPopup/>
             ) : popup.content == 'boosts' ? (
