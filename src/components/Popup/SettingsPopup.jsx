@@ -72,7 +72,7 @@ const SettingsPopup = () => {
           <PopupContentTitle>{section.label}</PopupContentTitle>
           <ul>
             {section.items.map((item, index) => (
-              <PopupContentItem key={index} onClick={item.right !== 'switch' ? () => changeContent(item.key, 'popup', { channelId: channelId, channelName: channelName, workMode: channel?.workMode }) : undefined}>
+              <PopupContentItem key={index} onClick={item.right !== 'switch' ? () => changeContent(item.key, 'popup', { channelId: channelId, channelName: channelName, workMode: channel?.workMode, premoderationMinutes: channel?.premoderationMinutes, canPublishWithoutApproval: channel?.canPublishWithoutApproval }) : undefined}>
                 <PopupContentLeft>
                   {item.extra && (
                     <IconBac $bg={item.extra.background}>

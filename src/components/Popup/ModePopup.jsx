@@ -28,6 +28,9 @@ const ModePopup = () => {
         if (popup?.data?.canPublishWithoutApproval) {
             setRequireApproval(popup.data.canPublishWithoutApproval);
         }
+        if (popup?.data?.premoderationMinutes) {
+            setPremoderationMinutes(popup.data.premoderationMinutes);
+        }
     }, [popup?.data]);
    
 
