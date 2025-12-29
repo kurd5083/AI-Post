@@ -40,11 +40,20 @@ const LinkGenerationMyPopup = () => {
               {links.map((link) => (
                 <tr key={link.id}>
                   <TableCell>{new Date(link.createdAt).toLocaleDateString()}</TableCell>
-                  <TableCell>{link.inviteLink}</TableCell>
-                  <TableCell>{link.memberLimit}</TableCell>
-                  <TableCell>{link.createsJoinRequest ? "Да" : "Нет"}</TableCell>
-                  <TableCell>{link.isRevoked ? "Отозвана" : "Активна"}</TableCell>
-                  <TableCell>{link.creator?.firstName || "-"}</TableCell>
+                  <TableCell>
+                    <CellInviteLink>
+                      <a>{link.inviteLink}</a>
+                      <span>Скопировать</span>
+                    </CellInviteLink>
+                  </TableCell>
+                  <TableCell>+ 500</TableCell>
+                  <TableCell>- 200</TableCell>
+                  <TableCell>= 300</TableCell>
+                  <TableCell>
+                    <CellStatus>
+                      Активно
+                    </CellStatus>
+                  </TableCell>
                   <TableCell>
                     <HideButton>
                       <img src={hide} alt="hide icon" width={24} height={17} />
@@ -127,7 +136,6 @@ const HeaderCell = styled.th`
   top: 0px;
   z-index: 2;
   padding: 20px 0;
-  background-color: #131826;
 `;
 const TableCell = styled.td`
   font-size: 14px;
@@ -135,6 +143,33 @@ const TableCell = styled.td`
   color: #6A7080;
   padding: 15px 0;
 `;
+
+const CellInviteLink = styled.div`
+  display: flex;
+  flex-direction: column;
+  a {
+    color: #D6DCEC;
+  }
+  span {
+    color: #336CFF;
+    font-size: 12px;
+  }
+`;
+const CellStatus = styled.p`
+  position: relative;
+  padding-left: 32px;
+
+  &::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    width: 16px;
+    height: 16px;
+    background-color: #B5EC5B;
+    border-radius: 50%;
+  }
+`;
+CellStatus
 const BaseButton = styled.button`
   display: flex;
   align-items: center;
