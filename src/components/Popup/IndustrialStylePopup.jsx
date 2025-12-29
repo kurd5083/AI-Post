@@ -10,6 +10,7 @@ import { useUpdateChannelGlobalPrompt } from "@/lib/channels/global-prompt/useUp
 import { useUpdateChannelCreativity } from "@/lib/channels/creativity/useUpdateChannelCreativity";
 import { useUpdateChannelCaption } from "@/lib/channels/caption/useUpdateChannelCaption";
 import Preview from "@/components/Preview";
+import { useTestDrivePrompt } from "@/lib/posts/useTestDrivePrompt";
 
 const MAX_PROMPT_LENGTH = 100;
 
@@ -25,6 +26,8 @@ const IndustrialStylePopup = () => {
   const { creativity } = useGetChannelCreativity(channelId);
   const { caption } = useGetChannelCaption(channelId);
 
+  const { mutate: runTestDrive, isLoading } = useTestDrivePrompt();
+  
   useEffect(() => {
     if (globalPrompt !== undefined) setLocalPrompt(globalPrompt.globalPromt);
     if (caption !== undefined) setLocalCaption(caption.caption);
@@ -119,6 +122,8 @@ const IndustrialStyleContainer = styled.div`
 `
 const IndustrialStyleContent = styled.div`
   display: flex;
+  margin-bottom: 42px;
+  gap: 100px;
 `
 const IndustrialStyleLeft = styled.div`
   h2 {
