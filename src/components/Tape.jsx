@@ -141,14 +141,12 @@ const Tape = () => {
             )}
             
           </FilterKey>
-           <FilterKey>
-            <InputPlus
-              title="Поиск"
+            <FilterInput
+              type="text"
               placeholder="Поиск по заголовку и содержимому"
               value={search}
-              onChange={setSearch}
+              onChange={(e) => setSearch(e.target.value)}
             />
-          </FilterKey>
           <BtnBase
             $color="#D6DCEC"
             $bg="#336CFF"
@@ -340,4 +338,17 @@ const EmptyText = styled.p`
   color: #6A7080;
   margin-top: 32px;
 `;
+const FilterInput = styled.input`
+  margin-top: 40px; 
+  background-color: transparent;
+  color: #D6DCEC;
+  font-size: 16px;
+  font-weight: 700;
+  border: none;
+
+  &::placeholder {
+    color: #6A7080;
+  }
+`;
+
 export default Tape;
