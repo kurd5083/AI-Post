@@ -1,5 +1,4 @@
 import styled from "styled-components";
-import ava_icon from "@/assets/ava-icon.png";
 import setting from "@/assets/setting.svg";
 import arrow from "@/assets/arrow.svg";
 import { usePopupStore } from "@/store/popupStore"
@@ -25,7 +24,7 @@ const PopupHead = () => {
           </PopupListInfoContent>
         </PopupListInfo>
       )}
-      {popup.content !== 'profile' && (
+      {popup.content !== 'profile' || popup.content !== 'create_post' && (
         <PopupListHead>
           <PopupListHeadContent>
             {popup.content == 'settings' ? (

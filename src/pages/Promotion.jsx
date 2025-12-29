@@ -3,7 +3,6 @@ import PageHead from '@/components/PageHead'
 import CustomSelect from '@/shared/CustomSelect'
 import BtnBase from "@/shared/BtnBase";
 import { Link } from "react-router";
-import { promotionsDatas } from "@/data/promotionsDatas";
 import { usePromotionServices } from "@/lib/promotion/usePromotionServices";
 
 const Promotion = () => {
