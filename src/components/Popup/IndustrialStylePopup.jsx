@@ -9,6 +9,7 @@ import { useGetChannelCaption } from "@/lib/channels/caption/useGetChannelCaptio
 import { useUpdateChannelGlobalPrompt } from "@/lib/channels/global-prompt/useUpdateChannelGlobalPrompt";
 import { useUpdateChannelCreativity } from "@/lib/channels/creativity/useUpdateChannelCreativity";
 import { useUpdateChannelCaption } from "@/lib/channels/caption/useUpdateChannelCaption";
+import Preview from "@/components/Preview";
 
 const MAX_PROMPT_LENGTH = 100;
 
@@ -96,7 +97,7 @@ const IndustrialStylePopup = () => {
           </IndustrialStyleBlock>
         </IndustrialStyleLeft>
         <IndustrialStyleRight>
-          
+          <Preview collapsed={true}/>
         </IndustrialStyleRight>
       </IndustrialStyleContent>
       <IndustrialStyleButton>
@@ -116,6 +117,7 @@ const IndustrialStyleContainer = styled.div`
   }
 `
 const IndustrialStyleContent = styled.div`
+  display: flex;
 `
 const IndustrialStyleLeft = styled.div`
   h2 {
