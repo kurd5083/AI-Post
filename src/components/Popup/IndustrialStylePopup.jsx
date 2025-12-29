@@ -97,7 +97,7 @@ const IndustrialStylePopup = () => {
           </IndustrialStyleBlock>
         </IndustrialStyleLeft>
         <IndustrialStyleRight>
-          <Preview collapsed={true}/>
+          <Preview collapsed={false}/>
         </IndustrialStyleRight>
       </IndustrialStyleContent>
       <IndustrialStyleButton>
