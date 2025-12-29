@@ -3,6 +3,8 @@ import styled from "styled-components";
 import Checkbox from "@/shared/Checkbox";
 import { useUpdateWorkMode } from "@/lib/channels/useUpdateWorkMode";
 import { usePopupStore } from "@/store/popupStore"
+import CustomSelectSec from "@/shared/CustomSelectSec";
+import { useUpdateChannelPremoderationMinutes } from "@/lib/mode/useUpdateChannelPremoderationMinutes";
 
 const ModePopup = () => {
 	const { popup } = usePopupStore();
@@ -20,11 +22,7 @@ const ModePopup = () => {
 
     const handleSelectMode = (mode) => {
         setSelectedMode(mode);
-        if (mode === "PREMODERATION") {
-            setWorkMode({ workMode: mode, premoderationMinutes });
-        } else {
-            setWorkMode({ workMode: mode });
-        }
+        setWorkMode({ workMode: mode });
     };
     return (
         <ModeContent>
@@ -56,6 +54,16 @@ const ModePopup = () => {
                 </ModeContentItem>
             </div>
             <ModeContentTitle>Параметры премодерации</ModeContentTitle>
+            <CustomSelectSec
+                value={premoderationMinutes}
+                onChange={(option) => setPremoderationMinutes(option.value)} 
+                options={[
+                    { label: "15 минут", value: 15 },
+                    { label: "30 минут", value: 30 }
+                ]}
+                width="215px"
+                fs="24px"
+            />
             {/* <ModeContentItem>
                     <Checkbox  
                         checked={selectedMode === "PREMODERATION"} 
@@ -85,6 +93,7 @@ const ModeContent = styled.div`
     }
 `
 const ModeContentTitle = styled.h3`
+    text-transform: uppercase;
     font-size: 12px;
     font-weight: 700;
     color: #6A7080;
