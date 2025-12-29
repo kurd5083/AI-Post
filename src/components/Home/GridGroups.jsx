@@ -60,12 +60,9 @@ const GridGroups = () => {
             <ButtonDel
               onClick={(e) => {
                 e.stopPropagation();
-                if (manualPosts.length <= 1) return; 
-                changeContent("delete_confirm", "popup_window", {
-                  itemName: manualPosts[index].link, 
-                  onDelete: () => {
-                    setManualPosts((prev) => prev.filter((_, i) => i !== index));
-                  },
+                openPopup("delete_confirm", "popup_window", {
+                  itemName: channel.name,
+                  onDelete: () => deleteChannel(channel.id),
                 });
               }}
               title="Удалить"

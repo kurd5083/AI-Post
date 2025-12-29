@@ -85,65 +85,75 @@ const PromotionPopup = () => {
           Введите ссылку на пост и количество просмотров для ручного продвижения
         </PromoteText>
         {manualPosts.map((post, index) => (
-  <PostContainer key={index}>
-    <CounterContainer>
-      <CounterTitle>Ссылка на пост:</CounterTitle>
-      <PostInput
-        value={post.link}
-        onChange={(e) => {
-          const newPosts = [...manualPosts];
-          newPosts[index].link = e.target.value;
-          setManualPosts(newPosts);
-        }}
-      />
-    </CounterContainer>
-    <CounterContainer>
-      <CounterTitle>Количество просмотров</CounterTitle>
-      <Counter
-        value={post.views}
-        onChange={(value) => {
-          const newPosts = [...manualPosts];
-          newPosts[index].views = value;
-          setManualPosts(newPosts);
-        }}
-      />
-    </CounterContainer>
-    <ButtonDel
-      onClick={() => {
-        if (manualPosts.length <= 1) return; // нельзя удалить, если остался один
-        setManualPosts((prev) => prev.filter((_, i) => i !== index));
-      }}
-      title="Удалить"
-    >
-      <img src={del} alt="del icon" width={14} height={16} />
-    </ButtonDel>
-  </PostContainer>
-))}
+          <PostContainer key={index}>
+            <CounterContainer>
+              <CounterTitle>Ссылка на пост:</CounterTitle>
+              <PostInput
+                value={post.link}
+                onChange={(e) => {
+                  const newPosts = [...manualPosts];
+                  newPosts[index].link = e.target.value;
+                  setManualPosts(newPosts);
+                }}
+              />
+            </CounterContainer>
+            <CounterContainer>
+              <CounterTitle>Количество просмотров</CounterTitle>
+              <Counter
+                value={post.views}
+                onChange={(value) => {
+                  const newPosts = [...manualPosts];
+                  newPosts[index].views = value;
+                  setManualPosts(newPosts);
+                }}
+              />
+            </CounterContainer>
+            {manualPosts.length <= 1 ? (
+              <></>
+            ) : (
+              <ButtonDel
+                onClick={(e) => {
+                  e.stopPropagation();
+                  changeContent("delete_confirm", "popup_window", {
+                    itemName: manualPosts[index].link, 
+                    onDelete: () => {
+                      setManualPosts((prev) => prev.filter((_, i) => i !== index));
+                    },
+                  });
+                }}
+                title="Удалить"
+              >
+                <img src={del} alt="del icon" width={14} height={16} />
+              </ButtonDel>
+            )}
 
-<PostContainer>
-  <CounterContainer>
-    <CounterTitle>Ссылка на пост:</CounterTitle>
-    <PostInput
-      placeholder="https://"
-      value={postLink}
-      onChange={(e) => setPostLink(e.target.value)}
-    />
-  </CounterContainer>
-  <CounterContainer>
-    <CounterTitle>Количество просмотров</CounterTitle>
-    <Counter placeholder="" value={postViews} onChange={setPostViews} />
-  </CounterContainer>
+          </PostContainer>
+        ))}
 
-  <BtnBase
-    $padding="17px 31px"
-    $color="#fff"
-    $bg="#336CFF"
-    onClick={handleAddPost}
-    disabled={!postLink || !postViews}
-  >
-    + Добавить ссылку на пост
-  </BtnBase>
-</PostContainer>
+        <PostContainer>
+          <CounterContainer>
+            <CounterTitle>Ссылка на пост:</CounterTitle>
+            <PostInput
+              placeholder="https://"
+              value={postLink}
+              onChange={(e) => setPostLink(e.target.value)}
+            />
+          </CounterContainer>
+          <CounterContainer>
+            <CounterTitle>Количество просмотров</CounterTitle>
+            <Counter placeholder="" value={postViews} onChange={setPostViews} />
+          </CounterContainer>
+
+          <BtnBase
+            $padding="17px 31px"
+            $color="#fff"
+            $bg="#336CFF"
+            onClick={handleAddPost}
+            disabled={!postLink || !postViews}
+          >
+            + Добавить ссылку на пост
+          </BtnBase>
+        </PostContainer>
         <BtnBase
           $margin="8"
           $padding="21px 24px"
