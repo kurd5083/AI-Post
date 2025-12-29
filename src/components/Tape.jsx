@@ -11,9 +11,12 @@ import { useNews } from "@/lib/news/useNews";
 
 const Tape = () => {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
-  const { newsData, newsLoding } = useNews({});
+  const [filters, setFilters] = useState({});
+  const { newsData, newsLoding } = useNews({ filter: filters });
   const [stopWord, setStopWord] = useState("");
   const [stopWords, setStopWords] = useState([]);
+  const [priorityWord, setPriorityWord] = useState("");
+  const [priorityWords, setPriorityWords] = useState([]);
 
   const handleFilterClick = () => {
     setIsFilterOpen(!isFilterOpen);
@@ -77,21 +80,48 @@ const Tape = () => {
             />
           </FilterKey>
           <FilterKey>
-            <InputPlus 
-            title="Приоритетные слова" 
-            placeholder="Ключевое слово"  
-            bg="#2B243C" 
-            color="#FF55AD" 
-            fs="16px" 
-            padding="16px"
-            
+            <InputPlus
+              title="Приоритетные слова"
+              placeholder="Ключевое слово"
+              bg="#2B243C"
+              color="#FF55AD"
+              fs="16px"
+              padding="16px"
+              value={priorityWord}
+              onChange={setPriorityWord}
+              onSubmit={() => {
+                if (!priorityWord.trim()) return;
+                setPriorityWords((prev) => [...prev, priorityWord]);
+                setPriorityWord("");
+              }}
             />
-            <BlocksItems items={[{value: 'Любовь'}, {value: 'Мир'}]} color="#EF6284" />
+
+            <BlocksItems
+              items={priorityWords.map((word, index) => ({ id: index, value: word }))}
+              color="#EF6284"
+              onRemove={(id) => {
+                setPriorityWords(prev => prev.filter((_, index) => index !== id));
+              }}
+            />
           </FilterKey>
-          <BtnBase $color="#D6DCEC" $bg="#336CFF" $margin="40">Сохранить</BtnBase>
+          <BtnBase
+            $color="#D6DCEC"
+            $bg="#336CFF"
+            $margin="40"
+            onClick={() => {
+              setFilters({
+                stopWords: stopWords.join(","),
+                priorityWords: priorityWords.join(","),
+              });
+
+              setIsFilterOpen(false);
+            }}
+          >
+            Сохранить
+          </BtnBase>
         </FilterWrapper>
       )}
-      <TapeList 
+      <TapeList
         newsData={newsData?.data || []}
         loading={newsLoding}
       />
