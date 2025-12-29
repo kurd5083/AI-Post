@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-testDrivePrompt
+import { testDrivePrompt } from "@/api/posts/testDrive";
 
 export const useTestDrivePrompt = () => {
 	const queryClient = useQueryClient();
