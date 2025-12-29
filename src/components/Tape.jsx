@@ -68,23 +68,24 @@ const Tape = () => {
                 setStopWord("");
               }}
             />
-            {/* <BlocksItems 
-              items={hashtags.map((h, index) => ({ value: h, id: index }))} 
-              color="#EF6284" 
-              onRemove={(id) => {
-                setHashtags((prev) => prev.filter((h) => h.id !== id));
-              }}
-            /> */}
             <BlocksItems
               items={stopWords.map((word, index) => ({ value: word, id: index }))}
               color="#EF6284"
               onRemove={(id) => {
-                setStopWords((prev) => prev.filter((w) => w.id !== id));
+                setStopWords(prev => prev.filter((_, index) => index !== id));
               }}
             />
           </FilterKey>
           <FilterKey>
-            <InputPlus title="Приоритетные слова" placeholder="Ключевое слово"  bg="#2B243C" color="#FF55AD" fs="16px" padding="16px"/>
+            <InputPlus 
+            title="Приоритетные слова" 
+            placeholder="Ключевое слово"  
+            bg="#2B243C" 
+            color="#FF55AD" 
+            fs="16px" 
+            padding="16px"
+            
+            />
             <BlocksItems items={[{value: 'Любовь'}, {value: 'Мир'}]} color="#EF6284" />
           </FilterKey>
           <BtnBase $color="#D6DCEC" $bg="#336CFF" $margin="40">Сохранить</BtnBase>
