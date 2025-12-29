@@ -27,8 +27,7 @@ const IndustrialStylePopup = () => {
   const { creativity } = useGetChannelCreativity(channelId);
   const { caption } = useGetChannelCaption(channelId);
 
-  const { mutate: testDrive, isLoading } = useTestDrivePrompt();
-
+  const { mutateAsync: testDrive, isLoading } = useTestDrivePrompt();
 
   useEffect(() => {
     if (globalPrompt !== undefined) setLocalPrompt(globalPrompt.globalPromt);
