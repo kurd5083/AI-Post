@@ -76,11 +76,15 @@ const LinkGenerationMyPopup = () => {
   );
 };
 const TableWrapper = styled.div`
+  box-sizing: border-box;
   display: flex;
   height: 100%;
   flex-direction: column;
   padding: 0 56px;
-
+  width: 100%;
+  overflow: auto;
+  scrollbar-width: none;
+  
   @media(max-width: 1600px) {
     padding: 0 32px;
   }
