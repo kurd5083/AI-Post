@@ -6,7 +6,6 @@ import CustomSelect from "@/shared/CustomSelectSec";
 import BtnBase from "@/shared/BtnBase";
 
 const Preview = ({ collapsed, testResult }) => {
-	console.log(testResult)
 	const { title, summary, url, savedFiles } = testResult || {};
 
 	return (
@@ -36,8 +35,15 @@ const Preview = ({ collapsed, testResult }) => {
 							<PreviewInfoBG src={PreviewBG} alt="bg" />
 							<PreviewInfoContent>
 								<PreviewInfoText>
+									 {savedFiles?.images?.length > 0 && (
+										<ImagesContainer>
+											{savedFiles.images.map((img, index) => (
+												<img key={index} src={img} alt={`image-${index}`} />
+											))}
+										</ImagesContainer>
+									)}
 									{title && <strong>{title}</strong>}<br /><br />
-                  {summary}
+                  {summary}<br /><br />
 									{url && (
 										<a href={url} target="_blank" rel="noopener noreferrer">
 											Источник: {url}
@@ -156,5 +162,17 @@ const PreviewInfoText = styled.p`
   line-height: 16px;
   font-weight: 600;
 `
+const ImagesContainer = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 16px;
 
+  img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 12px;
+  }
+`;
 export default Preview
