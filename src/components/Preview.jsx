@@ -3,6 +3,7 @@ import eye_blue from "@/assets/eye-blue.svg";
 import PreviewBG from "@/assets/ai-generator/PreviewBG.png";
 import arrow from "@/assets/arrow.svg";
 import CustomSelect from "@/shared/CustomSelectSec";
+import BtnBase from "@/shared/BtnBase";
 
 const Preview = ({ collapsed }) => {
 	return (

@@ -106,6 +106,7 @@ const IndustrialStylePopup = () => {
     </IndustrialStyleContainer>
   )
 }
+
 const IndustrialStyleContainer = styled.div`
   padding: 0 56px;
 
