@@ -10,7 +10,10 @@ const LinkGenerationPrevPopup = () => {
       <img src={link_generation} alt="link generation icon" width={123} height={113}/>
       <LinkGenerationTitle>Пригласительных ссылок пока нет</LinkGenerationTitle>
       <LinkGenerationText>Создайте первую ссылку для приглашения пользователей в канал</LinkGenerationText>
-      <BtnBase onClick={() => changeContent("link_generation")} $color="#FC5B5B" $bg="#29212F">+ Создать ссылку</BtnBase>
+      <Buttons>
+        <BtnBase onClick={() => changeContent("link_generation")} $color="#FC5B5B" $bg="#29212F">+ Создать ссылку</BtnBase>
+        <BtnBase onClick={() => changeContent("my_link_generation")} $color="#D6DCEC" $bg="#1C212F" $padding="21px 52px">Мои ссылки</BtnBase>
+      </Buttons>
     </LinkGenerationContainer>
   )
 }
@@ -47,5 +50,9 @@ const LinkGenerationText = styled.p`
   text-align: center;
   line-height: 24px;
 `
-
+const Buttons = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 16px;
+`
 export default LinkGenerationPrevPopup
