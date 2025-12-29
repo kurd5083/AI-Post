@@ -38,7 +38,7 @@ const LinkGenerationMyPopup = () => {
             </thead>
             <tbody>
               {links.map((link) => (
-                <TableItem key={link.id}>
+                <tr key={link.id}>
                   <TableCell>{new Date(link.createdAt).toLocaleDateString()}</TableCell>
                   <TableCell>{link.inviteLink}</TableCell>
                   <TableCell>{link.memberLimit}</TableCell>
@@ -53,7 +53,7 @@ const LinkGenerationMyPopup = () => {
                       <img src={del} alt="del icon" width={14} height={16} />
                     </DeleteButton>
                   </TableCell>
-                </TableItem>
+                </tr>
               ))}
             </tbody>
           </Table>
@@ -86,75 +86,55 @@ const TableWrapper = styled.div`
 `;
 const Table = styled.table`
   width: 100%;
-  border-spacing: 0;
+  border-collapse: separate;
+  border-spacing: 0 20px;
+  table-layout: fixed;
+
+  @media(max-width: 768px) {
+    border-spacing: 0;
+  }
 
   & colgroup col:first-child {
-    width: 25%;
-    @media (max-width: 768px) {
-      width: calc(50% - 24px);
-    }
+    width: 58px;
   }
   & colgroup col:nth-child(2) {
-    width: 25%;
-    @media (max-width: 768px) {
-      width: calc(50% - 24px);
-    }
+    width: 276px;
   }
   & colgroup col:nth-child(3) {
-    width: calc(50% - 48px);
-    @media (max-width: 768px) {
-      display: none;
-    }
+    width: 163px;
   }
   & colgroup col:nth-child(4) {
-    width: 48px;
-    @media (max-width: 480px) {
-      width: 40px;
-    }
+    width: 209px;
   }
+  & colgroup col:nth-child(5) {
+    width: 152px;
+  }
+  & colgroup col:nth-child(6) {
+    width: 176px;
+  }
+  & colgroup col:nth-child(7) {
+    width: 94px;
+  }
+
 `;
 const HeaderCell = styled.th`
-  text-align: center;
+  text-align: left;
   font-weight: 700;
   color: #6A7080;
   font-size: 12px;
   text-transform: uppercase;
-  &:first-child {
-    text-align: left;
-  }
-  @media (max-width: 768px) {
-    &:nth-child(2) {
-      text-align: left;
-    }
-    &:nth-child(3) {
-      display: none;
-    }
-  }
-`;
-
-const TableItem = styled.tr`
-  &:last-child {
-    td {
-      border-bottom: none;
-    }
-  }
+  position: sticky;
+  top: 0px;
+  z-index: 2;
+  padding: 20px 0;
+  background-color: #131826;
 `;
 const TableCell = styled.td`
-  text-align: center;
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 700;
-  padding: 30px 0;
-  border-bottom: 2px solid #2E3954;
-  @media (max-width: 768px) {
-    &:nth-child(2) {
-      text-align: left;
-    }
-    &:nth-child(3) {
-      display: none;
-    }
-  }
+  color: #6A7080;
+  padding: 15px 0;
 `;
-
 const BaseButton = styled.button`
   display: flex;
   align-items: center;
