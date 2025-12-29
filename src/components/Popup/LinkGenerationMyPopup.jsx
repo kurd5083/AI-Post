@@ -150,20 +150,20 @@ const CellDate = styled.div`
   display: flex;
   flex-direction: column;
   gap: 8px;
-  a {
+  p {
     color: #D6DCEC;
-  }
-  span {
-    color: #336CFF;
-    font-size: 12px;
   }
 `;
 const CellInviteLink = styled.div`
   display: flex;
   flex-direction: column;
   gap: 8px;
-  p {
+  a {
     color: #D6DCEC;
+  }
+  span {
+    color: #336CFF;
+    font-size: 12px;
   }
 `;
 const CellStatus = styled.p`

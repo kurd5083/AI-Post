@@ -80,22 +80,23 @@ const IndustrialStylePopup = () => {
               value={localCaption}
               onChange={(e) => setLocalCaption(e.target.value)}
             />
-            {/* <IndustrialStyleBtn>
-              <PlusIcon color="#2B89ED"/>
-            </IndustrialStyleBtn> */}
           </IndustrialStyleInputContainer>
           <IndustrialStyleDesc>Подпись будет добавлена в <mark>конец каждого поста.</mark> Например: ссылка или призыв подписаться.</IndustrialStyleDesc>
+          <IndustrialStyleTitle>Креативность</IndustrialStyleTitle>
+          <IndustrialStyleBlock>
+            <Drag
+              value={localCreativity}
+              onChange={setLocalCreativity}
+            />
+            <IndustrialStyleDesc>Ползунок <mark>«Креативность»</mark> регулирует, насколько
+              оригинальным и неожиданным будет текст поста.
+              Высокие значения <mark>увеличивают</mark> вариативность, что
+              может привести к менее предсказуемым результатам
+            </IndustrialStyleDesc>
+          </IndustrialStyleBlock>
         </IndustrialStyleLeft>
         <IndustrialStyleRight>
-          <IndustrialStyleTitle>Креативность</IndustrialStyleTitle>
-          <Drag
-            value={localCreativity}
-            onChange={setLocalCreativity}
-          />
-          <IndustrialStyleDesc>Ползунок <mark>«Креативность»</mark> регулирует, насколько
-            оригинальным и неожиданным будет текст поста.
-            Высокие значения <mark>увеличивают</mark> вариативность, что
-            может привести к менее предсказуемым результатам</IndustrialStyleDesc>
+          
         </IndustrialStyleRight>
       </IndustrialStyleContent>
       <IndustrialStyleButton>
@@ -115,9 +116,6 @@ const IndustrialStyleContainer = styled.div`
   }
 `
 const IndustrialStyleContent = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  gap: 40px 80px;
 `
 const IndustrialStyleLeft = styled.div`
   h2 {
@@ -140,12 +138,17 @@ const IndustrialStyleTitle = styled.h2`
   text-transform: uppercase;
   margin-bottom: 24px;
 `
+const IndustrialStyleBlock = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 32px;
+`
+
 const IndustrialStyleDesc = styled.p`
   font-size: 14px;
   line-height: 24px;
   font-weight: 700;
   color: #6A7080;
-  margin-top: 24px;
   max-width: 420px;
 
   mark {
@@ -154,12 +157,13 @@ const IndustrialStyleDesc = styled.p`
 `
 const IndustrialStyleInfo = styled.div`
   position: relative;
+  width: 470px;
+
 
   div {
     background-color: #1C2336;
     box-sizing: border-box;
     padding: 32px;
-    width: 470px;
     border-radius: 24px;
     min-height: 170px;
 		@media (max-width: 768px) {
@@ -230,15 +234,8 @@ const IndustrialStyleInput = styled.input`
     color: #D6DCEC;
   }
 `
-const IndustrialStyleBtn = styled.button`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 12px;
-  background-color: #162238;
-  border-radius: 50%;
-`
 const IndustrialStyleRight = styled.div`
+margin-top: 42px;
   display: flex;
   flex-direction: column;
   align-items: flex-start;

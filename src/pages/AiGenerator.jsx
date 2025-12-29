@@ -139,29 +139,13 @@ const AiGenerator = () => {
                   <BtnBase $padding="17px" $bg="#243D56" $color="#D6DCEC">🚀 Начать</BtnBase>
                 </PreviewInfoContent>
               </PreviewInfo>
-              <PreviewButtons>
-                <ButtonBlock>
-                  <PreviewButton><img src={text} alt="text icon" width={24} height={17} /></PreviewButton>
-                  <p>EDIT TEXT</p>
-                </ButtonBlock>
-                <ButtonBlock>
-                  <PreviewButton><img src={img} alt="img icon" width={14} height={16} /></PreviewButton>
-                  <p>EDIT IMAGE</p>
-                </ButtonBlock>
-                <ButtonBlock>
-                  <PreviewButton><img src={copy} alt="copy icon" width={24} height={17} /></PreviewButton>
-                  <p>COPY TEXT</p>
-                </ButtonBlock>
-              </PreviewButtons>
+              <PreviewButton>
+                <img src={text} alt="text icon" width={24} height={17} />
+                <p>Отправить в Telegram</p>
+              </PreviewButton>
             </>
           )}
         </PreviewContent>
-        <PreviewPublish>
-          <BtnBase $padding="32px" $bg="#336CFF" $color="#D6DCEC">
-            <img src={publish} alt="publish icon" />
-            Опубликовать записи
-          </BtnBase>
-        </PreviewPublish>
         <AddPost>
           <BtnBase $padding="21px 24px">
             + Добавить пост
@@ -404,40 +388,17 @@ const HeadArrow = styled.img`
     display: block;
   }
 `
-const PreviewButtons = styled.div`
+const PreviewButton = styled.button`
   display: flex;
-  justify-content: space-around;
-  margin-top: 55px;
-`;
-const ButtonBlock = styled.div`
-  display: flex;
-  flex-direction: column;
   align-items: center;
   gap: 16px;
+
   p {
-    color: #6A7080;
-    font-size: 12px;
+    font-size: 14px;
     font-weight: 700;
-    text-transform: uppercase;
   }
 `;
-const PreviewButton = styled(BaseButton)`
-  border: 2px solid #2D3241;
-`;
-const PreviewPublish = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  font-size: 24px;
-  font-weight: 800;
-  button {
-    margin-top: 16px;
-    display: flex;
-    justify-content: center;
-    width: 100%;
-    text-align: center;
-  }
-`
+
 const PreviewSelect = styled.div`
   margin-top: 28px;
   display: flex;
