@@ -6,6 +6,7 @@ import BtnBase from "@/shared/BtnBase";
 import { usePopupStore } from "@/store/popupStore";
 import { useCreateConfigСhannel } from "@/lib/channels/useCreateConfigСhannel";
 import { useGetChannelPromotionConfig } from "@/lib/channels/useGetChannelPromotionConfig";
+import del from "@/assets/del.svg";
 
 const PromotionPopup = () => {
   const { popup, changeContent } = usePopupStore();
@@ -15,25 +16,36 @@ const PromotionPopup = () => {
   const { promotionConfig } = useGetChannelPromotionConfig(channelId);
 
   const [autoViews, setAutoViews] = useState(false);
+  const [autoViewsLink, setAutoViewsLink] = useState(false);
   const [minViews, setMinViews] = useState(null);
   const [maxViews, setMaxViews] = useState(null);
+
   const [postLink, setPostLink] = useState("");
   const [postViews, setPostViews] = useState(null);
+  const [manualPosts, setManualPosts] = useState([]);
 
   useEffect(() => {
     if (promotionConfig) {
-      setAutoViews(promotionConfig.viewsOnNewPostEnabled || false);
+      setAutoViews(promotionConfig.isEnabled || false);
+      setAutoViewsLink(promotionConfig.viewsOnNewPostEnabled || false);
       setMinViews(promotionConfig.minViews);
       setMaxViews(promotionConfig.maxViews);
     }
   }, [promotionConfig]);
+
+  const handleAddPost = () => {
+    if (!postLink || !postViews) return;
+    setManualPosts(prev => [...prev, { link: postLink, views: postViews }]);
+    setPostLink("");
+    setPostViews(null);
+  };
 
   const handleSave = () => {
     createConfigСhannel.mutate({
       channelId: channelId,
       isEnabled: autoViews,
       allowedServiceIds: [272],
-      viewsOnNewPostEnabled: autoViews,
+      viewsOnNewPostEnabled: autoViewsLink,
       boostsEnabled: false,
       boostsRetentionDays: 7,
       minViews,
@@ -54,7 +66,12 @@ const PromotionPopup = () => {
           Просмотры на новый пост<br /> и автозакупка после публикации
         </PostTitle>
       </PromotionViews>
-
+      <PromotionViews>
+        <ToggleSwitch bg="#EF6283" value={autoViewsLink} onChange={() => setAutoViewsLink(!autoViewsLink)} />
+        <PostTitle>
+          Просмотры на пост по ссылке
+        </PostTitle>
+      </PromotionViews>
       <ViewsPost>
         <PostTitle>Просмотры на пост</PostTitle>
         <PostContainer>
@@ -81,6 +98,26 @@ const PromotionPopup = () => {
             <CounterTitle>Количество просмотров</CounterTitle>
             <Counter placeholder="" value={postViews} onChange={setPostViews} />
           </CounterContainer>
+          <BtnBase
+            $padding="17px 31px"
+            $color="#fff"
+            $bg="#336CFF"
+          >
+            + Добавить ссылку на пост
+          </BtnBase>
+          <ButtonDel
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          changeContent("delete_confirm", "popup_window", {
+                            // itemName: channel.name,
+                            // onDelete: () => deleteChannel(channel.id),
+
+                          });
+                        }}
+                        title="Удалить"
+                      >
+                        <img src={del} alt="del icon" width={14} height={16} />
+                      </ButtonDel>
         </PostContainer>
         <BtnBase
           $margin="8"
@@ -154,6 +191,32 @@ const CounterContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 16px;
+`;
+
+const ButtonDel = styled.button`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  flex-shrink: 0;
+  transition: all 0.2s;
+  margin-right: 8px;
+  
+  @media (max-width: 480px) {
+    margin-right: 4px !important;
+    width: 40px;
+    height: 40px;
+  }
+  border: 2px solid #2F3953;
+
+  margin-right: 0;
+  
+  &:hover {
+    border: none;
+    background-color: rgba(239, 98, 132, 0.08);
+  }
 `;
 const CounterTitle = styled.p`
   font-weight: 700;
