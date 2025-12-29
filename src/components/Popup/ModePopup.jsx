@@ -12,14 +12,12 @@ const ModePopup = () => {
 	const { popup } = usePopupStore();
     const channelId = popup?.data?.channelId;
 
-    const { mutate: setWorkMode } = useUpdateWorkMode(channelId);
-    const { mutate: updatePremoderationMinutes } = useUpdateChannelPremoderationMinutes();
-
     const [selectedMode, setSelectedMode] = useState(null);
     const [requireApproval, setRequireApproval] = useState(false);
     const [premoderationMinutes, setPremoderationMinutes] = useState(30);
 
-
+    const { mutate: setWorkMode } = useUpdateWorkMode(channelId);
+    const { mutate: updatePremoderationMinutes } = useUpdateChannelPremoderationMinutes(channelId);
     const { mutate: toggleField } = useUpdateChannelField();
 
 
@@ -39,7 +37,7 @@ const ModePopup = () => {
     };
     const handleChangeMinutes = (option) => {
         setPremoderationMinutes(option.value);
-        updatePremoderationMinutes(channelId);
+        updatePremoderationMinutes({ minutes: option.value });
     };
     const handleToggleApproval = () => {
         const newValue = !requireApproval;
@@ -81,8 +79,8 @@ const ModePopup = () => {
                 value={premoderationMinutes}
                 onChange={handleChangeMinutes}
                 options={[
-                { label: "15 минут", value: 15 },
-                { label: "30 минут", value: 30 },
+                    { label: "15 минут", value: 15 },
+                    { label: "30 минут", value: 30 },
                 ]}
                 width="215px"
                 fs="24px"
