@@ -159,13 +159,12 @@ const CellStatus = styled.p`
     border-radius: 50%;
   }
 `;
-CellStatus
 const BaseButton = styled.button`
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 56px;
-  height: 56px;
+  width: 48px;
+  height: 48px;
   border-radius: 12px;
   flex-shrink: 0;
   transition: all 0.2s;
@@ -176,7 +175,6 @@ const HideButton = styled(BaseButton)`
 `;
 const DeleteButton = styled(BaseButton)`
   border: 2px solid #2D3241;
-  margin-right: 16px;
 
   &:hover {
     border: none;
