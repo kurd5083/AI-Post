@@ -64,11 +64,7 @@ const Tape = () => {
               onChange={setStopWord}
               onSubmit={() => {
                 if (!stopWord.trim()) return;
-
-                setStopWords(prev =>
-                  prev.includes(value) ? prev : [...prev, value]
-                );
-
+                setLocalKeywords((prev) => [...prev, stopWord]);
                 setStopWord("");
               }}
             />
