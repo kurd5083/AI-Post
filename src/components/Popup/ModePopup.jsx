@@ -5,25 +5,48 @@ import { useUpdateWorkMode } from "@/lib/channels/useUpdateWorkMode";
 import { usePopupStore } from "@/store/popupStore"
 import CustomSelectSec from "@/shared/CustomSelectSec";
 import { useUpdateChannelPremoderationMinutes } from "@/lib/mode/useUpdateChannelPremoderationMinutes";
+import { useUpdateChannelField } from "@/lib/channels/useUpdateChannelField";
+
 
 const ModePopup = () => {
 	const { popup } = usePopupStore();
     const channelId = popup?.data?.channelId;
+
     const { mutate: setWorkMode } = useUpdateWorkMode(channelId);
+    const { mutate: updatePremoderationMinutes } = useUpdateChannelPremoderationMinutes();
+
     const [selectedMode, setSelectedMode] = useState(null);
+    const [requireApproval, setRequireApproval] = useState(false);
     const [premoderationMinutes, setPremoderationMinutes] = useState(30);
 
+
+    const { mutate: toggleField } = useUpdateChannelField();
+
+
     useEffect(() => {
-        const mode = popup?.data?.workMode;
-        if (mode) {
-            setSelectedMode(mode);
+        if (popup?.data?.workMode) {
+            setSelectedMode(popup.data.workMode);
         }
-    }, [popup?.data?.workMode]);
+        if (popup?.data?.canPublishWithoutApproval) {
+            setRequireApproval(popup.data.canPublishWithoutApproval);
+        }
+    }, [popup?.data]);
+   
 
     const handleSelectMode = (mode) => {
         setSelectedMode(mode);
         setWorkMode({ workMode: mode });
     };
+    const handleChangeMinutes = (option) => {
+        setPremoderationMinutes(option.value);
+        updatePremoderationMinutes(channelId);
+    };
+    const handleToggleApproval = () => {
+        const newValue = !requireApproval;
+        setRequireApproval(newValue);
+        toggleField({ channelId, field: "canPublishWithoutApproval" });
+    };
+
     return (
         <ModeContent>
             <ModeContentTitle>Выберите один режим работы</ModeContentTitle>
@@ -54,28 +77,28 @@ const ModePopup = () => {
                 </ModeContentItem>
             </div>
             <ModeContentTitle>Параметры премодерации</ModeContentTitle>
-            <CustomSelectSec
+             <CustomSelectSec
                 value={premoderationMinutes}
-                onChange={(option) => setPremoderationMinutes(option.value)} 
+                onChange={handleChangeMinutes}
                 options={[
-                    { label: "15 минут", value: 15 },
-                    { label: "30 минут", value: 30 }
+                { label: "15 минут", value: 15 },
+                { label: "30 минут", value: 30 },
                 ]}
                 width="215px"
                 fs="24px"
             />
-            {/* <ModeContentItem>
-                    <Checkbox  
-                        checked={selectedMode === "PREMODERATION"} 
-                        onChange={() => handleSelectMode("PREMODERATION")}
+            <ModeContentItem>
+                    <Checkbox 
+                        checked={requireApproval}
+                        onChange={handleToggleApproval}
                     >
-                        <div>
-                            <h4>Премодерация</h4>
-                            <p>Наш бот будет отправлять вам посты на предварительную модерацию за указанное
-                                вами время, предоставляя возможность принять решение о публикации</p>
-                        </div>
-                    </Checkbox>
-                </ModeContentItem> */}
+                    <div>
+                        <h4>Не публиковать без одобрения</h4>
+                        <p>Сервис сформирует пост и отправит вам через бота.
+                            Решение о публикации будете принимать вы</p>
+                    </div>
+                </Checkbox>
+            </ModeContentItem>
         </ModeContent>
     )
 }
