@@ -5,6 +5,7 @@ import TimeIcons from "@/icons/TimeIcons";
 import TapeList from "@/components/TapeList";
 import BtnBase from "@/shared/BtnBase";
 import { usePopupStore } from "@/store/popupStore"
+import { useNews } from "@/lib/news/useNews";
 import { useNewsById } from "@/lib/news/useNewsById";
 import { useFormattedHtml } from "@/lib/useFormattedHtml";
 import ModernLoading from "@/components/ModernLoading";
@@ -13,8 +14,8 @@ import news_stub from "@/assets/news-stub.png";
 const NewsDetail = () => {
 	const { openPopup } = usePopupStore();
 	const { id } = useParams();
-	const { news, newsLoading } = useNewsById(id);
-	console.log(news)
+	const { news, newsIdLoading } = useNewsById(id);
+	const { newsData, newsLoding } = useNews({});
 	const formattedTitle = useFormattedHtml(news?.title);
 	const formattedContent = useFormattedHtml(news?.summary);
 
@@ -24,7 +25,7 @@ const NewsDetail = () => {
 				<img src={fire} alt="fire icon" />
 				<mark>Лайв</mark> лента
 			</NewsTitle>
-			{!newsLoading ? (
+			{!newsIdLoading ? (
 				<>
 					<NewsPost>
 						<PostLeft>
@@ -60,7 +61,12 @@ const NewsDetail = () => {
 				<ModernLoading text="Загрузка новости..." />
 			)}
 			<NewsSubTitle>Другие новости</NewsSubTitle>
-			<TapeList forceHorizontal={true} padding={true} />
+			<TapeList 
+				forceHorizontal={true} 
+				padding={true} 
+				newsData={newsData?.data || []}
+				loading={newsLoding}
+			/>
 		</NewsContainer>
 	);
 }
