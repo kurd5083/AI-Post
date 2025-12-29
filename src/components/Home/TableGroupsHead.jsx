@@ -13,8 +13,6 @@ import { useChannelsStore } from "@/store/channelsStore";
 import GridIcon from "@/icons/GridIcon";
 import ListIcon from "@/icons/ListIcon";
 import DirIcon from "@/icons/DirIcon";
-import { useSendAddChannelButton } from "@/lib/channels/useSendAddChannelButton";
-import { useNavigate } from "react-router";
 import { useTelegramBotInfo } from "@/lib/useTelegramBotInfo";
 
 const TableGroups = () => {
@@ -25,11 +23,8 @@ const TableGroups = () => {
   const { selectedId, setId } = useChannelsStore();
   const { channels } = useChannelsGroupedByFolders();
   const { mutate: deleteFolder } = useDeleteFolder();
-  const { mutate: addChannel } = useSendAddChannelButton();
-  const navigate = useNavigate()
-  
   const { botInfo } = useTelegramBotInfo();
-  console.log(botInfo)
+
   return (
     <TableGroupsContainer>
       <TableGroupsHead>
@@ -80,9 +75,6 @@ const TableGroups = () => {
                 `https://t.me/${botInfo?.username}?startchannel=1&admin=change_info+post_messages+edit_messages+invite+users+pin_messages+manage_chat`
               )
             }
-      
-            // onClick={addChannel}
-          // onClick={() => openPopup("create_channel", "popup_window")}
           >{isSmall ? "+ Добавить" : "+ Добавить канал"}</TableGroupsHeadAdd>
           <TableGroupsHeadShow $active={viewType === "grid"} onClick={setGridView}>
             <GridIcon color={viewType === "grid" ? "#D6DCEC" : "#6A7080"} />

@@ -10,10 +10,11 @@ const LinkGenerationMyPopup = () => {
   const channelId = popup?.data?.channelId;
 
   const { links, linksLoading } = useGetChannelInviteLinks(channelId);
+  console.log(links)
   return (
     <TableWrapper>
       {!linksLoading ? (
-        members?.team?.length > 0 ? (
+        links?.length > 0 ? (
           <Table>
             <colgroup>
               <col />
