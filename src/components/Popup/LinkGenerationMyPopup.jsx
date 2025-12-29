@@ -39,7 +39,12 @@ const LinkGenerationMyPopup = () => {
             <tbody>
               {links.map((link) => (
                 <tr key={link.id}>
-                  <TableCell>{new Date(link.createdAt).toLocaleDateString()}</TableCell>
+                  <TableCell>
+                    <CellDate>
+                      <p>12.12.21</p>
+                      <span>16:40</span>
+                    </CellDate>
+                  </TableCell>
                   <TableCell>
                     <CellInviteLink>
                       <a>{link.inviteLink}</a>
@@ -137,18 +142,28 @@ const TableCell = styled.td`
 `;
 const TableCellActions = styled.td`
   display: flex;
+  justify-content: flex-end;
   padding: 15px 0;
 `;
 
-const CellInviteLink = styled.div`
+const CellDate = styled.div`
   display: flex;
   flex-direction: column;
+  gap: 8px;
   a {
     color: #D6DCEC;
   }
   span {
     color: #336CFF;
     font-size: 12px;
+  }
+`;
+const CellInviteLink = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  p {
+    color: #D6DCEC;
   }
 `;
 const CellStatus = styled.p`
