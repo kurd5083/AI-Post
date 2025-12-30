@@ -18,7 +18,14 @@ import Preview from "@/components/Preview";
 
 const AiGeneratorPopup = () => {
   const [collapsed, setCollapsed] = useState(false);
-  const [posts, setPosts] = useState([]);
+  const [posts, setPosts] = useState([
+    {
+      id: 1,
+      title: "Пост 1",
+      progress: "0 / 1024",
+      text: "",
+    },
+  ]);
 
   const { fadeVisible, ref } = useFadeOnScroll(20);
 
@@ -27,7 +34,7 @@ const AiGeneratorPopup = () => {
       id: Date.now(),
       title: `Новый пост ${posts.length + 1}`,
       progress: "0 / 1024",
-      text: "Текст публикации...",
+      text: "",
     };
     setPosts([newPost, ...posts]);
   };
@@ -45,6 +52,12 @@ const AiGeneratorPopup = () => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
+  const handleTextChange = (id, newText) => {
+    setPosts((prev) =>
+      prev.map((p) => (p.id === id ? { ...p, text: newText } : p))
+    );
+  };
+
   return (
     <GeneratorContainer>
       <GeneratorHead>
@@ -60,10 +73,17 @@ const AiGeneratorPopup = () => {
         {posts.map((post) => (
           <ListItem key={post.id}>
             <ItemHead>
-              <CheckboxCircle><input value={post.title}/></CheckboxCircle>
+              <CheckboxCircle>
+                <HeadTitle value={post.title}/>
+              </CheckboxCircle>
               <p>{post.progress}</p>
             </ItemHead>
-            <ItemText>{post.text}</ItemText>
+            <ItemText
+              placeholder="Текст публикации..."
+              type="text"
+              value={post.text}
+              onChange={(e) => handleTextChange(post.id, e.target.value)}
+            />
             <ItemAI>
               <p><img src={create} alt="create icon" />Создать фото с AI</p>
               <p><AiGeneratorIcon color="#336CFF"/>Написать с AI</p>
@@ -206,23 +226,20 @@ const ItemHead = styled.div`
   h3 {
     display: flex;
     align-items: center;
-    font-size: 24px;
-    font-weight: 700;
   }
-  p {
-    font-size: 12px;
-    font-weight: 700;
-    color: #6A7080;
-  }
+
 `
-const ItemText = styled.p`
-  color: #6A7080;
+const HeadTitle = styled.input`
+  font-size: 24px;
+  font-weight: 700;
+`
+const ItemText = styled.input`
   font-size: 16px;
   font-weight: 700;
+  color: #6A7080;
   margin-top: 24px;
   @media(max-width: 1400px) {
       height: 120px;
-
   }
 `
 const ItemAI = styled.div`
