@@ -14,6 +14,7 @@ import ellipsis from "@/assets/ai-generator/ellipsis.svg";
 import CheckboxCircle from "@/shared/CheckboxCircle";
 import AiGeneratorIcon from "@/icons/AiGeneratorIcon";
 import useFadeOnScroll from "@/lib/useFadeOnScroll";
+import Preview from "@/components/Preview";
 
 const AiGeneratorPopup = () => {
   const [collapsed, setCollapsed] = useState(false);
@@ -93,7 +94,7 @@ const AiGeneratorPopup = () => {
           </ListItem>
         ))}
       </GeneratorList>
-      
+      <Preview/>
     </GeneratorContainer>
   );
 };
