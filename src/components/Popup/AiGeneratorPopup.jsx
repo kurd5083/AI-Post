@@ -103,19 +103,21 @@ const AiGeneratorPopup = () => {
                 <HideButton>
                   <img src={hide} alt="hide icon" width={24} height={17} />
                 </HideButton>
-                <DeleteButton>
-                  <img src={del} alt="del icon" width={14} height={16} />
-                </DeleteButton>
-                <BtnBase $padding="19px 46px">
-                  Сохранить
-                </BtnBase>
+                <div>
+                  <div>
+                    <BtnBase $padding="21px 24px" $color="#241E2D" $bg="#EF6284">Отменить</BtnBase>
+                    <BtnBase $padding="21px 24px" $border>Изменить время</BtnBase>
+                    <BtnBase $padding="21px 24px" $color="#336CFF" $bg="#161F37">Сохранить</BtnBase>
+                  </div>
+                  <BtnBase $padding="21px 24px" $border $width="100%">Опубликовать сейчас</BtnBase>
+                </div>
               </Buttons>
             </ItemActions>
           </ListItem>
         ))}
       </GeneratorList>
       <PreviewContainer>
-        <Preview collapsed={collapsed} testResult={posts}/>
+        <Preview collapsed={collapsed} testResult={posts[0]}/>
       </PreviewContainer>
     </GeneratorContainer>
   );
@@ -311,14 +313,6 @@ const BaseButton = styled.button`
 const HideButton = styled(BaseButton)`
   border: 2px solid #2D3241;
 `;
-const DeleteButton = styled(BaseButton)`
-  border: 2px solid #2D3241;
-
-  &:hover {
-    border: none;
-    background-color: rgba(239, 98, 132, 0.08);
-  }
-`
 const PreviewContainer  = styled.div`
   grid-column:  4 / span 2;
   grid-row: 1 / span 2;
