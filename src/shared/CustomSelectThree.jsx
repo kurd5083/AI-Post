@@ -56,6 +56,8 @@ const CustomSelectThree = ({ options = [], value = null, onChange }) => {
               <Checkbox
                 checked={option.id === value}
                 onClick={(e) => e.stopPropagation()}
+								width="20px"
+								height="20px"
               />
             </DropdownItem>
           ))}
@@ -104,7 +106,7 @@ const DropdownList = styled.div`
 const SelectAllButton = styled.button`
   width: 100%;
   padding: 11px;
-  margin-bottom: 32px;
+  margin-bottom: 20px;
   background: #336CFF;
   color: white;
   border-radius: 12px;

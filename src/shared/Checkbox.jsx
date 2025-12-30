@@ -1,10 +1,10 @@
 import styled from "styled-components";
 
-const Checkbox = ({ checked, onChange, color, children }) => {
+const Checkbox = ({ checked, onChange, color, children, width, height }) => {
   return (
     <CheckboxContainer onClick={() => onChange()}>
       <HiddenCheckbox type="checkbox" checked={checked} readOnly />
-      <StyledCheckbox $color={color} checked={checked} />
+      <StyledCheckbox $color={color} checked={checked} $width={width} $heigh={heigh}/>
       {children}
     </CheckboxContainer>
   );
@@ -24,8 +24,8 @@ const HiddenCheckbox = styled.input`
 
 const StyledCheckbox = styled.div`
   box-sizing: border-box;
-  width: 40px;
-  height: 40px;
+  width: ${({ $width }) => $width || "40px"}
+  height: ${({ $height }) => $height || "40px"}
   flex-shrink: 0;
   border: 2px solid #6A7080;
   border-radius: 8px;
