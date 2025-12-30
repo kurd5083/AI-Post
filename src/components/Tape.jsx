@@ -326,6 +326,7 @@ const FilterKeyCheckbox = styled.div`
 const CheckboxText = styled.p`
   display: flex;
   align-items: center;
+  font-weight: 600;
 `
 const EmptyText = styled.p`
   font-size: 16px;

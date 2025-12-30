@@ -15,7 +15,6 @@ import { useUserChannels } from "@/lib/channels/useUserChannels";
 
 const Statistics = () => {
   const { isSwipe } = useSwipeAllowed(1600);
-  const { popup } = usePopupStore();
   const { userChannels } = useUserChannels();
   const [selectedChannels, setSelectedChannels] = useState([]);
 

@@ -19,13 +19,7 @@ const AiGeneratorPopup = () => {
   const [collapsed, setCollapsed] = useState(false);
   const [selectedPost, setSelectedPost] = useState(posts[0]);
   const [posts, setPosts] = useState([
-    {
-      id: 1,
-      placeholder: 'Пост 1',
-      title: "",
-      progress: "0 / 1024",
-      summary: "",
-    },
+    { id: 1, placeholder: "Пост 1", title: "", progress: "0 / 1024", text: "" },
   ]);
 
   const { fadeVisible, ref } = useFadeOnScroll(20);
@@ -41,6 +35,24 @@ const AiGeneratorPopup = () => {
     setPosts([newPost, ...posts]);
   };
 
+  const handleTitleChange = (id, newTitle) => {
+    setPosts((prev) =>
+      prev.map((p) => (p.id === id ? { ...p, title: newTitle } : p))
+    );
+    if (selectedPost.id === id) {
+      setSelectedPost((prev) => ({ ...prev, title: newTitle }));
+    }
+  };
+
+  const handleTextChange = (id, newText) => {
+    setPosts((prev) =>
+      prev.map((p) => (p.id === id ? { ...p, text: newText } : p))
+    );
+    if (selectedPost.id === id) {
+      setSelectedPost((prev) => ({ ...prev, text: newText }));
+    }
+  };
+
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth > 1400) {
@@ -53,12 +65,6 @@ const AiGeneratorPopup = () => {
 
     return () => window.removeEventListener("resize", handleResize);
   }, []);
-
-  const handleTextChange = (id, newText) => {
-    setPosts((prev) =>
-      prev.map((p) => (p.id === id ? { ...p, text: newText } : p))
-    );
-  };
 
   return (
     <GeneratorContainer>
@@ -77,6 +83,7 @@ const AiGeneratorPopup = () => {
             <ItemHead>
               <CheckboxCircle>
                 <HeadTitle
+                  tape="text"
                   placeholder={post.placeholder}
                   value={post.title}
                   onChange={(e) => handleTitleChange(post.id, e.target.value)}
