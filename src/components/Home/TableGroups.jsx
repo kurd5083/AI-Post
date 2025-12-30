@@ -8,6 +8,7 @@ import { useChannelsGroupedByFolders } from "@/lib/useChannelsGroupedByFolders";
 import { useDeleteChannel } from "@/lib/channels/useDeleteChannel";
 import useResolution from "@/lib/useResolution";
 import DirIcon from '@/icons/DirIcon';
+import AvaPlug from '@/shared/AvaPlug';
 
 const TableGroups = () => {
   const { openPopup } = usePopupStore();
@@ -60,7 +61,13 @@ const TableGroups = () => {
             <TableCell>
               <p>
                 <TableCellNum>#{index + 1}</TableCellNum>
-                <img src={channel.avatarUrl} alt="Group" />
+                <TableCellAva>
+                  {channel?.avatarUrl ? (
+                    <img src={channel.avatarUrl} alt="Group" />
+                  ) : (
+                    <AvaPlug />
+                  )}
+                </TableCellAva>
                 <CellName>{channel.name}</CellName>
               </p>
             </TableCell>
@@ -274,17 +281,6 @@ const TableCell = styled.td`
     align-items: center;
     font-weight: 700;
     margin: 0;
-        
-    img {
-      margin: 0 24px 0 32px;
-      width: 40px;
-      height: 40px;
-      border-radius: 12px;
-      object-fit: cover;
-      @media(max-width: 991px) {
-        margin: 0 10px 0 0;
-      }
-    }
   }
 	@media(max-width: 768px) {
     &:nth-child(2), &:nth-child(3) {
@@ -303,6 +299,21 @@ const TableCellNum = styled.span`
     display: none;
   }
 `;
+const TableCellAva = styled.div`
+  margin: 0 24px 0 32px;
+  
+  @media(max-width: 991px) {
+    margin: 0 10px 0 0;
+  }
+
+  img {
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    object-fit: cover;
+  }
+`;
+
 const TableCellStatus = styled.button`
   padding: 18px 24px;
   border-radius: 12px;

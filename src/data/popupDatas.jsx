@@ -231,5 +231,13 @@ export const popupDatas = [
     {
         key: "compilation_upload",
     },
+    {
+        key: "premoderation",
+        name: "Премодерация",
+        extra: {
+            background: "#382B73",
+            image: publications
+        }
+    },
    
 ]

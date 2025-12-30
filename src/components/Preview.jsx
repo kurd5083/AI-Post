@@ -7,62 +7,68 @@ import BtnBase from "@/shared/BtnBase";
 import TgIcon from "@/icons/TgIcon";
 
 const Preview = ({ collapsed, testResult }) => {
-	const { title, summary, url, savedFiles } = testResult || {};
+  const { title, summary, url, savedFiles } = testResult || {};
 
-	return (
-		<GeneratorPreview $collapsed={collapsed}>
-			<PreviewContent>
-				<PreviewHead>
-					<HeadLeft><img src={eye_blue} alt="eye icon" />Лайв превью</HeadLeft>
-					<HeadArrow src={arrow} alt="arrow icon" onClick={() => setCollapsed(prev => !prev)} $collapsed={collapsed} />
-				</PreviewHead>
-				{!collapsed && (
-					<>
-						<PreviewSelect>
-							<CustomSelect
-								placeholder="Все платформы"
-								options={[
-									{ value: "Telegram", label: "Telegram" },
-								]}
-								width="220px"
-								fs="14px"
-								padding="16px"
-							/>
-							<PreviewHeadButton>
-								<BtnBase $padding="16px 24px">Telegram</BtnBase>
-							</PreviewHeadButton>
-						</PreviewSelect>
-						<PreviewInfo>
-							<PreviewInfoBG src={PreviewBG} alt="bg" />
-							<PreviewInfoContainer>
-								{savedFiles?.images?.length > 0 && (
-									<ImagesContainer>
-										{savedFiles.images.map((img, index) => (
-											<img key={index} src={img} alt={`image-${index}`} />
-										))}
-									</ImagesContainer>
-								)}
-								<PreviewInfoText>
-									{title && <strong>{title}</strong>}<br /><br />
-									{summary}<br /><br />
-									{url && (
-										<a href={url} target="_blank" rel="noopener noreferrer">
-											Источник: {url}
-										</a>
-									)}
-								</PreviewInfoText>
-								<BtnBase $padding="17px" $bg="#243D56" $color="#D6DCEC">🚀 Начать</BtnBase>
-							</PreviewInfoContainer>
-						</PreviewInfo>
-						<PreviewButton>
-							<TgIcon width="24" height="20" сolor="#336CFF"/>
-							<p>Отправить в Telegram</p>
-						</PreviewButton>
-					</>
-				)}
-			</PreviewContent>
-		</GeneratorPreview>
-	)
+  return (
+    <GeneratorPreview $collapsed={collapsed}>
+      <PreviewContent>
+        <PreviewHead>
+          <HeadLeft><img src={eye_blue} alt="eye icon" />Лайв превью</HeadLeft>
+          <HeadArrow src={arrow} alt="arrow icon" onClick={() => setCollapsed(prev => !prev)} $collapsed={collapsed} />
+        </PreviewHead>
+        {!collapsed && (
+          <>
+            <PreviewSelect>
+              <CustomSelect
+                placeholder="Все платформы"
+                options={[
+                  { value: "Telegram", label: "Telegram" },
+                ]}
+                width="220px"
+                fs="14px"
+                padding="16px"
+              />
+              <PreviewHeadButton>
+                <BtnBase $padding="16px 24px">Telegram</BtnBase>
+              </PreviewHeadButton>
+            </PreviewSelect>
+            <PreviewInfo>
+              <PreviewInfoBG src={PreviewBG} alt="bg" />
+              <PreviewInfoContainer>
+                {savedFiles?.images?.length > 0 && (
+                  <ImagesContainer>
+                    {savedFiles.images.map((img, index) => (
+                      <img key={index} src={img} alt={`image-${index}`} />
+                    ))}
+                  </ImagesContainer>
+                )}
+                <PreviewInfoText>
+                  {title || summary || url ? (
+                    <>
+                      {title && <strong>{title}</strong>}<br /><br />
+                      {summary}<br /><br />
+                      {url && (
+                        <a href={url} target="_blank" rel="noopener noreferrer">
+                          Источник: {url}
+                        </a>
+                      )}
+                    </>
+                  ) : (
+                    <EmptyText>Превью недоступно. Выберите пост или дождитесь загрузки данных.</EmptyText> 
+                  )}
+                </PreviewInfoText>
+                <BtnBase $padding="17px" $bg="#243D56" $color="#D6DCEC">🚀 Начать</BtnBase>
+              </PreviewInfoContainer>
+            </PreviewInfo>
+            <PreviewButton>
+              <TgIcon width="24" height="20" сolor="#336CFF" />
+              <p>Отправить в Telegram</p>
+            </PreviewButton>
+          </>
+        )}
+      </PreviewContent>
+    </GeneratorPreview>
+  )
 }
 const GeneratorPreview = styled.div`
   width: 100%;
@@ -174,6 +180,9 @@ const PreviewInfoText = styled.p`
 	font-size: 12px;
   line-height: 16px;
   font-weight: 600;
-
+`
+const EmptyText = styled.p`
+ height: 100px;
+ font-size: 14px;
 `
 export default Preview

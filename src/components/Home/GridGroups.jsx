@@ -7,6 +7,7 @@ import { useDeleteChannel } from "@/lib/channels/useDeleteChannel";
 import { useChannelsGroupedByFolders } from "@/lib/useChannelsGroupedByFolders";
 import DirIcon from '@/icons/DirIcon';
 import ModernLoading from "@/components/ModernLoading";
+import AvaPlug from '@/shared/AvaPlug';
 
 const GridGroups = () => {
   const { openPopup } = usePopupStore();
@@ -43,7 +44,12 @@ const GridGroups = () => {
       {currentChannels.map((channel, index) => (
         <GridItem key={channel.id}>
           <GridItemNum>#{index + 1}</GridItemNum>
-          <GridImg src={channel.avatarUrl} alt="Group" />
+          {channel?.avatarUrl ? (
+            <GridImg src={channel.avatarUrl} alt="Group" />
+          ) : (
+            <AvaPlug/>
+          )}
+          
           <CellName>{channel.name}</CellName>
           <p>
             {channel?.workMode === "PREMODERATION" && "Предмодерация"}
@@ -99,7 +105,6 @@ const GridContainer = styled.div`
     padding: 0 24px;
   }
 `;
-
 const GridItem = styled.div`
   display: flex;
   flex-direction: column;
@@ -114,19 +119,16 @@ const GridItem = styled.div`
     padding: 16px 8px;
   }
 `;
-
 const GridItemNum = styled.p`
   font-size: 14px;
   font-weight: 600;
 `;
-
 const GridImg = styled.img`
   width: 40px;
   height: 40px;
   border-radius: 12px;
   object-fit: cover;
 `;
-
 const CellName = styled.span`
   max-width: 180px;
   white-space: nowrap;
@@ -136,7 +138,6 @@ const CellName = styled.span`
     max-width: 140px;
   }
 `;
-
 const GridStatus = styled.button`
   padding: 18px 24px;
   border-radius: 12px;
@@ -155,12 +156,10 @@ const GridStatus = styled.button`
     color: #fff;
   }
 `;
-
 const ButtonsWrap = styled.div`
   display: flex;
   align-items: center;
 `;
-
 const BaseButton = styled.button`
   display: flex;
   align-items: center;
@@ -178,7 +177,6 @@ const BaseButton = styled.button`
     height: 40px;
   }
 `;
-
 const ButtonDir = styled(BaseButton)`
   border: 2px solid #336CFF;
 
@@ -186,7 +184,6 @@ const ButtonDir = styled(BaseButton)`
     background-color: #336CFF;
   }
 `;
-
 const ButtonSetting = styled(BaseButton)`
   border: 2px solid #2F3953;
   margin-right: 24px;
@@ -196,7 +193,6 @@ const ButtonSetting = styled(BaseButton)`
     margin-right: 8px;
   }
 `;
-
 const ButtonDel = styled(BaseButton)`
   border: 2px solid #2F3953;
   margin-right: 0;

@@ -96,8 +96,10 @@ const Popup = () => {
                 <AdvancedPopup/>
             ) : popup.content == 'create_post' ? (
                 <AiGeneratorPopup/>
+            ) : popup.content == 'premoderation' ? (
+                <PremoderationPopup/>
             ) : (
-                2
+                null
             )}
         </PopupListContainer>
     )

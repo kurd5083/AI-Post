@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-export const BtnBase = styled.button`
+const BtnBase = styled.button`
   display: flex;
   gap: 8px;
   align-items: center;
@@ -13,6 +13,6 @@ export const BtnBase = styled.button`
   font-size: 14px;
   margin-top: ${({ $margin }) => $margin ? $margin : "0"}px;
   width: ${({ $width }) => $width || "fit-content"};
-  border: ${({ $border, $bg }) => $border ? '2px solid #333E59' : `2px solid ${$bg}`} 
+  border: ${({ $border, $bg }) => $border ? '2px solid #333E59' : `2px solid ${$bg}`} ;
 `
 export default BtnBase
