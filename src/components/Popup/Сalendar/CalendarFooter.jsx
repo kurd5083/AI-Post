@@ -13,8 +13,6 @@ const dayKeyUTC = (d) =>
 export const CalendarFooter = ({
   events,
   selectedDate,
-  isPending,
-  onAdd,
 }) => {
   const { changeContent } = usePopupStore();
   
@@ -34,16 +32,12 @@ export const CalendarFooter = ({
         <BtnBase
           onClick={(e) => {
             e.stopPropagation();
-            changeContent("create_calendar_event", "popup_window", {
-              itemName: 'test',
-              onSave: () => onAdd(),
-            });
+            changeContent("create_calendar_event", "popup_window");
           }}
-          disabled={isPending}
           $color="#AC60FD"
           $bg="#1F203D"
         >
-          {isPending ? "Создание..." : "Добавить пост"}
+          Добавить пост
         </BtnBase>
       </CalendarButton>
 

@@ -1,7 +1,6 @@
 import styled from "styled-components";
 import { useState, useEffect, useMemo  } from "react";
 import { usePopupStore } from "@/store/popupStore";
-import { useCreateCalendarEvent } from "@/lib/calendar/useCreateCalendarEvent";
 import { useCalendarEventsByRange } from "@/lib/calendar/useCalendarEventsByRange";
 import { generateWeek } from "@/lib/generateWeek";
 import CalendarHeader from "@/components/Popup/Сalendar/CalendarHeader";
@@ -55,7 +54,6 @@ const CalendarPopup = () => {
 
   const { events = [] } = useCalendarEventsByRange(startDate, endDate);
     console.log(events, 'ass')
-  const { mutate, isPending } = useCreateCalendarEvent();
 
   const syncDate = (date) => {
     setSelectedDate(date);
@@ -99,15 +97,6 @@ const CalendarPopup = () => {
       <CalendarFooter
         events={events}
         selectedDate={selectedDate}
-        isPending={isPending}
-        onAdd={() =>
-          mutate({
-            channelId,
-            eventType: "POST_SCHEDULED",
-            scheduledAt: selectedDate.toISOString(),
-            timezone: "UTC",
-          })
-        }
       />
       <CalendarPostsList posts={postsForDay} />
     </CalendarContent>

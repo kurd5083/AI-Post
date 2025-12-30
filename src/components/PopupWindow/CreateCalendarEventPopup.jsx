@@ -7,33 +7,30 @@ import { useCreateCalendarEvent } from "@/lib/calendar/useCreateCalendarEvent";
 
 const CreateCalendarEventPopup = () => {
   const { goBack, popup } = usePopupStore();
-  const { channelId, defaultDate, onSave } = popup?.data || {};
-
+  const channelId = popup?.data?.channelId;
   const { mutate: createEvent, isPending } = useCreateCalendarEvent();
 
   const [title, setTitle] = useState("Scheduled Post");
   const [description, setDescription] = useState("Post description");
-  const [scheduledAt, setScheduledAt] = useState(
-    defaultDate ? new Date(defaultDate).toISOString() : new Date().toISOString()
-  );
+  // const [scheduledAt, setScheduledAt] = useState(
+  //   defaultDate ? new Date(defaultDate).toISOString() : new Date().toISOString()
+  // );
   const [duration, setDuration] = useState(60);
   const [priority, setPriority] = useState(0);
 
-  useEffect(() => {
-    if (defaultDate) {
-      setScheduledAt(new Date(defaultDate).toISOString());
-    }
-  }, [defaultDate]);
+  // useEffect(() => {
+  //   if (defaultDate) {
+  //     setScheduledAt(new Date(defaultDate).toISOString());
+  //   }
+  // }, [defaultDate]);
 
   const handleCreate = () => {
-    if (!channelId) return alert("Не указан канал");
-
-    const payload = {
+    const data = {
       channelId,
       eventType: "POST_SCHEDULED",
       title,
       description,
-      scheduledAt,
+      scheduledAt: '',
       timezone: "UTC",
       duration,
       priority,
@@ -43,9 +40,8 @@ const CreateCalendarEventPopup = () => {
       metadata: { source: "manual" },
     };
 
-    createEvent(payload, {
+    createEvent(data, {
       onSuccess: () => {
-        if (onSave) onSave(payload);
         goBack();
       },
     });
