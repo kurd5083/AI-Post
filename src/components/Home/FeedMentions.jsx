@@ -16,9 +16,7 @@ const FeedMentions = () => {
   const { userChannels } = useUserChannels();
   const [selectedChannels, setSelectedChannels] = useState([]);
 
-  const { mentions, mentionsLoading } = useMentions({
-    channelIds: selectedChannels.map(c => c.id),
-  });
+  const { mentions, mentionsLoading } = useMentions({channelIds: selectedChannels.map(c => c.id)});
   console.log(mentions)
   const mentionsItems = useMemo(() => {
     if (!mentions?.response?.items) return [];
