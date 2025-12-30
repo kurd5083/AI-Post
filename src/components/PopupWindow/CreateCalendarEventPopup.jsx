@@ -65,8 +65,8 @@ const CreateCalendarEventPopup = () => {
       <InputLabel>Дата и время</InputLabel>
       <PopupInput
         type="datetime-local"
-        value={scheduledAt.slice(0, 16)}
-        onChange={(e) => setScheduledAt(new Date(e.target.value).toISOString())}
+        // value={scheduledAt.slice(0, 16)}
+        // onChange={(e) => setScheduledAt(new Date(e.target.value).toISOString())}
       />
 
       <InputLabel>Длительность (минуты)</InputLabel>
