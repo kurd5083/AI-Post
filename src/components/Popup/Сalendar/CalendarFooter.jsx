@@ -8,7 +8,7 @@ const safeDate = (value) => {
 };
 
 const dayKeyUTC = (d) =>
-  `${d.getUTCFullYear()}-${d.getUTCMonth()}-${d.getUTCDate()}`;
+  `${d.getUTCFullYear()}-${d.getUTCMonth() + 1}-${d.getUTCDate()}`;
 
 export const CalendarFooter = ({
   events,
