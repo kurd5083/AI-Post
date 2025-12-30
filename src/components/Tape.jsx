@@ -13,7 +13,7 @@ import { useNews } from "@/lib/news/useNews";
 const Tape = () => {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [filters, setFilters] = useState({
-    priorityWords: "путин",
+    priorityWords: "",
   });
   const { newsData, newsLoding } = useNews(filters);
   console.log(newsData)

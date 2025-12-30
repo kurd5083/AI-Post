@@ -18,20 +18,9 @@ const Preview = ({ collapsed, testResult }) => {
         </PreviewHead>
         {!collapsed && (
           <>
-            <PreviewSelect>
-              <CustomSelect
-                placeholder="Все платформы"
-                options={[
-                  { value: "Telegram", label: "Telegram" },
-                ]}
-                width="220px"
-                fs="14px"
-                padding="16px"
-              />
-              <PreviewHeadButton>
+              {/* <PreviewHeadButton>
                 <BtnBase $padding="16px 24px">Telegram</BtnBase>
-              </PreviewHeadButton>
-            </PreviewSelect>
+              </PreviewHeadButton> */}
             <PreviewInfo>
               <PreviewInfoBG src={PreviewBG} alt="bg" />
               <PreviewInfoContainer>
@@ -57,7 +46,6 @@ const Preview = ({ collapsed, testResult }) => {
                     <EmptyText>Превью недоступно. Выберите пост или дождитесь загрузки данных.</EmptyText> 
                   )}
                 </PreviewInfoText>
-                <BtnBase $padding="17px" $bg="#243D56" $color="#D6DCEC">🚀 Начать</BtnBase>
               </PreviewInfoContainer>
             </PreviewInfo>
             <PreviewButton>
@@ -115,17 +103,6 @@ const PreviewButton = styled.button`
     font-weight: 700;
   }
 `;
-const PreviewSelect = styled.div`
-  margin-top: 28px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-`
-const PreviewHeadButton = styled.div`
-  @media(max-width: 480px) {
-    display: none;
-  }
-`
 const PreviewInfo = styled.div`
   position: relative;
   margin-top: 55px;
