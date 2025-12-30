@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import BtnBase from "@/shared/BtnBase";
+import { usePopupStore } from "@/store/popupStore"
 
 const safeDate = (value) => {
   const d = new Date(value);
@@ -15,6 +16,7 @@ export const CalendarFooter = ({
   isPending,
   onAdd,
 }) => {
+  const { popup, changeContent } = usePopupStore();
   const selectedKey = dayKeyUTC(selectedDate);
   console.log(events, selectedDate, '1')
 
@@ -29,7 +31,13 @@ export const CalendarFooter = ({
     <>
       <CalendarButton>
         <BtnBase
-          onClick={onAdd}
+          onClick={(e) => {
+            e.stopPropagation();
+            changeContent("create_calendar_event", "popup_window", {
+              itemName: folder.name,
+              onSave: () => onAdd,
+            });
+          }}
           disabled={isPending}
           $color="#AC60FD"
           $bg="#1F203D"

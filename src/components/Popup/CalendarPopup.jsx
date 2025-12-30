@@ -8,7 +8,6 @@ import CalendarHeader from "@/components/Popup/Сalendar/CalendarHeader";
 import CalendarWeek from "@/components/Popup/Сalendar/CalendarWeek";
 import CalendarFooter from "@/components/Popup/Сalendar/CalendarFooter";
 import CalendarPostsList from "@/components/Popup/Сalendar/CalendarPostsList";
-import CreateCalendarEventPopup from "@/PopupWindow/CreateCalendarEventPopup";
 
 const safeDate = (value) => {
   const d = new Date(value);
@@ -74,7 +73,7 @@ const CalendarPopup = () => {
   const postsForDay = useMemo(() => {
     const selectedKey = dayKeyUTC(selectedDate);
 
-    return events.filter((e) => {
+    return events?.filter((e) => {
       const d = safeDate(e.scheduledAt);
       if (!d) return false;
 
