@@ -5,9 +5,6 @@ export const getNews = async (filters) => {
 
   const response = await apiClient.get("/news", {
     params: filters,
-    headers: {
-    "Cache-Control": "no-cache",
-  },
   });
 
   return response.data;
