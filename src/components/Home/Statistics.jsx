@@ -21,7 +21,7 @@ const Statistics = () => {
 
   useEffect(() => {
     if (userChannels?.length) {
-      setSelectedChannels(userChannels);
+      setSelectedChannels(userChannels.map(c => c.id));
     }
     }, [userChannels]);
 

@@ -17,10 +17,12 @@ import Preview from "@/components/Preview";
 
 const AiGeneratorPopup = () => {
   const [collapsed, setCollapsed] = useState(false);
+  const [selectedPost, setSelectedPost] = useState(posts[0]);
   const [posts, setPosts] = useState([
     {
       id: 1,
-      title: "Пост 1",
+      placeholder: 'Пост 1',
+      title: "",
       progress: "0 / 1024",
       summary: "",
     },
@@ -31,7 +33,8 @@ const AiGeneratorPopup = () => {
   const handleAddPost = () => {
     const newPost = {
       id: Date.now(),
-      title: `Новый пост ${posts.length + 1}`,
+      placeholder: `Новый пост ${posts.length + 1}`,
+      title: "",
       progress: "0 / 1024",
       text: "",
     };
@@ -73,7 +76,11 @@ const AiGeneratorPopup = () => {
           <ListItem key={post.id}>
             <ItemHead>
               <CheckboxCircle>
-                <HeadTitle value={post.title}/>
+                <HeadTitle
+                  placeholder={post.placeholder}
+                  value={post.title}
+                  onChange={(e) => handleTitleChange(post.id, e.target.value)}
+                />
               </CheckboxCircle>
               <p>{post.progress}</p>
             </ItemHead>
@@ -99,7 +106,7 @@ const AiGeneratorPopup = () => {
                 <img src={ellipsis} alt="ellipsis icon" width={18} height={4} />
               </ItemActionsAdd>
               <ButtonsAll>
-                <HideButton>
+                <HideButton onClick={() => setSelectedPost(post)}>
                   <img src={hide} alt="hide icon" width={24} height={17} />
                 </HideButton>
                 <ButtonsMain>
@@ -116,7 +123,7 @@ const AiGeneratorPopup = () => {
         ))}
       </GeneratorList>
       <PreviewContainer>
-        <Preview collapsed={collapsed} testResult={posts[0]}/>
+        <Preview collapsed={collapsed} testResult={selectedPost}/>
       </PreviewContainer>
     </GeneratorContainer>
   );
@@ -228,7 +235,6 @@ const ItemHead = styled.div`
     display: flex;
     align-items: center;
   }
-
 `
 const HeadTitle = styled.input`
   font-size: 24px;
