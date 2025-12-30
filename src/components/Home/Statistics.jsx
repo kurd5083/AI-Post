@@ -9,6 +9,7 @@ import channels from "@/assets/statistics/channels.svg";
 import views from "@/assets/statistics/views.svg";
 import generated from "@/assets/statistics/generated.svg";
 import mentions from "@/assets/statistics/mentions.svg";
+import CustomSelectThree from "@/shared/CustomSelectThree";
 
 const Statistics = () => {
   const { isSwipe } = useSwipeAllowed(1600);
@@ -24,6 +25,7 @@ const Statistics = () => {
       <StatisticsTitle>
         <img src={rating} alt="rating icon" />
         Статистика
+        <CustomSelectThree/>
       </StatisticsTitle>
 
       <StatisticsList
