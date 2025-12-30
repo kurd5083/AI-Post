@@ -26,7 +26,7 @@ const Statistics = () => {
   const { channelStat, channelStatLoading } = useChannelStat({
     channelIds: selectedChannels?.map(c => c.id),
   });
-    
+    console.log(channelStat)
 
   // const channelStatItems = useMemo(() => {
   //   if (!channelStat?.response) return [];
