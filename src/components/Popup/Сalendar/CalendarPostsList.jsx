@@ -1,8 +1,11 @@
 import styled from "styled-components";
 import { useDeleteCalendarEvent } from "@/lib/calendar/useDeleteCalendarEvent";
+import edit from "@/assets/templates/edit.svg";
+import { usePopupStore } from "@/store/popupStore"
 
 const CalendarPostsList = ({ posts }) => {
   const { mutate: deleteMutation } = useDeleteCalendarEvent();
+  const { popup, changeContent } = usePopupStore();
 
   const formatTime = (dateStr) => {
     const d = new Date(dateStr);
@@ -37,8 +40,21 @@ const CalendarPostsList = ({ posts }) => {
               <MetaItem><strong>Duration:</strong> {post.duration} мин</MetaItem>
             </Meta>
           </Content>
-          <DeleteButton onClick={() => handleDelete(post.id)} disabled={deleteMutation.isLoading}>
-            {deleteMutation.isLoading ? "Удаление..." : "Удалить"}
+         
+          <ButtonEdit>
+            <img src={edit} alt="edit icon" width={22} height={16} />
+          </ButtonEdit>
+          <DeleteButton
+            onClick={(e) => {
+              e.stopPropagation(); 
+              changeContent("delete_confirm", "popup_window", {
+                itemName: post.title,
+                onDelete: () => handleDelete(post.id),
+              });
+            }}
+            disabled={deleteMutation.isLoading}
+          >
+            <img src={del} alt="del icon" width={14} height={16} />
           </DeleteButton>
         </PostItem>
       ))}
@@ -46,7 +62,7 @@ const CalendarPostsList = ({ posts }) => {
   );
 };
 
-// --- Styled Components ---
+
 
 const ListContainer = styled.div`
   display: flex;
@@ -54,7 +70,6 @@ const ListContainer = styled.div`
   gap: 16px;
   margin-top: 24px;
 `;
-
 const PostItem = styled.div`
   display: flex;
   align-items: flex-start;
@@ -69,7 +84,6 @@ const PostItem = styled.div`
     background-color: #2a2b4f;
   }
 `;
-
 const Time = styled.div`
   font-size: 16px;
   font-weight: 700;
@@ -77,25 +91,21 @@ const Time = styled.div`
   width: 70px;
   flex-shrink: 0;
 `;
-
 const Content = styled.div`
   flex: 1;
   display: flex;
   flex-direction: column;
   gap: 8px;
 `;
-
 const Title = styled.div`
   font-size: 16px;
   font-weight: 700;
   color: #ffffff;
 `;
-
 const Description = styled.div`
   font-size: 14px;
   color: #a0a0b8;
 `;
-
 const Meta = styled.div`
   display: flex;
   flex-wrap: wrap;
@@ -103,33 +113,33 @@ const Meta = styled.div`
   font-size: 12px;
   color: #c0c0d0;
 `;
-
 const MetaItem = styled.div`
   background-color: #2a2b4f;
   padding: 4px 8px;
   border-radius: 6px;
 `;
-
-const DeleteButton = styled.button`
-  background-color: #ff4d4f;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  padding: 6px 12px;
-  font-weight: 600;
-  cursor: pointer;
+const BaseButton = styled.button`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 64px;
+  border-radius: 12px;
+  flex-shrink: 0;
   transition: all 0.2s;
-
-  &:hover:enabled {
-    background-color: #ff7875;
-  }
-
-  &:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-  }
 `;
+const ButtonEdit = styled(BaseButton)`
+	background-color: #336CFF;
+	color: #D6DCEC;
+`;
+const DeleteButton = styled(BaseButton)`
+  border: 2px solid #2D3241;
 
+  &:hover {
+    border: none;
+    background-color: rgba(239, 98, 132, 0.08);
+  }
+`
 const EmptyText = styled.div`
   font-size: 16px;
   font-weight: 700;
