@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useMemo } from "react";
 import styled from "styled-components";
 import rating from "@/assets/statistics/rating.svg";
 import { Swiper, SwiperSlide } from "swiper/react";
