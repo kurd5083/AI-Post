@@ -28,7 +28,7 @@ const StyledCheckbox = styled.div`
   height: ${({ $height }) => $height || "40px"};
   flex-shrink: 0;
   border: 2px solid #6A7080;
-  border-radius: 8px;
+  border-radius: ${({ $width }) => $width? "4" || "8px"};
   transition: all 0.2s;
   display: flex;
   align-items: center;
@@ -36,8 +36,8 @@ const StyledCheckbox = styled.div`
 
   &:after {
     content: "";
-    width: 16px;
-    height: 16px;
+    width: ${({ $width }) => $width? "8px" || "16px"};
+    height: ${({ $height }) => $height? "8px" || "16px"};
     background: ${({ $color }) => $color || "#336CFF"};
     border-radius: 50%;
     display: ${(props) => (props.checked ? "block" : "none")};
