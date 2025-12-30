@@ -4,7 +4,7 @@ const Checkbox = ({ checked, onChange, color, children, width, height }) => {
   return (
     <CheckboxContainer onClick={() => onChange()}>
       <HiddenCheckbox type="checkbox" checked={checked} readOnly />
-      <StyledCheckbox $color={color} checked={checked} $width={width} $heigh={heigh}/>
+      <StyledCheckbox $color={color} checked={checked} $width={width} $height={height}/>
       {children}
     </CheckboxContainer>
   );
