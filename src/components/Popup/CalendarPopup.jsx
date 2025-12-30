@@ -40,7 +40,7 @@ const CalendarPopup = () => {
         0, 0, 0
       )).toISOString()
     )
-    : null;
+    : new Date().toISOString();
 
   const endDate = currentWeek[6]
     ? normalize(
@@ -51,9 +51,9 @@ const CalendarPopup = () => {
         23, 59, 59
       )).toISOString()
     )
-    : null;
+    : new Date().toISOString();
 
-  const { events = [] } = useCalendarEventsByRange({ startDate, endDate });
+  const { events } = useCalendarEventsByRange(startDate, endDate);
     console.log(events, 'ass')
   const { mutate, isPending } = useCreateCalendarEvent();
 
