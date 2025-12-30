@@ -18,7 +18,7 @@ const FeedMentions = () => {
 
   useEffect(() => {
     if (userChannels?.length) {
-      setSelectedChannels(userChannels.map(c => c.id));
+      setSelectedChannels(userChannels?.map(c => c.id));
     }
   }, [userChannels]);
 
