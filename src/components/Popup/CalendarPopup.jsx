@@ -51,9 +51,8 @@ const CalendarPopup = () => {
       )).toISOString()
     )
     : new Date().toISOString();
-
+    console.log(startDate, endDate)
   const { events = [] } = useCalendarEventsByRange(startDate, endDate);
-    console.log(events, 'ass')
 
   const syncDate = (date) => {
     setSelectedDate(date);
@@ -73,18 +72,11 @@ const CalendarPopup = () => {
     return events.filter((e) => {
       const d = safeDate(e.scheduledAt);
       if (!d) return false;
-      console.log({
-  selectedDate,
-  selectedUTC: dayKeyUTC(selectedDate),
-  eventDate: e.scheduledAt,
-  eventUTC: dayKeyUTC(new Date(e.scheduledAt)), 
-}, 'aaaa');
-      console.log(dayKeyUTC(d) === selectedKey && e.channelId === channelId)
       return dayKeyUTC(d) === selectedKey && e.channelId === channelId;
     });
 
   }, [events, selectedDate]);
-  console.log(postsForDay)
+
   return (
     <CalendarContent>
       <CalendarHeader

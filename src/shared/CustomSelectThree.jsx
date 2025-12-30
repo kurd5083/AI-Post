@@ -1,7 +1,6 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import styled from "styled-components";
-
-
+import Checkbox from "@/shared/Checkbox";
 
 const optionsData = [
     { label: "Antropia D...", avatar: "/mnt/data/69578d59-ba12-4ee5-98d9-e4fdbad3afec.png" },
@@ -52,7 +51,6 @@ const CustomSelectThree = () => {
                             <Checkbox
                                 type="checkbox"
                                 checked={selected.includes(option.label)}
-                                readOnly
                             />
                         </DropdownItem>
                     ))}
