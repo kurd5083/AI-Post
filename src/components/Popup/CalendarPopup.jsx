@@ -72,6 +72,7 @@ const CalendarPopup = () => {
     const selectedKey = dayKeyUTC(selectedDate);
     return events.filter((e) => {
       const d = safeDate(e.scheduledAt);
+      console.log(d, 'dddd')
       if (!d) return false;
 
       return dayKeyUTC(d) === selectedKey && e.channelId === channelId;
