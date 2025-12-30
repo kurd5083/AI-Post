@@ -61,7 +61,7 @@ const CompilationPopup = () => {
                   <CompilationOpen
                     onClick={() =>
                       changeContent(
-                        "compilation_upload", 'popup', { name: item.name, text: "Здесь вы можете добавить свой источник", id: item.id}
+                        "compilation_upload", 'popup', { channelId: channelId, name: item.name, text: "Здесь вы можете добавить свой источник", id: item.id}
                       )
                     }
                   >

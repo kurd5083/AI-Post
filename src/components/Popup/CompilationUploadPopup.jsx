@@ -8,7 +8,6 @@ import { useAvailableCategories } from "@/lib/channels/categories/useAvailableCa
 const CompilationUploadPopup = () => {
   const { popup, goBack } = usePopupStore()
   const { categories } = useAvailableCategories();
-
   const categoryId = popup?.data?.id;
   const category = categories.find(cat => cat.id === categoryId);
   console.log(category)
@@ -18,9 +17,6 @@ const CompilationUploadPopup = () => {
         items={category?.sources?.map((source) => ({ value: source.name }))}
         view={false}
         color="#EF6284"
-        onRemove={(value) =>
-          removeKeyword({ channelId, source: value })
-        }
       />
       <BtnBase onClick={goBack} $margin="48">Вернуться в подборки</BtnBase>
     </CompilationContainer>
