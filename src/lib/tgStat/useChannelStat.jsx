@@ -5,7 +5,7 @@ export const useChannelStat = ({channelIds}) => {
   const { data: channelStat, isLoading: channelStatLoading } = useQuery({
     queryKey: ["channel-stat", channelIds],
     queryFn: () => getChannelStat(channelIds),
-    enabled: Array.isArray(channelIds) && channelIds.length > 0,
+    enabled: channelIds.length > 0,
   });
 
   return { channelStat, channelStatLoading };
