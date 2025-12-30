@@ -52,9 +52,7 @@ const CustomSelectThree = ({ options = [], value = [], onChange }) => {
     <DropdownContainer ref={ref}>
       <DropdownHeader onClick={() => setIsOpen((v) => !v)}>
         <HeaderText title={headerLabel}>{headerLabel}</HeaderText>
-        <Arrow $open={isOpen}>
-					<img src={arrow_blue} alt="arrow icon" width={12} height={6}/>
-				</Arrow>
+				<Arrow $open={isOpen} src={arrow_blue} alt="arrow icon" width={12} height={6}/>
       </DropdownHeader>
 
       {isOpen && (
@@ -111,7 +109,7 @@ const HeaderText = styled.p`
 	font-size: 14px;
 `;
 
-const Arrow = styled.span`
+const Arrow = styled.img`
   transition: 0.2s;
   transform: rotate(${({ $open }) => ($open ? "180deg" : "0deg")});
 `;
@@ -122,6 +120,7 @@ const DropdownList = styled.div`
   border-radius: 24px;
   margin-top: 20px;
   max-height: 240px;
+	width: 220px;
   overflow-y: auto;
   padding: 16px;
 	z-index: 20;
