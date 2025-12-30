@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import { useDeleteCalendarEvent } from "@/lib/calendar/useDeleteCalendarEvent";
 import edit from "@/assets/templates/edit.svg";
+import del from "@/assets/del.svg";
 import { usePopupStore } from "@/store/popupStore"
 
 const CalendarPostsList = ({ posts }) => {
