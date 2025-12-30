@@ -16,11 +16,12 @@ import useFadeOnScroll from "@/lib/useFadeOnScroll";
 import Preview from "@/components/Preview";
 
 const AiGeneratorPopup = () => {
-  const [collapsed, setCollapsed] = useState(false);
-  const [selectedPost, setSelectedPost] = useState(posts[0]);
   const [posts, setPosts] = useState([
     { id: 1, placeholder: "Пост 1", title: "", progress: "0 / 1024", text: "" },
   ]);
+
+  const [selectedPost, setSelectedPost] = useState(posts[0]);
+  const [collapsed, setCollapsed] = useState(false);
 
   const { fadeVisible, ref } = useFadeOnScroll(20);
 

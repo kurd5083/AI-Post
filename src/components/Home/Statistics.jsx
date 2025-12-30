@@ -22,10 +22,10 @@ const Statistics = () => {
       setSelectedChannels(userChannels?.map(c => c.id));
     }
   }, [userChannels]);
-  console.log(selectedChannels, '2')
+
   const { channelStat, channelStatLoading } = useChannelStat({
-    channelIds: selectedChannels?.map(c => c.id),
-  });
+  channelIds: selectedChannels,
+});
     console.log(channelStat)
 
   // const channelStatItems = useMemo(() => {
