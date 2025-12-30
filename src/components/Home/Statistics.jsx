@@ -16,12 +16,36 @@ import { useUserChannels } from "@/lib/channels/useUserChannels";
 const Statistics = () => {
   const { isSwipe } = useSwipeAllowed(1600);
   const { popup } = usePopupStore();
+const [selectedChannels, setSelectedChannels] = useState([]);
 
-  const { userChannels } = useUserChannels();
-  
-  const [selectedChannels, setSelectedChannels] = useState([]);
-  // const { channelStat, channelStatLoading } = useChannelStat(channelId);
-  // console.log(channelStat, 'aadgag')
+  // Выбираем все каналы по умолчанию
+  useEffect(() => {
+    if (userChannels?.length) {
+      setSelectedChannels(userChannels);
+    }
+  }, [userChannels]);
+
+  const { channelStat, channelStatLoading } = useChannelStat(
+    selectedChannels?.map(c => String(c.id))
+  );
+
+  const channelStatItems = useMemo(() => {
+    if (!channelStat?.response) return [];
+    if (Array.isArray(channelStat.response)) {
+      return channelStat.response.map(stat => ({
+        ...stat,
+        channel: userChannels?.find(c => c.id === stat.id),
+      }));
+    }
+    return [{ ...channelStat.response }];
+  }, [channelStat, userChannels]);
+
+  const displayValue = useMemo(() => {
+    if (!userChannels?.length || !selectedChannels?.length) return [];
+    return selectedChannels.length === userChannels.length
+      ? "Выбраны все"
+      : selectedChannels;
+  }, [selectedChannels, userChannels]);
 
   return (
     <StatisticsContainer>

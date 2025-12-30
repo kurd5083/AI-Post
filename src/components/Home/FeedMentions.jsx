@@ -26,17 +26,17 @@ const FeedMentions = () => {
     channelIds: selectedChannels?.map(c => String(c.id)),
   });
 
-  console.log(mentions)
+  console.log(mentions, 'aaaaaaaa1')
 
-  const mentionsItems = useMemo(() => {
-    if (!mentions?.response?.items) return [];
-    return mentions.response.items.map(item => ({
-      ...item,
-      channel: mentions.response.channels?.find(c => c.id === item.channelId),
-    }));
-  }, [mentions]);
+  // const mentionsItems = useMemo(() => {
+  //   if (!mentions?.response?.items) return [];
+  //   return mentions.response.items.map(item => ({
+  //     ...item,
+  //     channel: mentions.response.channels?.find(c => c.id === item.channelId),
+  //   }));
+  // }, [mentions]);
 
-  console.log(mentionsItems)
+  // console.log(mentionsItems)
 
   return (
     <FeedMentionsContainer>
