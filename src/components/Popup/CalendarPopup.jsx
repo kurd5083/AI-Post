@@ -75,7 +75,7 @@ const CalendarPopup = () => {
       console.log(dayKeyUTC(d), 'dddd')
       console.log(selectedKey, 'ddd2')
       if (!d) return false;
-
+      console.log(e.channelId)
       return dayKeyUTC(d) === selectedKey && e.channelId === channelId;
     });
 
