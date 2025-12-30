@@ -5,7 +5,7 @@ import { usePopupStore } from "@/store/popupStore"
 import { popupDatas } from "@/data/popupDatas";
 import CloseIcon from "@/icons/CloseIcon";
 import { useChannelById } from "@/lib/channels/useChannelById";
-
+import AvaPlug from "@/shared/AvaPlug";
 const PopupHead = () => {
   const { popup, closePopup, goBack } = usePopupStore()
   const channelId = popup?.data?.channelId;
@@ -17,7 +17,11 @@ const PopupHead = () => {
       {popup.content !== 'notifications' && popup.content !== 'replenish' && popup.content !== 'upload_media' && popup.content !== 'profile' && popup.content !== 'create_post' && (
         <PopupListInfo>
           {popup.content != 'settings' && <PopupArrow src={arrow} alt="arrow icon" width={8} height={16} onClick={goBack} />}
-          <PopupListAva src={channel?.avatarUrl} alt="ava icon" width={48} height={48} />
+          {channel?.avatarUrl ? (
+            <PopupListAva src={channel?.avatarUrl} alt="ava icon" width={48} height={48} />
+          ) : (
+            <AvaPlug width={48} height={48}/>
+          )}
           <PopupListInfoContent>
             <p>{channel?.name}</p>
             <span>{channel?.subscribersCount} Подписчиков</span>

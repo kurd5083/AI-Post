@@ -65,7 +65,7 @@ const TableGroups = () => {
                   {channel?.avatarUrl ? (
                     <img src={channel.avatarUrl} alt="Group" />
                   ) : (
-                    <AvaPlug />
+                    <AvaPlug width={40} height={40}/>
                   )}
                 </TableCellAva>
                 <CellName>{channel.name}</CellName>
@@ -301,7 +301,7 @@ const TableCellNum = styled.span`
 `;
 const TableCellAva = styled.div`
   margin: 0 24px 0 32px;
-  
+
   @media(max-width: 991px) {
     margin: 0 10px 0 0;
   }

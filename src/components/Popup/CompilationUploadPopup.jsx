@@ -14,9 +14,9 @@ const CompilationUploadPopup = () => {
   console.log(category)
   return (
     <CompilationContainer>
-      <InputPlus title="ИСТОЧНИК" placeholder="Введите свой источник" bg="#2B243C" color="#FF55AD" />
       <BlocksItems
         items={category?.sources?.map((source) => ({ value: source.name }))}
+        view={false}
         color="#EF6284"
         onRemove={(value) =>
           removeKeyword({ channelId, source: value })

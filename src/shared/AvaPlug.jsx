@@ -1,9 +1,9 @@
 import styled from "styled-components";
 import AccountIcon from "@/icons/AccountIcon";
 
-const AvaPlug = () => {
+const AvaPlug = ({width, height}) => {
   return (
-    <Plug>
+    <Plug $width={width} $height={height}>
         <AccountIcon color="#fff"/>
     </Plug>
   )
@@ -13,8 +13,8 @@ const Plug = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
+  width: ${({$width}) => $width};
+  height: ${({$height}) => $height};
   border-radius: 12px;
   background-color: #2B89ED;
 `;

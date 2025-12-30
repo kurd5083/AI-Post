@@ -100,7 +100,7 @@ const SchedulePopup = () => {
         />
 
         <ScheduleKey>
-          <ScheduleKeyTitle>Выберите интервал</ScheduleKeyTitle>
+          <ScheduleKeyTitle>Выберите время публикаций</ScheduleKeyTitle>
 
           <ScheduleInputContainer>
             <TimeInput
@@ -113,7 +113,7 @@ const SchedulePopup = () => {
             </ScheduleBtn>
           </ScheduleInputContainer>
           {publicationTimes.length === 0 ? (
-            <EmptyText>Интервалы не добавлены</EmptyText>
+            <EmptyText>Время публикаций не добавлены</EmptyText>
           ) : (
             <BlocksItems
               items={publicationTimes.map((t, index) => ({ value: t, id: index }))}
@@ -125,7 +125,7 @@ const SchedulePopup = () => {
           )}
         </ScheduleKey>
         <ScheduleKey>
-          <ScheduleKeyTitle>ДНИ НЕДЕЛИ</ScheduleKeyTitle>
+          <ScheduleKeyTitle>Выбирите дни недели</ScheduleKeyTitle>
           <ScheduleDays>
             {DAYS.map((day) => (
               <ScheduleDaysBlock key={day.value}>

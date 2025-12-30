@@ -87,25 +87,13 @@ const ModePopup = () => {
                         options={[
                             { label: "15 минут", value: 15 },
                             { label: "30 минут", value: 30 },
+                            { label: "60 минут", value: 60 },
+                            { label: "2 часа", value: 120 },
                         ]}
                         width="215px"
                         fs="24px"
                     />
 
-                    <ModeContentItem>
-                        <Checkbox
-                            checked={requireApproval}
-                            onChange={handleToggleApproval}
-                        >
-                            <div>
-                                <h4>Не публиковать без одобрения</h4>
-                                <p>
-                                    Сервис сформирует пост и отправит вам через бота.
-                                    Решение о публикации будете принимать вы
-                                </p>
-                            </div>
-                        </Checkbox>
-                    </ModeContentItem>
                 </>
             )}
         </ModeContent>
