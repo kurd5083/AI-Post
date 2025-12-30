@@ -16,7 +16,7 @@ const Statistics = () => {
   const { isSwipe } = useSwipeAllowed(1600);
   const { userChannels } = useUserChannels();
   const [selectedChannels, setSelectedChannels] = useState([]);
-
+  console.log(userChannels)
   useEffect(() => {
     if (userChannels?.length) {
       setSelectedChannels(userChannels.map(c => c.id));
