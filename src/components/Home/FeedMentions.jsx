@@ -8,8 +8,14 @@ import arrow from "@/assets/arrow.svg";
 import CardPablish from "@/components/CardPablish";
 import TgIcon from "@/icons/TgIcon";
 import CustomSelectThree from "@/shared/CustomSelectThree";
+import { useUserChannels } from "@/lib/channels/useUserChannels";
+
 const FeedMentions = () => {
   const [fadeVisible, setFadeVisible] = useState(true);
+  
+  const { userChannels } = useUserChannels();
+
+  const [selectedChannels, setSelectedChannels] = useState([]);
 
   return (
     <FeedMentionsContainer>
@@ -17,7 +23,15 @@ const FeedMentions = () => {
         <FeedMentionsTitle>
           <TgIcon color="#579AFF"/>
           Лента упоминаний
-          <CustomSelectThree/>
+          <CustomSelectThree
+            options={userChannels.map((c) => ({
+              id: c.id,
+              label: c.name,
+              avatar: c.avatarUrl,
+            }))}
+            value={selectedChannels}
+            onChange={setSelectedChannels}
+          />
         </FeedMentionsTitle>
 
         <FeedMentionsButtons>

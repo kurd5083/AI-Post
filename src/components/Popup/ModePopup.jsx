@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import Checkbox from "@/shared/Checkbox";
-import { useUpdateWorkMode } from "@/lib/channels/useUpdateWorkMode";
+import { useUpdateWorkMode } from "@/lib/channels/mode/useUpdateWorkMode";
 import { usePopupStore } from "@/store/popupStore"
 import CustomSelectSec from "@/shared/CustomSelectSec";
-import { useUpdateChannelPremoderationMinutes } from "@/lib/mode/useUpdateChannelPremoderationMinutes";
+import { useUpdateChannelPremoderationMinutes } from "@/lib/channels/mode/useUpdateChannelPremoderationMinutes";
 import { useUpdateChannelField } from "@/lib/channels/useUpdateChannelField";
 
 

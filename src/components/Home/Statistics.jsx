@@ -1,3 +1,4 @@
+import { useState } from "react";
 import styled from "styled-components";
 import rating from "@/assets/statistics/rating.svg";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -10,22 +11,33 @@ import views from "@/assets/statistics/views.svg";
 import generated from "@/assets/statistics/generated.svg";
 import mentions from "@/assets/statistics/mentions.svg";
 import CustomSelectThree from "@/shared/CustomSelectThree";
+import { useUserChannels } from "@/lib/channels/useUserChannels";
 
 const Statistics = () => {
   const { isSwipe } = useSwipeAllowed(1600);
   const { popup } = usePopupStore();
   const channelId = popup?.data?.channelId;
 
+  const { userChannels } = useUserChannels();
+  
+  const [selectedChannels, setSelectedChannels] = useState([]);
   // const { channelStat, channelStatLoading } = useChannelStat(channelId);
   // console.log(channelStat, 'aadgag')
-
 
   return (
     <StatisticsContainer>
       <StatisticsTitle>
         <img src={rating} alt="rating icon" />
         Статистика
-        <CustomSelectThree/>
+        <CustomSelectThree
+            options={userChannels.map((c) => ({
+              id: c.id,
+              label: c.name,
+              avatar: c.avatarUrl,
+            }))}
+            value={selectedChannels}
+            onChange={setSelectedChannels}
+          />
       </StatisticsTitle>
 
       <StatisticsList
