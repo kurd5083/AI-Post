@@ -232,12 +232,20 @@ const ItemHead = styled.div`
 const HeadTitle = styled.input`
   font-size: 24px;
   font-weight: 700;
+  color: #D6DCEC;
+  background: transparent;
+  border: none;
 `
-const ItemText = styled.input`
+const ItemText = styled.textarea`
   font-size: 16px;
   font-weight: 700;
   color: #6A7080;
   margin-top: 24px;
+  background: transparent;
+  border: none;
+  outline: none;
+  resize: none;
+
   @media(max-width: 1400px) {
       height: 120px;
   }
