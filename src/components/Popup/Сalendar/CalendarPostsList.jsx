@@ -15,12 +15,6 @@ const CalendarPostsList = ({ posts }) => {
     return `${hours}:${minutes}`;
   };
 
-  const handleDelete = (id) => {
-    if (confirm("Вы уверены, что хотите удалить этот пост?")) {
-      deleteMutation(id);
-    }
-  };
-
   if (!posts || posts.length === 0) {
     return <EmptyText>Нет запланированных постов</EmptyText>;
   }
@@ -41,7 +35,6 @@ const CalendarPostsList = ({ posts }) => {
               <MetaItem><strong>Duration:</strong> {post.duration} мин</MetaItem>
             </Meta>
           </Content>
-         
           <ButtonEdit>
             <img src={edit} alt="edit icon" width={22} height={16} />
           </ButtonEdit>
@@ -50,7 +43,7 @@ const CalendarPostsList = ({ posts }) => {
               e.stopPropagation(); 
               changeContent("delete_confirm", "popup_window", {
                 itemName: post.title,
-                onDelete: () => handleDelete(post.id),
+                onDelete: () => deleteMutation(post.id),
               });
             }}
             disabled={deleteMutation.isLoading}
@@ -78,7 +71,7 @@ const PostItem = styled.div`
   gap: 16px;
   padding: 16px;
   border-radius: 12px;
-  background-color: #1f203d;
+  border: 2px solid #2F3953;
   transition: all 0.2s;
 
   &:hover {
@@ -123,15 +116,14 @@ const BaseButton = styled.button`
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 64px;
-  height: 64px;
+  width: 48px;
+  height: 48px;
   border-radius: 12px;
   flex-shrink: 0;
   transition: all 0.2s;
 `;
 const ButtonEdit = styled(BaseButton)`
-	background-color: #336CFF;
-	color: #D6DCEC;
+	background-color: #333E59;
 `;
 const DeleteButton = styled(BaseButton)`
   border: 2px solid #2D3241;
