@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import styled from "styled-components";
 import BtnBase from "@/shared/BtnBase";
 import { usePopupStore } from "@/store/popupStore";
@@ -6,46 +6,56 @@ import CloseIcon from "@/icons/CloseIcon";
 import { useCreateCalendarEvent } from "@/lib/calendar/useCreateCalendarEvent";
 
 const CreateCalendarEventPopup = () => {
-  const { closePopup, popup } = usePopupStore();
-  const { channelId } = popup?.data || {};
+  const { goBack, popup } = usePopupStore();
+  const { channelId, defaultDate, onSave } = popup?.data || {};
 
   const { mutate: createEvent, isPending } = useCreateCalendarEvent();
 
   const [title, setTitle] = useState("Scheduled Post");
   const [description, setDescription] = useState("Post description");
-  const [scheduledAt, setScheduledAt] = useState(new Date().toISOString());
+  const [scheduledAt, setScheduledAt] = useState(
+    defaultDate ? new Date(defaultDate).toISOString() : new Date().toISOString()
+  );
   const [duration, setDuration] = useState(60);
   const [priority, setPriority] = useState(0);
+
+  useEffect(() => {
+    if (defaultDate) {
+      setScheduledAt(new Date(defaultDate).toISOString());
+    }
+  }, [defaultDate]);
 
   const handleCreate = () => {
     if (!channelId) return alert("Не указан канал");
 
-    createEvent(
-      {
-        channelId,
-        eventType: "POST_SCHEDULED",
-        title,
-        description,
-        scheduledAt,
-        timezone: "UTC",
-        duration,
-        priority,
-        postId: 1,
-        scheduleId: 1,
-        intervalId: 1,
-        metadata: { source: "manual" },
+    const payload = {
+      channelId,
+      eventType: "POST_SCHEDULED",
+      title,
+      description,
+      scheduledAt,
+      timezone: "UTC",
+      duration,
+      priority,
+      postId: 1,
+      scheduleId: 1,
+      intervalId: 1,
+      metadata: { source: "manual" },
+    };
+
+    createEvent(payload, {
+      onSuccess: () => {
+        if (onSave) onSave(payload);
+        goBack();
       },
-      {
-        onSuccess: () => closePopup(),
-      }
-    );
+    });
   };
 
   return (
     <div>
       <PopupHead>
         <HeadTitle>Создать событие</HeadTitle>
-        <CloseButton onClick={closePopup}>
+        <CloseButton onClick={goBack}>
           <CloseIcon color="#336CFF" />
         </CloseButton>
       </PopupHead>
@@ -81,7 +91,7 @@ const CreateCalendarEventPopup = () => {
         <BtnBase $color="#D6DCEC" $bg="#336CFF" onClick={handleCreate} disabled={isPending}>
           {isPending ? "Создание..." : "Создать"}
         </BtnBase>
-        <BtnBase onClick={closePopup} $color="#D6DCEC" $bg="#242A3A">
+        <BtnBase onClick={goBack} $color="#D6DCEC" $bg="#242A3A">
           Отменить
         </BtnBase>
       </PopupButtons>

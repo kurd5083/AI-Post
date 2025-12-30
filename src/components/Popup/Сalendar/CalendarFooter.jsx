@@ -16,7 +16,8 @@ export const CalendarFooter = ({
   isPending,
   onAdd,
 }) => {
-  const { popup, changeContent } = usePopupStore();
+  const { changeContent } = usePopupStore();
+  
   const selectedKey = dayKeyUTC(selectedDate);
   console.log(events, selectedDate, '1')
 
@@ -34,8 +35,8 @@ export const CalendarFooter = ({
           onClick={(e) => {
             e.stopPropagation();
             changeContent("create_calendar_event", "popup_window", {
-              itemName: folder.name,
-              onSave: () => onAdd,
+              itemName: 'test',
+              onSave: () => onAdd(),
             });
           }}
           disabled={isPending}
