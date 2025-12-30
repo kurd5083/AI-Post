@@ -5,7 +5,7 @@ export const useMentions = ({channelIds}) => {
   const { data: mentions, isLoading: mentionsLoading } = useQuery({
     queryKey: ["mentions", channelIds],
     queryFn: () => getMentions(channelIds),
-    enabled: channelIds.length > 0,
+    enabled: channelIds && channelIds.length > 0,
   });
 
   return { mentions, mentionsLoading };

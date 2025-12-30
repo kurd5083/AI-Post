@@ -28,7 +28,7 @@ const StyledCheckbox = styled.div`
   height: ${({ $height }) => $height || "40px"};
   flex-shrink: 0;
   border: 2px solid #6A7080;
-  border-radius: ${({ $width }) => $width ? "4px" : "8px"};
+  border-radius: 8px;
   transition: all 0.2s;
   display: flex;
   align-items: center;
