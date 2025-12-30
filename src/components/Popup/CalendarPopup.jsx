@@ -8,6 +8,7 @@ import CalendarHeader from "@/components/Popup/Сalendar/CalendarHeader";
 import CalendarWeek from "@/components/Popup/Сalendar/CalendarWeek";
 import CalendarFooter from "@/components/Popup/Сalendar/CalendarFooter";
 import CalendarPostsList from "@/components/Popup/Сalendar/CalendarPostsList";
+import CreateCalendarEventPopup from "@/PopupWindow/CreateCalendarEventPopup";
 
 const safeDate = (value) => {
   const d = new Date(value);
@@ -53,7 +54,7 @@ const CalendarPopup = () => {
     )
     : new Date().toISOString();
 
-  const { events } = useCalendarEventsByRange(startDate, endDate);
+  const { events = [] } = useCalendarEventsByRange(startDate, endDate);
     console.log(events, 'ass')
   const { mutate, isPending } = useCreateCalendarEvent();
 

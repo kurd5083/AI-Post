@@ -5,6 +5,7 @@ import MoveChannelPopup from "@/components/PopupWindow/MoveChannelPopup";
 import ChangeTimePopup from "@/components/PopupWindow/ChangeTimePopup";
 import DeleteConfirmPopup from "@/components/PopupWindow/DeleteConfirmPopup";
 import SelectChannelsPopup from "@/components/PopupWindow/SelectChannelsPopup";
+import CreateCalendarEventPopup from "@/components/PopupWindow/CreateCalendarEventPopup";
 
 const PopupWindow = () => {
     const { popup } = usePopupStore()
@@ -22,6 +23,8 @@ const PopupWindow = () => {
                     <DeleteConfirmPopup />
                 ) : popup.content == 'select_channel' ?(
                     <SelectChannelsPopup />
+                ) : popup.content == 'create_calendar_event' ?(
+                    <CreateCalendarEventPopup />
                 ) : (
                     2
                 )}
