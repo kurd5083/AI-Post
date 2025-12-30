@@ -128,6 +128,7 @@ const DropdownList = styled.div`
 const SelectAllButton = styled.button`
   width: 100%;
   padding: 11px;
+	font-weight: 700;
   margin-bottom: 20px;
   background: #336CFF;
   color: white;

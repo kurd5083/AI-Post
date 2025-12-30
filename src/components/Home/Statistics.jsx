@@ -35,7 +35,7 @@ const Statistics = () => {
               avatar: c.avatarUrl,
             }))}
             value={selectedChannels}
-            onChange={(option) => setSelectedChannels(option.id)}
+            onChange={setSelectedChannels}
           />
       </StatisticsTitle>
 
