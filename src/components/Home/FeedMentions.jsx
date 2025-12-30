@@ -24,7 +24,7 @@ const FeedMentions = () => {
           <TgIcon color="#579AFF"/>
           Лента упоминаний
           <CustomSelectThree
-            options={userChannels.map((c) => ({
+            options={userChannels?.map((c) => ({
               id: c.id,
               label: c.name,
               avatar: c.avatarUrl,

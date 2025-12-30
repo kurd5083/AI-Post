@@ -29,7 +29,7 @@ const Statistics = () => {
         <img src={rating} alt="rating icon" />
         Статистика
         <CustomSelectThree
-            options={userChannels.map((c) => ({
+            options={userChannels?.map((c) => ({
               id: c.id,
               label: c.name,
               avatar: c.avatarUrl,

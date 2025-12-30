@@ -24,8 +24,8 @@ const HiddenCheckbox = styled.input`
 
 const StyledCheckbox = styled.div`
   box-sizing: border-box;
-  width: ${({ $width }) => $width || "40px"}
-  height: ${({ $height }) => $height || "40px"}
+  width: ${({ $width }) => $width || "40px"};
+  height: ${({ $height }) => $height || "40px"};
   flex-shrink: 0;
   border: 2px solid #6A7080;
   border-radius: 8px;
