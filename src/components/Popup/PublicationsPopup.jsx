@@ -19,7 +19,7 @@ const PublicationsPopup = () => {
   const channelId = popup?.data?.channelId;
 
   const { posts, loadingPosts } = usePostsByChannel(channelId);
-  
+
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth < 768) {
@@ -61,8 +61,14 @@ const PublicationsPopup = () => {
   return (
     <>
       <PublicationsHead>
+        <PublicationsFilter $active={filter === "archive"} onClick={() => setFilter("archive")}>
+          Общие посты <span>{posts?.filter(p => p.archived).length || 0}</span>
+        </PublicationsFilter>
+        <PublicationsFilter $active={filter === "archive"} onClick={() => setFilter("archive")}>
+          Премодерация <span>{posts?.filter(p => p.archived).length || 0}</span>
+        </PublicationsFilter>
         <CustomSelectSec
-          placeholder="По дате"
+          placeholder="Выбор даты"
           value={filter}
           onChange={(option) => setFilter(option.value)} 
           options={[
@@ -72,9 +78,6 @@ const PublicationsPopup = () => {
           width="250px"
           fs="24px"
         />
-        <PublicationsFilter $active={filter === "archive"} onClick={() => setFilter("archive")}>
-          Архив <span>{posts?.filter(p => p.archived).length || 0}</span>
-        </PublicationsFilter>
       </PublicationsHead>
       {!loadingPosts && channelId ? (
         <>

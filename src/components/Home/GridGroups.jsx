@@ -49,13 +49,12 @@ const GridGroups = () => {
           ) : (
             <AvaPlug width="40px" height="40px"/>
           )}
-          
           <CellName>{channel.name}</CellName>
           <p>
             {channel?.workMode === "PREMODERATION" && "Предмодерация"}
             {channel?.workMode === "AUTOPOSTING" && "Автопостинг"}
           </p>
-          <GridStatus>Премодерация</GridStatus>
+          <GridStatus onClick={() => openPopup("premoderation", "popup", { channelId: channel.id })}>Премодерация</GridStatus>
           <ButtonsWrap>
             <ButtonDir onClick={() => openPopup("move_channel", "popup_window", { channelId: channel.id })} title="Перейти">
               <DirIcon />
