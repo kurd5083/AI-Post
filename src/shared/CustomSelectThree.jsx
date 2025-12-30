@@ -1,20 +1,41 @@
 import { useState, useRef, useEffect } from "react";
 import styled from "styled-components";
 import Checkbox from "@/shared/Checkbox";
+import arrow_blue from "@/assets/arrow-blue.svg";
 
-const CustomSelectThree = ({ options = [], value = null, onChange }) => {
+const CustomSelectThree = ({ options = [], value = [], onChange }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [selected, setSelected] = useState([]);
   const ref = useRef(null);
 
-	const selectedOption = options.find((o) => o.id === value);
-
- 	const handleSelect = (id) => {
-    onChange(id);
-    setIsOpen(false);
+  const toggleItem = (id) => {
+    onChange(
+      value.includes(id)
+        ? value.filter((v) => v !== id)
+        : [...value, id]
+    );
   };
 
-  const headerLabel = selectedOption?.label || "Выберите канал";
+  const selectAll = () => {
+    onChange(
+      value.length === options.length
+        ? []
+        : options.map((o) => o.id)
+    );
+  };
+
+  const headerLabel = useMemo(() => {
+    if (!value.length) return "Выберите канал";
+
+    const selectedOptions = options.filter((o) =>
+      value.includes(o.id)
+    );
+
+    if (selectedOptions.length <= 2) {
+      return selectedOptions.map((o) => o.label).join(", ");
+    }
+
+    return `Выбрано: ${selectedOptions.length}`;
+  }, [value, options]);
 
   useEffect(() => {
     const handleClickOutside = (e) => {
@@ -31,14 +52,16 @@ const CustomSelectThree = ({ options = [], value = null, onChange }) => {
     <DropdownContainer ref={ref}>
       <DropdownHeader onClick={() => setIsOpen((v) => !v)}>
         <HeaderText title={headerLabel}>{headerLabel}</HeaderText>
-        <Arrow $open={isOpen}>⌄</Arrow>
+        <Arrow $open={isOpen}>
+					<img src={arrow_blue} alt="arrow icon" width={12} height={6}/>
+				</Arrow>
       </DropdownHeader>
 
       {isOpen && (
         <DropdownList>
           <SelectAllButton
             onClick={selectAll}
-            $active={selected.length === optionsData.length}
+            $active={value.length === options.length}
           >
             Выбрать все
           </SelectAllButton>
@@ -46,7 +69,7 @@ const CustomSelectThree = ({ options = [], value = null, onChange }) => {
           {options.map((option) => (
             <DropdownItem
               key={option.id}
-              onClick={() => handleSelect(option.id)}
+              onClick={() => toggleItem(option.id)}
             >
               <ItemLeft>
                 {option.avatar && <Avatar src={option.avatar} />}
@@ -54,10 +77,10 @@ const CustomSelectThree = ({ options = [], value = null, onChange }) => {
               </ItemLeft>
 
               <Checkbox
-                checked={option.id === value}
+                checked={value.includes(option.id)}
                 onClick={(e) => e.stopPropagation()}
-								width="20px"
-								height="20px"
+                width="20px"
+                height="20px"
               />
             </DropdownItem>
           ))}
