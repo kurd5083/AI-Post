@@ -22,8 +22,8 @@ const FeedMentions = () => {
     }
   }, [userChannels]);
 
- const { mentions, mentionsLoading } = useMentions({
-    channelIds: selectedChannels?.map(c => String(c.id)),
+  const { mentions, mentionsLoading } = useMentions({
+    channelIds: selectedChannels?.map(c => c.id),
   });
 
   console.log(mentions, 'aaaaaaaa1')

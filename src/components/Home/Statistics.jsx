@@ -4,7 +4,6 @@ import rating from "@/assets/statistics/rating.svg";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import useSwipeAllowed from "@/lib/useSwipeAllowed";
-import { usePopupStore } from "@/store/popupStore";
 import { useChannelStat } from "@/lib/tgStat/useChannelStat";
 import channels from "@/assets/statistics/channels.svg";
 import views from "@/assets/statistics/views.svg";
@@ -22,10 +21,10 @@ const Statistics = () => {
     if (userChannels?.length) {
       setSelectedChannels(userChannels.map(c => c.id));
     }
-    }, [userChannels]);
+  }, [userChannels]);
 
   const { channelStat, channelStatLoading } = useChannelStat({
-    channelIds: selectedChannels?.map(c => String(c.id))
+    channelIds: selectedChannels?.map(c => c.id),
   });
   console.log(channelStat, 'aaaaaaaa1') 
 
