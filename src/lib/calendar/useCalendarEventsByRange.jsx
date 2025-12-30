@@ -1,11 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
 import { getCalendarEventsByRange } from "@/api/calendar/getCalendarEventsByRange";
 
-export const useCalendarEventsByRange = ({ channelId, startDate, endDate }) => {
+export const useCalendarEventsByRange = ({ startDate, endDate }) => {
   const { data: events = [] } = useQuery({
-    queryKey: ["calendar-events", channelId, startDate, endDate],
-    queryFn: () => getCalendarEventsByRange(channelId, startDate, endDate),
-    enabled: !!channelId && !!startDate && !!endDate,
+    queryKey: ["calendar-events", startDate, endDate],
+    queryFn: () => getCalendarEventsByRange(startDate, endDate),
+    enabled: !!startDate && !!endDate,
   });
 
   return { events };

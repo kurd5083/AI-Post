@@ -53,12 +53,8 @@ const CalendarPopup = () => {
     )
     : null;
 
-  const { events = [] } = useCalendarEventsByRange({
-    channelId,
-    startDate,
-    endDate,
-  });
-
+  const { events = [] } = useCalendarEventsByRange({ startDate, endDate });
+    console.log(events, 'ass')
   const { mutate, isPending } = useCreateCalendarEvent();
 
   const syncDate = (date) => {
