@@ -63,25 +63,26 @@ const CustomSelectThree = ({ options = [], value = [], onChange }) => {
           >
             Выбрать все
           </SelectAllButton>
+					<DropdownContent>
+						{options.map((option) => (
+							<DropdownItem
+								key={option.id}
+								onClick={() => toggleItem(option.id)}
+							>
+								<ItemLeft>
+									{option.avatar && <Avatar src={option.avatar} />}
+									<ItemText>{option.label}</ItemText>
+								</ItemLeft>
 
-          {options.map((option) => (
-            <DropdownItem
-              key={option.id}
-              onClick={() => toggleItem(option.id)}
-            >
-              <ItemLeft>
-                {option.avatar && <Avatar src={option.avatar} />}
-                <ItemText>{option.label}</ItemText>
-              </ItemLeft>
-
-              <Checkbox
-                checked={value.includes(option.id)}
-                onClick={(e) => e.stopPropagation()}
-                width="20px"
-                height="20px"
-              />
-            </DropdownItem>
-          ))}
+								<Checkbox
+									checked={value.includes(option.id)}
+									onClick={(e) => e.stopPropagation()}
+									width="24px"
+									height="24px"
+								/>
+							</DropdownItem>
+						))}
+						</DropdownContent>
         </DropdownList>
       )}
     </DropdownContainer>
@@ -108,7 +109,6 @@ const HeaderText = styled.p`
 	color: #336CFF;
 	font-size: 14px;
 `;
-
 const Arrow = styled.img`
   transition: 0.2s;
   transform: rotate(${({ $open }) => ($open ? "180deg" : "0deg")});
@@ -133,6 +133,11 @@ const SelectAllButton = styled.button`
   background: #336CFF;
   color: white;
   border-radius: 12px;
+`;
+const DropdownContent = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 `;
 const DropdownItem = styled.div`
   display: flex;
