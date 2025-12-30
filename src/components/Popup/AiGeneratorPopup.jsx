@@ -99,19 +99,19 @@ const AiGeneratorPopup = () => {
                 <img src={setting} alt="setting icon" width={18} height={20} />
                 <img src={ellipsis} alt="ellipsis icon" width={18} height={4} />
               </ItemActionsAdd>
-              <Buttons>
+              <ButtonsAll>
                 <HideButton>
                   <img src={hide} alt="hide icon" width={24} height={17} />
                 </HideButton>
-                <div>
-                  <div>
+                <ButtonsMain>
+                  <ButtonsMainTop>
                     <BtnBase $padding="21px 24px" $color="#241E2D" $bg="#EF6284">Отменить</BtnBase>
-                    <BtnBase $padding="21px 24px" $border>Изменить время</BtnBase>
+                    <BtnBase $padding="21px 24px" $border $bg="transporent">Изменить время</BtnBase>
                     <BtnBase $padding="21px 24px" $color="#336CFF" $bg="#161F37">Сохранить</BtnBase>
-                  </div>
-                  <BtnBase $padding="21px 24px" $border $width="100%">Опубликовать сейчас</BtnBase>
-                </div>
-              </Buttons>
+                  </ButtonsMainTop>
+                  <BtnBase $padding="21px 24px" $border $width="100%" $bg="transporent">Опубликовать сейчас</BtnBase>
+                </ButtonsMain>
+              </ButtonsAll>
             </ItemActions>
           </ListItem>
         ))}
@@ -291,14 +291,23 @@ const ItemActionsAdd = styled.div`
     cursor: pointer;
   }
 `
-const Buttons = styled.div`
+const ButtonsAll = styled.div`
   display: flex;
-  gap: 16px;
-  @media(max-width: 1600px) {
+  gap: 8px;
+  /* @media(max-width: 1600px) {
     position: absolute;
     bottom: -72px;
     right: 0;
-  } 
+  }  */
+`;
+const ButtonsMain = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+`;
+const ButtonsMainTop = styled.div`
+  display: flex;
+  gap: 8px;
 `;
 const BaseButton = styled.button`
   display: flex;
