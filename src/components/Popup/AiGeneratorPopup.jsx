@@ -49,8 +49,8 @@ const AiGeneratorPopup = () => {
     <GeneratorContainer>
       <GeneratorHead>
         <h2>
-          <AiGeneratorIcon width={24} height={24} />
-          AI Генератор
+          <AiGeneratorIcon width={16} height={16} color="#336CFF"/>
+          Создать пост
         </h2>
         <BtnBase $padding="21px 24px" onClick={() => handleAddPost()}>
           + Добавить пост

@@ -66,7 +66,6 @@ const Preview = ({ collapsed, testResult }) => {
 }
 const GeneratorPreview = styled.div`
   width: 100%;
-	max-width: 800px;
 `;
 const PreviewContent = styled.div`
   background-color: #181E30;

@@ -27,7 +27,7 @@ const CreateCalendarEventPopup = () => {
       eventType: "POST_SCHEDULED",
       title,
       description,
-      scheduledAt: '',
+      scheduledAt,
       timezone: "UTC",
       duration,
       priority,
