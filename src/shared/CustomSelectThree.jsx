@@ -24,18 +24,18 @@ const CustomSelectThree = ({ options = [], value = [], onChange }) => {
   };
 
   const headerLabel = useMemo(() => {
-    if (!value.length) return "Выберите канал";
+		if (!value.length) return "Выберите канал";
 
-    const selectedOptions = options.filter((o) =>
-      value.includes(o.id)
-    );
+		if (value.length === options.length) return "Выбраны все"; // <-- добавлено
 
-    if (selectedOptions.length <= 2) {
-      return selectedOptions.map((o) => o.label).join(", ");
-    }
+		const selectedOptions = options.filter((o) => value.includes(o.id));
 
-    return `Выбрано: ${selectedOptions.length}`;
-  }, [value, options]);
+		if (selectedOptions.length <= 2) {
+			return selectedOptions.map((o) => o.label).join(", ");
+		}
+
+		return `Выбрано: ${selectedOptions.length}`;
+	}, [value, options]);
 
   useEffect(() => {
     const handleClickOutside = (e) => {
