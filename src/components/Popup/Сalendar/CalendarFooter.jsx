@@ -16,6 +16,7 @@ export const CalendarFooter = ({
   onAdd,
 }) => {
   const selectedKey = dayKeyUTC(selectedDate);
+  console.log(selectedDate, '1')
 
   const hasEvents = events.some((e) => {
     const d = safeDate(e.scheduledAt);
@@ -23,7 +24,7 @@ export const CalendarFooter = ({
 
     return dayKeyUTC(d) === selectedKey;
   });
-
+  console.log(hasEvents, '2')
   return (
     <>
       <CalendarButton>

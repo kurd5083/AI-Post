@@ -105,7 +105,6 @@ const CardPablishText = styled.p`
   -webkit-box-orient: vertical;
   overflow: hidden;
   padding-right: 40px;
-  max-width: 300px;
 `
 const CardPablishSubtext = styled.p`
   box-sizing: border-box;
@@ -117,8 +116,8 @@ const CardPablishSubtext = styled.p`
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
-  padding-right: 60px;
-  max-width: 300px;
+  padding-right: 40px;
+  max-width: 260px;
 `
 
 export default CardPablish

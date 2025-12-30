@@ -1,8 +1,9 @@
 import styled from "styled-components";
 
 const CalendarPostsList = ({ posts }) => {
-    if (!posts || posts.length === 0) return;
-    
+  console.log(posts, '3')
+    // if (!posts || posts.length === 0) return;
+
     const formatTime = (dateStr) => {
         const d = new Date(dateStr);
         const hours = String(d.getHours()).padStart(2, "0");
@@ -11,7 +12,7 @@ const CalendarPostsList = ({ posts }) => {
     };
     return (
         <ListContainer>
-            {posts.map((post) => (
+            {posts?.map((post) => (
                 <PostItem key={post.id}>
                     <Time>{formatTime(post.scheduledAt)}</Time>
                     <Content>
