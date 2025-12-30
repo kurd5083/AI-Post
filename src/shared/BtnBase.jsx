@@ -12,7 +12,7 @@ export const BtnBase = styled.button`
   font-weight: 700;
   font-size: 14px;
   margin-top: ${({ $margin }) => $margin ? $margin : "0"}px;
-  width: fit-content;
+  width: ${({ $width }) => $width || "fit-content"};
   border: ${({ $border, $bg }) => $border ? '2px solid #333E59' : `2px solid ${$bg}`} 
 `
 export default BtnBase

@@ -105,11 +105,11 @@ const AiGeneratorPopup = () => {
                 </HideButton>
                 <ButtonsMain>
                   <ButtonsMainTop>
-                    <BtnBase $padding="21px 24px" $color="#241E2D" $bg="#EF6284">Отменить</BtnBase>
-                    <BtnBase $padding="21px 24px" $border $bg="transporent">Изменить время</BtnBase>
+                    <BtnBase $padding="21px 24px" $color="#EF6284" $bg="#241E2D">Отменить</BtnBase>
+                    <BtnBase $padding="21px 24px" $border $bg="transporent" $color="#6A7080">Изменить время</BtnBase>
                     <BtnBase $padding="21px 24px" $color="#336CFF" $bg="#161F37">Сохранить</BtnBase>
                   </ButtonsMainTop>
-                  <BtnBase $padding="21px 24px" $border $width="100%" $bg="transporent">Опубликовать сейчас</BtnBase>
+                  <BtnBase $padding="21px 24px" $border $width="100%" $bg="transporent" $color="#6A7080">Опубликовать сейчас</BtnBase>
                 </ButtonsMain>
               </ButtonsAll>
             </ItemActions>
@@ -294,6 +294,7 @@ const ItemActionsAdd = styled.div`
 const ButtonsAll = styled.div`
   display: flex;
   gap: 8px;
+  align-items: flex-end
   /* @media(max-width: 1600px) {
     position: absolute;
     bottom: -72px;
