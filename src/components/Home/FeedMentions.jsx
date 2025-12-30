@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useEffect, useMemo } from "react";
 import styled from "styled-components";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
@@ -16,8 +16,18 @@ const FeedMentions = () => {
   const { userChannels } = useUserChannels();
   const [selectedChannels, setSelectedChannels] = useState([]);
 
-  const { mentions, mentionsLoading } = useMentions({channelIds: selectedChannels.map(c => c.id)});
+  useEffect(() => {
+    if (userChannels?.length) {
+      setSelectedChannels(userChannels);
+    }
+  }, [userChannels]);
+
+ const { mentions, mentionsLoading } = useMentions({
+    channelIds: selectedChannels?.map(c => c.id),
+  });
+
   console.log(mentions)
+
   const mentionsItems = useMemo(() => {
     if (!mentions?.response?.items) return [];
     return mentions.response.items.map(item => ({
@@ -25,7 +35,9 @@ const FeedMentions = () => {
       channel: mentions.response.channels?.find(c => c.id === item.channelId),
     }));
   }, [mentions]);
+
   console.log(mentionsItems)
+
   return (
     <FeedMentionsContainer>
       <FeedMentionsHead>
