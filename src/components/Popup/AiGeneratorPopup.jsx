@@ -52,7 +52,7 @@ const AiGeneratorPopup = () => {
           <AiGeneratorIcon width={24} height={24} />
           AI Генератор
         </h2>
-        <BtnBase $padding="21px 24px" onClick={handleAddPost}>
+        <BtnBase $padding="21px 24px" onClick={() => handleAddPost()}>
           + Добавить пост
         </BtnBase>
       </GeneratorHead>
@@ -94,7 +94,9 @@ const AiGeneratorPopup = () => {
           </ListItem>
         ))}
       </GeneratorList>
-      <Preview/>
+      <PreviewContainer>
+        <Preview collapsed={collapsed}/>
+      </PreviewContainer>
     </GeneratorContainer>
   );
 };
@@ -292,5 +294,9 @@ const DeleteButton = styled(BaseButton)`
     background-color: rgba(239, 98, 132, 0.08);
   }
 `
+const PreviewContainer  = styled.div`
+  grid-column:  4 / span 2;
+  grid-row: 1 / span 2;
+`;
 
 export default AiGeneratorPopup;
