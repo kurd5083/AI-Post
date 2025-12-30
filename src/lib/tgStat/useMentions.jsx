@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { getMentions } from "@/api/mentions/getMentions";
+import { getMentions } from "@/api/tgStat/getMentions";
 
 export const useMentions = (channelIds) => {
   const { data: mentions, isLoading: mentionsLoading } = useQuery({
