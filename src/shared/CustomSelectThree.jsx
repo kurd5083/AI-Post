@@ -91,6 +91,7 @@ const Arrow = styled.span`
   transform: rotate(${({ $open }) => ($open ? "180deg" : "0deg")});
 `;
 const DropdownList = styled.div`
+	position: absolute;
   background: #222B438F;
   backdrop-filter: blur(20px);
   border-radius: 24px;
@@ -98,6 +99,7 @@ const DropdownList = styled.div`
   max-height: 240px;
   overflow-y: auto;
   padding: 16px;
+	z-index: 20;
 `;
 const SelectAllButton = styled.button`
   width: 100%;
@@ -111,6 +113,7 @@ const DropdownItem = styled.div`
   display: flex;
   align-items: center;
   cursor: pointer;
+	justify-content: space-between;
 `;
 const ItemLeft = styled.div`
   display: flex;
