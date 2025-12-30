@@ -4,22 +4,25 @@ import BtnBase from "@/shared/BtnBase";
 import { usePopupStore } from "@/store/popupStore";
 import CloseIcon from "@/icons/CloseIcon";
 import { useCreateCalendarEvent } from "@/lib/calendar/useCreateCalendarEvent";
-import CustomSelect from "@/shared/CustomSelect";
-
-              
+import CustomSelectSec from "@/shared/CustomSelectSec";
+import { usePostsByChannel } from "@/lib/posts/usePostsByChannel";
 
 const CreateCalendarEventPopup = () => {
   const { goBack, popup } = usePopupStore();
   const channelId = popup?.data?.channelId;
+
   const { mutate: createEvent, isPending } = useCreateCalendarEvent();
+  const { posts, loadingPosts } = usePostsByChannel(channelId);
 
   const [title, setTitle] = useState("Scheduled Post");
   const [description, setDescription] = useState("Post description");
+  const [selectedPostId, setSelectedPostId] = useState(null);
+    const [duration, setDuration] = useState(60);
+  const [priority, setPriority] = useState(0);
   // const [scheduledAt, setScheduledAt] = useState(
   //   defaultDate ? new Date(defaultDate).toISOString() : new Date().toISOString()
   // );
-  const [duration, setDuration] = useState(60);
-  const [priority, setPriority] = useState(0);
+
 
   // useEffect(() => {
   //   if (defaultDate) {
@@ -37,7 +40,7 @@ const CreateCalendarEventPopup = () => {
       timezone: "UTC",
       duration,
       priority,
-      postId: 1,
+      postId: selectedPostId,
       scheduleId: 1,
       intervalId: 1,
       metadata: { source: "manual" },
@@ -87,13 +90,14 @@ const CreateCalendarEventPopup = () => {
       />
 
       <InputLabel>Выбрать пост</InputLabel>
-      <CustomSelect
-				options={[
-					{ value: "Unlimited", label: "Не ограничено" },
-					{ value: "1", label: "1" },
-					{ value: "2", label: "2" },
-					{ value: "3", label: "3" },
-				]}
+      <CustomSelectSec
+				options={posts?.map((post) => ({
+          value: post.id,
+          label: post.title,
+        }))}
+        value={selectedPostId}
+        onChange={(option) => setSelectedPostId(option.value)}
+        width="100%"
       />
 
       <PopupButtons>
@@ -126,30 +130,27 @@ const CloseButton = styled.button`
   align-items: center;
   justify-content: center;
 `;
-
-const InputLabel = styled.h3`
-  margin-top: 24px;
-  font-size: 14px;
+const InputLabel = styled.h2`
+  text-transform: uppercase;
   color: #6a7080;
+  font-size: 12px;
   font-weight: 700;
+  margin: 48px 0 26px;
+  border: none;
 `;
-
 const PopupInput = styled.input`
-  width: 100%;
-  padding: 8px 12px;
-  margin-top: 8px;
-  font-size: 16px;
-  color: #d6dcec;
   background-color: transparent;
-  border: 2px solid #2e3954;
-  border-radius: 4px;
-
-  &:focus {
-    outline: none;
-    border-color: #336cff;
+  width: 100%;
+  color: #d6dcec;
+  font-size: 16px;
+  font-weight: 700;
+  padding-bottom: 24px;
+  border: none;
+  border-bottom: 2px solid #2e3954;
+  &::placeholder {
+    color: #d6dcec;
   }
 `;
-
 const PopupButtons = styled.div`
   display: flex;
   gap: 8px;

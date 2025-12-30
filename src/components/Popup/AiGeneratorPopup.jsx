@@ -297,6 +297,10 @@ const DeleteButton = styled(BaseButton)`
 const PreviewContainer  = styled.div`
   grid-column:  4 / span 2;
   grid-row: 1 / span 2;
+  @media(max-width: 1400px) {
+    grid-column: 1 /span 5;
+    grid-row: 2;
+  }
 `;
 
 export default AiGeneratorPopup;
