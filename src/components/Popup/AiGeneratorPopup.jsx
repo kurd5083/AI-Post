@@ -215,7 +215,7 @@ const ItemHead = styled.div`
     color: #6A7080;
   }
 `
-const ItemText = styled.input`
+const ItemText = styled.p`
   color: #6A7080;
   font-size: 16px;
   font-weight: 700;

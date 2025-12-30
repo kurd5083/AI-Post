@@ -4,6 +4,9 @@ import BtnBase from "@/shared/BtnBase";
 import { usePopupStore } from "@/store/popupStore";
 import CloseIcon from "@/icons/CloseIcon";
 import { useCreateCalendarEvent } from "@/lib/calendar/useCreateCalendarEvent";
+import CustomSelect from "@/shared/CustomSelect";
+
+              
 
 const CreateCalendarEventPopup = () => {
   const { goBack, popup } = usePopupStore();
@@ -81,6 +84,16 @@ const CreateCalendarEventPopup = () => {
         type="number"
         value={priority}
         onChange={(e) => setPriority(Number(e.target.value))}
+      />
+
+      <InputLabel>Выбрать пост</InputLabel>
+      <CustomSelect
+				options={[
+					{ value: "Unlimited", label: "Не ограничено" },
+					{ value: "1", label: "1" },
+					{ value: "2", label: "2" },
+					{ value: "3", label: "3" },
+				]}
       />
 
       <PopupButtons>
