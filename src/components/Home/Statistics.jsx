@@ -24,8 +24,8 @@ const Statistics = () => {
   }, [userChannels]);
 
   const { channelStat, channelStatLoading } = useChannelStat({
-  channelIds: selectedChannels,
-});
+    channelIds: selectedChannels,
+  });
     console.log(channelStat)
 
   // const channelStatItems = useMemo(() => {
