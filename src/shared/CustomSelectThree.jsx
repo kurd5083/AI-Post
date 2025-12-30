@@ -36,7 +36,6 @@ const CustomSelectThree = () => {
       : `Выбрано: ${selected.length}`
     : "Выберите канал";
 
-  // 👉 закрытие по клику вне
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (ref.current && !ref.current.contains(e.target)) {
@@ -91,9 +90,23 @@ const DropdownContainer = styled.div`
 `;
 
 const DropdownHeader = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 16px;
   cursor: pointer;
 `;
+const HeaderText = styled.p`
+  max-width: 180px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-weight: 600;
+`;
 
+const Arrow = styled.span`
+  transition: 0.2s;
+  transform: rotate(${({ $open }) => ($open ? "180deg" : "0deg")});
+`;
 const DropdownList = styled.div`
   background: #222B438F;
   backdrop-filter: blur(20px);

@@ -7,7 +7,7 @@ import { feedmentionsDatas } from "@/data/feedmentionsDatas";
 import arrow from "@/assets/arrow.svg";
 import CardPablish from "@/components/CardPablish";
 import TgIcon from "@/icons/TgIcon";
-
+import CustomSelectThree from "@/shared/CustomSelectThree";
 const FeedMentions = () => {
   const [fadeVisible, setFadeVisible] = useState(true);
 
@@ -17,6 +17,7 @@ const FeedMentions = () => {
         <FeedMentionsTitle>
           <TgIcon color="#579AFF"/>
           Лента упоминаний
+          <CustomSelectThree/>
         </FeedMentionsTitle>
 
         <FeedMentionsButtons>
