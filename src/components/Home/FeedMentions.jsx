@@ -26,8 +26,6 @@ const FeedMentions = () => {
     channelIds: selectedChannels?.map(c => c.id),
   });
 
-  console.log(mentions, 'aaaaaaaa1')
-
   // const mentionsItems = useMemo(() => {
   //   if (!mentions?.response?.items) return [];
   //   return mentions.response.items.map(item => ({
