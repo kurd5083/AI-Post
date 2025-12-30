@@ -23,7 +23,7 @@ const AiGeneratorPopup = () => {
       id: 1,
       title: "Пост 1",
       progress: "0 / 1024",
-      text: "",
+      summary: "",
     },
   ]);
 
@@ -115,7 +115,7 @@ const AiGeneratorPopup = () => {
         ))}
       </GeneratorList>
       <PreviewContainer>
-        <Preview collapsed={collapsed}/>
+        <Preview collapsed={collapsed} testResult={posts}/>
       </PreviewContainer>
     </GeneratorContainer>
   );
