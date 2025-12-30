@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import styled from "styled-components";
 import create from "@/assets/create.svg";
 import BtnBase from "@/shared/BtnBase";
-import del from "@/assets/del.svg";
 import hide from "@/assets/hide.svg";
 import paper from "@/assets/ai-generator/paper.svg";
 import img from "@/assets/ai-generator/img.svg";

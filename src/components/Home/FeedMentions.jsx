@@ -17,10 +17,10 @@ const FeedMentions = () => {
   const [selectedChannels, setSelectedChannels] = useState([]);
 
   useEffect(() => {
-    if (userChannels?.length && selectedChannels.length === 0) {
-      setSelectedChannels(userChannels);
+    if (userChannels?.length) {
+      setSelectedChannels(userChannels.map(c => c.id));
     }
-  }, [userChannels, selectedChannels]);
+  }, [userChannels]);
 
  const { mentions, mentionsLoading } = useMentions({
     channelIds: selectedChannels?.map(c => String(c.id)),
