@@ -47,7 +47,7 @@ const GridGroups = () => {
           {channel?.avatarUrl ? (
             <GridImg src={channel.avatarUrl} alt="Group" />
           ) : (
-            <AvaPlug width={40} height={40}/>
+            <AvaPlug width="40px" height="40px"/>
           )}
           
           <CellName>{channel.name}</CellName>

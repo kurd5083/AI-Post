@@ -65,7 +65,7 @@ const TableGroups = () => {
                   {channel?.avatarUrl ? (
                     <img src={channel.avatarUrl} alt="Group" />
                   ) : (
-                    <AvaPlug width={40} height={40}/>
+                    <AvaPlug width="40px" height="40px"/>
                   )}
                 </TableCellAva>
                 <CellName>{channel.name}</CellName>
