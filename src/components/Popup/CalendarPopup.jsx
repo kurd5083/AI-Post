@@ -70,15 +70,15 @@ const CalendarPopup = () => {
 
   const postsForDay = useMemo(() => {
     const selectedKey = dayKeyUTC(selectedDate);
-
-    return events?.filter((e) => {
+    return events.filter((e) => {
       const d = safeDate(e.scheduledAt);
       if (!d) return false;
 
-      return dayKeyUTC(d) === selectedKey;
+      return dayKeyUTC(d) === selectedKey && e.channelId === channelId;
     });
-  }, [events, selectedDate]);
 
+  }, [events, selectedDate]);
+  console.log(postsForDay)
   return (
     <CalendarContent>
       <CalendarHeader
