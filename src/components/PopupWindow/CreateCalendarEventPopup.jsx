@@ -17,18 +17,9 @@ const CreateCalendarEventPopup = () => {
   const [title, setTitle] = useState("Scheduled Post");
   const [description, setDescription] = useState("Post description");
   const [selectedPostId, setSelectedPostId] = useState(null);
-    const [duration, setDuration] = useState(60);
+  const [duration, setDuration] = useState(60);
   const [priority, setPriority] = useState(0);
-  // const [scheduledAt, setScheduledAt] = useState(
-  //   defaultDate ? new Date(defaultDate).toISOString() : new Date().toISOString()
-  // );
-
-
-  // useEffect(() => {
-  //   if (defaultDate) {
-  //     setScheduledAt(new Date(defaultDate).toISOString());
-  //   }
-  // }, [defaultDate]);
+  const [scheduledAt, setScheduledAt] = useState('');
 
   const handleCreate = () => {
     const data = {
@@ -71,8 +62,8 @@ const CreateCalendarEventPopup = () => {
       <InputLabel>Дата и время</InputLabel>
       <PopupInput
         type="datetime-local"
-        // value={scheduledAt.slice(0, 16)}
-        // onChange={(e) => setScheduledAt(new Date(e.target.value).toISOString())}
+        value={scheduledAt.slice(0, 16)}
+        onChange={(e) => setScheduledAt(new Date(e.target.value).toISOString())}
       />
 
       <InputLabel>Длительность (минуты)</InputLabel>
@@ -98,6 +89,8 @@ const CreateCalendarEventPopup = () => {
         value={selectedPostId}
         onChange={(option) => setSelectedPostId(option.value)}
         width="100%"
+        fs="16px"
+        padding="24px"
       />
 
       <PopupButtons>
