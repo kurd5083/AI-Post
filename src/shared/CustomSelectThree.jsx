@@ -28,10 +28,16 @@ const CustomSelectThree = () => {
     }
   };
 
+  const headerLabel = selected.length
+  ? selected.length <= 2
+    ? selected.join(", ")
+    : `Выбрано: ${selected.length}`
+  : "Выбирите канал";
+
   return (
     <DropdownContainer>
       <DropdownHeader onClick={() => setIsOpen(!isOpen)}>
-        Маркетинг
+        {headerLabel}
       </DropdownHeader>
       {isOpen && (
         <DropdownList>
