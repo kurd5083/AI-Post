@@ -26,7 +26,7 @@ const CustomSelectThree = ({ options = [], value = [], onChange }) => {
   const headerLabel = useMemo(() => {
 		if (!value.length) return "Выберите канал";
 
-		if (value.length === options.length) return "Выбраны все"; // <-- добавлено
+		if (value.length === options.length) return "Выбраны все";
 
 		const selectedOptions = options.filter((o) => value.includes(o.id));
 
@@ -122,6 +122,7 @@ const DropdownList = styled.div`
   max-height: 240px;
 	width: 220px;
   overflow-y: auto;
+	scrollbar-width: none;
   padding: 16px;
 	z-index: 20;
 `;
