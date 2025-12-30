@@ -1,64 +1,89 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import styled from "styled-components";
 import Checkbox from "@/shared/Checkbox";
 
 const optionsData = [
-    { label: "Antropia D...", avatar: "/mnt/data/69578d59-ba12-4ee5-98d9-e4fdbad3afec.png" },
-    { label: "123", avatar: "/mnt/data/69578d59-ba12-4ee5-98d9-e4fdbad3afec.png" },
-    { label: "51251", avatar: "/mnt/data/69578d59-ba12-4ee5-98d9-e4fdbad3afec.png" },
-    { label: "Фцвфцвфцв", avatar: "/mnt/data/69578d59-ba12-4ee5-98d9-e4fdbad3afec.png" },
+  { label: "Antropia D...", avatar: "/mnt/data/69578d59-ba12-4ee5-98d9-e4fdbad3afec.png" },
+  { label: "123", avatar: "/mnt/data/69578d59-ba12-4ee5-98d9-e4fdbad3afec.png" },
+  { label: "51251", avatar: "/mnt/data/69578d59-ba12-4ee5-98d9-e4fdbad3afec.png" },
+  { label: "Фцвфцвфцв", avatar: "/mnt/data/69578d59-ba12-4ee5-98d9-e4fdbad3afec.png" },
 ];
 
 const CustomSelectThree = () => {
-    const [isOpen, setIsOpen] = useState(false);
-    const [selected, setSelected] = useState([]);
+  const [isOpen, setIsOpen] = useState(false);
+  const [selected, setSelected] = useState([]);
+  const ref = useRef(null);
 
-    const toggleItem = (label) => {
-        setSelected((prev) =>
-            prev.includes(label) ? prev.filter((item) => item !== label) : [...prev, label]
-        );
-    };
-
-    const selectAll = () => {
-        if (selected.length === optionsData.length) {
-            setSelected([]);
-        } else {
-            setSelected(optionsData.map((opt) => opt.label));
-        }
-    };
-
-    const headerLabel = selected.length
-        ? selected.length <= 2
-            ? selected.join(", ")
-            : `Выбрано: ${selected.length}`
-        : "Выбирите канал";
-
-    return (
-        <DropdownContainer>
-            <DropdownHeader onClick={() => setIsOpen(!isOpen)}>
-                {headerLabel}
-            </DropdownHeader>
-            {isOpen && (
-                <DropdownList>
-                    <SelectAllButton onClick={selectAll}>Выбрать все</SelectAllButton>
-                    {optionsData.map((option, idx) => (
-                        <DropdownItem key={idx} onClick={() => toggleItem(option.label)}>
-                            <ItemLeft>
-                                <Avatar src={option.avatar} alt="avatar" />
-                                <ItemText>{option.label}</ItemText>
-                            </ItemLeft>
-
-                            <Checkbox
-                                type="checkbox"
-                                checked={selected.includes(option.label)}
-                            />
-                        </DropdownItem>
-                    ))}
-                </DropdownList>
-            )}
-        </DropdownContainer>
+  const toggleItem = (label) => {
+    setSelected((prev) =>
+      prev.includes(label)
+        ? prev.filter((item) => item !== label)
+        : [...prev, label]
     );
-}
+  };
+
+  const selectAll = () => {
+    setSelected(
+      selected.length === optionsData.length
+        ? []
+        : optionsData.map((o) => o.label)
+    );
+  };
+
+  const headerLabel = selected.length
+    ? selected.length <= 2
+      ? selected.join(", ")
+      : `Выбрано: ${selected.length}`
+    : "Выберите канал";
+
+  // 👉 закрытие по клику вне
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (ref.current && !ref.current.contains(e.target)) {
+        setIsOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  return (
+    <DropdownContainer ref={ref}>
+      <DropdownHeader onClick={() => setIsOpen((v) => !v)}>
+        <HeaderText title={headerLabel}>{headerLabel}</HeaderText>
+        <Arrow $open={isOpen}>⌄</Arrow>
+      </DropdownHeader>
+
+      {isOpen && (
+        <DropdownList>
+          <SelectAllButton
+            onClick={selectAll}
+            $active={selected.length === optionsData.length}
+          >
+            Выбрать все
+          </SelectAllButton>
+
+          {optionsData.map((option) => (
+            <DropdownItem
+              key={option.label}
+              onClick={() => toggleItem(option.label)}
+            >
+              <ItemLeft>
+                <Avatar src={option.avatar} />
+                <ItemText>{option.label}</ItemText>
+              </ItemLeft>
+
+              <Checkbox
+                checked={selected.includes(option.label)}
+                onClick={(e) => e.stopPropagation()}
+              />
+            </DropdownItem>
+          ))}
+        </DropdownList>
+      )}
+    </DropdownContainer>
+  );
+};
 
 const DropdownContainer = styled.div`
   width: 220px;
