@@ -2,39 +2,19 @@ import { useState, useRef, useEffect } from "react";
 import styled from "styled-components";
 import Checkbox from "@/shared/Checkbox";
 
-const optionsData = [
-  { label: "Antropia D...", avatar: "/mnt/data/69578d59-ba12-4ee5-98d9-e4fdbad3afec.png" },
-  { label: "123", avatar: "/mnt/data/69578d59-ba12-4ee5-98d9-e4fdbad3afec.png" },
-  { label: "51251", avatar: "/mnt/data/69578d59-ba12-4ee5-98d9-e4fdbad3afec.png" },
-  { label: "Фцвфцвфцв", avatar: "/mnt/data/69578d59-ba12-4ee5-98d9-e4fdbad3afec.png" },
-];
-
-const CustomSelectThree = () => {
+const CustomSelectThree = ({ options = [], value = null, onChange }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selected, setSelected] = useState([]);
   const ref = useRef(null);
 
-  const toggleItem = (label) => {
-    setSelected((prev) =>
-      prev.includes(label)
-        ? prev.filter((item) => item !== label)
-        : [...prev, label]
-    );
+	const selectedOption = options.find((o) => o.id === value);
+
+ 	const handleSelect = (id) => {
+    onChange(id);
+    setIsOpen(false);
   };
 
-  const selectAll = () => {
-    setSelected(
-      selected.length === optionsData.length
-        ? []
-        : optionsData.map((o) => o.label)
-    );
-  };
-
-  const headerLabel = selected.length
-    ? selected.length <= 2
-      ? selected.join(", ")
-      : `Выбрано: ${selected.length}`
-    : "Выберите канал";
+  const headerLabel = selectedOption?.label || "Выберите канал";
 
   useEffect(() => {
     const handleClickOutside = (e) => {
@@ -43,7 +23,8 @@ const CustomSelectThree = () => {
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
+    return () =>
+      document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
   return (
@@ -62,18 +43,18 @@ const CustomSelectThree = () => {
             Выбрать все
           </SelectAllButton>
 
-          {optionsData.map((option) => (
+          {options.map((option) => (
             <DropdownItem
-              key={option.label}
-              onClick={() => toggleItem(option.label)}
+              key={option.id}
+              onClick={() => handleSelect(option.id)}
             >
               <ItemLeft>
-                <Avatar src={option.avatar} />
+                {option.avatar && <Avatar src={option.avatar} />}
                 <ItemText>{option.label}</ItemText>
               </ItemLeft>
 
               <Checkbox
-                checked={selected.includes(option.label)}
+                checked={option.id === value}
                 onClick={(e) => e.stopPropagation()}
               />
             </DropdownItem>
@@ -101,6 +82,8 @@ const HeaderText = styled.p`
   overflow: hidden;
   text-overflow: ellipsis;
   font-weight: 600;
+	color: #336CFF;
+	font-size: 14px;
 `;
 
 const Arrow = styled.span`

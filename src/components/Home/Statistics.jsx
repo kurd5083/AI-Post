@@ -16,7 +16,6 @@ import { useUserChannels } from "@/lib/channels/useUserChannels";
 const Statistics = () => {
   const { isSwipe } = useSwipeAllowed(1600);
   const { popup } = usePopupStore();
-  const channelId = popup?.data?.channelId;
 
   const { userChannels } = useUserChannels();
   
@@ -36,7 +35,7 @@ const Statistics = () => {
               avatar: c.avatarUrl,
             }))}
             value={selectedChannels}
-            onChange={setSelectedChannels}
+            onChange={(option) => setSelectedChannels(option.id)}
           />
       </StatisticsTitle>
 
