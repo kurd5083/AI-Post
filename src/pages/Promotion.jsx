@@ -13,7 +13,7 @@ const Promotion = () => {
 			<PageHead />
 			<PromotionHead>
 				<PromotionHeadText $active={true}>Продвижение</PromotionHeadText>
-				<Link to='/my-orders'><PromotionHeadText >Подписки</PromotionHeadText></Link>
+				<Link to='/my-orders'><PromotionHeadText >Мои заказы</PromotionHeadText></Link>
 			</PromotionHead>
 			<PromotionFilter>
 				<label>Платформа

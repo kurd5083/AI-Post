@@ -12,7 +12,7 @@ const MyOrders = () => {
       <PageHead/>
       <PromotionHead>
 				<Link to='/promotion'><PromotionHeadText>Продвижение</PromotionHeadText></Link>
-				<PromotionHeadText $active={true}>Подписки</PromotionHeadText>
+				<PromotionHeadText $active={true}>Мои заказы</PromotionHeadText>
 			</PromotionHead>
       <PageFilter
         activeFilter={activeFilter}

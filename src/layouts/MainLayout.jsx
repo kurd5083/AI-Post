@@ -8,11 +8,13 @@ import Header from "@/components/Header";
 import Popup from "@/components/Popup/Popup"
 import PopupWindow from '@/components/PopupWindow/PopupWindow';
 import MobileMenu from "@/components/MobileMenu";
+import Lightbox from "@/components/Lightbox";
 import { usePopupStore } from "@/store/popupStore";
-
+import { useLightboxStore } from "@/store/lightboxStore";
 
 const MainLayout = () => {
   const { popup, closePopup } = usePopupStore();
+  const { isOpen, images, initialIndex, closeLightbox } = useLightboxStore();
   const location = useLocation();
 
   useEffect(() => {
@@ -30,6 +32,13 @@ const MainLayout = () => {
           popup.view === 'popup_window'
             ? <PopupWindow content={popup.content} />
             : <Popup content={popup.content} />
+        )}
+         {isOpen && (
+          <Lightbox
+            images={images}
+            initialIndex={initialIndex}
+            onClose={closeLightbox}
+          />
         )}
       </Main>
       <Tape />

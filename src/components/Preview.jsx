@@ -6,13 +6,17 @@ import CustomSelect from "@/shared/CustomSelectSec";
 import BtnBase from "@/shared/BtnBase";
 import TgIcon from "@/icons/TgIcon";
 import { useSendPostToChannel } from "@/lib/posts/useSendPostToChannel";
-  import { usePopupStore } from "@/store/popupStore"
+import { usePopupStore } from "@/store/popupStore"
+import { useLightboxStore } from "@/store/lightboxStore";
 
 const Preview = ({ collapsed, testResult, telegramId }) => {
   console.log(testResult)
+
+  const { openLightbox } = useLightboxStore();
+  
   const { title, summary, url, savedFiles, postId } = testResult || {};
   const { mutate: sendPost, isLoading: sendPostLoading } = useSendPostToChannel();
-  const { popup, changeContent } = usePopupStore();
+  const { popup } = usePopupStore();
   const channelId = popup?.data?.channelId;
 
   const handleSendToTelegram = () => {
@@ -38,7 +42,12 @@ const Preview = ({ collapsed, testResult, telegramId }) => {
                 {savedFiles?.images?.length > 0 && (
                   <ImagesContainer>
                     {savedFiles.images.map((img, index) => (
-                      <img key={index} src={img} alt={`image-${index}`} />
+                      <img 
+                        key={index} 
+                        src={img} 
+                        alt={`image-${index}`} 
+                        onClick={() => openLightbox(savedFiles.images, i)}
+                      />
                     ))}
                   </ImagesContainer>
                 )}
@@ -158,6 +167,7 @@ const ImagesContainer = styled.div`
 		max-width: 250px;
     object-fit: cover;
     border-radius: 12px;
+    cursor: pointer;
   }
 `;
 const PreviewInfoText = styled.p`
