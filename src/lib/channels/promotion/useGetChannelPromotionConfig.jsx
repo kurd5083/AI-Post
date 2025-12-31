@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { getChannelPromotionConfig } from "@/api/channels/getChannelPromotionConfig";
+import { getChannelPromotionConfig } from "@/api/channels/promotion/getChannelPromotionConfig";
 
 export const useGetChannelPromotionConfig = (channelId) => {
     const { data: promotionConfig } = useQuery({

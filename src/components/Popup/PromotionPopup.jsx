@@ -5,16 +5,18 @@ import Counter from "@/shared/Counter";
 import BtnBase from "@/shared/BtnBase";
 import { usePopupStore } from "@/store/popupStore";
 import { useCreateConfigСhannel } from "@/lib/channels/useCreateConfigСhannel";
-import { useGetChannelPromotionConfig } from "@/lib/channels/useGetChannelPromotionConfig";
+import { useGetChannelPromotionConfig } from "@/lib/channels/promotion/useGetChannelPromotionConfig";
+import { useUpdatePromotionConfig } from "@/lib/channels/promotion/useUpdatePromotionConfig";
 import del from "@/assets/del.svg";
 
 const PromotionPopup = () => {
   const { popup, changeContent } = usePopupStore();
   const channelId = popup?.data?.channelId;
-
-  const createConfigСhannel = useCreateConfigСhannel();
   const { promotionConfig } = useGetChannelPromotionConfig(channelId);
-  console.log(promotionConfig)
+
+  const { mutate: createConfigСhannel, isLoading: createConfigLoading } = useCreateConfigСhannel();
+  const { mutate: updatePromotionConfig, isLoading: updatePromotionLoading } = useUpdatePromotionConfig();
+
   const [autoViews, setAutoViews] = useState(false);
   const [autoViewsLink, setAutoViewsLink] = useState(false);
   const [minViews, setMinViews] = useState("");
@@ -23,7 +25,7 @@ const PromotionPopup = () => {
   const [postLink, setPostLink] = useState("");
   const [postViews, setPostViews] = useState("");
   const [manualPosts, setManualPosts] = useState([]);
-  console.log(manualPosts)
+
   useEffect(() => {
     if (promotionConfig) {
       setAutoViews(promotionConfig.isEnabled || false);
@@ -40,18 +42,23 @@ const PromotionPopup = () => {
     setPostLink("");
     setPostViews("");
   };
-
+  const buildPayload = () => ({
+    isEnabled: autoViews,
+    allowedServiceIds: [272],
+    viewsOnNewPostEnabled: autoViewsLink,
+    boostsEnabled: false,
+    boostsRetentionDays: 7,
+    minViews,
+    maxViews,
+  });
   const handleSave = () => {
-    createConfigСhannel.mutate({
-      channelId: channelId,
-      isEnabled: autoViews,
-      allowedServiceIds: [272],
-      viewsOnNewPostEnabled: autoViewsLink,
-      boostsEnabled: false,
-      boostsRetentionDays: 7,
-      minViews,
-      maxViews,
-    });
+    const payload = buildPayload();
+
+    if (promotionConfig) {
+      updatePromotionConfig({ channelId, payload });
+    } else {
+      createConfigСhannel({ channelId, ...payload });
+    }
   };
 
   return (
@@ -164,9 +171,13 @@ const PromotionPopup = () => {
       <BtnBase
         $margin="64"
         onClick={handleSave}
-        disabled={createConfigСhannel.isLoading}
+        disabled={
+          createConfigLoading || updatePromotionLoading
+        }
       >
-        {createConfigСhannel.isLoading ? "Сохраняем..." : "Сохранить"}
+        {createConfigLoading || updatePromotionLoading
+          ? "Сохраняем..."
+          : "Сохранить"}
       </BtnBase>
     </PromotionContainer>
   );
