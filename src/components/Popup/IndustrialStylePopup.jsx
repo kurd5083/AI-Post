@@ -17,6 +17,7 @@ const MAX_PROMPT_LENGTH = 100;
 const IndustrialStylePopup = () => {
   const { popup, changeContent } = usePopupStore();
   const channelId = popup?.data?.channelId;
+  const telegramId = popup?.data?.telegramId;
 
   const [result, setResult] = useState(null);
   const [localPrompt, setLocalPrompt] = useState("");
@@ -94,7 +95,7 @@ const IndustrialStylePopup = () => {
           <IndustrialStyleDesc>Подпись будет добавлена в <mark>конец каждого поста.</mark> Например: ссылка или призыв подписаться.</IndustrialStyleDesc>
         </IndustrialStyleLeft>
         <IndustrialStyleRight>
-          <Preview collapsed={false} testResult={result} />
+          <Preview collapsed={false} testResult={result} telegramId={telegramId}/>
         </IndustrialStyleRight>
       </IndustrialStyleContent>
       <IndustrialStyleTitle>Креативность</IndustrialStyleTitle>

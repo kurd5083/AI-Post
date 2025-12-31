@@ -8,16 +8,16 @@ import TgIcon from "@/icons/TgIcon";
 import { useSendPostToChannel } from "@/lib/posts/useSendPostToChannel";
   import { usePopupStore } from "@/store/popupStore"
 
-const Preview = ({ collapsed, testResult }) => {
+const Preview = ({ collapsed, testResult, telegramId }) => {
   console.log(testResult)
-  const { title, summary, url, savedFiles } = testResult || {};
+  const { title, summary, url, savedFiles, postId } = testResult || {};
   const { mutate: sendPost, isLoading: sendPostLoading } = useSendPostToChannel();
   const { popup, changeContent } = usePopupStore();
   const channelId = popup?.data?.channelId;
 
   const handleSendToTelegram = () => {
-    if (!postId || !channelId || !channelTelegramId) return;
-    sendPost({ postId, channelId, channelTelegramId });
+    if (!postId || !channelId || !telegramId) return;
+    sendPost({ postId, channelId, channelTelegramId: telegramId });
   };
 
   return (
@@ -59,9 +59,9 @@ const Preview = ({ collapsed, testResult }) => {
                 </PreviewInfoText>
               </PreviewInfoContainer>
             </PreviewInfo>
-            <PreviewButton onClick={handleSendToTelegram} disabled={isLoading}>
+            <PreviewButton onClick={handleSendToTelegram} disabled={sendPostLoading}>
               <TgIcon color="#336CFF" width="24" height="20"/>
-              <p>{isLoading ? "Отправляем..." : "Отправить в Telegram"}</p>
+              <p>{sendPostLoading ? "Отправляем..." : "Отправить в Telegram"}</p>
             </PreviewButton>
           </>
         )}

@@ -10,10 +10,11 @@ import { useEnableChannelPosting, useDisableChannelPosting } from "@/lib/channel
 import { useAutoApprovalStatus } from "@/lib/channels/useAutoApprovalStatus";
 import { useEnableChannelPromotion, useDisnableChannelPromotion } from "@/lib/channels/useEnableChannelPromotion";
 import { usePostsByChannel } from "@/lib/posts/usePostsByChannel";
+import { useUser } from "@/lib/useUser";
 
 const SettingsPopup = () => {
   const { changeContent, popup } = usePopupStore();
-  console.log(popup)
+  const { user } = useUser();
   const channelId = popup?.data?.channelId;
   const channelName = popup?.data?.channelName;
   const { channel } = useChannelById(channelId);
@@ -75,13 +76,14 @@ const SettingsPopup = () => {
               <PopupContentItem
                 key={index}
                 onClick={item.right !== 'switch' ? () => {
-                  if (!channel) return;
+                  if (!channel || !user) return;
                   changeContent(item.key, 'popup', {
                     channelId: channel.id,
                     channelName: channel.name,
                     workMode: channel.workMode,
                     premoderationMinutes: channel.premoderationMinutes,
                     canPublishWithoutApproval: channel.canPublishWithoutApproval,
+                    telegramId: user.telegramId,
                   });
                 } : undefined}
               >
