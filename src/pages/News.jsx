@@ -11,9 +11,11 @@ import { useFormattedHtml } from "@/lib/useFormattedHtml";
 import ModernLoading from "@/components/ModernLoading";
 import news_stub from "@/assets/news-stub.png";
 import dzen_icon from "@/assets/dzen-icon.svg";
+import { useLightboxStore } from "@/store/lightboxStore";
 
 const NewsDetail = () => {
 	const { openPopup } = usePopupStore();
+	const { openLightbox } = useLightboxStore();
 	const { id } = useParams();
 	const { newsData, newsLoding } = useNews({});
 	const { news, newsIdLoading } = useNewsById(id);
@@ -55,6 +57,7 @@ const NewsDetail = () => {
 									? `http://77.37.65.40:3000/${news?.images[0]}` 
 									: news_stub} 
 							alt={news?.title} 
+							onClick={() => openLightbox(news?.images && news?.images[0] ? `http://77.37.65.40:3000/${news?.images[0]}` : news_stub, 1)}
 						/>
 					</NewsPost>
 				</>

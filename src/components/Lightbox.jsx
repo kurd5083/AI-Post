@@ -19,7 +19,7 @@ const Lightbox = () => {
     return (
         <Overlay onClick={()=> closeLightbox()}>
             <Content onClick={(e) => e.stopPropagation()}>
-                <CloseButton onClick={onClose}>&times;</CloseButton>
+                <CloseButton onClick={()=> closeLightbox()}>&times;</CloseButton>
                 <NavButton left onClick={handlePrev}>&lt;</NavButton>
                 <Image src={images[currentIndex]} alt={`img-${currentIndex}`} />
                 <NavButton onClick={handleNext}>&gt;</NavButton>

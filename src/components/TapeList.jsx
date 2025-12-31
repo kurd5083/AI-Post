@@ -13,7 +13,6 @@ import ModernLoading from "@/components/ModernLoading";
 import { usePopupStore } from "@/store/popupStore"
 import { useLightboxStore } from "@/store/lightboxStore";
 
-
 const TapeList = ({ forceHorizontal = false, padding, newsData, loding }) => {
   const { popup, changeContent, openPopup } = usePopupStore();
   const { openLightbox } = useLightboxStore();
@@ -225,7 +224,7 @@ const TapePostImg = styled.img`
   border-radius: 24px;
 	width: ${({ $forceHorizontal }) => $forceHorizontal ? '105px' : '152px'};
   cursor: pointer;
-  
+
   @media (max-width: 1600px) {
     width: 105px;
   }
