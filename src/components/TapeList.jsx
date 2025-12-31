@@ -5,16 +5,18 @@ import { Navigation } from "swiper/modules";
 import "swiper/css";
 import useSwipeAllowed from "@/lib/useSwipeAllowed";
 import useFadeOnScroll from "@/lib/useFadeOnScroll";
-
-import { usePopupStore } from "@/store/popupStore"
 import TimeIcons from "@/icons/TimeIcons";
 import arrow from "@/assets/arrow.svg";
 import dzen_icon from "@/assets/dzen-icon.svg";
-import ModernLoading from "@/components/ModernLoading";
 import news_stub from "@/assets/news-stub.png";
+import ModernLoading from "@/components/ModernLoading";
+import { usePopupStore } from "@/store/popupStore"
+import { useLightboxStore } from "@/store/lightboxStore";
+
 
 const TapeList = ({ forceHorizontal = false, padding, newsData, loding }) => {
   const { popup, changeContent, openPopup } = usePopupStore();
+  const { openLightbox } = useLightboxStore();
 
   const { fadeVisible, ref } = useFadeOnScroll(20);
   const { isSwipe } = useSwipeAllowed(1400);
@@ -70,6 +72,7 @@ const TapeList = ({ forceHorizontal = false, padding, newsData, loding }) => {
                 src={news.images && news.images[0] ? `http://77.37.65.40:3000/${news.images[0]}` : news_stub} 
                 alt="post img" 
                 $forceHorizontal={forceHorizontal} 
+                onClick={() => openLightbox(news.images && news.images[0] ? `http://77.37.65.40:3000/${news.images[0]}` : news_stub.images, 1)}
               />
             </TapeItem>
           ))}
