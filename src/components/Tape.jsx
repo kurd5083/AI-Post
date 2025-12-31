@@ -13,9 +13,9 @@ import { useNews } from "@/lib/news/useNews";
 const Tape = () => {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [filters, setFilters] = useState({
-    isProcessed: "false",
-    isPublished: "false",
-    priorityWords: "спорт",
+    // isProcessed: "false",
+    // isPublished: "false",
+    // priorityWords: "спорт",
   });
   const { newsData, newsLoding } = useNews(filters);
   console.log(newsData)
