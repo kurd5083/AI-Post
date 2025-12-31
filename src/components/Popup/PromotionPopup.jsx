@@ -4,7 +4,7 @@ import ToggleSwitch from "@/shared/ToggleSwitch";
 import Counter from "@/shared/Counter";
 import BtnBase from "@/shared/BtnBase";
 import { usePopupStore } from "@/store/popupStore";
-import { useCreateConfigСhannel } from "@/lib/channels/useCreateConfigСhannel";
+import { useCreateConfigСhannel } from "@/lib/channels/promotion/useCreateConfigСhannel";
 import { useGetChannelPromotionConfig } from "@/lib/channels/promotion/useGetChannelPromotionConfig";
 import { useUpdatePromotionConfig } from "@/lib/channels/promotion/useUpdatePromotionConfig";
 import del from "@/assets/del.svg";
