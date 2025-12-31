@@ -71,7 +71,7 @@ const TapeList = ({ forceHorizontal = false, padding, newsData, loding }) => {
                 src={news.images && news.images[0] ? `http://77.37.65.40:3000/${news.images[0]}` : news_stub} 
                 alt="post img" 
                 $forceHorizontal={forceHorizontal} 
-                onClick={() => openLightbox(news.images && news.images[0] ? `http://77.37.65.40:3000/${news.images[0]}` : news_stub.images, 1)}
+                onClick={() => openLightbox(news.images && news.images[0] ? `http://77.37.65.40:3000/${news.images[0]}` : news_stub.images, 0)}
               />
             </TapeItem>
           ))}
