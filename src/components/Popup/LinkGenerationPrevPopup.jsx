@@ -54,5 +54,12 @@ const Buttons = styled.div`
   display: flex;
   align-items: center;
   gap: 16px;
+  @media(max-width: 480px) {
+    flex-direction: column;
+    
+    button {
+      width: 100%;
+    }
+  }
 `
 export default LinkGenerationPrevPopup
