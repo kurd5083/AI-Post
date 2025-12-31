@@ -5,15 +5,16 @@ import { useLightboxStore } from "@/store/lightboxStore";
 const Lightbox = () => {
     const { images, initialIndex, closeLightbox } = useLightboxStore();
     const [currentIndex, setCurrentIndex] = useState(initialIndex);
+    console.log(images, initialIndex)
 
     // if (!images.length) return null;
 
     const handlePrev = () => {
-        setCurrentIndex((prev) => (prev === 0 ? images.length - 1 : prev - 1));
+        setCurrentIndex((prev) => (prev === 0 ? images?.length - 1 : prev - 1));
     };
 
     const handleNext = () => {
-        setCurrentIndex((prev) => (prev === images.length - 1 ? 0 : prev + 1));
+        setCurrentIndex((prev) => (prev === images?.length - 1 ? 0 : prev + 1));
     };
 
     return (
@@ -21,7 +22,7 @@ const Lightbox = () => {
             <Content onClick={(e) => e.stopPropagation()}>
                 <CloseButton onClick={()=> closeLightbox()}>&times;</CloseButton>
                 <NavButton left onClick={handlePrev}>&lt;</NavButton>
-                <Image src={images[currentIndex]} alt={`img-${currentIndex}`} />
+                <Image src={images?.[currentIndex]} alt={`img-${currentIndex}`} />
                 <NavButton onClick={handleNext}>&gt;</NavButton>
             </Content>
         </Overlay>

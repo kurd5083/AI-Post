@@ -36,7 +36,14 @@ const NewsDetail = () => {
 								<img src={dzen_icon} alt="ava icon" />
 								<p>{news?.sourceName}</p>
 							</PostHead>
-							<NewsImgMobile src={`http://77.37.65.40:3000/${news?.images[0]}`} alt={news?.title} />
+							<NewsImgMobile 
+								src={`http://77.37.65.40:3000/${news?.images[0]}`} 
+								alt={news?.title} 
+								onClick={() => openLightbox(
+									news?.images?.map(img => `http://77.37.65.40:3000/${img}`) || [news_stub],
+									0
+								)}
+							/>
 							<PostTimeMobile ><TimeIcons color="#336CFF" />{news?.readingTime}</PostTimeMobile>
 							<PostTilte dangerouslySetInnerHTML={{ __html: formattedTitle }} />
 							<PostDescription dangerouslySetInnerHTML={{ __html: formattedContent }} />
@@ -166,6 +173,7 @@ const NewsImgMobile = styled.img`
 	max-height: 330px;
 	border-radius: 24px;
 	object-fit: cover;
+	cursor: pointer;
 
 	@media (max-width: 1400px) {
     display: block;
@@ -206,6 +214,7 @@ const NewsImg = styled.img`
 	max-height: 330px;
 	border-radius: 24px;
 	object-fit: cover;
+	cursor: pointer;
 
 	@media (max-width: 1400px) {
     display: none;

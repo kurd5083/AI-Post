@@ -73,7 +73,7 @@ const TapeList = ({ forceHorizontal = false, padding, newsData, loding }) => {
                 $forceHorizontal={forceHorizontal} 
                 onClick={() => openLightbox(
                   news?.images?.map(img => `http://77.37.65.40:3000/${img}`) || [news_stub],
-                  0 // стартовый индекс 0
+                  0
                 )}
               />
             </TapeItem>
