@@ -27,10 +27,10 @@ const PromotionPopup = () => {
 
   useEffect(() => {
     if (promotionConfig) {
-      setAutoViews(promotionConfig.isEnabled || false);
-      setAutoViewsLink(promotionConfig.viewsOnNewPostEnabled || false);
-      setMinViews(promotionConfig.minViews);
-      setMaxViews(promotionConfig.maxViews);
+      setAutoViews(promotionConfig.isEnabled ?? false);
+      setAutoViewsLink(promotionConfig.viewsOnNewPostEnabled ?? false);
+      setMinViews(promotionConfig.minViews ?? "");
+      setMaxViews(promotionConfig.maxViews ?? "");
     }
   }, [promotionConfig]);
   console.log(promotionConfig, 'promotionConfig')
