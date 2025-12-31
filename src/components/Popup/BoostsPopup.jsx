@@ -49,22 +49,15 @@ const BoostsPopup = () => {
           onChange={(id) => setBoostDays(Number(id))}
         />
       </BoostsBlock>
-
-      <CostTitle>Стоимость:</CostTitle>
-      <CostPrice>15.500<mark>,48</mark> руб.</CostPrice>
-
-      <BoostsButtons>
-        <BtnBase
-          $color="#D6DCEC"
-          $bg="#2B89ED"
-          onClick={handleStartBoost}
-          disabled={createBoostOrder.isLoading}
-        >
-          {createBoostOrder.isLoading ? "Продвигаем..." : "Начать продвижение"}
-        </BtnBase>
-
-        <BtnBase $color="#EF6284" $bg="#562F43">Купить бусты</BtnBase>
-      </BoostsButtons>
+      <BtnBase
+        $color="#D6DCEC"
+        $bg="#2B89ED"
+        onClick={handleStartBoost}
+        disabled={createBoostOrder.isLoading}
+        $margin="40"
+      >
+        {createBoostOrder.isLoading ? "Продвигаем..." : "Начать продвижение"}
+      </BtnBase>
     </BoostsContainer>
   );
 };
@@ -98,20 +91,5 @@ const BoostsBlock = styled.div`
 `;
 
 const BlockTitle = styled.h2` font-size: 24px; font-weight: 700; `;
-const CostTitle = styled.p` margin-top: 48px; font-size: 24px; font-weight: 700; `;
-const CostPrice = styled.p`
-  margin-top: 32px;
-  font-size: 48px;
-  font-weight: 700;
-  mark { color: #6A7080; }
-  @media(max-width: 480px) { font-size: 32px; }
-`;
-
-const BoostsButtons = styled.div`
-  display: flex;
-  gap: 8px;
-  margin-top: 40px;
-  @media(max-width: 480px) { flex-direction: column; gap: 64px; }
-`;
 
 export default BoostsPopup;
