@@ -73,13 +73,13 @@ const PromotionPopup = () => {
       ) : (
         <>
           <PromotionViews>
-            <ToggleSwitch bg="#EF6283" value={autoViews} onChange={() => setAutoViews(!autoViews)} />
+            <ToggleSwitch bg="#EF6283" checked={autoViews} onChange={() => setAutoViews(!autoViews)} />
             <PostTitle>
               Просмотры на новый пост<br /> и автозакупка после публикации
             </PostTitle>
           </PromotionViews>
           <PromotionViews>
-            <ToggleSwitch bg="#EF6283" value={autoViewsLink} onChange={() => setAutoViewsLink(!autoViewsLink)} />
+            <ToggleSwitch bg="#EF6283" checked={autoViewsLink} onChange={() => setAutoViewsLink(!autoViewsLink)} />
             <PostTitle>
               Просмотры на пост по ссылке
             </PostTitle>

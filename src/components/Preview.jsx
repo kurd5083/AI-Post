@@ -49,7 +49,7 @@ const Preview = ({ collapsed, testResult }) => {
               </PreviewInfoContainer>
             </PreviewInfo>
             <PreviewButton>
-              <TgIcon width="24" height="20" сolor="#336CFF" />
+              <TgIcon color="#336CFF"width="24" height="20"/>
               <p>Отправить в Telegram</p>
             </PreviewButton>
           </>
