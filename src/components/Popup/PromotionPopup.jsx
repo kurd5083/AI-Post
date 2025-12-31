@@ -14,7 +14,7 @@ const PromotionPopup = () => {
 
   const createConfigСhannel = useCreateConfigСhannel();
   const { promotionConfig } = useGetChannelPromotionConfig(channelId);
-
+  console.log(promotionConfig)
   const [autoViews, setAutoViews] = useState(false);
   const [autoViewsLink, setAutoViewsLink] = useState(false);
   const [minViews, setMinViews] = useState("");
