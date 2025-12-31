@@ -40,8 +40,10 @@ const FeedMentions = () => {
     <FeedMentionsContainer>
       <FeedMentionsHead>
         <FeedMentionsTitle>
-          <TgIcon color="#579AFF"/>
-          Лента упоминаний
+          <TitleLeft>
+            <TgIcon color="#579AFF"/>
+            Лента упоминаний
+          </TitleLeft>
           <CustomSelectThree
             options={userChannels?.map((c) => ({
               id: c.id,
@@ -114,12 +116,21 @@ const FeedMentionsHead = styled.div`
 const FeedMentionsTitle = styled.h2`
   display: flex;
   align-items: center;
+  gap: 30px;
+  @media (max-width: 640px) {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+  }
+`
+const TitleLeft = styled.span`
+  display: flex;
+  align-items: center;
   gap: 24px;
 `
 const FeedMentionsButtons = styled.div`
   display: flex;
   gap: 8px;
-  
 `
 const FeedMentionsButton = styled.button`
   display: flex;

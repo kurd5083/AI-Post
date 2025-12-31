@@ -127,15 +127,17 @@ const StatisticsContainer = styled.section`
 const StatisticsTitle = styled.h2`
   display: flex;
   align-items: center;
-  gap: 24px;
+  gap: 30px;
   @media (max-width: 1400px) {
     padding: 0 32px;
   }
   @media (max-width: 768px) {
     padding: 0 24px;
   }
-  @media (max-width: 480px) {
+  @media (max-width: 640px) {
     flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
   }
 `
 const TitleLeft = styled.span`
