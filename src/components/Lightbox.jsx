@@ -7,6 +7,10 @@ const Lightbox = () => {
     const [currentIndex, setCurrentIndex] = useState(initialIndex);
     console.log(images, initialIndex)
 
+    useEffect(() => {
+        setCurrentIndex(initialIndex);
+    }, [images, initialIndex]);
+    
     // if (!images.length) return null;
 
     const handlePrev = () => {
