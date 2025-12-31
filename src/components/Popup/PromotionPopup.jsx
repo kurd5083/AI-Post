@@ -12,7 +12,7 @@ import del from "@/assets/del.svg";
 const PromotionPopup = () => {
   const { popup, changeContent } = usePopupStore();
   const channelId = popup?.data?.channelId;
-  const { promotionConfig } = useGetChannelPromotionConfig(channelId);
+  const { promotionConfig, promotionLoading } = useGetChannelPromotionConfig(channelId);
   const { mutate: createConfigСhannel, isLoading: createConfigLoading } = useCreateConfigСhannel();
   const { mutate: updatePromotionConfig, isLoading: updatePromotionLoading } = useUpdatePromotionConfig();
 
@@ -27,10 +27,10 @@ const PromotionPopup = () => {
 
   useEffect(() => {
     if (promotionConfig) {
-      setAutoViews(promotionConfig.isEnabled ?? false);
-      setAutoViewsLink(promotionConfig.viewsOnNewPostEnabled ?? false);
-      setMinViews(promotionConfig.minViews ?? "");
-      setMaxViews(promotionConfig.maxViews ?? "");
+      setAutoViews(promotionConfig.isEnabled || false);
+      setAutoViewsLink(promotionConfig.viewsOnNewPostEnabled || false);
+      setMinViews(promotionConfig.minViews);
+      setMaxViews(promotionConfig.maxViews);
     }
   }, [promotionConfig]);
   console.log(promotionConfig, 'promotionConfig')
@@ -67,107 +67,113 @@ const PromotionPopup = () => {
         <PromotionHeadText $active={true}>Просмотр</PromotionHeadText>
         <PromotionHeadText onClick={() => changeContent("boosts")}>Бусты</PromotionHeadText>
       </PromotionHead>
+      {promotionLoading ? (
+        <ModernLoading text="Загрузка публикаций..." />
+      ) : (
+        <>
+          <PromotionViews>
+            <ToggleSwitch bg="#EF6283" value={autoViews} onChange={() => setAutoViews(!autoViews)} />
+            <PostTitle>
+              Просмотры на новый пост<br /> и автозакупка после публикации
+            </PostTitle>
+          </PromotionViews>
+          <PromotionViews>
+            <ToggleSwitch bg="#EF6283" value={autoViewsLink} onChange={() => setAutoViewsLink(!autoViewsLink)} />
+            <PostTitle>
+              Просмотры на пост по ссылке
+            </PostTitle>
+          </PromotionViews>
 
-      <PromotionViews>
-        <ToggleSwitch bg="#EF6283" value={autoViews} onChange={() => setAutoViews(!autoViews)} />
-        <PostTitle>
-          Просмотры на новый пост<br /> и автозакупка после публикации
-        </PostTitle>
-      </PromotionViews>
-      <PromotionViews>
-        <ToggleSwitch bg="#EF6283" value={autoViewsLink} onChange={() => setAutoViewsLink(!autoViewsLink)} />
-        <PostTitle>
-          Просмотры на пост по ссылке
-        </PostTitle>
-      </PromotionViews>
+          {autoViews && (
+            <ViewsPost>
+              <PostTitle>Просмотры на пост</PostTitle>
+              <PostContainer>
+                <Counter placeholder="Мин." value={minViews} onChange={setMinViews} />
+                <Counter placeholder="Макс." value={maxViews} onChange={setMaxViews} />
+              </PostContainer>
+            </ViewsPost>
+          )}
+          {autoViewsLink && (
+            <PromotePost>
+              <PostTitle>Продвинуть пост</PostTitle>
+              <PromoteText>
+                Введите ссылку на пост и количество просмотров для ручного продвижения
+              </PromoteText>
+              {manualPosts.map((post, index) => (
+                <PostContainer key={index}>
+                  <CounterContainer>
+                    <CounterTitle>Ссылка на пост:</CounterTitle>
+                    <PostInput
+                      value={post.link}
+                      onChange={(e) => {
+                        const newPosts = [...manualPosts];
+                        newPosts[index].link = e.target.value;
+                        setManualPosts(newPosts);
+                      }}
+                    />
+                  </CounterContainer>
+                  <CounterContainer>
+                    <CounterTitle>Количество просмотров</CounterTitle>
+                    <Counter
+                      value={post.views}
+                      onChange={(value) => {
+                        const newPosts = [...manualPosts];
+                        newPosts[index].views = value;
+                        setManualPosts(newPosts);
+                      }}
+                    />
+                  </CounterContainer>
+                  {manualPosts.length <= 1 ? (
+                    <></>
+                  ) : (
+                    <ButtonDel
+                      onClick={() => setManualPosts((prev) => prev.filter((_, i) => i !== index))}
+                      title="Удалить"
+                    >
+                      <img src={del} alt="del icon" width={14} height={16} />
+                    </ButtonDel>
+                  )}
 
-      {autoViews && (
-        <ViewsPost>
-          <PostTitle>Просмотры на пост</PostTitle>
-          <PostContainer>
-            <Counter placeholder="Мин." value={minViews} onChange={setMinViews} />
-            <Counter placeholder="Макс." value={maxViews} onChange={setMaxViews} />
-          </PostContainer>
-        </ViewsPost>
-      )}
-      {autoViewsLink && (
-        <PromotePost>
-          <PostTitle>Продвинуть пост</PostTitle>
-          <PromoteText>
-            Введите ссылку на пост и количество просмотров для ручного продвижения
-          </PromoteText>
-          {manualPosts.map((post, index) => (
-            <PostContainer key={index}>
-              <CounterContainer>
-                <CounterTitle>Ссылка на пост:</CounterTitle>
-                <PostInput
-                  value={post.link}
-                  onChange={(e) => {
-                    const newPosts = [...manualPosts];
-                    newPosts[index].link = e.target.value;
-                    setManualPosts(newPosts);
-                  }}
-                />
-              </CounterContainer>
-              <CounterContainer>
-                <CounterTitle>Количество просмотров</CounterTitle>
-                <Counter
-                  value={post.views}
-                  onChange={(value) => {
-                    const newPosts = [...manualPosts];
-                    newPosts[index].views = value;
-                    setManualPosts(newPosts);
-                  }}
-                />
-              </CounterContainer>
-              {manualPosts.length <= 1 ? (
-                <></>
-              ) : (
-                <ButtonDel
-                  onClick={() => setManualPosts((prev) => prev.filter((_, i) => i !== index))}
-                  title="Удалить"
+                </PostContainer>
+              ))}
+
+              <PostContainer>
+                <CounterContainer>
+                  <CounterTitle>Ссылка на пост:</CounterTitle>
+                  <PostInput
+                    placeholder="https://"
+                    value={postLink}
+                    onChange={(e) => setPostLink(e.target.value)}
+                  />
+                </CounterContainer>
+                <CounterContainer>
+                  <CounterTitle>Количество просмотров</CounterTitle>
+                  <Counter placeholder="" value={postViews} onChange={setPostViews} />
+                </CounterContainer>
+
+                <BtnBase
+                  $padding="17px 31px"
+                  $color="#fff"
+                  $bg="#336CFF"
+                  onClick={handleAddPost}
+                  disabled={!postLink || !postViews}
                 >
-                  <img src={del} alt="del icon" width={14} height={16} />
-                </ButtonDel>
-              )}
-
-            </PostContainer>
-          ))}
-
-          <PostContainer>
-            <CounterContainer>
-              <CounterTitle>Ссылка на пост:</CounterTitle>
-              <PostInput
-                placeholder="https://"
-                value={postLink}
-                onChange={(e) => setPostLink(e.target.value)}
-              />
-            </CounterContainer>
-            <CounterContainer>
-              <CounterTitle>Количество просмотров</CounterTitle>
-              <Counter placeholder="" value={postViews} onChange={setPostViews} />
-            </CounterContainer>
-
-            <BtnBase
-              $padding="17px 31px"
-              $color="#fff"
-              $bg="#336CFF"
-              onClick={handleAddPost}
-              disabled={!postLink || !postViews}
-            >
-              + Добавить ссылку на пост
-            </BtnBase>
-          </PostContainer>
-          <BtnBase
-            $margin="8"
-            $padding="21px 24px"
-            $color="#EF6284"
-            $bg="#241F31"
-          >
-            Начать продвижение
-          </BtnBase>
-        </PromotePost>
+                  + Добавить ссылку на пост
+                </BtnBase>
+              </PostContainer>
+              <BtnBase
+                $margin="8"
+                $padding="21px 24px"
+                $color="#EF6284"
+                $bg="#241F31"
+              >
+                Начать продвижение
+              </BtnBase>
+            </PromotePost>
+          )}
+        </>
       )}
+
       <BtnBase
         $margin="64"
         onClick={handleSave}
