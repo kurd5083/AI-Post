@@ -33,7 +33,7 @@ const MainLayout = () => {
             ? <PopupWindow content={popup.content} />
             : <Popup content={popup.content} />
         )}
-         {isOpen && (
+        {isOpen && (
           <Lightbox/>
         )}
       </Main>

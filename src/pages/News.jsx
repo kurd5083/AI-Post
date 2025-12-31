@@ -39,10 +39,10 @@ const NewsDetail = () => {
 							<NewsImgMobile 
 								src={`http://77.37.65.40:3000/${news?.images[0]}`} 
 								alt={news?.title} 
-								onClick={() => openLightbox(
-									news?.images?.map(img => `http://77.37.65.40:3000/${img}`) || [news_stub],
-									0
-								)}
+								onClick={() => openLightbox({
+									images: news?.images?.map(img => `http://77.37.65.40:3000/${img}`) || [news_stub],
+									initialIndex: 0
+								})}
 							/>
 							<PostTimeMobile ><TimeIcons color="#336CFF" />{news?.readingTime}</PostTimeMobile>
 							<PostTilte dangerouslySetInnerHTML={{ __html: formattedTitle }} />
@@ -62,7 +62,10 @@ const NewsDetail = () => {
 						<NewsImg 
 							src={news?.images && news?.images[0] ? `http://77.37.65.40:3000/${news?.images[0]}` : news_stub} 
 							alt={news?.title} 
-							onClick={() => openLightbox(news?.images?.map((img, index) => `http://77.37.65.40:3000/${img}`) || [news_stub], index)}
+							onClick={() => openLightbox({
+								images: news?.images?.map(img => `http://77.37.65.40:3000/${img}`) || [news_stub],
+								initialIndex: 0
+							})}
 						/>
 					</NewsPost>
 				</>
