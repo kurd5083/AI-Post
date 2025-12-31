@@ -17,7 +17,7 @@ const DeleteConfirmPopup = () => {
     <div>
       <DeleteHead>
         <HeadTitle>Подтвердите удаление</HeadTitle>
-        <CloseButton onClick={popup && popup?.previousPage.length > 0 ? goBack() : closePopup()}>
+        <CloseButton onClick={() => popup && popup?.previousPage.length > 0 ? goBack() : closePopup()}>
           <CloseIcon color="#336CFF"/>
         </CloseButton>
       </DeleteHead>
@@ -28,12 +28,12 @@ const DeleteConfirmPopup = () => {
         <BtnBase
           $color="#fff"
           $bg="#FF4D4D"
-          onClick={handleDelete}
+          onClick={()=> handleDelete()}
         >
           Удалить
         </BtnBase>
         <BtnBase
-          onClick={popup && popup?.previousPage.length > 0 ? goBack() : closePopup()}
+          onClick={() => popup && popup?.previousPage.length > 0 ? goBack() : closePopup()}
           $color="#D6DCEC"
           $bg="#242A3A"
         >
