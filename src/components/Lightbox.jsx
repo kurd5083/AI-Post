@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import styled from "styled-components";
 import { useLightboxStore } from "@/store/lightboxStore";
 
@@ -10,7 +10,7 @@ const Lightbox = () => {
     useEffect(() => {
         setCurrentIndex(initialIndex);
     }, [images, initialIndex]);
-    
+
     // if (!images.length) return null;
 
     const handlePrev = () => {

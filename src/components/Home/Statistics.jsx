@@ -43,8 +43,10 @@ const Statistics = () => {
   return (
     <StatisticsContainer>
       <StatisticsTitle>
-        <img src={rating} alt="rating icon" />
-        Статистика
+        <TitleLeft>
+          <img src={rating} alt="rating icon" />
+          Статистика
+        </TitleLeft>
         <CustomSelectThree
             options={userChannels?.map((c) => ({
               id: c.id,
@@ -132,6 +134,14 @@ const StatisticsTitle = styled.h2`
   @media (max-width: 768px) {
     padding: 0 24px;
   }
+  @media (max-width: 480px) {
+    flex-direction: column;
+  }
+`
+const TitleLeft = styled.span`
+  display: flex;
+  align-items: center;
+  gap: 24px;
 `
 const StatisticsList = styled(Swiper)`
   display: flex;
