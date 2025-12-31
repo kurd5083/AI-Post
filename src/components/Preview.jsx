@@ -5,9 +5,20 @@ import arrow from "@/assets/arrow.svg";
 import CustomSelect from "@/shared/CustomSelectSec";
 import BtnBase from "@/shared/BtnBase";
 import TgIcon from "@/icons/TgIcon";
+import { useSendPostToChannel } from "@/lib/posts/useSendPostToChannel";
+  import { usePopupStore } from "@/store/popupStore"
 
 const Preview = ({ collapsed, testResult }) => {
+  console.log(testResult)
   const { title, summary, url, savedFiles } = testResult || {};
+  const { mutate: sendPost, isLoading: sendPostLoading } = useSendPostToChannel();
+  const { popup, changeContent } = usePopupStore();
+  const channelId = popup?.data?.channelId;
+
+  const handleSendToTelegram = () => {
+    if (!postId || !channelId || !channelTelegramId) return;
+    sendPost({ postId, channelId, channelTelegramId });
+  };
 
   return (
     <GeneratorPreview $collapsed={collapsed}>
@@ -48,9 +59,9 @@ const Preview = ({ collapsed, testResult }) => {
                 </PreviewInfoText>
               </PreviewInfoContainer>
             </PreviewInfo>
-            <PreviewButton>
-              <TgIcon color="#336CFF"width="24" height="20"/>
-              <p>Отправить в Telegram</p>
+            <PreviewButton onClick={handleSendToTelegram} disabled={isLoading}>
+              <TgIcon color="#336CFF" width="24" height="20"/>
+              <p>{isLoading ? "Отправляем..." : "Отправить в Telegram"}</p>
             </PreviewButton>
           </>
         )}
