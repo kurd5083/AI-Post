@@ -90,7 +90,7 @@ const CustomSelectThree = ({ options = [], value = [], onChange }) => {
 };
 
 const DropdownContainer = styled.div`
-  width: 220px;
+  width: 160px;
   position: relative;
 `;
 
@@ -115,6 +115,7 @@ const Arrow = styled.img`
 `;
 const DropdownList = styled.div`
 	position: absolute;
+	right: 20px;
   background: #222B438F;
   backdrop-filter: blur(20px);
   border-radius: 24px;

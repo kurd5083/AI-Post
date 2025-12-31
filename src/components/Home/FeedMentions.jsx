@@ -130,7 +130,7 @@ const FeedMentionsButton = styled.button`
   border-radius: 50%;
   background-color: #1C2438;
 
-  @media (max-width: 480px) {
+  @media (max-width: 768px) {
     position: absolute;
     top: 50%;
     right: 16px;
@@ -141,7 +141,7 @@ const FeedMentionsButton = styled.button`
   }
   &:first-child {
     transform: rotate(180deg);
-    @media (max-width: 480px) {
+    @media (max-width: 768px) {
       transform: rotate(180deg) translateY(-10px);
       left: 16px;
     }
