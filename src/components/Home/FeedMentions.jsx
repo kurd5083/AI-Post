@@ -120,7 +120,7 @@ const FeedMentionsTitle = styled.h2`
   @media (max-width: 640px) {
     flex-direction: column;
     align-items: flex-start;
-    gap: 20px;
+    gap: 8px;
   }
 `
 const TitleLeft = styled.span`
@@ -150,11 +150,17 @@ const FeedMentionsButton = styled.button`
     height: 32px;
     z-index: 2;
   }
+  @media (max-width: 640px) {
+    transform: translateY(30px);
+  }
   &:first-child {
     transform: rotate(180deg);
     @media (max-width: 768px) {
       transform: rotate(180deg) translateY(-10px);
       left: 16px;
+    }
+    @media (max-width: 640px) {
+      transform: rotate(180deg) translateY(-30px);
     }
   }
 `

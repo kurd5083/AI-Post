@@ -137,7 +137,7 @@ const StatisticsTitle = styled.h2`
   @media (max-width: 640px) {
     flex-direction: column;
     align-items: flex-start;
-    gap: 20px;
+    gap: 8px;
   }
 `
 const TitleLeft = styled.span`
