@@ -53,11 +53,9 @@ const NewsDetail = () => {
 							</PostFooter>
 						</PostLeft>
 						<NewsImg 
-							src={news?.images && news?.images[0] 
-									? `http://77.37.65.40:3000/${news?.images[0]}` 
-									: news_stub} 
+							src={news?.images && news?.images[0] ? `http://77.37.65.40:3000/${news?.images[0]}` : news_stub} 
 							alt={news?.title} 
-							onClick={() => openLightbox(news?.images?.map(img => `http://77.37.65.40:3000/${img}`) || [news_stub], 0)}
+							onClick={() => openLightbox(news?.images?.map((img, index) => `http://77.37.65.40:3000/${img}`) || [news_stub], index)}
 						/>
 					</NewsPost>
 				</>

@@ -155,7 +155,11 @@ const IndustrialStyleBlock = styled.div`
   display: flex;
   align-items: center;
   gap: 32px;
-
+  
+  @media (max-width: 991px) {
+		flex-direction: column;
+    align-items: flex-start;
+	}
 `
 
 const IndustrialStyleDesc = styled.p`
