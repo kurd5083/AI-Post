@@ -153,7 +153,6 @@ const CreateFolderInput = styled.input`
 `;
 const CreateFolderUl = styled.ul`
   display: flex;
-  justify-content: space-between;
   gap: 6px;
   flex-wrap: wrap;
 `;

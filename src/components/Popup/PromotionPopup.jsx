@@ -13,7 +13,6 @@ const PromotionPopup = () => {
   const { popup, changeContent } = usePopupStore();
   const channelId = popup?.data?.channelId;
   const { promotionConfig } = useGetChannelPromotionConfig(channelId);
-
   const { mutate: createConfigСhannel, isLoading: createConfigLoading } = useCreateConfigСhannel();
   const { mutate: updatePromotionConfig, isLoading: updatePromotionLoading } = useUpdatePromotionConfig();
 
@@ -34,6 +33,7 @@ const PromotionPopup = () => {
       setMaxViews(promotionConfig.maxViews);
     }
   }, [promotionConfig]);
+  console.log(promotionConfig, 'promotionConfig')
 
   const handleAddPost = () => {
     if (!postLink || !postViews) return;
