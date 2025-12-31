@@ -3,13 +3,22 @@ import { usePopupStore } from "@/store/popupStore";
 import del from "@/assets/del.svg";
 import hide from "@/assets/hide.svg"
 import { useGetChannelInviteLinks } from "@/lib/channels/invite-link/useGetChannelInviteLinks";
+import { useRemoveInviteLink } from "@/lib/channels/invite-link/useRemoveInviteLink";
+
 import ModernLoading from "@/components/ModernLoading";
 
+
 const LinkGenerationMyPopup = () => {
-  const { popup } = usePopupStore();
+  const { popup, changeContent } = usePopupStore();
   const channelId = popup?.data?.channelId;
 
   const { links, linksLoading } = useGetChannelInviteLinks(channelId);
+  const { mutate: removeLink, isLoading: removeLoading } = useRemoveInviteLink();
+
+  const handleRemove = (linkId) => {
+    removeLink(linkId);
+  };
+
   console.log(links)
   return (
     <TableWrapper>
@@ -63,7 +72,15 @@ const LinkGenerationMyPopup = () => {
                     <HideButton>
                       <img src={hide} alt="hide icon" width={24} height={17} />
                     </HideButton>
-                    <DeleteButton>
+                    <DeleteButton
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        changeContent("delete_confirm", "popup_window", {
+                          itemName: link.inviteLink,
+                          onDelete: () => handleRemove(link.id),
+                        });
+                      }}
+                    >
                       <img src={del} alt="del icon" width={14} height={16} />
                     </DeleteButton>
                   </TableCellActions>
