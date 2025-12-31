@@ -51,9 +51,9 @@ const LinkGenerationMyPopup = () => {
                       <span>Скопировать</span>
                     </CellInviteLink>
                   </TableCell>
-                  <TableCell>+ 500</TableCell>
-                  <TableCell>- 200</TableCell>
-                  <TableCell>= 300</TableCell>
+                  <TableCell>+ {link.netJoins}</TableCell>
+                  <TableCell>- {link.leavesCount}</TableCell>
+                  <TableCell>= {link.joinsCount}</TableCell>
                   <TableCell>
                     <CellStatus>
                       Активно

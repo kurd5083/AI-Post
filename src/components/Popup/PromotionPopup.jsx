@@ -8,6 +8,7 @@ import { useCreateConfigСhannel } from "@/lib/channels/promotion/useCreateConfi
 import { useGetChannelPromotionConfig } from "@/lib/channels/promotion/useGetChannelPromotionConfig";
 import { useUpdatePromotionConfig } from "@/lib/channels/promotion/useUpdatePromotionConfig";
 import del from "@/assets/del.svg";
+import ModernLoading from "@/components/ModernLoading";
 
 const PromotionPopup = () => {
   const { popup, changeContent } = usePopupStore();
