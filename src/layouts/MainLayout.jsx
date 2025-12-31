@@ -14,7 +14,7 @@ import { useLightboxStore } from "@/store/lightboxStore";
 
 const MainLayout = () => {
   const { popup, closePopup } = usePopupStore();
-  const { isOpen, images, initialIndex, closeLightbox } = useLightboxStore();
+  const { isOpen } = useLightboxStore();
   const location = useLocation();
 
   useEffect(() => {
@@ -34,11 +34,7 @@ const MainLayout = () => {
             : <Popup content={popup.content} />
         )}
          {isOpen && (
-          <Lightbox
-            images={images}
-            initialIndex={initialIndex}
-            onClose={closeLightbox}
-          />
+          <Lightbox/>
         )}
       </Main>
       <Tape />

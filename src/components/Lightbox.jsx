@@ -1,29 +1,31 @@
 import { useState } from "react";
 import styled from "styled-components";
+import { useLightboxStore } from "@/store/lightboxStore";
 
-const Lightbox = ({ images = [], initialIndex = 0, onClose }) => {
-  const [currentIndex, setCurrentIndex] = useState(initialIndex);
+const Lightbox = () => {
+    const { images, initialIndex, closeLightbox } = useLightboxStore();
+    const [currentIndex, setCurrentIndex] = useState(initialIndex);
 
-  if (!images.length) return null;
+    // if (!images.length) return null;
 
-  const handlePrev = () => {
-    setCurrentIndex((prev) => (prev === 0 ? images.length - 1 : prev - 1));
-  };
+    const handlePrev = () => {
+        setCurrentIndex((prev) => (prev === 0 ? images.length - 1 : prev - 1));
+    };
 
-  const handleNext = () => {
-    setCurrentIndex((prev) => (prev === images.length - 1 ? 0 : prev + 1));
-  };
+    const handleNext = () => {
+        setCurrentIndex((prev) => (prev === images.length - 1 ? 0 : prev + 1));
+    };
 
-  return (
-    <Overlay onClick={onClose}>
-      <Content onClick={(e) => e.stopPropagation()}>
-        <CloseButton onClick={onClose}>&times;</CloseButton>
-        <NavButton left onClick={handlePrev}>&lt;</NavButton>
-        <Image src={images[currentIndex]} alt={`img-${currentIndex}`} />
-        <NavButton onClick={handleNext}>&gt;</NavButton>
-      </Content>
-    </Overlay>
-  );
+    return (
+        <Overlay onClick={()=> closeLightbox()}>
+            <Content onClick={(e) => e.stopPropagation()}>
+                <CloseButton onClick={onClose}>&times;</CloseButton>
+                <NavButton left onClick={handlePrev}>&lt;</NavButton>
+                <Image src={images[currentIndex]} alt={`img-${currentIndex}`} />
+                <NavButton onClick={handleNext}>&gt;</NavButton>
+            </Content>
+        </Overlay>
+    );
 };
 
 const Overlay = styled.div`

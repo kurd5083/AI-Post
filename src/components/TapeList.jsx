@@ -224,6 +224,8 @@ const TapePostImg = styled.img`
   object-fit: cover;
   border-radius: 24px;
 	width: ${({ $forceHorizontal }) => $forceHorizontal ? '105px' : '152px'};
+  cursor: pointer;
+  
   @media (max-width: 1600px) {
     width: 105px;
   }
