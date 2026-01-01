@@ -27,9 +27,8 @@ const ChangeTimePopup = ({ initialTime = "00:00", onClose, onSave }) => {
 
   const handleSave = () => {
     if (!hours || !minutes) return;
-    if (popup?.data?.onSave) {
-      console.log(`${hours.padStart(2, "0")}:${minutes.padStart(2, "0")}`)
-      popup.data.onSave(`${hours.padStart(2, "0")}:${minutes.padStart(2, "0")}`);
+    if (onSave) {
+      onSave(`${hours.padStart(2, "0")}:${minutes.padStart(2, "0")}`);
     }
     goBack();
   };
@@ -67,7 +66,6 @@ const ChangeTimePopup = ({ initialTime = "00:00", onClose, onSave }) => {
           </BtnBase>
         </ChangeTimeButtons>
       </PopupContent>
-
     </PopupContainer>
   );
 };
@@ -90,10 +88,10 @@ const PopupContainer = styled.section`
     height: 100%;
     z-index: 10;
     @media(max-width: 1600px) {
-        padding: 120px 32px 30px;   
+      padding: 120px 32px 30px;   
     }
     @media(max-width: 480px) {
-        padding: 120px 24px 30px;   
+      padding: 120px 24px 30px;   
     }
 `
 const PopupContent = styled.div`

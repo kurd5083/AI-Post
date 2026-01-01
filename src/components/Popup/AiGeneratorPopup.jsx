@@ -158,7 +158,7 @@ const AiGeneratorPopup = () => {
       {popupPostId && (
         <ChangeTimePopup 
           onSave={handleSaveTime}
-          onClose={setPopupPostId(null)} 
+          onClose={() => setPopupPostId(null)}
           initialTime={posts.find((p) => p.id === popupPostId)?.time || "00:00"}
         />
       )}

@@ -54,6 +54,13 @@ const Header = styled.div`
 const DateDisplay = styled.h1`
   font-size: 48px;
   font-weight: 700;
+  text-align: center;
+  @media (max-width: 991px) {
+    font-size: 32px;
+  }
+  @media (max-width: 768px) {
+    font-size: 28px;
+  }
 `;
 
 const NavButton = styled.button`
@@ -76,6 +83,7 @@ const NavButtonLeft = styled(NavButton)`
 `;
 const WeekGrid = styled.div`
   display: flex;
+  flex-wrap: wrap;
   gap: 56px;
 `;
 
