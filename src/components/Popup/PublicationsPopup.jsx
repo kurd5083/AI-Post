@@ -135,21 +135,20 @@ const dateValueOptions = useMemo(() => {
         </PublicationsFilter>
 
         <CustomSelectSec
-          placeholder="Выбор даты"
-          value={filter}
-        
-          options={[
-            { value: "all", label: "Все даты" },
-  { value: "year", label: "За год" },
-  { value: "month", label: "За месяц" },
-  { value: "week", label: "За неделю" },
-          ]}
-            onChange={(option) =>
+  placeholder="Выбор даты"
+  value={dateFilter.period}
+  options={[
+    { value: "all", label: "Все даты" },
+    { value: "year", label: "За год" },
+    { value: "month", label: "За месяц" },
+    { value: "week", label: "За неделю" },
+  ]}
+  onChange={(option) =>
     setDateFilter({ period: option.value, value: null })
   }
-          width="250px"
-          fs="24px"
-        />
+  width="250px"
+  fs="24px"
+/>
         {dateFilter.period !== "all" && (
   <CustomSelectSec
     placeholder="Уточнить"
