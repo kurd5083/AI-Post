@@ -1,12 +1,9 @@
 import styled from "styled-components";
-import arrow from "@/assets/arrow.svg";
 import TimeIcons from "@/icons/TimeIcons";
-import { useFormattedHtml } from "@/lib/useFormattedHtml";
 import timeAgo from "@/lib/timeAgo";
+import BtnBase from "@/shared/BtnBase";
 
 const CardPablish = ({ item, bg }) => {
-  const formattedText = useFormattedHtml(item.summary);
-
 	return (
 		<CardPablishItem $bg={bg}>
 			<CardPablishItemHead>
@@ -20,12 +17,27 @@ const CardPablish = ({ item, bg }) => {
 				</CardPablishItemTime>
 			</CardPablishItemHead>
 			  <CardPablishText>{item.title}</CardPablishText>
-        <CardPablishSubtext
-          dangerouslySetInnerHTML={{__html: formattedText}}
-        />
-			<CardPablishOpen>
-				<img src={arrow} alt="arrow icon" />
-			</CardPablishOpen>
+        <CardPablishSubtext>{item.summary}</CardPablishSubtext>
+			<CardPablishButtons>
+				<BtnBase
+          $padding="16px 24px"
+          $width="100%"
+          $bg="transporent"
+          $color="#D6DCEC"
+          $border={true}
+        >
+        Принять
+        </BtnBase>
+        <BtnBase
+          $padding="16px 24px"
+          $width="100%"
+          $bg="transporent"
+          $color="#D6DCEC"
+          $border={true}
+        >
+          Отклонить
+        </BtnBase>
+			</CardPablishButtons>
 		</CardPablishItem>
 	)
 }
@@ -96,15 +108,13 @@ const CardPablishItemTime = styled.p`
 `
 const CardPablishText = styled.p`
   box-sizing: border-box;
-  margin-top: 26px;
-  font-size: 24px;
-  line-height: 24px;
+  margin-top: 18px;
+  font-size: 14px;
+  line-height: 14px;
   font-weight: 700;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
   overflow: hidden;
-  padding-right: 40px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 `
 const CardPablishSubtext = styled.p`
   box-sizing: border-box;
@@ -113,11 +123,15 @@ const CardPablishSubtext = styled.p`
   line-height: 14px;
   font-weight: 600;
   color: #6A7080;
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
   overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  padding-right: 40px;
-  max-width: 260px;
+`
+const CardPablishButtons = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
 `
 
 export default CardPablish

@@ -1,9 +1,12 @@
 import styled from "styled-components";
+import arrow from "@/assets/arrow.svg";
 import TimeIcons from "@/icons/TimeIcons";
+import { useFormattedHtml } from "@/lib/useFormattedHtml";
 import timeAgo from "@/lib/timeAgo";
-import BtnBase from "@/shared/BtnBase";
 
 const MentionsCard = ({ item, bg }) => {
+  const formattedText = useFormattedHtml(item.summary);
+
 	return (
 		<MentionsCardItem $bg={bg}>
 			<MentionsCardItemHead>
@@ -17,27 +20,12 @@ const MentionsCard = ({ item, bg }) => {
 				</MentionsCardItemTime>
 			</MentionsCardItemHead>
 			  <MentionsCardText>{item.title}</MentionsCardText>
-        <MentionsCardSubtext>{item.summary}</MentionsCardSubtext>
-			<MentionsCardButtons>
-				<BtnBase
-          $padding="16px 24px"
-          $width="100%"
-          $bg="transporent"
-          $color="#D6DCEC"
-          $border={true}
-        >
-        Принять
-        </BtnBase>
-        <BtnBase
-          $padding="16px 24px"
-          $width="100%"
-          $bg="transporent"
-          $color="#D6DCEC"
-          $border={true}
-        >
-          Отклонить
-        </BtnBase>
-			</MentionsCardButtons>
+        <MentionsCardSubtext
+          dangerouslySetInnerHTML={{__html: formattedText}}
+        />
+			<MentionsCardOpen>
+				<img src={arrow} alt="arrow icon" />
+			</MentionsCardOpen>
 		</MentionsCardItem>
 	)
 }
@@ -108,13 +96,15 @@ const MentionsCardItemTime = styled.p`
 `
 const MentionsCardText = styled.p`
   box-sizing: border-box;
-  margin-top: 18px;
-  font-size: 14px;
-  line-height: 14px;
+  margin-top: 26px;
+  font-size: 24px;
+  line-height: 24px;
   font-weight: 700;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
   overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
+  padding-right: 40px;
 `
 const MentionsCardSubtext = styled.p`
   box-sizing: border-box;
@@ -123,15 +113,11 @@ const MentionsCardSubtext = styled.p`
   line-height: 14px;
   font-weight: 600;
   color: #6A7080;
-  display: -webkit-box;
-  -webkit-line-clamp: 4;
-  -webkit-box-orient: vertical;
   overflow: hidden;
-`
-const MentionsCardButtons = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 8px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  padding-right: 40px;
+  max-width: 260px;
 `
 
 export default MentionsCard
