@@ -4,6 +4,8 @@ import timeAgo from "@/lib/timeAgo";
 import BtnBase from "@/shared/BtnBase";
 import { useLightboxStore } from "@/store/lightboxStore";
 
+const MAX_VISIBLE_IMAGES = 3;
+
 const CardPablish = ({ item, bg }) => {
   const { openLightbox } = useLightboxStore();
 
@@ -16,7 +18,7 @@ const CardPablish = ({ item, bg }) => {
           <p>{item.username}</p>
         </CardPablishItemName>
         <CardPablishItemTime>
-          <p>{new Date(item.createdAt).toLocaleDateString("ru-RU")}</p><br />
+          <p>{new Date(item.createdAt).toLocaleDateString("ru-RU")}</p>
           <span>
             {new Date(item.createdAt).toLocaleTimeString("ru-RU", {
               hour: "2-digit",
@@ -26,17 +28,29 @@ const CardPablish = ({ item, bg }) => {
         </CardPablishItemTime>
       </CardPablishItemHead>
       <CardPablishImages>
-        {item.images.map((elem, index) => (
-          <ImageItem
-            src={elem}
-            alt={`картинка поста ${index}`}
-            onClick={() => openLightbox({
-              images: item.images.map(img => img),
-              initialIndex: 0
-            })}
-          />
-        ))}
-      </CardPablishImages>
+  {item.images.slice(0, MAX_VISIBLE_IMAGES).map((elem, index) => {
+    // Последнее видимое изображение, если есть скрытые
+    const isLastVisible = index === MAX_VISIBLE_IMAGES - 1;
+    const extraCount = item.images.length - MAX_VISIBLE_IMAGES;
+
+    return (
+      <ImageItemWrapper key={index} onClick={() => openLightbox({
+        images: item.images,
+        initialIndex: index
+      })}>
+        <ImageItem
+          src={elem}
+          alt={`картинка поста ${index}`}
+        />
+        {isLastVisible && extraCount > 0 && (
+          <Overlay>
+            +{extraCount}
+          </Overlay>
+        )}
+      </ImageItemWrapper>
+    );
+  })}
+</CardPablishImages>
       <CardPablishText>{item.title}</CardPablishText>
       <CardPablishSubtext>{item.summary}</CardPablishSubtext>
       <CardPablishButtons>
@@ -123,28 +137,44 @@ const CardPablishItemImg = styled.img`
 const CardPablishItemTime = styled.p`
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
-  gap: 10px;
+  align-items: flex-end;
   font-size: 14px;
   font-weight: 700;
   span {
-  color:#6A7080;
-
+    color:#6A7080;
   }
 `
 const CardPablishImages = styled.div`
   display: flex;
   align-items: center;
-  flex-wrap: wrap;
   gap: 8px;
   margin-top: 4px;
 `
+const ImageItemWrapper = styled.div`
+  position: relative;
+  cursor: pointer;
+`;
 const ImageItem = styled.img`
   width: 48px;
   height: 48px;
   border-radius: 8px;
   object-fit: cover;
 `
+const Overlay = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.5);
+  color: #fff;
+  font-size: 24px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+`;
 const CardPablishText = styled.p`
   box-sizing: border-box;
   margin-top: 18px;
