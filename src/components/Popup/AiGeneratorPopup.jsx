@@ -156,7 +156,7 @@ const AiGeneratorPopup = () => {
       <PreviewContainer>
         <Preview collapsed={collapsed} testResult={selectedPost}/>
       </PreviewContainer>
-      {popup && (
+      {popupPostId && (
         <ChangeTimePopup 
           onSave={handleSaveTime}
           onClose={setPopupPostId(null)} 
