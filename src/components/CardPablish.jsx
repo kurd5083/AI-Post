@@ -28,29 +28,28 @@ const CardPablish = ({ item, bg }) => {
         </CardPablishItemTime>
       </CardPablishItemHead>
       <CardPablishImages>
-  
-  {item.images.slice(0, MAX_VISIBLE_IMAGES).map((elem, index) => {
-    const isLastVisible = index === MAX_VISIBLE_IMAGES - 1;
-    const extraCount = item.images.length - MAX_VISIBLE_IMAGES;
+        {item.images.slice(0, MAX_VISIBLE_IMAGES).map((elem, index) => {
+          const isLastVisible = index === MAX_VISIBLE_IMAGES - 1;
+          const extraCount = item.images.length - MAX_VISIBLE_IMAGES;
 
-    return (
-      <ImageItemWrapper key={index} onClick={() => openLightbox({
-        images: item.images,
-        initialIndex: index
-      })}>
-        <ImageItem
-          src={elem}
-          alt={`картинка ${index}`}
-        />
-        {isLastVisible && extraCount > 0 && (
-          <Overlay>
-            +{extraCount}
-          </Overlay>
-        )}
-      </ImageItemWrapper>
-    );
-  })}
-</CardPablishImages>
+          return (
+            <ImageItemWrapper key={index} onClick={() => openLightbox({
+              images: item.images,
+              initialIndex: index
+            })}>
+              <ImageItem
+                src={elem}
+                alt={`картинка ${index}`}
+              />
+              {isLastVisible && extraCount > 0 && (
+                <Overlay>
+                  +{extraCount}
+                </Overlay>
+              )}
+            </ImageItemWrapper>
+          );
+        })}
+      </CardPablishImages>
       <CardPablishText>{item.title}</CardPablishText>
       <CardPablishSubtext>{item.summary}</CardPablishSubtext>
       <CardPablishButtons>
@@ -149,6 +148,7 @@ const CardPablishImages = styled.div`
   align-items: center;
   gap: 8px;
   margin-top: 4px;
+  flex-grow: 1;
 `
 const ImageItemWrapper = styled.div`
   position: relative;
@@ -157,7 +157,6 @@ const ImageItemWrapper = styled.div`
   height: 48px;
   border-radius: 8px;
   overflow: hidden;
-  flex-grow: 1;
 `;
 const ImageItem = styled.img`
   object-fit: cover;
