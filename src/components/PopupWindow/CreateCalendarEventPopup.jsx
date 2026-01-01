@@ -48,7 +48,7 @@ const CreateCalendarEventPopup = () => {
     <div>
       <PopupHead>
         <HeadTitle>Создать событие</HeadTitle>
-        <CloseButton onClick={goBack}>
+        <CloseButton onClick={() => goBack()}>
           <CloseIcon color="#336CFF" />
         </CloseButton>
       </PopupHead>
@@ -94,10 +94,10 @@ const CreateCalendarEventPopup = () => {
       />
 
       <PopupButtons>
-        <BtnBase $color="#D6DCEC" $bg="#336CFF" onClick={handleCreate} disabled={isPending}>
+        <BtnBase $color="#D6DCEC" $bg="#336CFF" onClick={() => handleCreate()} disabled={isPending}>
           {isPending ? "Создание..." : "Создать"}
         </BtnBase>
-        <BtnBase onClick={goBack} $color="#D6DCEC" $bg="#242A3A">
+        <BtnBase onClick={() => goBack()} $color="#D6DCEC" $bg="#242A3A">
           Отменить
         </BtnBase>
       </PopupButtons>
