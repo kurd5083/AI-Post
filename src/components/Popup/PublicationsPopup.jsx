@@ -42,15 +42,18 @@ const PublicationsPopup = () => {
 
   const filteredPosts = useMemo(() => {
     if (!posts) return [];
-    let result = [...posts];
 
-    if (filter === "archive") {
-      result = result.filter(post => post.archived);
-    } else if (filter === "date") {
-      result.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    switch (filter) {
+      case "premoderation":
+        // ⚠️ пока нет поля — возвращаем пусто или всё
+        // потом тут будет, например:
+        // return posts.filter(p => p.status === "premoderation");
+        return posts;
+
+      case "common":
+      default:
+        return posts;
     }
-
-    return result;
   }, [posts, filter]);
 
   const totalPages = filteredPosts.length ? Math.ceil(filteredPosts.length / itemsPerPage) : 0;
@@ -61,19 +64,25 @@ const PublicationsPopup = () => {
   return (
     <>
       <PublicationsHead>
-        <PublicationsFilter >
-          Общие посты <span>{posts?.filter(p => p.archived).length || 0}</span>
+        <PublicationsFilter
+          $active={filter === "common"}
+          onClick={() => setFilter("common")}
+        >
+          Общие посты <span>{posts?.length || 0}</span>
         </PublicationsFilter>
-        <PublicationsFilter >
-          Премодерация <span>{posts?.filter(p => p.archived).length || 0}</span>
+
+        <PublicationsFilter
+          $active={filter === "premoderation"}
+          onClick={() => setFilter("premoderation")}
+        >
+          Премодерация <span>0</span>
         </PublicationsFilter>
+
         <CustomSelectSec
           placeholder="Выбор даты"
           value={filter}
-          onChange={(option) => setFilter(option.value)} 
-          options={[
-            
-          ]}
+          onChange={(option) => setFilter(option.value)}
+          options={[]}
           width="250px"
           fs="24px"
         />
@@ -128,16 +137,17 @@ const PublicationsFilter = styled.p`
   align-items: center;
   gap: 16px;
   padding-bottom: 32px;
-  border-bottom: 2px solid #2e3954;
+  border-bottom: 2px solid ${({ $active }) => ($active ? "#D6DCEC" : "#2e3954")};
   width: max-content !important;
   font-size: 24px;
   font-weight: 700;
-  color: #6a7080;
+  color: ${({ $active }) => ($active ? "#D6DCEC" : "#6a7080")};
   flex-shrink: 0;
   cursor: pointer;
-    
+  transition: color 0.2s, border-color 0.2s;
+
   span {
-    color: #6a7080;
+    color: inherit;
   }
 `;
 const PublicationsList = styled.div`
