@@ -10,8 +10,5 @@ export const useCreatePost = () => {
       console.log("Пост успешно создан:", data);
       queryClient.invalidateQueries(["posts"]);
     },
-    onError: (error) => {
-      console.error("Ошибка при создании поста:", error);
-    },
   });
 };

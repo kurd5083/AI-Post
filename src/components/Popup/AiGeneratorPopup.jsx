@@ -15,8 +15,12 @@ import AiGeneratorIcon from "@/icons/AiGeneratorIcon";
 import useFadeOnScroll from "@/lib/useFadeOnScroll";
 import Preview from "@/components/Preview";
 import ChangeTimePopup from "@/components/PopupWindow/ChangeTimePopup";
+import { useCreatePost } from "@/lib/posts/useCreatePost";
+import { usePopupStore } from "@/store/popupStore"
 
 const AiGeneratorPopup = () => {
+  const { popup } = usePopupStore();
+  const channelId = popup?.data?.channelId;
   const [posts, setPosts] = useState([
     { id: 1, placeholder: "Пост 1", title: "", progress: "0 / 1024", text: "", time: "00:00" },
   ]);
@@ -51,7 +55,7 @@ const AiGeneratorPopup = () => {
 
   const handleTextChange = (id, newText) => {
     setPosts((prev) => prev.map((p) => (p.id === id ? { ...p, text: newText } : p)));
-  };  
+  };
 
   const handleSaveTime = (newTime) => {
     setPosts((prev) =>
@@ -72,12 +76,40 @@ const AiGeneratorPopup = () => {
 
     return () => window.removeEventListener("resize", handleResize);
   }, []);
+  const {mutate: createPostMutation} = useCreatePost();
+  const handleSavePost = (post) => {
+    const now = new Date(); 
+    const [hours, minutes] = post.time.split(":").map(Number);
 
+    const calendarScheduledAt = new Date(
+      Date.UTC(
+        new Date().getFullYear(),
+        new Date().getMonth(),
+        new Date().getDate(),
+        hours || 0,
+        minutes || 0,
+        0
+      )
+    ).toISOString();
+
+    const payload = {
+      title: post.title,
+      text: post.text,
+      images: [],
+      source: "AI_GENERATOR",
+      channelId,
+      publishedAt: new Date().toISOString(),
+      calendarScheduledAt,
+      summary: post.text.slice(0, 150),
+    };
+
+    createPostMutation(payload);
+  };
   return (
     <GeneratorContainer>
       <GeneratorHead>
         <h2>
-          <AiGeneratorIcon width={16} height={16} color="#336CFF"/>
+          <AiGeneratorIcon width={16} height={16} color="#336CFF" />
           Создать пост
         </h2>
         <BtnBase $padding="21px 24px" onClick={() => handleAddPost()}>
@@ -110,40 +142,47 @@ const AiGeneratorPopup = () => {
             <ItemActions>
               <ActionsLeft>
                 <ItemAI>
-              <p><img src={create} alt="create icon" />Создать фото с AI</p>
-              <p><AiGeneratorIcon color="#336CFF"/>Написать с AI</p>
-            </ItemAI>
-              <ItemActionsAdd>
-                <AiGeneratorIcon width={24} height={24} color="#336CFF" />
-                <img src={paper} alt="paper icon" width={14} height={16} />
-                <img src={img} alt="img icon" width={16} height={16} />
-                <img src={comment} alt="comment icon" width={16} height={16} />
-                <img src={map} alt="map icon" width={18} height={20} />
-                <img src={text} alt="text icon" width={18} height={20} />
-                <img src={setting} alt="setting icon" width={18} height={20} />
-                <img src={ellipsis} alt="ellipsis icon" width={18} height={4} />
-              </ItemActionsAdd>
+                  <p><img src={create} alt="create icon" />Создать фото с AI</p>
+                  <p><AiGeneratorIcon color="#336CFF" />Написать с AI</p>
+                </ItemAI>
+                <ItemActionsAdd>
+                  <AiGeneratorIcon width={24} height={24} color="#336CFF" />
+                  <img src={paper} alt="paper icon" width={14} height={16} />
+                  <img src={img} alt="img icon" width={16} height={16} />
+                  <img src={comment} alt="comment icon" width={16} height={16} />
+                  <img src={map} alt="map icon" width={18} height={20} />
+                  <img src={text} alt="text icon" width={18} height={20} />
+                  <img src={setting} alt="setting icon" width={18} height={20} />
+                  <img src={ellipsis} alt="ellipsis icon" width={18} height={4} />
+                </ItemActionsAdd>
               </ActionsLeft>
-               
+
               <ButtonsAll>
                 <HideButton onClick={() => setSelectedPost(post)}>
                   <img src={hide} alt="hide icon" width={24} height={17} />
                 </HideButton>
                 <ButtonsMain>
                   <ButtonsMainTop>
-                    <BtnBase 
-                      $padding="21px 24px" 
-                      $color="#EF6284" 
+                    <BtnBase
+                      $padding="21px 24px"
+                      $color="#EF6284"
                       $bg="#241E2D"
                       onClick={() => handleRemovePost(post.id)}
                     >Отменить</BtnBase>
-                    <BtnBase 
-                      $padding="21px 24px" 
+                    <BtnBase
+                      $padding="21px 24px"
                       $border $bg="transporent"
                       $color="#6A7080"
                       onClick={() => setPopupPostId(post.id)}
-                     >Изменить время</BtnBase>
-                    <BtnBase $padding="21px 24px" $color="#336CFF" $bg="#161F37">Сохранить</BtnBase>
+                    >Изменить время</BtnBase>
+                    <BtnBase
+                      $padding="21px 24px"
+                      $color="#336CFF"
+                      $bg="#161F37"
+                      onClick={() => handleSavePost(post)}
+                    >
+                      Сохранить
+                    </BtnBase>
                   </ButtonsMainTop>
                   <BtnBase $padding="21px 24px" $border $width="100%" $bg="transporent" $color="#6A7080">Опубликовать сейчас</BtnBase>
                 </ButtonsMain>
@@ -153,10 +192,10 @@ const AiGeneratorPopup = () => {
         ))}
       </GeneratorList>
       <PreviewContainer>
-        <Preview collapsed={collapsed} testResult={selectedPost}/>
+        <Preview collapsed={collapsed} testResult={selectedPost} />
       </PreviewContainer>
       {popupPostId && (
-        <ChangeTimePopup 
+        <ChangeTimePopup
           onSave={handleSaveTime}
           onClose={() => setPopupPostId(null)}
           initialTime={posts.find((p) => p.id === popupPostId)?.time || "00:00"}
@@ -378,7 +417,7 @@ const BaseButton = styled.button`
 const HideButton = styled(BaseButton)`
   border: 2px solid #2D3241;
 `;
-const PreviewContainer  = styled.div`
+const PreviewContainer = styled.div`
   grid-column:  4 / span 2;
   grid-row: 1 / span 2;
   @media(max-width: 1400px) {
