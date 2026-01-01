@@ -14,6 +14,7 @@ import CheckboxCircle from "@/shared/CheckboxCircle";
 import AiGeneratorIcon from "@/icons/AiGeneratorIcon";
 import useFadeOnScroll from "@/lib/useFadeOnScroll";
 import Preview from "@/components/Preview";
+import ChangeTimePopup from "@/components/PopupWindow/ChangeTimePopup";
 
 const AiGeneratorPopup = () => {
   const [posts, setPosts] = useState([
@@ -106,8 +107,6 @@ const AiGeneratorPopup = () => {
               />
               <ItemTime>Время публикации: {post.time}</ItemTime>
             </ItemBody>
-            
-           
             <ItemActions>
               <ActionsLeft>
                 <ItemAI>
@@ -284,12 +283,13 @@ const HeadTitle = styled.input`
 const ItemBody = styled.div`
   display: flex;
   justify-content: space-between;
+  align-items: flex-end;
+  margin: 24px 0;
 `
 const ItemText = styled.textarea`
   font-size: 16px;
   font-weight: 700;
   color: #6A7080;
-  margin-top: 24px;
   background: transparent;
   border: none;
   outline: none;

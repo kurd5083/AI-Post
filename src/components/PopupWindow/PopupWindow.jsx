@@ -2,7 +2,6 @@ import styled from "styled-components";
 import { usePopupStore } from "@/store/popupStore"
 import CreateFolderPopup from "@/components/PopupWindow/CreateFolderPopup";
 import MoveChannelPopup from "@/components/PopupWindow/MoveChannelPopup";
-import ChangeTimePopup from "@/components/PopupWindow/ChangeTimePopup";
 import DeleteConfirmPopup from "@/components/PopupWindow/DeleteConfirmPopup";
 import SelectChannelsPopup from "@/components/PopupWindow/SelectChannelsPopup";
 import CreateCalendarEventPopup from "@/components/PopupWindow/CreateCalendarEventPopup";
