@@ -2,35 +2,47 @@ import styled from "styled-components";
 import TimeIcons from "@/icons/TimeIcons";
 import timeAgo from "@/lib/timeAgo";
 import BtnBase from "@/shared/BtnBase";
+import { useLightboxStore } from "@/store/lightboxStore";
 
 const CardPablish = ({ item, bg }) => {
+  const { openLightbox } = useLightboxStore();
+
   console.log(item)
-	return (
-		<CardPablishItem $bg={bg}>
-			<CardPablishItemHead>
-				<CardPablishItemName>
-					<CardPablishItemImg src={item.ava} alt={item.username} />
-					<p>{item.username}</p>
-				</CardPablishItemName>
-				<CardPablishItemTime>
-          <TimeIcons/>
+  return (
+    <CardPablishItem $bg={bg}>
+      <CardPablishItemHead>
+        <CardPablishItemName>
+          <CardPablishItemImg src={item.ava} alt={item.username} />
+          <p>{item.username}</p>
+        </CardPablishItemName>
+        <CardPablishItemTime>
+          <TimeIcons />
           {timeAgo(item.createdAt)}
-				</CardPablishItemTime>
-        <CardPablishImages>
-          <ImageItem/>
-        </CardPablishImages>
-			</CardPablishItemHead>
-			  <CardPablishText>{item.title}</CardPablishText>
-        <CardPablishSubtext>{item.summary}</CardPablishSubtext>
-			<CardPablishButtons>
-				<BtnBase
+        </CardPablishItemTime>
+      </CardPablishItemHead>
+      <CardPablishImages>
+        {item.images.map((elem, index) => (
+          <ImageItem
+            src={elem}
+            alt={`картинка поста ${index}`}
+            onClick={() => openLightbox({
+              images: item.images.map(img => img),
+              initialIndex: 0
+            })}
+          />
+        ))}
+      </CardPablishImages>
+      <CardPablishText>{item.title}</CardPablishText>
+      <CardPablishSubtext>{item.summary}</CardPablishSubtext>
+      <CardPablishButtons>
+        <BtnBase
           $padding="16px 24px"
           $width="100%"
           $bg="transporent"
           $color="#D6DCEC"
           $border={true}
         >
-        Принять
+          Принять
         </BtnBase>
         <BtnBase
           $padding="16px 24px"
@@ -41,9 +53,9 @@ const CardPablish = ({ item, bg }) => {
         >
           Отклонить
         </BtnBase>
-			</CardPablishButtons>
-		</CardPablishItem>
-	)
+      </CardPablishButtons>
+    </CardPablishItem>
+  )
 }
 const CardPablishOpen = styled.button`
   display: flex;
