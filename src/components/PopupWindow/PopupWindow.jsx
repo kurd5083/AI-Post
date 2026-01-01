@@ -8,17 +8,16 @@ import SelectChannelsPopup from "@/components/PopupWindow/SelectChannelsPopup";
 import CreateCalendarEventPopup from "@/components/PopupWindow/CreateCalendarEventPopup";
 
 const PopupWindow = () => {
-    const { popup } = usePopupStore()
+    const { popup, goBack, closePopup } = usePopupStore();
 
+    
     return (
-        <PopupContainer>
-            <PopupContent>
+        <PopupContainer onClick={popup && popup?.previousPage.length > 0 ? goBack() : closePopup()}>
+            <PopupContent onClick={(e) => e.stopPropagation()}>
                 {popup.content == 'create_folder' ? (
                     <CreateFolderPopup />
                 ) : popup.content == 'move_channel' ? (
                     <MoveChannelPopup />
-                ) : popup.content == 'change_time' ? (
-                    <ChangeTimePopup />
                 ) : popup.content == 'delete_confirm' ?(
                     <DeleteConfirmPopup />
                 ) : popup.content == 'select_channel' ?(

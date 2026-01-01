@@ -17,11 +17,11 @@ import Preview from "@/components/Preview";
 
 const AiGeneratorPopup = () => {
   const [posts, setPosts] = useState([
-    { id: 1, placeholder: "Пост 1", title: "", progress: "0 / 1024", text: "" },
+    { id: 1, placeholder: "Пост 1", title: "", progress: "0 / 1024", text: "", time: "00:00" },
   ]);
-
   const [selectedPost, setSelectedPost] = useState(posts[0]);
   const [collapsed, setCollapsed] = useState(false);
+  const [popupPostId, setPopupPostId] = useState(null);
 
   const { fadeVisible, ref } = useFadeOnScroll(20);
 
@@ -32,17 +32,15 @@ const AiGeneratorPopup = () => {
       title: "",
       progress: "0 / 1024",
       text: "",
+      time: "00:00",
     };
     setPosts([newPost, ...posts]);
   };
 
   const handleRemovePost = (id) => {
     setPosts((prev) => prev.filter((p) => p.id !== id));
-
-    if (selectedPost.id === id && posts.length > 1) {
+    if (selectedPost?.id === id) {
       setSelectedPost(posts.find((p) => p.id !== id) || null);
-    } else if (posts.length === 1) {
-      setSelectedPost(null);
     }
   };
 
@@ -53,6 +51,13 @@ const AiGeneratorPopup = () => {
   const handleTextChange = (id, newText) => {
     setPosts((prev) => prev.map((p) => (p.id === id ? { ...p, text: newText } : p)));
   };  
+
+  const handleSaveTime = (newTime) => {
+    setPosts((prev) =>
+      prev.map((p) => (p.id === popupPostId ? { ...p, time: newTime } : p))
+    );
+    setPopupPostId(null)
+  };
 
   useEffect(() => {
     const handleResize = () => {
@@ -92,12 +97,16 @@ const AiGeneratorPopup = () => {
               </CheckboxCircle>
               <p>{post.progress}</p>
             </ItemHead>
-            <ItemText
-              placeholder="Текст публикации..."
-              type="text"
-              value={post.text}
-              onChange={(e) => handleTextChange(post.id, e.target.value)}
-            />
+            <ItemBody>
+              <ItemText
+                placeholder="Текст публикации..."
+                type="text"
+                value={post.text}
+                onChange={(e) => handleTextChange(post.id, e.target.value)}
+              />
+              <ItemTime>Время публикации: {post.time}</ItemTime>
+            </ItemBody>
+            
            
             <ItemActions>
               <ActionsLeft>
@@ -129,7 +138,12 @@ const AiGeneratorPopup = () => {
                       $bg="#241E2D"
                       onClick={() => handleRemovePost(post.id)}
                     >Отменить</BtnBase>
-                    <BtnBase $padding="21px 24px" $border $bg="transporent" $color="#6A7080">Изменить время</BtnBase>
+                    <BtnBase 
+                      $padding="21px 24px" 
+                      $border $bg="transporent"
+                      $color="#6A7080"
+                      onClick={() => setPopupPostId(post.id)}
+                     >Изменить время</BtnBase>
                     <BtnBase $padding="21px 24px" $color="#336CFF" $bg="#161F37">Сохранить</BtnBase>
                   </ButtonsMainTop>
                   <BtnBase $padding="21px 24px" $border $width="100%" $bg="transporent" $color="#6A7080">Опубликовать сейчас</BtnBase>
@@ -142,6 +156,13 @@ const AiGeneratorPopup = () => {
       <PreviewContainer>
         <Preview collapsed={collapsed} testResult={selectedPost}/>
       </PreviewContainer>
+      {popup && (
+        <ChangeTimePopup 
+          onSave={handleSaveTime}
+          onClose={setPopupPostId(null)} 
+          initialTime={posts.find((p) => p.id === popupPostId)?.time || "00:00"}
+        />
+      )}
     </GeneratorContainer>
   );
 };
@@ -260,6 +281,10 @@ const HeadTitle = styled.input`
   background: transparent;
   border: none;
 `
+const ItemBody = styled.div`
+  display: flex;
+  justify-content: space-between;
+`
 const ItemText = styled.textarea`
   font-size: 16px;
   font-weight: 700;
@@ -274,7 +299,10 @@ const ItemText = styled.textarea`
       height: 120px;
   }
 `
-
+const ItemTime = styled.p`
+  font-size: 14px;
+  color: #6a7080;
+`;
 const ItemActions = styled.div`
   display: flex;
   justify-content: space-between;

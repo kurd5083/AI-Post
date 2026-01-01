@@ -1,24 +1,11 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import styled from "styled-components";
 import BtnBase from "@/shared/BtnBase";
-import { usePopupStore } from "@/store/popupStore";
 import CloseIcon from "@/icons/CloseIcon";
 
-const ChangeTimePopup = () => {
-  const { popup, goBack } = usePopupStore();
-  console.log(popup, 'ttttttttttttt')
-  const currentTime = popup?.data?.currentTime;
-
-  const [hours, setHours] = useState('');
-  const [minutes, setMinutes] = useState('');
-
-  useEffect(() => {
-    if (currentTime) {
-      const [h, m] = currentTime.split(":");
-      setHours(h);
-      setMinutes(m);
-    }
-  }, [currentTime]);
+const ChangeTimePopup = ({ initialTime = "00:00", onClose, onSave }) => {
+  const [hours, setHours] = useState(initialTime.split(":")[0]);
+  const [minutes, setMinutes] = useState(initialTime.split(":")[1]);
 
   const handleHoursChange = (e) => {
     let value = e.target.value;
@@ -47,39 +34,81 @@ const ChangeTimePopup = () => {
     goBack();
   };
   return (
-    <div>
-      <ChangeTimeHead>
-        <HeadTitle>Изменить время</HeadTitle>
-        <CloseButton onClick={goBack}>
-					<CloseIcon color="#336CFF"/>
-				</CloseButton>
-      </ChangeTimeHead>
-      <ChangeTimeSubtitle>Выберите время в которое будет удобнее опубликовать пост</ChangeTimeSubtitle>
-      <TimeWrapper>
-        <TimeInputField
-          type="text"
-          value={hours}
-          onChange={handleHoursChange}
-          placeholder="00"
-        />
-        <Colon>:</Colon>
-        <TimeInputField
-          type="text"
-          value={minutes}
-          onChange={handleMinutesChange}
-          placeholder="00"
-        />
-      </TimeWrapper>
-      <ChangeTimeButtons>
-        <BtnBase $color="#D6DCEC" $bg="#336CFF" onClick={handleSave}>
-          Сохранить
-        </BtnBase>
-        <BtnBase onClick={goBack} $color="#D6DCEC" $bg="#242A3A">Отменить</BtnBase>
-      </ChangeTimeButtons>
-    </div>
+    <PopupContainer onClick={onClose}>
+      <PopupContent onClick={(e) => e.stopPropagation()}>
+        <ChangeTimeHead>
+          <HeadTitle>Изменить время</HeadTitle>
+          <CloseButton onClick={onClose}>
+            <CloseIcon color="#336CFF" />
+          </CloseButton>
+        </ChangeTimeHead>
+        <ChangeTimeSubtitle>Выберите время в которое будет удобнее опубликовать пост</ChangeTimeSubtitle>
+        <TimeWrapper>
+          <TimeInputField
+            type="text"
+            value={hours}
+            onChange={handleHoursChange}
+            placeholder="00"
+          />
+          <Colon>:</Colon>
+          <TimeInputField
+            type="text"
+            value={minutes}
+            onChange={handleMinutesChange}
+            placeholder="00"
+          />
+        </TimeWrapper>
+        <ChangeTimeButtons>
+          <BtnBase $color="#D6DCEC" $bg="#336CFF" onClick={handleSave}>
+            Сохранить
+          </BtnBase>
+          <BtnBase $color="#D6DCEC" $bg="#242A3A" onClick={onClose}>
+            Отменить
+          </BtnBase>
+        </ChangeTimeButtons>
+      </PopupContent>
+
+    </PopupContainer>
   );
 };
-
+const PopupContainer = styled.section`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    box-sizing: border-box;
+    position: absolute;
+    top: 0px;
+    left: 0;
+    padding: 120px 56px 30px;
+    background-color: #121726ad;
+    backdrop-filter: blur(30px);
+    width: 100%;
+    overflow-y: auto;
+    scrollbar-width: none;
+    max-height: 100dvh;
+    height: 100%;
+    z-index: 10;
+    @media(max-width: 1600px) {
+        padding: 120px 32px 30px;   
+    }
+    @media(max-width: 480px) {
+        padding: 120px 24px 30px;   
+    }
+`
+const PopupContent = styled.div`
+    margin-top: 50px;
+    box-sizing: border-box;
+    max-width: 520px;
+    width: 100%;
+    background: #1c243860;
+    border-radius: 32px;
+    padding: 48px;
+    @media(max-width: 480px) {
+        margin-top: 30px;
+        padding: 32px 24px;   
+    }
+`
 const ChangeTimeHead = styled.div`
   display: flex;
   align-items: center;
