@@ -21,8 +21,8 @@ const PublicationsPopup = () => {
   const { posts, loadingPosts } = usePostsByChannel(channelId);
 
   const [dateFilter, setDateFilter] = useState({
-    period: "all", // all | year | month | week
-    value: null,   // конкретный год / месяц / неделя
+    period: "all",
+    value: null,
   });
 
   useEffect(() => {
@@ -43,80 +43,81 @@ const PublicationsPopup = () => {
 
   useEffect(() => {
     setCurrentPage(1);
-  }, [itemsPerPage]);
+  }, [dateFilter]);
 
   const filteredPosts = useMemo(() => {
-  if (!posts) return [];
+    if (!posts) return [];
 
-  let result = [...posts];
-  const now = new Date();
+    const now = new Date();
+    let result = [...posts];
 
-  switch (dateFilter.period) {
-    case "year":
-      result = result.filter(
-        (p) => new Date(p.createdAt).getFullYear() === dateFilter.value
-      );
-      break;
-
-    case "month":
-      result = result.filter((p) => {
-        const d = new Date(p.createdAt);
-        return (
-          d.getFullYear() === now.getFullYear() &&
-          d.getMonth() === dateFilter.value
+    switch (dateFilter.period) {
+      case "year":
+        if (dateFilter.value == null) return result;
+        result = result.filter(
+          (p) => new Date(p.createdAt).getFullYear() === dateFilter.value
         );
-      });
-      break;
+        break;
 
-    case "week":
-      result = result.filter((p) => {
-        const d = new Date(p.createdAt);
-        const diff =
-          (now - d) / (1000 * 60 * 60 * 24);
-        return diff <= (dateFilter.value + 1) * 7;
-      });
-      break;
+      case "month":
+        if (dateFilter.value == null) return result;
+        result = result.filter((p) => {
+          const d = new Date(p.createdAt);
+          return (
+            d.getFullYear() === dateFilter.value.year &&
+            d.getMonth() === dateFilter.value.month
+          );
+        });
+        break;
 
-    default:
-      break;
-  }
+      case "week":
+        if (dateFilter.value == null) return result;
+        // последние N дней
+        const daysAgo = dateFilter.value; // value = 7, 14, 21 и т.д.
+        const threshold = new Date();
+        threshold.setDate(now.getDate() - daysAgo);
+        result = result.filter((p) => new Date(p.createdAt) >= threshold);
+        break;
 
-  return result;
-}, [posts, dateFilter]);
+      default:
+        break;
+    }
+
+    return result;
+  }, [posts, dateFilter]);
   const totalPages = filteredPosts.length ? Math.ceil(filteredPosts.length / itemsPerPage) : 0;
   const indexOfLast = currentPage * itemsPerPage;
   const indexOfFirst = indexOfLast - itemsPerPage;
   const currentItems = filteredPosts.slice(indexOfFirst, indexOfLast);
-const dateValueOptions = useMemo(() => {
-  const now = new Date();
+  const dateValueOptions = useMemo(() => {
+    const now = new Date();
 
-  if (dateFilter.period === "year") {
-    const currentYear = now.getFullYear();
-    return Array.from({ length: 5 }, (_, i) => {
-      const year = currentYear - i;
-      return { value: year, label: year.toString() };
-    });
-  }
+    if (dateFilter.period === "year") {
+      const currentYear = now.getFullYear();
+      return Array.from({ length: 5 }, (_, i) => {
+        const year = currentYear - i;
+        return { value: year, label: year.toString() };
+      });
+    }
 
-  if (dateFilter.period === "month") {
-    return Array.from({ length: 12 }, (_, i) => {
-      const date = new Date(now.getFullYear(), i);
-      return {
-        value: i,
-        label: date.toLocaleString("ru", { month: "long" }),
-      };
-    });
-  }
+    if (dateFilter.period === "month") {
+      // value = { year: 2025, month: 0..11 }
+      return Array.from({ length: 12 }, (_, i) => ({
+        value: { year: now.getFullYear(), month: i },
+        label: new Date(now.getFullYear(), i).toLocaleString("ru", { month: "long" }),
+      }));
+    }
 
-  if (dateFilter.period === "week") {
-    return Array.from({ length: 8 }, (_, i) => ({
-      value: i,
-      label: `Неделя ${i + 1}`,
-    }));
-  }
+    if (dateFilter.period === "week") {
+      return [
+        { value: 7, label: "Последние 7 дней" },
+        { value: 14, label: "Последние 14 дней" },
+        { value: 21, label: "Последние 21 день" },
+      ];
+    }
 
-  return [];
-}, [dateFilter.period]);
+    return [];
+  }, [dateFilter.period]);
   return (
     <>
       <PublicationsHead>
@@ -135,32 +136,32 @@ const dateValueOptions = useMemo(() => {
         </PublicationsFilter>
 
         <CustomSelectSec
-  placeholder="Выбор даты"
-  value={dateFilter.period}
-  options={[
-    { value: "all", label: "Все даты" },
-    { value: "year", label: "За год" },
-    { value: "month", label: "За месяц" },
-    { value: "week", label: "За неделю" },
-  ]}
-  onChange={(option) =>
-    setDateFilter({ period: option.value, value: null })
-  }
-  width="250px"
-  fs="24px"
-/>
+          placeholder="Выбор даты"
+          value={dateFilter.period}
+          options={[
+            { value: "all", label: "Все даты" },
+            { value: "year", label: "За год" },
+            { value: "month", label: "За месяц" },
+            { value: "week", label: "За неделю" },
+          ]}
+          onChange={(option) =>
+            setDateFilter({ period: option.value, value: null })
+          }
+          width="250px"
+          fs="24px"
+        />
         {dateFilter.period !== "all" && (
-  <CustomSelectSec
-    placeholder="Уточнить"
-    value={dateFilter.value}
-    options={dateValueOptions}
-    onChange={(option) =>
-      setDateFilter((prev) => ({ ...prev, value: option.value }))
-    }
-    width="220px"
-    fs="24px"
-  />
-)}
+          <CustomSelectSec
+            placeholder="Уточнить"
+            value={dateFilter.value}
+            options={dateValueOptions}
+            onChange={(option) =>
+              setDateFilter((prev) => ({ ...prev, value: option.value }))
+            }
+            width="220px"
+            fs="24px"
+          />
+        )}
       </PublicationsHead>
       {!loadingPosts && channelId ? (
         <>
