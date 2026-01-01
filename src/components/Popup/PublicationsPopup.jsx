@@ -13,7 +13,7 @@ const itemsPerPageMob = 4;
 const PublicationsPopup = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(itemsPerPageDefault);
-  const [filter, setFilter] = useState("date");
+  const [filter, setFilter] = useState("common");
 
   const { popup } = usePopupStore();
   const channelId = popup?.data?.channelId;
@@ -61,10 +61,10 @@ const PublicationsPopup = () => {
   return (
     <>
       <PublicationsHead>
-        <PublicationsFilter $active={filter === "archive"} onClick={() => setFilter("archive")}>
+        <PublicationsFilter >
           Общие посты <span>{posts?.filter(p => p.archived).length || 0}</span>
         </PublicationsFilter>
-        <PublicationsFilter $active={filter === "archive"} onClick={() => setFilter("archive")}>
+        <PublicationsFilter >
           Премодерация <span>{posts?.filter(p => p.archived).length || 0}</span>
         </PublicationsFilter>
         <CustomSelectSec
@@ -72,8 +72,7 @@ const PublicationsPopup = () => {
           value={filter}
           onChange={(option) => setFilter(option.value)} 
           options={[
-            { label: "Сначала новые", value: "date" },
-            { label: "Сначала старые", value: "old" }
+            
           ]}
           width="250px"
           fs="24px"

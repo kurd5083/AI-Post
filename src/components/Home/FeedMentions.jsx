@@ -5,7 +5,7 @@ import "swiper/css";
 import { Navigation } from "swiper/modules";
 import { feedmentionsDatas } from "@/data/feedmentionsDatas";
 import arrow from "@/assets/arrow.svg";
-import CardPablish from "@/components/CardPablish";
+import MentionsCard from "@/components/MentionsCard";
 import TgIcon from "@/icons/TgIcon";
 import CustomSelectThree from "@/shared/CustomSelectThree";
 import { useUserChannels } from "@/lib/channels/useUserChannels";
@@ -79,7 +79,7 @@ const FeedMentions = () => {
       >
         {feedmentionsDatas.map((item, index) => (
           <FeedMentionsItem key={index}>
-            <CardPablish item={item} />
+            <MentionsCard item={item} />
           </FeedMentionsItem>
         ))}
       </FeedMentionsList>
