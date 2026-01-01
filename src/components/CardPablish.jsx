@@ -28,8 +28,8 @@ const CardPablish = ({ item, bg }) => {
         </CardPablishItemTime>
       </CardPablishItemHead>
       <CardPablishImages>
+  
   {item.images.slice(0, MAX_VISIBLE_IMAGES).map((elem, index) => {
-    // Последнее видимое изображение, если есть скрытые
     const isLastVisible = index === MAX_VISIBLE_IMAGES - 1;
     const extraCount = item.images.length - MAX_VISIBLE_IMAGES;
 
@@ -40,7 +40,7 @@ const CardPablish = ({ item, bg }) => {
       })}>
         <ImageItem
           src={elem}
-          alt={`картинка поста ${index}`}
+          alt={`картинка ${index}`}
         />
         {isLastVisible && extraCount > 0 && (
           <Overlay>
@@ -91,6 +91,8 @@ const CardPablishOpen = styled.button`
 `
 
 const CardPablishItem = styled.div`
+  display: flex;
+  flex-direction: column;
   position: relative; 
   box-sizing: border-box;
   padding: 20px;
@@ -112,12 +114,10 @@ const CardPablishItem = styled.div`
 `
 const CardPablishItemHead = styled.div`
   display: flex;
-  align-items: center;
   justify-content: space-between;
 `
 const CardPablishItemName = styled.div`
   display: flex;
-  align-items: center;
   gap: 16px;
     
   p {
@@ -153,11 +153,13 @@ const CardPablishImages = styled.div`
 const ImageItemWrapper = styled.div`
   position: relative;
   cursor: pointer;
-`;
-const ImageItem = styled.img`
   width: 48px;
   height: 48px;
   border-radius: 8px;
+  overflow: hidden;
+  flex-grow: 1;
+`;
+const ImageItem = styled.img`
   object-fit: cover;
 `
 const Overlay = styled.div`
@@ -168,12 +170,10 @@ const Overlay = styled.div`
   height: 100%;
   background: rgba(0,0,0,0.5);
   color: #fff;
-  font-size: 24px;
-  font-weight: bold;
+  font-weight: 600;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 8px;
 `;
 const CardPablishText = styled.p`
   box-sizing: border-box;
