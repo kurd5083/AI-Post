@@ -36,23 +36,23 @@ const AiGeneratorPopup = () => {
     setPosts([newPost, ...posts]);
   };
 
-  const handleTitleChange = (id, newTitle) => {
-    setPosts((prev) =>
-      prev.map((p) => (p.id === id ? { ...p, title: newTitle } : p))
-    );
-    if (selectedPost.id === id) {
-      setSelectedPost((prev) => ({ ...prev, title: newTitle }));
+  const handleRemovePost = (id) => {
+    setPosts((prev) => prev.filter((p) => p.id !== id));
+
+    if (selectedPost.id === id && posts.length > 1) {
+      setSelectedPost(posts.find((p) => p.id !== id) || null);
+    } else if (posts.length === 1) {
+      setSelectedPost(null);
     }
   };
 
-  const handleTextChange = (id, newText) => {
-    setPosts((prev) =>
-      prev.map((p) => (p.id === id ? { ...p, text: newText } : p))
-    );
-    if (selectedPost.id === id) {
-      setSelectedPost((prev) => ({ ...prev, text: newText }));
-    }
+  const handleTitleChange = (id, newTitle) => {
+    setPosts((prev) => prev.map((p) => (p.id === id ? { ...p, title: newTitle } : p)));
   };
+
+  const handleTextChange = (id, newText) => {
+    setPosts((prev) => prev.map((p) => (p.id === id ? { ...p, text: newText } : p)));
+  };  
 
   useEffect(() => {
     const handleResize = () => {
@@ -123,7 +123,12 @@ const AiGeneratorPopup = () => {
                 </HideButton>
                 <ButtonsMain>
                   <ButtonsMainTop>
-                    <BtnBase $padding="21px 24px" $color="#EF6284" $bg="#241E2D">Отменить</BtnBase>
+                    <BtnBase 
+                      $padding="21px 24px" 
+                      $color="#EF6284" 
+                      $bg="#241E2D"
+                      onClick={() => handleRemovePost(post.id)}
+                    >Отменить</BtnBase>
                     <BtnBase $padding="21px 24px" $border $bg="transporent" $color="#6A7080">Изменить время</BtnBase>
                     <BtnBase $padding="21px 24px" $color="#336CFF" $bg="#161F37">Сохранить</BtnBase>
                   </ButtonsMainTop>
@@ -274,14 +279,12 @@ const ItemActions = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
-  @media(max-width: 1600px) {
-    margin-top: 32px;
-  } 
 `
 const ActionsLeft = styled.div`
   display: flex;
   flex-direction: column;
   gap: 50px;
+  margin-bottom: 20px;
 `
 
 const ItemAI = styled.div`
@@ -318,12 +321,12 @@ const ItemActionsAdd = styled.div`
 const ButtonsAll = styled.div`
   display: flex;
   gap: 8px;
-  align-items: flex-end
-  /* @media(max-width: 1600px) {
+  align-items: flex-end;
+  @media(max-width: 1600px) {
     position: absolute;
     bottom: -72px;
     right: 0;
-  }  */
+  } 
 `;
 const ButtonsMain = styled.div`
   display: flex;
