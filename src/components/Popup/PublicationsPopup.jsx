@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo } from "react";
 import styled from "styled-components";
 import CardPablish from "@/components/CardPablish";
-import { usePopupStore } from "@/store/popupStore"
+import { usePopupStore } from "@/store/popupStore";
 import { usePostsByChannel } from "@/lib/posts/usePostsByChannel";
 import ModernLoading from "@/components/ModernLoading";
 import CustomSelectSec from "@/shared/CustomSelectSec";
@@ -14,26 +14,20 @@ const PublicationsPopup = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(itemsPerPageDefault);
   const [filter, setFilter] = useState("common");
-
-  const { popup } = usePopupStore();
-  const channelId = popup?.data?.channelId;
-
-  const { posts, loadingPosts } = usePostsByChannel(channelId);
-
   const [dateFilter, setDateFilter] = useState({
     period: "all",
     value: null,
   });
 
+  const { popup } = usePopupStore();
+  const channelId = popup?.data?.channelId;
+  const { posts, loadingPosts } = usePostsByChannel(channelId);
+
   useEffect(() => {
     const handleResize = () => {
-      if (window.innerWidth < 768) {
-        setItemsPerPage(itemsPerPageMob);
-      } else if (window.innerWidth < 1600) {
-        setItemsPerPage(itemsPerPageSmall);
-      } else {
-        setItemsPerPage(itemsPerPageDefault);
-      }
+      if (window.innerWidth < 768) setItemsPerPage(itemsPerPageMob);
+      else if (window.innerWidth < 1600) setItemsPerPage(itemsPerPageSmall);
+      else setItemsPerPage(itemsPerPageDefault);
     };
 
     handleResize();
@@ -41,85 +35,83 @@ const PublicationsPopup = () => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [dateFilter]);
+  useEffect(() => setCurrentPage(1), [dateFilter]);
 
   const filteredPosts = useMemo(() => {
-  if (!posts) return [];
+    if (!posts) return [];
+    const now = new Date();
+    let result = [...posts];
 
-  const now = new Date();
-  let result = [...posts];
-
-  switch (dateFilter.period) {
-    case "year":
-      if (dateFilter.value == null) return result;
-      result = result.filter((p) => {
-        const postDate = new Date(p.publishedAt);
-        return postDate.getFullYear() === dateFilter.value;
-      });
-      break;
-
-    case "month":
-      if (!dateFilter.value) return result;
-      // dateFilter.value = { year, month }
-      result = result.filter((p) => {
-        const postDate = new Date(p.publishedAt);
-        return (
-          postDate.getFullYear() === dateFilter.value.year &&
-          postDate.getMonth() === dateFilter.value.month
+    switch (dateFilter.period) {
+      case "year":
+        if (!dateFilter.value) return result;
+        result = result.filter(
+          (p) => new Date(p.publishedAt).getFullYear() === dateFilter.value
         );
-      });
-      break;
+        break;
 
-    case "week":
-      if (!dateFilter.value) return result;
-      const daysAgo = dateFilter.value; // 7, 14, 21
-      const threshold = new Date();
-      threshold.setDate(now.getDate() - daysAgo);
-      result = result.filter((p) => new Date(p.publishedAt) >= threshold);
-      break;
+      case "month":
+        if (!dateFilter.value) return result;
+        result = result.filter((p) => {
+          const postDate = new Date(p.publishedAt);
+          return (
+            postDate.getFullYear() === dateFilter.value.year &&
+            postDate.getMonth() === dateFilter.value.month
+          );
+        });
+        break;
 
-    default:
-      break;
-  }
+      case "week":
+        if (!dateFilter.value) return result;
+        const threshold = new Date();
+        threshold.setDate(now.getDate() - dateFilter.value);
+        result = result.filter((p) => new Date(p.publishedAt) >= threshold);
+        break;
 
-  return result;
-}, [posts, dateFilter]);
-  const totalPages = filteredPosts.length ? Math.ceil(filteredPosts.length / itemsPerPage) : 0;
+      default:
+        break;
+    }
+
+    return result;
+  }, [posts, dateFilter]);
+
+  const totalPages = filteredPosts.length
+    ? Math.ceil(filteredPosts.length / itemsPerPage)
+    : 0;
   const indexOfLast = currentPage * itemsPerPage;
   const indexOfFirst = indexOfLast - itemsPerPage;
   const currentItems = filteredPosts.slice(indexOfFirst, indexOfLast);
+
   const dateValueOptions = useMemo(() => {
-  const now = new Date();
+    const now = new Date();
 
-  if (dateFilter.period === "year") {
-    const currentYear = now.getFullYear();
-    return Array.from({ length: 5 }, (_, i) => {
-      const year = currentYear - i;
-      return { value: year, label: year.toString() };
-    });
-  }
+    if (dateFilter.period === "year") {
+      const currentYear = now.getFullYear();
+      return Array.from({ length: 5 }, (_, i) => {
+        const year = currentYear - i;
+        return { value: year, label: year.toString() };
+      });
+    }
 
-  if (dateFilter.period === "month") {
-    // Для месяца делаем выбор месяца в текущем или выбранном году
-    const year = now.getFullYear();
-    return Array.from({ length: 12 }, (_, i) => ({
-      value: { year, month: i },
-      label: new Date(year, i).toLocaleString("ru", { month: "long" }),
-    }));
-  }
+    if (dateFilter.period === "month") {
+      const year = now.getFullYear();
+      return Array.from({ length: 12 }, (_, i) => ({
+        value: { year, month: i },
+        label: new Date(year, i).toLocaleString("ru", { month: "long" }),
+      }));
+    }
 
-  if (dateFilter.period === "week") {
-    return [
-      { value: 7, label: "Последние 7 дней" },
-      { value: 14, label: "Последние 14 дней" },
-      { value: 21, label: "Последние 21 день" },
-    ];
-  }
+    if (dateFilter.period === "week") {
+      return [
+        { value: 7, label: "Последние 7 дней" },
+        { value: 14, label: "Последние 14 дней" },
+        { value: 21, label: "Последние 21 день" },
+      ];
+    }
 
-  return [];
-}, [dateFilter.period]);
+    return [];
+  }, [dateFilter.period]);
+
   return (
     <>
       <PublicationsHead>
@@ -152,6 +144,7 @@ const PublicationsPopup = () => {
           width="250px"
           fs="24px"
         />
+
         {dateFilter.period !== "all" && (
           <CustomSelectSec
             placeholder="Уточнить"
@@ -165,17 +158,17 @@ const PublicationsPopup = () => {
           />
         )}
       </PublicationsHead>
+
       {!loadingPosts && channelId ? (
         <>
           <PublicationsList>
             {currentItems?.length > 0 ? (
-              currentItems?.map((item) => (
-                <CardPablish key={item.id} item={item} bg />
-              ))
+              currentItems.map((item) => <CardPablish key={item.id} item={item} bg />)
             ) : (
               <EmptyState>Публикаций пока нет</EmptyState>
             )}
           </PublicationsList>
+
           {totalPages > 1 && (
             <PaginationWrapper>
               {Array.from({ length: totalPages }, (_, i) => (
@@ -203,19 +196,21 @@ const PublicationsHead = styled.div`
   scrollbar-width: none;
   padding: 0 56px;
 
-  @media(max-width: 1600px) {
+  @media (max-width: 1600px) {
     padding: 0 32px;
   }
-  @media(max-width: 768px) {
+  @media (max-width: 768px) {
     padding: 0 24px;
   }
 `;
+
 const PublicationsFilter = styled.p`
   display: flex;
   align-items: center;
   gap: 16px;
   padding-bottom: 32px;
-  border-bottom: 2px solid ${({ $active }) => ($active ? "#D6DCEC" : "#2e3954")};
+  border-bottom: 2px solid
+    ${({ $active }) => ($active ? "#D6DCEC" : "#2e3954")};
   width: max-content !important;
   font-size: 24px;
   font-weight: 700;
@@ -228,33 +223,36 @@ const PublicationsFilter = styled.p`
     color: inherit;
   }
 `;
+
 const PublicationsList = styled.div`
   display: grid;
   margin-top: 50px;
   gap: 16px 24px;
   padding: 0 56px;
   grid-template-columns: repeat(3, 1fr);
-  
-  @media(max-width: 1600px) {
+
+  @media (max-width: 1600px) {
     grid-template-columns: repeat(2, 1fr);
     padding: 0 32px;
   }
-   @media(max-width: 1400px) {
+  @media (max-width: 1400px) {
     grid-template-columns: repeat(3, 1fr);
   }
   @media (max-width: 991px) {
     grid-template-columns: repeat(2, 1fr);
   }
-  @media(max-width: 768px) {
+  @media (max-width: 768px) {
     padding: 0 24px;
     grid-template-columns: 1fr;
   }
 `;
+
 const EmptyState = styled.p`
   text-align: center;
   font-size: 14px;
   color: #6a7080;
 `;
+
 const PaginationWrapper = styled.div`
   flex-grow: 1;
   display: flex;
@@ -263,6 +261,7 @@ const PaginationWrapper = styled.div`
   gap: 37px;
   padding-top: 40px;
 `;
+
 const PageBtn = styled.button`
   font-size: 12px;
   color: ${(props) => (props.active ? "#D6DCEC" : "#6A7080")};

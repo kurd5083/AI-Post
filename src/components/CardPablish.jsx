@@ -16,8 +16,13 @@ const CardPablish = ({ item, bg }) => {
           <p>{item.username}</p>
         </CardPablishItemName>
         <CardPablishItemTime>
-          <TimeIcons />
-          {timeAgo(item.createdAt)}
+          <p>{new Date(item.createdAt).toLocaleDateString("ru-RU")}</p><br />
+          <span>
+            {new Date(item.createdAt).toLocaleTimeString("ru-RU", {
+              hour: "2-digit",
+              minute: "2-digit",
+            })}
+          </span>
         </CardPablishItemTime>
       </CardPablishItemHead>
       <CardPablishImages>
@@ -117,10 +122,15 @@ const CardPablishItemImg = styled.img`
 `
 const CardPablishItemTime = styled.p`
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  justify-content: flex-end;
   gap: 10px;
   font-size: 14px;
   font-weight: 700;
+  span {
+  color:#6A7080;
+
+  }
 `
 const CardPablishImages = styled.div`
   display: flex;
