@@ -9,7 +9,7 @@ import { useSendPostToChannel } from "@/lib/posts/useSendPostToChannel";
 import { usePopupStore } from "@/store/popupStore"
 import { useLightboxStore } from "@/store/lightboxStore";
 
-const Preview = ({ collapsed, testResult, telegramId }) => {
+const Preview = ({ collapsed, onChange, testResult, telegramId }) => {
   console.log(testResult)
 
   const { openLightbox } = useLightboxStore();
@@ -29,7 +29,7 @@ const Preview = ({ collapsed, testResult, telegramId }) => {
       <PreviewContent>
         <PreviewHead>
           <HeadLeft><img src={eye_blue} alt="eye icon" />Лайв превью</HeadLeft>
-          <HeadArrow src={arrow} alt="arrow icon" onClick={() => setCollapsed(prev => !prev)} $collapsed={collapsed} />
+          <HeadArrow src={arrow} alt="arrow icon" onClick={onChange} $collapsed={collapsed} />
         </PreviewHead>
         {!collapsed && (
           <>

@@ -21,8 +21,10 @@ import { usePopupStore } from "@/store/popupStore"
 const AiGeneratorPopup = () => {
   const { popup } = usePopupStore();
   const channelId = popup?.data?.channelId;
+  const telegramId = popup?.data?.telegramId;
+
   const [posts, setPosts] = useState([
-    { id: 1, placeholder: "Пост 1", title: "", progress: "0 / 1024", text: "", time: "00:00" },
+    { postId: Date.now(), placeholder: "Пост 1", title: "", progress: "0 / 1024", text: "", time: "00:00" },
   ]);
   const [selectedPost, setSelectedPost] = useState(posts[0]);
   const [collapsed, setCollapsed] = useState(false);
@@ -32,7 +34,7 @@ const AiGeneratorPopup = () => {
 
   const handleAddPost = () => {
     const newPost = {
-      id: Date.now(),
+      postId: Date.now(),
       placeholder: `Новый пост ${posts.length + 1}`,
       title: "",
       progress: "0 / 1024",
@@ -42,26 +44,26 @@ const AiGeneratorPopup = () => {
     setPosts([newPost, ...posts]);
   };
 
-  const handleRemovePost = (id) => {
-    setPosts((prev) => prev.filter((p) => p.id !== id));
-    if (selectedPost?.id === id) {
-      setSelectedPost(posts.find((p) => p.id !== id) || null);
+  const handleRemovePost = (postId) => {
+    setPosts((prev) => prev.filter((p) => p.postId !== postId));
+    if (selectedPost?.postId === postId) {
+      setSelectedPost(posts.find((p) => p.postId !== postId) || null);
     }
   };
 
-  const handleTitleChange = (id, newTitle) => {
-    setPosts((prev) => prev.map((p) => (p.id === id ? { ...p, title: newTitle } : p)));
+  const handleTitleChange = (postId, newTitle) => {
+    setPosts((prev) => prev.map((p) => (p.postId === postId ? { ...p, title: newTitle } : p)));
   };
 
-  const handleTextChange = (id, newText) => {
-    setPosts((prev) => prev.map((p) => (p.id === id ? { ...p, text: newText } : p)));
+  const handleTextChange = (postId, newText) => {
+    setPosts((prev) => prev.map((p) => (p.postId === postId ? { ...p, text: newText } : p)));
   };
 
   const handleSaveTime = (newTime) => {
     setPosts((prev) =>
-      prev.map((p) => (p.id === popupPostId ? { ...p, time: newTime } : p))
+      prev.map((p) => (p.postId === popupPostId ? { ...p, time: newTime } : p))
     );
-    setPopupPostId(null)
+    setPopupPostId(null);
   };
 
   useEffect(() => {
@@ -76,9 +78,10 @@ const AiGeneratorPopup = () => {
 
     return () => window.removeEventListener("resize", handleResize);
   }, []);
+
   const {mutate: createPostMutation} = useCreatePost();
+  
   const handleSavePost = (post) => {
-    const now = new Date(); 
     const [hours, minutes] = post.time.split(":").map(Number);
 
     const calendarScheduledAt = new Date(
@@ -96,7 +99,7 @@ const AiGeneratorPopup = () => {
       title: post.title,
       text: post.text,
       images: [],
-      source: "AI_GENERATOR",
+      source: "",
       channelId,
       publishedAt: new Date().toISOString(),
       calendarScheduledAt,
@@ -105,6 +108,7 @@ const AiGeneratorPopup = () => {
 
     createPostMutation(payload);
   };
+  
   return (
     <GeneratorContainer>
       <GeneratorHead>
@@ -117,15 +121,15 @@ const AiGeneratorPopup = () => {
         </BtnBase>
       </GeneratorHead>
       <GeneratorList $fadeVisible={fadeVisible} ref={ref}>
-        {posts.map((post) => (
-          <ListItem key={post.id}>
+       {posts.map((post) => (
+          <ListItem key={post.postId}>
             <ItemHead>
               <CheckboxCircle>
                 <HeadTitle
                   tape="text"
                   placeholder={post.placeholder}
                   value={post.title}
-                  onChange={(e) => handleTitleChange(post.id, e.target.value)}
+                  onChange={(e) => handleTitleChange(post.postId, e.target.value)}
                 />
               </CheckboxCircle>
               <p>{post.progress}</p>
@@ -135,7 +139,7 @@ const AiGeneratorPopup = () => {
                 placeholder="Текст публикации..."
                 type="text"
                 value={post.text}
-                onChange={(e) => handleTextChange(post.id, e.target.value)}
+                onChange={(e) => handleTextChange(post.postId, e.target.value)}
               />
               <ItemTime>Время публикации: {post.time}</ItemTime>
             </ItemBody>
@@ -167,13 +171,13 @@ const AiGeneratorPopup = () => {
                       $padding="21px 24px"
                       $color="#EF6284"
                       $bg="#241E2D"
-                      onClick={() => handleRemovePost(post.id)}
+                      onClick={() => handleRemovePost(post.postId)}
                     >Отменить</BtnBase>
                     <BtnBase
                       $padding="21px 24px"
                       $border $bg="transporent"
                       $color="#6A7080"
-                      onClick={() => setPopupPostId(post.id)}
+                      onClick={() => setPopupPostId(post.postId)}
                     >Изменить время</BtnBase>
                     <BtnBase
                       $padding="21px 24px"
@@ -192,13 +196,13 @@ const AiGeneratorPopup = () => {
         ))}
       </GeneratorList>
       <PreviewContainer>
-        <Preview collapsed={collapsed} testResult={selectedPost} />
+        <Preview collapsed={collapsed} onChange={() => setCollapsed(!collapsed)} testResult={selectedPost} telegramId={telegramId}/>
       </PreviewContainer>
       {popupPostId && (
         <ChangeTimePopup
           onSave={handleSaveTime}
           onClose={() => setPopupPostId(null)}
-          initialTime={posts.find((p) => p.id === popupPostId)?.time || "00:00"}
+          initialTime={posts.find((p) => p.postId === popupPostId)?.time || "00:00"}
         />
       )}
     </GeneratorContainer>
