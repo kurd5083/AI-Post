@@ -46,78 +46,80 @@ const PublicationsPopup = () => {
   }, [dateFilter]);
 
   const filteredPosts = useMemo(() => {
-    if (!posts) return [];
+  if (!posts) return [];
 
-    const now = new Date();
-    let result = [...posts];
+  const now = new Date();
+  let result = [...posts];
 
-    switch (dateFilter.period) {
-      case "year":
-        if (dateFilter.value == null) return result;
-        result = result.filter(
-          (p) => new Date(p.createdAt).getFullYear() === dateFilter.value
+  switch (dateFilter.period) {
+    case "year":
+      if (dateFilter.value == null) return result;
+      result = result.filter((p) => {
+        const postDate = new Date(p.publishedAt);
+        return postDate.getFullYear() === dateFilter.value;
+      });
+      break;
+
+    case "month":
+      if (!dateFilter.value) return result;
+      // dateFilter.value = { year, month }
+      result = result.filter((p) => {
+        const postDate = new Date(p.publishedAt);
+        return (
+          postDate.getFullYear() === dateFilter.value.year &&
+          postDate.getMonth() === dateFilter.value.month
         );
-        break;
+      });
+      break;
 
-      case "month":
-        if (dateFilter.value == null) return result;
-        result = result.filter((p) => {
-          const d = new Date(p.createdAt);
-          return (
-            d.getFullYear() === dateFilter.value.year &&
-            d.getMonth() === dateFilter.value.month
-          );
-        });
-        break;
+    case "week":
+      if (!dateFilter.value) return result;
+      const daysAgo = dateFilter.value; // 7, 14, 21
+      const threshold = new Date();
+      threshold.setDate(now.getDate() - daysAgo);
+      result = result.filter((p) => new Date(p.publishedAt) >= threshold);
+      break;
 
-      case "week":
-        if (dateFilter.value == null) return result;
-        // последние N дней
-        const daysAgo = dateFilter.value; // value = 7, 14, 21 и т.д.
-        const threshold = new Date();
-        threshold.setDate(now.getDate() - daysAgo);
-        result = result.filter((p) => new Date(p.createdAt) >= threshold);
-        break;
+    default:
+      break;
+  }
 
-      default:
-        break;
-    }
-
-    return result;
-  }, [posts, dateFilter]);
+  return result;
+}, [posts, dateFilter]);
   const totalPages = filteredPosts.length ? Math.ceil(filteredPosts.length / itemsPerPage) : 0;
   const indexOfLast = currentPage * itemsPerPage;
   const indexOfFirst = indexOfLast - itemsPerPage;
   const currentItems = filteredPosts.slice(indexOfFirst, indexOfLast);
   const dateValueOptions = useMemo(() => {
-    const now = new Date();
+  const now = new Date();
 
-    if (dateFilter.period === "year") {
-      const currentYear = now.getFullYear();
-      return Array.from({ length: 5 }, (_, i) => {
-        const year = currentYear - i;
-        return { value: year, label: year.toString() };
-      });
-    }
+  if (dateFilter.period === "year") {
+    const currentYear = now.getFullYear();
+    return Array.from({ length: 5 }, (_, i) => {
+      const year = currentYear - i;
+      return { value: year, label: year.toString() };
+    });
+  }
 
-    if (dateFilter.period === "month") {
-      // value = { year: 2025, month: 0..11 }
-      return Array.from({ length: 12 }, (_, i) => ({
-        value: { year: now.getFullYear(), month: i },
-        label: new Date(now.getFullYear(), i).toLocaleString("ru", { month: "long" }),
-      }));
-    }
+  if (dateFilter.period === "month") {
+    // Для месяца делаем выбор месяца в текущем или выбранном году
+    const year = now.getFullYear();
+    return Array.from({ length: 12 }, (_, i) => ({
+      value: { year, month: i },
+      label: new Date(year, i).toLocaleString("ru", { month: "long" }),
+    }));
+  }
 
-    if (dateFilter.period === "week") {
-      return [
-        { value: 7, label: "Последние 7 дней" },
-        { value: 14, label: "Последние 14 дней" },
-        { value: 21, label: "Последние 21 день" },
-      ];
-    }
+  if (dateFilter.period === "week") {
+    return [
+      { value: 7, label: "Последние 7 дней" },
+      { value: 14, label: "Последние 14 дней" },
+      { value: 21, label: "Последние 21 день" },
+    ];
+  }
 
-    return [];
-  }, [dateFilter.period]);
+  return [];
+}, [dateFilter.period]);
   return (
     <>
       <PublicationsHead>
