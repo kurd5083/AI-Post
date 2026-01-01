@@ -98,11 +98,13 @@ const AiGeneratorPopup = () => {
               value={post.text}
               onChange={(e) => handleTextChange(post.id, e.target.value)}
             />
-            <ItemAI>
+           
+            <ItemActions>
+              <ActionsLeft>
+                <ItemAI>
               <p><img src={create} alt="create icon" />Создать фото с AI</p>
               <p><AiGeneratorIcon color="#336CFF"/>Написать с AI</p>
             </ItemAI>
-            <ItemActions>
               <ItemActionsAdd>
                 <AiGeneratorIcon width={24} height={24} color="#336CFF" />
                 <img src={paper} alt="paper icon" width={14} height={16} />
@@ -113,6 +115,8 @@ const AiGeneratorPopup = () => {
                 <img src={setting} alt="setting icon" width={18} height={20} />
                 <img src={ellipsis} alt="ellipsis icon" width={18} height={4} />
               </ItemActionsAdd>
+              </ActionsLeft>
+               
               <ButtonsAll>
                 <HideButton onClick={() => setSelectedPost(post)}>
                   <img src={hide} alt="hide icon" width={24} height={17} />
@@ -265,6 +269,21 @@ const ItemText = styled.textarea`
       height: 120px;
   }
 `
+
+const ItemActions = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  @media(max-width: 1600px) {
+    margin-top: 32px;
+  } 
+`
+const ActionsLeft = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 50px;
+`
+
 const ItemAI = styled.div`
   display: flex;
   align-items: center;
@@ -284,14 +303,6 @@ const ItemAI = styled.div`
       color: #336CFF;
     }
   }
-`
-const ItemActions = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-  @media(max-width: 1600px) {
-    margin-top: 32px;
-  } 
 `
 const ItemActionsAdd = styled.div`
   display: flex;
