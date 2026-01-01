@@ -152,7 +152,6 @@ const PublicationsFilter = styled.p`
 `;
 const PublicationsList = styled.div`
   display: grid;
-  grid-template-rows: max-content;
   margin-top: 50px;
   gap: 16px 24px;
   padding: 0 56px;

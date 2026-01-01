@@ -4,6 +4,7 @@ import timeAgo from "@/lib/timeAgo";
 import BtnBase from "@/shared/BtnBase";
 
 const CardPablish = ({ item, bg }) => {
+  console.log(item)
 	return (
 		<CardPablishItem $bg={bg}>
 			<CardPablishItemHead>
@@ -15,6 +16,9 @@ const CardPablish = ({ item, bg }) => {
           <TimeIcons/>
           {timeAgo(item.createdAt)}
 				</CardPablishItemTime>
+        <CardPablishImages>
+          <ImageItem/>
+        </CardPablishImages>
 			</CardPablishItemHead>
 			  <CardPablishText>{item.title}</CardPablishText>
         <CardPablishSubtext>{item.summary}</CardPablishSubtext>
@@ -106,15 +110,29 @@ const CardPablishItemTime = styled.p`
   font-size: 14px;
   font-weight: 700;
 `
+const CardPablishImages = styled.div`
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 4px;
+`
+const ImageItem = styled.img`
+  width: 48px;
+  height: 48px;
+  border-radius: 8px;
+  object-fit: cover;
+`
 const CardPablishText = styled.p`
   box-sizing: border-box;
   margin-top: 18px;
   font-size: 14px;
   line-height: 14px;
   font-weight: 700;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
   overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
 `
 const CardPablishSubtext = styled.p`
   box-sizing: border-box;
@@ -132,6 +150,7 @@ const CardPablishButtons = styled.div`
   display: flex;
   align-items: center;
   gap: 8px;
+  margin-top: 24px;
 `
 
 export default CardPablish
