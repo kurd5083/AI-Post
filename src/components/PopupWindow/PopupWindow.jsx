@@ -11,7 +11,7 @@ const PopupWindow = () => {
 
     
     return (
-        <PopupContainer onClick={popup && popup?.previousPage.length > 0 ? goBack() : closePopup()}>
+        <PopupContainer onClick={() => popup && popup?.previousPage.length > 0 ? goBack() : closePopup()}>
             <PopupContent onClick={(e) => e.stopPropagation()}>
                 {popup.content == 'create_folder' ? (
                     <CreateFolderPopup />

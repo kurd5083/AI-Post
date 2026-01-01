@@ -10,14 +10,10 @@ const safeDate = (value) => {
 const dayKeyUTC = (d) =>
   `${d.getUTCFullYear()}-${d.getUTCMonth() + 1}-${d.getUTCDate()}`;
 
-export const CalendarFooter = ({
-  events,
-  selectedDate,
-}) => {
+export const CalendarFooter = ({ events, selectedDate }) => {
   const { changeContent } = usePopupStore();
   
   const selectedKey = dayKeyUTC(selectedDate);
-  console.log(events, selectedDate, '1')
 
   const hasEvents = events.some((e) => {
     const d = safeDate(e.scheduledAt);
@@ -25,7 +21,7 @@ export const CalendarFooter = ({
 
     return dayKeyUTC(d) === selectedKey;
   });
-  console.log(hasEvents, '2')
+
   return (
     <>
       <CalendarButton>

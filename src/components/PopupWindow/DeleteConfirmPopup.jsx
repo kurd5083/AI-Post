@@ -28,7 +28,7 @@ const DeleteConfirmPopup = () => {
         <BtnBase
           $color="#fff"
           $bg="#FF4D4D"
-          onClick={()=> handleDelete()}
+          onClick={() => handleDelete()}
         >
           Удалить
         </BtnBase>
