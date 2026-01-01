@@ -20,6 +20,11 @@ const PublicationsPopup = () => {
 
   const { posts, loadingPosts } = usePostsByChannel(channelId);
 
+  const [dateFilter, setDateFilter] = useState({
+    period: "all", // all | year | month | week
+    value: null,   // конкретный год / месяц / неделя
+  });
+
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth < 768) {
@@ -41,26 +46,77 @@ const PublicationsPopup = () => {
   }, [itemsPerPage]);
 
   const filteredPosts = useMemo(() => {
-    if (!posts) return [];
+  if (!posts) return [];
 
-    switch (filter) {
-      case "premoderation":
-        // ⚠️ пока нет поля — возвращаем пусто или всё
-        // потом тут будет, например:
-        // return posts.filter(p => p.status === "premoderation");
-        return posts;
+  let result = [...posts];
+  const now = new Date();
 
-      case "common":
-      default:
-        return posts;
-    }
-  }, [posts, filter]);
+  switch (dateFilter.period) {
+    case "year":
+      result = result.filter(
+        (p) => new Date(p.createdAt).getFullYear() === dateFilter.value
+      );
+      break;
 
+    case "month":
+      result = result.filter((p) => {
+        const d = new Date(p.createdAt);
+        return (
+          d.getFullYear() === now.getFullYear() &&
+          d.getMonth() === dateFilter.value
+        );
+      });
+      break;
+
+    case "week":
+      result = result.filter((p) => {
+        const d = new Date(p.createdAt);
+        const diff =
+          (now - d) / (1000 * 60 * 60 * 24);
+        return diff <= (dateFilter.value + 1) * 7;
+      });
+      break;
+
+    default:
+      break;
+  }
+
+  return result;
+}, [posts, dateFilter]);
   const totalPages = filteredPosts.length ? Math.ceil(filteredPosts.length / itemsPerPage) : 0;
   const indexOfLast = currentPage * itemsPerPage;
   const indexOfFirst = indexOfLast - itemsPerPage;
   const currentItems = filteredPosts.slice(indexOfFirst, indexOfLast);
+const dateValueOptions = useMemo(() => {
+  const now = new Date();
 
+  if (dateFilter.period === "year") {
+    const currentYear = now.getFullYear();
+    return Array.from({ length: 5 }, (_, i) => {
+      const year = currentYear - i;
+      return { value: year, label: year.toString() };
+    });
+  }
+
+  if (dateFilter.period === "month") {
+    return Array.from({ length: 12 }, (_, i) => {
+      const date = new Date(now.getFullYear(), i);
+      return {
+        value: i,
+        label: date.toLocaleString("ru", { month: "long" }),
+      };
+    });
+  }
+
+  if (dateFilter.period === "week") {
+    return Array.from({ length: 8 }, (_, i) => ({
+      value: i,
+      label: `Неделя ${i + 1}`,
+    }));
+  }
+
+  return [];
+}, [dateFilter.period]);
   return (
     <>
       <PublicationsHead>
@@ -81,11 +137,31 @@ const PublicationsPopup = () => {
         <CustomSelectSec
           placeholder="Выбор даты"
           value={filter}
-          onChange={(option) => setFilter(option.value)}
-          options={[]}
+        
+          options={[
+            { value: "all", label: "Все даты" },
+  { value: "year", label: "За год" },
+  { value: "month", label: "За месяц" },
+  { value: "week", label: "За неделю" },
+          ]}
+            onChange={(option) =>
+    setDateFilter({ period: option.value, value: null })
+  }
           width="250px"
           fs="24px"
         />
+        {dateFilter.period !== "all" && (
+  <CustomSelectSec
+    placeholder="Уточнить"
+    value={dateFilter.value}
+    options={dateValueOptions}
+    onChange={(option) =>
+      setDateFilter((prev) => ({ ...prev, value: option.value }))
+    }
+    width="220px"
+    fs="24px"
+  />
+)}
       </PublicationsHead>
       {!loadingPosts && channelId ? (
         <>
