@@ -14,7 +14,8 @@ const safeDate = (value) => {
 };
 
 const dayKeyUTC = (d) =>
-  `${d.getUTCFullYear()}-${d.getUTCMonth() + 1}-${d.getUTCDate()}`;
+  `${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2,'0')}-${String(d.getUTCDate()).padStart(2,'0')}`;
+
 
 const CalendarPopup = () => {
   const { popup } = usePopupStore();
@@ -74,8 +75,8 @@ const CalendarPopup = () => {
       if (!d) return false;
       return dayKeyUTC(d) === selectedKey && e.channelId === channelId;
     });
-
   }, [events, selectedDate]);
+
   console.log(postsForDay, 'postsForDay')
   return (
     <CalendarContent>
