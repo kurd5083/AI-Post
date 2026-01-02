@@ -7,7 +7,6 @@ import BtnBase from "@/shared/BtnBase";
 import { usePopupStore } from "@/store/popupStore"
 import { useNews } from "@/lib/news/useNews";
 import { useNewsById } from "@/lib/news/useNewsById";
-import { useFormattedHtml } from "@/lib/useFormattedHtml";
 import ModernLoading from "@/components/ModernLoading";
 import news_stub from "@/assets/news-stub.png";
 import dzen_icon from "@/assets/dzen-icon.svg";
@@ -19,8 +18,6 @@ const NewsDetail = () => {
 	const { id } = useParams();
 	const { newsData, newsLoding } = useNews({});
 	const { news, newsIdLoading } = useNewsById(id);
-	const formattedTitle = useFormattedHtml(news?.title);
-	const formattedContent = useFormattedHtml(news?.summary);
 
 	return (
 		<NewsContainer>
@@ -45,8 +42,8 @@ const NewsDetail = () => {
 								})}
 							/>
 							<PostTimeMobile ><TimeIcons color="#336CFF" />{news?.readingTime}</PostTimeMobile>
-							<PostTilte dangerouslySetInnerHTML={{ __html: formattedTitle }} />
-							<PostDescription dangerouslySetInnerHTML={{ __html: formattedContent }} />
+							<PostTilte>{news?.title}</PostTilte>
+							<PostDescription>{news?.summary}</PostDescription>
 							<PostFooter className="news-meta">
 								<BtnBase
 									$bg="#336CFF"

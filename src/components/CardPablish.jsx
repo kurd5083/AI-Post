@@ -3,7 +3,7 @@ import TimeIcons from "@/icons/TimeIcons";
 import timeAgo from "@/lib/timeAgo";
 import BtnBase from "@/shared/BtnBase";
 import { useLightboxStore } from "@/store/lightboxStore";
-
+import { formatText } from "@/lib/formatText";
 const MAX_VISIBLE_IMAGES = 3;
 
 const CardPablish = ({ item, bg }) => {
@@ -51,7 +51,9 @@ const CardPablish = ({ item, bg }) => {
         })}
       </CardPablishImages>
       <CardPablishText>{item.title}</CardPablishText>
-      <CardPablishSubtext>{item.summary}</CardPablishSubtext>
+      <CardPablishSubtext
+        dangerouslySetInnerHTML={{ __html: item.summary }}
+      />
       <CardPablishButtons>
         <BtnBase
           $padding="16px 24px"

@@ -20,6 +20,7 @@ import Preview from "@/components/Preview";
 import ChangeTimePopup from "@/components/PopupWindow/ChangeTimePopup";
 import { useCreatePost } from "@/lib/posts/useCreatePost";
 import { usePopupStore } from "@/store/popupStore";
+import { formatText } from "@/lib/formatText";
 
 const AiGeneratorPopup = () => {
   const { popup } = usePopupStore();
@@ -111,8 +112,6 @@ const AiGeneratorPopup = () => {
 
     createPostMutation(payload);
   };
-
-  const formatText = (command) => document.execCommand(command, false, null);
 
   const addLink = () => {
     const url = prompt("Введите ссылку");

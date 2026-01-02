@@ -1,12 +1,9 @@
 import styled from "styled-components";
 import arrow from "@/assets/arrow.svg";
 import TimeIcons from "@/icons/TimeIcons";
-import { useFormattedHtml } from "@/lib/useFormattedHtml";
 import timeAgo from "@/lib/timeAgo";
 
 const MentionsCard = ({ item, bg }) => {
-  const formattedText = useFormattedHtml(item.summary);
-
 	return (
 		<MentionsCardItem $bg={bg}>
 			<MentionsCardItemHead>
@@ -20,9 +17,7 @@ const MentionsCard = ({ item, bg }) => {
 				</MentionsCardItemTime>
 			</MentionsCardItemHead>
 			  <MentionsCardText>{item.title}</MentionsCardText>
-        <MentionsCardSubtext
-          dangerouslySetInnerHTML={{__html: formattedText}}
-        />
+        <MentionsCardSubtext>{item.summary}</MentionsCardSubtext>
 			<MentionsCardOpen>
 				<img src={arrow} alt="arrow icon" />
 			</MentionsCardOpen>
