@@ -15,7 +15,12 @@ const Tape = () => {
   const [filters, setFilters] = useState({
     // isProcessed: "false",
     // isPublished: "false",
-    // priorityWords: "спорт",
+    topic: "спорт"
+    page: '1',
+    limit: '20',
+    stopWords: 'путин',
+    language: 'ru,',
+    priorityWords: "спорт",
   });
   const { newsData, newsLoding } = useNews(filters);
   console.log(newsData)
