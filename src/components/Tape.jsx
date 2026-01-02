@@ -19,7 +19,7 @@ const Tape = () => {
     page: '1',
     limit: '20',
     stopWords: 'путин',
-    language: 'ru,',
+    language: 'ru',
     priorityWords: "спорт",
   });
   const { newsData, newsLoding } = useNews(filters);
