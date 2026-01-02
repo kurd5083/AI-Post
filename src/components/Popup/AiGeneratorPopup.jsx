@@ -21,9 +21,12 @@ import ChangeTimePopup from "@/components/PopupWindow/ChangeTimePopup";
 import { useCreatePost } from "@/lib/posts/useCreatePost";
 import { usePopupStore } from "@/store/popupStore";
 import { formatText } from "@/lib/formatText";
+import { useLightboxStore } from "@/store/lightboxStore";
 
 const AiGeneratorPopup = () => {
   const generatePostId = () => Math.floor(Math.random() * 2_000_000_000);
+
+  const { openLightbox } = useLightboxStore();
 
   const { popup } = usePopupStore();
   const channelId = popup?.data?.channelId;
@@ -218,7 +221,14 @@ const AiGeneratorPopup = () => {
                 <ImagesContainer>
                   {(post.images || []).map((img, index) => (
                     <ImagePreview key={index}>
-                      <img src={img} alt={`preview-${index}`} />
+                      <img 
+                      src={img} 
+                      alt={`preview-${index}`} 
+                      onClick={() => openLightbox({
+                        images: post.images.map(img => img),
+                        initialIndex: 0
+                      })}
+                      />
                       <RemoveImageButton onClick={() => handleRemoveImage(post.postId, index)}>×</RemoveImageButton>
                     </ImagePreview>
                   ))}
