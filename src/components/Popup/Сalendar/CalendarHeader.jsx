@@ -4,13 +4,12 @@ import { MONTH_OPTIONS, YEAR_OPTIONS } from "@/data/calendarDatas";
 
 const getDaysInMonth = (y, m) => new Date(y, m + 1, 0).getDate();
 
-export const CalendarHeader = ({ currentDate, selectedDate, syncDate }) => {
+export const CalendarHeader = ({ selectedDate, syncDate }) => {
   const dayOptions = Array.from(
     { length: getDaysInMonth(selectedDate.getFullYear(), selectedDate.getMonth()) },
     (_, i) => ({ value: i + 1, label: String(i + 1) })
   );
-  console.log(currentDate.getFullYear(), currentDate.getMonth(), currentDate, 'asfasg')
-  console.log()
+
   return (
     <CalendarHead>
       <CustomSelectSec

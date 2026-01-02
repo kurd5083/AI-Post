@@ -29,7 +29,7 @@ const CalendarPopup = () => {
     setCurrentWeek(generateWeek(currentDate));
   }, [currentDate]);
   
-  const normalize = (iso) => iso.replace(/\.\d{3}Z$/, 'Z');
+  // const normalize = (iso) => iso.replace(/\.\d{3}Z$/, 'Z');
 
   // const startDate = currentWeek[0]
   //   ? normalize(
@@ -58,7 +58,7 @@ const CalendarPopup = () => {
 
   const endDate = new Date(selectedDate);
   endDate.setUTCHours(23, 59, 59);
-
+  console.log(selectedDate, 'selectedDate')
   const startISO = startDate.toISOString();
   const endISO = endDate.toISOString();
 
@@ -98,7 +98,6 @@ events.forEach(e => {
   return (
     <CalendarContent>
       <CalendarHeader
-        currentDate={currentDate}
         selectedDate={selectedDate}
         syncDate={syncDate}
       />
