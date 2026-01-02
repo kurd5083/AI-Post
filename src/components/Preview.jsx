@@ -14,7 +14,7 @@ const Preview = ({ collapsed, onChange, testResult, telegramId }) => {
 
   const { openLightbox } = useLightboxStore();
   
-  const { title, summary, url, savedFiles, postId } = testResult || {};
+  const { title, summary, url, images, postId } = testResult || {};
   const { mutate: sendPost, isLoading: sendPostLoading } = useSendPostToChannel();
   const { popup } = usePopupStore();
   const channelId = popup?.data?.channelId;
@@ -39,14 +39,14 @@ const Preview = ({ collapsed, onChange, testResult, telegramId }) => {
             <PreviewInfo>
               <PreviewInfoBG src={PreviewBG} alt="bg" />
               <PreviewInfoContainer>
-                {savedFiles?.images?.length > 0 && (
+                {images?.length > 0 && (
                   <ImagesContainer>
-                    {savedFiles.images.map((img, index) => (
+                    {images.map((img, index) => (
                       <img 
                         key={index} 
                         src={img} 
                         alt={`image-${index}`} 
-                        onClick={() => openLightbox(savedFiles.images, index)}
+                        onClick={() => openLightbox(images, index)}
                       />
                     ))}
                   </ImagesContainer>
