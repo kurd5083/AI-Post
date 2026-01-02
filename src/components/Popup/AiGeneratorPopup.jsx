@@ -17,6 +17,7 @@ import Preview from "@/components/Preview";
 import ChangeTimePopup from "@/components/PopupWindow/ChangeTimePopup";
 import { useCreatePost } from "@/lib/posts/useCreatePost";
 import { usePopupStore } from "@/store/popupStore"
+import EmojiPicker from "emoji-picker-react";
 
 const AiGeneratorPopup = () => {
   const { popup } = usePopupStore();
@@ -29,6 +30,7 @@ const AiGeneratorPopup = () => {
   const [selectedPost, setSelectedPost] = useState(posts[0]);
   const [collapsed, setCollapsed] = useState(false);
   const [popupPostId, setPopupPostId] = useState(null);
+  const [showEmoji, setShowEmoji] = useState(false);
 
   const { fadeVisible, ref } = useFadeOnScroll(20);
 
@@ -109,29 +111,6 @@ const AiGeneratorPopup = () => {
     createPostMutation(payload);
   };
 
-  const wrapSelectedText = (postId, before, after = before) => {
-    setPosts((prev) =>
-      prev.map((p) => {
-        if (p.postId !== postId) return p;
-
-        const textarea = document.getElementById(`text-${postId}`);
-        if (!textarea) return p;
-
-        const start = textarea.selectionStart;
-        const end = textarea.selectionEnd;
-
-        const selected = p.text.slice(start, end);
-        const newText =
-          p.text.slice(0, start) +
-          before +
-          selected +
-          after +
-          p.text.slice(end);
-
-        return { ...p, text: newText };
-      })
-    );
-  };
 
   const addEmoji = (postId, emoji) => {
     setPosts((prev) =>
@@ -141,12 +120,17 @@ const AiGeneratorPopup = () => {
     );
   };
 
-  const addLink = (postId) => {
-    const url = prompt("Введите ссылку");
-    if (!url) return;
-
-    wrapSelectedText(postId, "[", `](${url})`);
+  const formatText = (command) => {
+    document.execCommand(command, false, null);
   };
+
+  const addLink = () => {
+    const url = prompt("Введите ссылку");
+    if (url) {
+      document.execCommand("createLink", false, url);
+    }
+  };
+
 
   return (
     <GeneratorContainer>
@@ -175,11 +159,13 @@ const AiGeneratorPopup = () => {
             </ItemHead>
             <ItemBody>
               <ItemText
+                contentEditable
+                suppressContentEditableWarning
                 id={`text-${post.postId}`}
-                placeholder="Текст публикации..."
-                type="text"
-                value={post.text}
-                onChange={(e) => handleTextChange(post.postId, e.target.value)}
+                onInput={(e) =>
+                  handleTextChange(post.postId, e.currentTarget.innerHTML)
+                }
+                dangerouslySetInnerHTML={{ __html: post.text }}
               />
               <ItemTime>Время публикации: {post.time}</ItemTime>
             </ItemBody>
@@ -195,30 +181,30 @@ const AiGeneratorPopup = () => {
                     alt="paper icon"
                     onClick={() => alert("Загрузка изображения")}
                   />
-                  <img
-                    src={smiley}
-                    alt="smiley icon"
-                    onClick={() => addEmoji(post.postId, "😊")}
-                  />
+                 <img
+                  src={smiley}
+                  onClick={() => setShowEmoji((p) => !p)}
+                />
+
                   <img
                     src={fat}
                     alt="fat icon"
-                    onClick={() => wrapSelectedText(post.postId, "**")}
+                    onClick={() => formatText("bold")}
                   />
                   <img
                     src={italics}
                     alt="italics icon"
-                    onClick={() => wrapSelectedText(post.postId, "_")}
+                    onClick={() => formatText("italic")}
                   />
                   <img
                     src={underlined}
                     alt="underlined icon"
-                    onClick={() => wrapSelectedText(post.postId, "<u>", "</u>")}
+                    onClick={() => formatText("underline")}
                   />
                   <img
                     src={crossed}
                     alt="crossed icon"
-                    onClick={() => wrapSelectedText(post.postId, "~~")}
+                    onClick={() => formatText("strikeThrough")}
                   />
                   <img
                     src={link}
@@ -416,6 +402,7 @@ const ItemText = styled.textarea`
 const ItemTime = styled.p`
   font-size: 14px;
   color: #6a7080;
+  text-align: right;
 `;
 const ItemActions = styled.div`
   display: flex;
