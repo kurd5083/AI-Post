@@ -188,6 +188,7 @@ const CellInviteLink = styled.div`
   span {
     color: #336CFF;
     font-size: 12px;
+    cursor: pointer;
   }
 `;
 const CellStatus = styled.p`

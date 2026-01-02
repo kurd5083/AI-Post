@@ -22,16 +22,19 @@ import { useCreatePost } from "@/lib/posts/useCreatePost";
 import { usePopupStore } from "@/store/popupStore";
 import { formatText } from "@/lib/formatText";
 import { useLightboxStore } from "@/store/lightboxStore";
+import { useUser } from "@/lib/useUser";
+
 
 const AiGeneratorPopup = () => {
   const generatePostId = () => Math.floor(Math.random() * 2_000_000_000);
 
   const { openLightbox } = useLightboxStore();
+  const { user } = useUser();
 
-  const { popup } = usePopupStore();
+  const { popup, changeContent } = usePopupStore();
   const channelId = popup?.data?.channelId;
-  const telegramId = popup?.data?.telegramId;
-
+  const telegramId = user.telegramId;
+  console.log(telegramId, 'telegramId')
   const [posts, setPosts] = useState([
     { postId: generatePostId(), placeholder: "Пост 1", title: "", progress: "0 / 1024", text: "", summary: "", time: "00:00" },
   ]);
@@ -91,31 +94,44 @@ const AiGeneratorPopup = () => {
   };
 
   const handleSavePost = (post) => {
-    const [hours, minutes] = post.time.split(":").map(Number);
+    const saveWithChannel = (finalChannelId) => {
+      const [hours, minutes] = post.time.split(":").map(Number);
 
-    const calendarScheduledAt = new Date(
-      Date.UTC(
-        new Date().getFullYear(),
-        new Date().getMonth(),
-        new Date().getDate(),
-        hours || 0,
-        minutes || 0,
-        0
-      )
-    ).toISOString();
+      const calendarScheduledAt = new Date(
+        Date.UTC(
+          new Date().getFullYear(),
+          new Date().getMonth(),
+          new Date().getDate(),
+          hours || 0,
+          minutes || 0,
+          0
+        )
+      ).toISOString();
 
-    const payload = {
-      title: post.title,
-      text: post.text,
-      images: [],
-      source: "",
-      channelId,
-      publishedAt: new Date().toISOString(),
-      calendarScheduledAt,
-      summary: post.summary,
+      const payload = {
+        title: post.title,
+        text: post.text,
+        images: [],
+        source: "",
+        channelId: finalChannelId,
+        publishedAt: new Date().toISOString(),
+        calendarScheduledAt,
+        summary: post.summary,
+      };
+
+      createPostMutation(payload);
     };
 
-    createPostMutation(payload);
+    if (!channelId) {
+      changeContent("select_channel", "popup_window", {
+        onSave: (selectedChannelId) => {
+          saveWithChannel(selectedChannelId);
+        },
+      });
+      return;
+    }
+
+    saveWithChannel(channelId);
   };
 
   const addLink = () => {
@@ -198,11 +214,11 @@ const AiGeneratorPopup = () => {
             <ItemHead>
               {/* <CheckboxCircle></CheckboxCircle> */}
               <HeadTitle
-                  tape="text"
-                  placeholder={post.placeholder}
-                  value={post.title}
-                  onChange={e => handleTitleChange(post.postId, e.target.value)}
-                />
+                tape="text"
+                placeholder={post.placeholder}
+                value={post.title}
+                onChange={e => handleTitleChange(post.postId, e.target.value)}
+              />
               <p>{post.progress}</p>
             </ItemHead>
 
@@ -220,13 +236,13 @@ const AiGeneratorPopup = () => {
                 <ImagesContainer>
                   {(post.images || []).map((img, index) => (
                     <ImagePreview key={index}>
-                      <img 
-                      src={img} 
-                      alt={`preview-${index}`} 
-                      onClick={() => openLightbox({
-                        images: post.images.map(img => img),
-                        initialIndex: 0
-                      })}
+                      <img
+                        src={img}
+                        alt={`preview-${index}`}
+                        onClick={() => openLightbox({
+                          images: post.images.map(img => img),
+                          initialIndex: 0
+                        })}
                       />
                       <RemoveImageButton onClick={() => handleRemoveImage(post.postId, index)}>×</RemoveImageButton>
                     </ImagePreview>

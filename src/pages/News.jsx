@@ -11,6 +11,7 @@ import ModernLoading from "@/components/ModernLoading";
 import news_stub from "@/assets/news-stub.png";
 import dzen_icon from "@/assets/dzen-icon.svg";
 import { useLightboxStore } from "@/store/lightboxStore";
+import { useCopyNewsToChannel } from "@/lib/news/useCopyNewsToChannel";
 
 const NewsDetail = () => {
 	const { openPopup } = usePopupStore();
@@ -18,6 +19,7 @@ const NewsDetail = () => {
 	const { id } = useParams();
 	const { newsData, newsLoding } = useNews({});
 	const { news, newsIdLoading } = useNewsById(id);
+	const { mutate: copyToChannel, isLoading: copyingLoading } = useCopyNewsToChannel();
 
 	return (
 		<NewsContainer>
@@ -33,9 +35,9 @@ const NewsDetail = () => {
 								<img src={dzen_icon} alt="ava icon" />
 								<p>{news?.sourceName}</p>
 							</PostHead>
-							<NewsImgMobile 
-								src={`http://77.37.65.40:3000/${news?.images[0]}`} 
-								alt={news?.title} 
+							<NewsImgMobile
+								src={`http://77.37.65.40:3000/${news?.images[0]}`}
+								alt={news?.title}
 								onClick={() => openLightbox({
 									images: news?.images?.map(img => `http://77.37.65.40:3000/${img}`) || [news_stub],
 									initialIndex: 0
@@ -49,16 +51,29 @@ const NewsDetail = () => {
 									$bg="#336CFF"
 									$color="#fff"
 									$padding="21px 40px"
-									onClick={() => openPopup("select_channel", "popup_window", { newsId: id })}
+									onClick={() =>
+										openPopup("select_channel", "popup_window", {
+											onSave: (channelId) => {
+												copyToChannel({
+													id,
+													data: {
+														channelId,
+														publishedAt: new Date().toISOString(),
+														calendarScheduledAt: new Date().toISOString(),
+													},
+												});
+											},
+										})
+									}
 								>
 									Сохранить в канал
 								</BtnBase>
 								<PostTime><TimeIcons color="#336CFF" />{news?.readingTime}</PostTime>
 							</PostFooter>
 						</PostLeft>
-						<NewsImg 
-							src={news?.images && news?.images[0] ? `http://77.37.65.40:3000/${news?.images[0]}` : news_stub} 
-							alt={news?.title} 
+						<NewsImg
+							src={news?.images && news?.images[0] ? `http://77.37.65.40:3000/${news?.images[0]}` : news_stub}
+							alt={news?.title}
 							onClick={() => openLightbox({
 								images: news?.images?.map(img => `http://77.37.65.40:3000/${img}`) || [news_stub],
 								initialIndex: 0
@@ -70,9 +85,9 @@ const NewsDetail = () => {
 				<ModernLoading text="Загрузка новости..." />
 			)}
 			<NewsSubTitle>Другие новости</NewsSubTitle>
-			<TapeList 
-				forceHorizontal={true} 
-				padding={true} 
+			<TapeList
+				forceHorizontal={true}
+				padding={true}
 				newsData={newsData?.data || []}
 				loading={newsLoding}
 			/>

@@ -5,28 +5,20 @@ import BtnBase from "@/shared/BtnBase";
 import CustomSelect from "@/shared/CustomSelectSec";
 import CloseIcon from "@/icons/CloseIcon";
 import { useUserChannels } from "@/lib/channels/useUserChannels";
-import { useCopyNewsToChannel } from "@/lib/news/useCopyNewsToChannel";
 
-const SelectChannelsPopup = () => {
+const SelectChannelsPopup = ({onSave, loading}) => {
 	const { popup, goBack, closePopup } = usePopupStore();
 	const { userChannels } = useUserChannels();
 	const [selectedChannelId, setSelectedChannelId] = useState(null);
 
-	const { mutate: copyToChannel, isLoading: isCopying } = useCopyNewsToChannel();
 
 	const handleSave = () => {
 		if (!selectedChannelId) {
 			alert("Выберите канал");
 			return;
 		}
-		copyToChannel({
-			id: popup?.data?.newsId,
-			data: {
-				channelId: selectedChannelId,
-				publishedAt: new Date().toISOString(),
-				calendarScheduledAt: new Date().toISOString(),
-			},
-		});
+		onSave(selectedChannelId);
+
 		popup && popup?.previousPage.length > 0 ? goBack() : closePopup();
 	};
 
@@ -49,7 +41,7 @@ const SelectChannelsPopup = () => {
 				}))}
 			/>
 			<SelectChannelsButtons>
-				<BtnBase onClick={handleSave} $color="#D6DCEC" $bg="#336CFF">{isCopying ? "Сохраняем..." : "Сохранить"}</BtnBase>
+				<BtnBase onClick={handleSave} $color="#D6DCEC" $bg="#336CFF">{loading ? "Сохраняем..." : "Сохранить"}</BtnBase>
 				<BtnBase onClick={() => popup && popup?.previousPage.length > 0 ? goBack() : closePopup()} $color="#D6DCEC" $bg="#242A3A">Отменить</BtnBase>
 			</SelectChannelsButtons>
 		</div>
