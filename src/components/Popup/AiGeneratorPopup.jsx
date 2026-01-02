@@ -124,22 +124,33 @@ const AiGeneratorPopup = () => {
     }
   };
 
-  const insertEmojiAtCursor = (emoji) => {
-    const selection = window.getSelection();
-    if (!selection || selection.rangeCount === 0) return;
+  const insertEmojiAtCursor = (emoji, postId) => {
+  const el = document.getElementById(`text-${postId}`);
+  el.focus();
 
-    const range = selection.getRangeAt(0);
-    range.deleteContents();
+  const selection = window.getSelection();
+  if (!selection || selection.rangeCount === 0) return;
 
-    const textNode = document.createTextNode(emoji);
-    range.insertNode(textNode);
+  const range = selection.getRangeAt(0);
+  range.deleteContents();
 
-    range.setStartAfter(textNode);
-    range.collapse(true);
+  const textNode = document.createTextNode(emoji);
+  range.insertNode(textNode);
 
-    selection.removeAllRanges();
-    selection.addRange(range);
-  };
+  // Ставим курсор после эмоджи
+  range.setStartAfter(textNode);
+  range.collapse(true);
+
+  selection.removeAllRanges();
+  selection.addRange(range);
+
+  // Обновляем состояние текста
+  setPosts(prev =>
+    prev.map(p =>
+      p.postId === postId ? { ...p, text: el.innerHTML } : p
+    )
+  );
+};
 
   return (
     <GeneratorContainer>
@@ -170,12 +181,14 @@ const AiGeneratorPopup = () => {
 
             <ItemBody>
               <ItemText
-                contentEditable
-                suppressContentEditableWarning
-                id={`text-${post.postId}`}
-                onInput={e => handleTextChange(post.postId, e.currentTarget.innerHTML)}
-                dangerouslySetInnerHTML={{ __html: post.text }}
-              />
+  contentEditable
+  suppressContentEditableWarning
+  id={`text-${post.postId}`}
+  onInput={e => handleTextChange(post.postId, e.currentTarget.innerHTML)}
+  onClick={() => saveSelection(post.postId)}
+  onKeyUp={() => saveSelection(post.postId)}
+  dangerouslySetInnerHTML={{ __html: post.text }}
+/>
               <ItemTime>Время публикации: {post.time}</ItemTime>
             </ItemBody>
 
@@ -198,12 +211,13 @@ const AiGeneratorPopup = () => {
                     {showEmoji && (
                       <div style={{ position: "absolute", zIndex: 100 }}>
                         <EmojiPicker
-                          onEmojiClick={emojiData => {
-                            insertEmojiAtCursor(emojiData.emoji);
-                            setShowEmoji(false);
-                          }}
-                          theme="dark"
-                        />
+  onEmojiClick={emojiData => {
+    insertEmojiAtCursor(emojiData.emoji, post.postId);
+    setShowEmoji(false);
+  }}
+  theme="dark"
+  locale="ru"
+/>
                       </div>
                     )}
                   </div>
