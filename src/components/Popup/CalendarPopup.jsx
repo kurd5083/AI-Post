@@ -31,29 +31,40 @@ const CalendarPopup = () => {
   
   const normalize = (iso) => iso.replace(/\.\d{3}Z$/, 'Z');
 
-  const startDate = currentWeek[0]
-    ? normalize(
-      new Date(Date.UTC(
-        currentWeek[0].getFullYear(),
-        currentWeek[0].getMonth(),
-        currentWeek[0].getDate(),
-        0, 0, 0
-      )).toISOString()
-    )
-    : new Date().toISOString();
+  // const startDate = currentWeek[0]
+  //   ? normalize(
+  //     new Date(Date.UTC(
+  //       currentWeek[0].getFullYear(),
+  //       currentWeek[0].getMonth(),
+  //       currentWeek[0].getDate(),
+  //       0, 0, 0
+  //     )).toISOString()
+  //   )
+  //   : new Date().toISOString();
 
-  const endDate = currentWeek[6]
-    ? normalize(
-      new Date(Date.UTC(
-        currentWeek[6].getFullYear(),
-        currentWeek[6].getMonth(),
-        currentWeek[6].getDate(),
-        23, 59, 59
-      )).toISOString()
-    )
-    : new Date().toISOString();
-    console.log(startDate, endDate)
-  const { events = [] } = useCalendarEventsByRange(startDate, endDate);
+  // const endDate = currentWeek[6]
+  //   ? normalize(
+  //     new Date(Date.UTC(
+  //       currentWeek[6].getFullYear(),
+  //       currentWeek[6].getMonth(),
+  //       currentWeek[6].getDate(),
+  //       23, 59, 59
+  //     )).toISOString()
+  //   )
+  //   : new Date().toISOString();
+
+  const startDate = new Date(selectedDate);
+  startDate.setUTCHours(0, 0, 0);
+
+  const endDate = new Date(selectedDate);
+  endDate.setUTCHours(23, 59, 59);
+
+  const startISO = startDate.toISOString();
+  const endISO = endDate.toISOString();
+
+  console.log(startISO, endISO);
+
+  const { events = [] } = useCalendarEventsByRange(startISO, endISO);
   console.log(events, "events")
   const syncDate = (date) => {
     setSelectedDate(date);
@@ -94,8 +105,8 @@ events.forEach(e => {
       <CalendarWeek
         currentWeek={currentWeek}
         selectedDate={selectedDate}
-        startDate={startDate}
-        endDate={endDate}
+        startDate={currentWeek[0]}
+        endDate={currentWeek[6]}
         changeWeek={changeWeek}
         syncDate={syncDate}
       />
