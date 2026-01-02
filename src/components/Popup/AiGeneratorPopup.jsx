@@ -153,7 +153,30 @@ const AiGeneratorPopup = () => {
       )
     );
   };
+  const handleAddImage = (postId, file) => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const imageUrl = e.target.result;
+      setPosts(prev =>
+        prev.map(p =>
+          p.postId === postId
+            ? { ...p, images: [...(p.images || []), imageUrl] }
+            : p
+        )
+      );
+    };
+    reader.readAsDataURL(file);
+  };
 
+  const handleRemoveImage = (postId, index) => {
+    setPosts(prev =>
+      prev.map(p =>
+        p.postId === postId
+          ? { ...p, images: p.images.filter((_, i) => i !== index) }
+          : p
+      )
+    );
+  };
   return (
     <GeneratorContainer>
       <GeneratorHead>
@@ -191,7 +214,25 @@ const AiGeneratorPopup = () => {
                 onClick={() => saveSelection(post.postId)}
                 onKeyUp={() => saveSelection(post.postId)}
               />
+              <ImagesContainer>
+    <input
+      type="file"
+      accept="image/*"
+      style={{ display: "none" }}
+      id={`file-input-${post.postId}`}
+      onChange={e => {
+        if (e.target.files[0]) handleAddImage(post.postId, e.target.files[0]);
+        e.target.value = ""; // сброс после выбора
+      }}
+    />
 
+    {(post.images || []).map((img, index) => (
+      <ImagePreview key={index}>
+        <img src={img} alt={`preview-${index}`} />
+        <RemoveImageButton onClick={() => handleRemoveImage(post.postId, index)}>×</RemoveImageButton>
+      </ImagePreview>
+    ))}
+  </ImagesContainer>
               <ItemTime>Время публикации: {post.time}</ItemTime>
             </ItemBody>
 
@@ -203,7 +244,23 @@ const AiGeneratorPopup = () => {
                 </ItemAI>
 
                 <ItemActionsAdd>
-                  <img src={paper} alt="paper icon" onClick={() => alert("Загрузка изображения")} />
+                  <input
+                    type="file"
+                    accept="image/*"
+                    style={{ display: "none" }}
+                    id={`file-input-${post.postId}`}
+                    onChange={e => {
+                      if (e.target.files[0]) handleAddImage(post.postId, e.target.files[0]);
+                      e.target.value = ""; 
+                    }}
+                  />
+
+                  <img
+                    src={paper}
+                    alt="paper icon"
+                    style={{ cursor: "pointer" }}
+                    onClick={() => document.getElementById(`file-input-${post.postId}`).click()}
+                  />
 
                   <div style={{ position: "relative" }}>
                     <img
@@ -420,7 +477,35 @@ const ItemText = styled.div`
     min-height: 120px;
   }
 `;
+const ImagePreview = styled.div`
+  position: relative;
+  width: 48px;
+  height: 48px;
+  border-radius: 8px;
+  overflow: hidden;
 
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+`;
+
+const RemoveImageButton = styled.button`
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: red;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-size: 10px;
+  line-height: 16px;
+  padding: 0;
+`;
 const ItemTime = styled.p`
   font-size: 14px;
   color: #6a7080;
