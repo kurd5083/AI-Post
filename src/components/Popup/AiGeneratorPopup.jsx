@@ -125,9 +125,10 @@ const AiGeneratorPopup = () => {
   };
 
   const insertEmojiAtCursor = (emoji) => {
-    if (!selectionRange || activePostId === null) return;
+    const selection = window.getSelection();
+    if (!selection || selection.rangeCount === 0) return;
 
-    const range = selectionRange;
+    const range = selection.getRangeAt(0);
     range.deleteContents();
 
     const textNode = document.createTextNode(emoji);
@@ -136,12 +137,8 @@ const AiGeneratorPopup = () => {
     range.setStartAfter(textNode);
     range.collapse(true);
 
-    const selection = window.getSelection();
     selection.removeAllRanges();
     selection.addRange(range);
-
-    const el = document.getElementById(`text-${activePostId}`);
-    handleTextChange(activePostId, el.innerHTML);
   };
 
   return (
@@ -176,12 +173,7 @@ const AiGeneratorPopup = () => {
                 contentEditable
                 suppressContentEditableWarning
                 id={`text-${post.postId}`}
-                onInput={e => {
-                  handleTextChange(post.postId, e.currentTarget.innerHTML);
-                  saveSelection(post.postId);
-                }}
-                onClick={() => saveSelection(post.postId)}
-                onKeyUp={() => saveSelection(post.postId)}
+                onInput={e => handleTextChange(post.postId, e.currentTarget.innerHTML)}
                 dangerouslySetInnerHTML={{ __html: post.text }}
               />
               <ItemTime>Время публикации: {post.time}</ItemTime>
@@ -210,6 +202,7 @@ const AiGeneratorPopup = () => {
                             insertEmojiAtCursor(emojiData.emoji);
                             setShowEmoji(false);
                           }}
+                          theme="dark"
                         />
                       </div>
                     )}
