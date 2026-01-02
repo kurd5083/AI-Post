@@ -15,7 +15,7 @@ const Tape = () => {
   const [filters, setFilters] = useState({
     // isProcessed: "false",
     // isPublished: "false",
-    topic: "спорт"
+    topic: "спорт",
     page: '1',
     limit: '20',
     stopWords: 'путин',
