@@ -27,7 +27,7 @@ const AiGeneratorPopup = () => {
   const telegramId = popup?.data?.telegramId;
 
   const [posts, setPosts] = useState([
-    { postId: Date.now(), placeholder: "Пост 1", title: "", progress: "0 / 1024", text: "", time: "00:00" },
+    { postId: Date.now(), placeholder: "Пост 1", title: "", progress: "0 / 1024", text: "", summary: "",  time: "00:00" },
   ]);
   const [selectedPost, setSelectedPost] = useState(posts[0]);
   const [collapsed, setCollapsed] = useState(false);
@@ -56,6 +56,7 @@ const AiGeneratorPopup = () => {
       title: "",
       progress: "0 / 1024",
       text: "",
+      summary: "", 
       time: "00:00",
     };
     setPosts([newPost, ...posts]);
@@ -73,7 +74,9 @@ const AiGeneratorPopup = () => {
   };
 
   const handleTextChange = (postId, newText) => {
-    setPosts(prev => prev.map(p => p.postId === postId ? { ...p, text: newText } : p));
+   setPosts(prev => prev.map(p => 
+    p.postId === postId ? { ...p, text: newText, summary: newText.slice(0, 150) } : p
+  ));
   };
 
   const handleSaveTime = (newTime) => {
@@ -103,7 +106,7 @@ const AiGeneratorPopup = () => {
       channelId,
       publishedAt: new Date().toISOString(),
       calendarScheduledAt,
-      summary: post.text.slice(0, 150),
+      summary: post.summary,
     };
 
     createPostMutation(payload);
@@ -125,41 +128,30 @@ const AiGeneratorPopup = () => {
   };
 
   const insertEmojiAtCursor = (emoji, postId) => {
-  const el = document.getElementById(`text-${postId}`);
-  el.focus();
+    const el = document.getElementById(`text-${postId}`);
+    el.focus();
 
-  const selection = window.getSelection();
+    const selection = window.getSelection();
+    if (!selection || selection.rangeCount === 0) return;
 
-  if (!selection) return;
+    const range = selection.getRangeAt(0);
+    range.deleteContents();
 
-  let range = selection.rangeCount > 0 ? selection.getRangeAt(0) : null;
+    const textNode = document.createTextNode(emoji);
+    range.insertNode(textNode);
 
-  // Если курсора нет или он не внутри нашего div — ставим в конец
-  if (!range || !el.contains(range.commonAncestorContainer)) {
-    range = document.createRange();
-    range.selectNodeContents(el);
-    range.collapse(false); // курсор в конец
-  }
+    range.setStartAfter(textNode);
+    range.collapse(true);
 
-  // Вставляем эмоджи
-  range.deleteContents();
-  const textNode = document.createTextNode(emoji);
-  range.insertNode(textNode);
+    selection.removeAllRanges();
+    selection.addRange(range);
 
-  // Ставим курсор после эмоджи
-  range.setStartAfter(textNode);
-  range.collapse(true);
-
-  selection.removeAllRanges();
-  selection.addRange(range);
-
-  // Обновляем состояние текста, чтобы React знал про изменения
-  setPosts(prev =>
-    prev.map(p =>
-      p.postId === postId ? { ...p, text: el.innerHTML } : p
-    )
-  );
-};
+    setPosts(prev =>
+      prev.map(p =>
+        p.postId === postId ? { ...p, text: el.innerHTML } : p
+      )
+    );
+  };
 
   return (
     <GeneratorContainer>
@@ -190,18 +182,14 @@ const AiGeneratorPopup = () => {
 
             <ItemBody>
               <ItemText
-  contentEditable
-  suppressContentEditableWarning
-  id={`text-${post.postId}`}
-  ref={el => {
-    if (!el) return;
-    // обновляем HTML только если он отличается, чтобы не сбивать курсор
-    if (el.innerHTML !== post.text) el.innerHTML = post.text;
-  }}
-  onInput={e => handleTextChange(post.postId, e.currentTarget.innerHTML)}
-  onClick={() => saveSelection(post.postId)}
-  onKeyUp={() => saveSelection(post.postId)}
-/>
+                contentEditable
+                suppressContentEditableWarning
+                id={`text-${post.postId}`}
+                ref={el => el && el.innerHTML !== post.text && (el.innerHTML = post.text)}
+                onInput={e => handleTextChange(post.postId, e.currentTarget.innerHTML)}
+                onClick={() => saveSelection(post.postId)}
+                onKeyUp={() => saveSelection(post.postId)}
+              />
 
               <ItemTime>Время публикации: {post.time}</ItemTime>
             </ItemBody>
