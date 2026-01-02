@@ -23,14 +23,14 @@ import { usePopupStore } from "@/store/popupStore";
 import { formatText } from "@/lib/formatText";
 
 const AiGeneratorPopup = () => {
-  const generatePostId = () => Math.floor(Math.random() * 2_000_000_000); 
+  const generatePostId = () => Math.floor(Math.random() * 2_000_000_000);
 
   const { popup } = usePopupStore();
   const channelId = popup?.data?.channelId;
   const telegramId = popup?.data?.telegramId;
 
   const [posts, setPosts] = useState([
-    { postId: generatePostId(), placeholder: "Пост 1", title: "", progress: "0 / 1024", text: "", summary: "",  time: "00:00" },
+    { postId: generatePostId(), placeholder: "Пост 1", title: "", progress: "0 / 1024", text: "", summary: "", time: "00:00" },
   ]);
   const [selectedPost, setSelectedPost] = useState(posts[0]);
   const [collapsed, setCollapsed] = useState(false);
@@ -59,7 +59,7 @@ const AiGeneratorPopup = () => {
       title: "",
       progress: "0 / 1024",
       text: "",
-      summary: "", 
+      summary: "",
       time: "00:00",
     };
     setPosts([newPost, ...posts]);
@@ -77,9 +77,9 @@ const AiGeneratorPopup = () => {
   };
 
   const handleTextChange = (postId, newText) => {
-   setPosts(prev => prev.map(p => 
-    p.postId === postId ? { ...p, text: newText, summary: newText.slice(0, 150) } : p
-  ));
+    setPosts(prev => prev.map(p =>
+      p.postId === postId ? { ...p, text: newText, summary: newText.slice(0, 150) } : p
+    ));
   };
 
   const handleSaveTime = (newTime) => {
@@ -215,24 +215,24 @@ const AiGeneratorPopup = () => {
                 onKeyUp={() => saveSelection(post.postId)}
               />
               <ImagesContainer>
-    <input
-      type="file"
-      accept="image/*"
-      style={{ display: "none" }}
-      id={`file-input-${post.postId}`}
-      onChange={e => {
-        if (e.target.files[0]) handleAddImage(post.postId, e.target.files[0]);
-        e.target.value = ""; // сброс после выбора
-      }}
-    />
+                <input
+                  type="file"
+                  accept="image/*"
+                  style={{ display: "none" }}
+                  id={`file-input-${post.postId}`}
+                  onChange={e => {
+                    if (e.target.files[0]) handleAddImage(post.postId, e.target.files[0]);
+                    e.target.value = "";
+                  }}
+                />
 
-    {(post.images || []).map((img, index) => (
-      <ImagePreview key={index}>
-        <img src={img} alt={`preview-${index}`} />
-        <RemoveImageButton onClick={() => handleRemoveImage(post.postId, index)}>×</RemoveImageButton>
-      </ImagePreview>
-    ))}
-  </ImagesContainer>
+                {(post.images || []).map((img, index) => (
+                  <ImagePreview key={index}>
+                    <img src={img} alt={`preview-${index}`} />
+                    <RemoveImageButton onClick={() => handleRemoveImage(post.postId, index)}>×</RemoveImageButton>
+                  </ImagePreview>
+                ))}
+              </ImagesContainer>
               <ItemTime>Время публикации: {post.time}</ItemTime>
             </ItemBody>
 
@@ -251,7 +251,7 @@ const AiGeneratorPopup = () => {
                     id={`file-input-${post.postId}`}
                     onChange={e => {
                       if (e.target.files[0]) handleAddImage(post.postId, e.target.files[0]);
-                      e.target.value = ""; 
+                      e.target.value = "";
                     }}
                   />
 
@@ -477,6 +477,13 @@ const ItemText = styled.div`
     min-height: 120px;
   }
 `;
+const ImagesContainer = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 12px 0;
+`;
+
 const ImagePreview = styled.div`
   position: relative;
   width: 48px;
