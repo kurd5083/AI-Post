@@ -16,9 +16,14 @@ export const CalendarHeader = ({ selectedDate, syncDate }) => {
         placeholder="День"
         options={dayOptions}
         value={selectedDate.getDate()}
-        onChange={(o) =>
-          syncDate(new Date(selectedDate.getFullYear(), selectedDate.getMonth(), o.value))
-        }
+        onChange={(o) => {
+          const newDate = new Date(Date.UTC(
+            selectedDate.getFullYear(),
+            selectedDate.getMonth(),
+            o.value 
+          ));
+          syncDate(newDate);
+        }}
         width="165px"
         fs="22px"
       />
@@ -27,9 +32,14 @@ export const CalendarHeader = ({ selectedDate, syncDate }) => {
         placeholder="Месяц"
         options={MONTH_OPTIONS}
         value={selectedDate.getMonth()}
-        onChange={(o) =>
-          syncDate(new Date(selectedDate.getFullYear(), o.value, selectedDate.getDate()))
-        }
+        onChange={(o) => {
+          const newDate = new Date(Date.UTC(
+            o.value,
+            selectedDate.getMonth(),
+            selectedDate.getDate()
+          ));
+          syncDate(newDate);
+        }}
         width="180px"
         fs="22px"
       />
@@ -38,9 +48,14 @@ export const CalendarHeader = ({ selectedDate, syncDate }) => {
         placeholder="Год"
         options={YEAR_OPTIONS}
         value={selectedDate.getFullYear()}
-        onChange={(o) =>
-          syncDate(new Date(o.value, selectedDate.getMonth(), selectedDate.getDate()))
-        }
+        onChange={(o) => {
+          const newDate = new Date(Date.UTC(
+            o.value,
+            selectedDate.getMonth(),
+            selectedDate.getDate()
+          ));
+          syncDate(newDate);
+        }}
         width="165px"
         fs="22px"
       />
