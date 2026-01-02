@@ -125,32 +125,32 @@ const AiGeneratorPopup = () => {
   };
 
   const insertEmojiAtCursor = (emoji, postId) => {
-  const el = document.getElementById(`text-${postId}`);
-  el.focus();
+    const el = document.getElementById(`text-${postId}`);
+    el.focus();
 
-  const selection = window.getSelection();
-  if (!selection || selection.rangeCount === 0) return;
+    const selection = window.getSelection();
+    if (!selection || selection.rangeCount === 0) return;
 
-  const range = selection.getRangeAt(0);
-  range.deleteContents();
+    const range = selection.getRangeAt(0);
+    range.deleteContents();
 
-  const textNode = document.createTextNode(emoji);
-  range.insertNode(textNode);
+    const textNode = document.createTextNode(emoji);
+    range.insertNode(textNode);
 
-  // Ставим курсор после эмоджи
-  range.setStartAfter(textNode);
-  range.collapse(true);
+    // Ставим курсор после эмоджи
+    range.setStartAfter(textNode);
+    range.collapse(true);
 
-  selection.removeAllRanges();
-  selection.addRange(range);
+    selection.removeAllRanges();
+    selection.addRange(range);
 
-  // Обновляем состояние текста
-  setPosts(prev =>
-    prev.map(p =>
-      p.postId === postId ? { ...p, text: el.innerHTML } : p
-    )
-  );
-};
+    // Обновляем состояние текста
+    setPosts(prev =>
+      prev.map(p =>
+        p.postId === postId ? { ...p, text: el.innerHTML } : p
+      )
+    );
+  };
 
   return (
     <GeneratorContainer>
@@ -184,11 +184,12 @@ const AiGeneratorPopup = () => {
   contentEditable
   suppressContentEditableWarning
   id={`text-${post.postId}`}
+  ref={el => el && el.innerHTML !== post.text && (el.innerHTML = post.text)}
   onInput={e => handleTextChange(post.postId, e.currentTarget.innerHTML)}
   onClick={() => saveSelection(post.postId)}
   onKeyUp={() => saveSelection(post.postId)}
-  dangerouslySetInnerHTML={{ __html: post.text }}
 />
+
               <ItemTime>Время публикации: {post.time}</ItemTime>
             </ItemBody>
 
@@ -211,13 +212,13 @@ const AiGeneratorPopup = () => {
                     {showEmoji && (
                       <div style={{ position: "absolute", zIndex: 100 }}>
                         <EmojiPicker
-  onEmojiClick={emojiData => {
-    insertEmojiAtCursor(emojiData.emoji, post.postId);
-    setShowEmoji(false);
-  }}
-  theme="dark"
-  locale="ru"
-/>
+                          onEmojiClick={emojiData => {
+                            insertEmojiAtCursor(emojiData.emoji, post.postId);
+                            setShowEmoji(false);
+                          }}
+                          theme="dark"
+                          locale="ru"
+                        />
                       </div>
                     )}
                   </div>
