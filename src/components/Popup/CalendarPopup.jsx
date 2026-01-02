@@ -69,6 +69,7 @@ const CalendarPopup = () => {
   };
 
   const postsForDay = useMemo(() => {
+
     const selectedKey = dayKeyUTC(selectedDate);
     return events.filter((e) => {
       const d = safeDate(e.scheduledAt);
@@ -76,8 +77,13 @@ const CalendarPopup = () => {
       return dayKeyUTC(d) === selectedKey && e.channelId === channelId;
     });
   }, [events, selectedDate]);
-
+  
   console.log(postsForDay, 'postsForDay')
+      console.log("selectedDate:", selectedDate);
+console.log("selectedKey:", dayKeyUTC(selectedDate));
+events.forEach(e => {
+  console.log("event", e.id, dayKeyUTC(new Date(e.scheduledAt)), e.channelId);
+})
   return (
     <CalendarContent>
       <CalendarHeader
