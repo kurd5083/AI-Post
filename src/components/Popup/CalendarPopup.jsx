@@ -1,26 +1,14 @@
 import styled from "styled-components";
-import { useState, useEffect, useMemo  } from "react";
-import { usePopupStore } from "@/store/popupStore";
+import { useState, useEffect } from "react";
 import { useCalendarEventsByRange } from "@/lib/calendar/useCalendarEventsByRange";
 import { generateWeek } from "@/lib/generateWeek";
 import CalendarHeader from "@/components/Popup/Сalendar/CalendarHeader";
 import CalendarWeek from "@/components/Popup/Сalendar/CalendarWeek";
 import CalendarFooter from "@/components/Popup/Сalendar/CalendarFooter";
 import CalendarPostsList from "@/components/Popup/Сalendar/CalendarPostsList";
-
-const safeDate = (value) => {
-  const d = new Date(value);
-  return isNaN(d.getTime()) ? null : d;
-};
-
-const dayKeyUTC = (d) =>
-  `${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2,'0')}-${String(d.getUTCDate()).padStart(2,'0')}`;
-
+import ModernLoading from "@/components/ModernLoading";
 
 const CalendarPopup = () => {
-  const { popup } = usePopupStore();
-  const channelId = popup?.data?.channelId;
-
   const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [currentWeek, setCurrentWeek] = useState([]);
@@ -28,44 +16,18 @@ const CalendarPopup = () => {
   useEffect(() => {
     setCurrentWeek(generateWeek(currentDate));
   }, [currentDate]);
-  
-  // const normalize = (iso) => iso.replace(/\.\d{3}Z$/, 'Z');
-
-  // const startDate = currentWeek[0]
-  //   ? normalize(
-  //     new Date(Date.UTC(
-  //       currentWeek[0].getFullYear(),
-  //       currentWeek[0].getMonth(),
-  //       currentWeek[0].getDate(),
-  //       0, 0, 0
-  //     )).toISOString()
-  //   )
-  //   : new Date().toISOString();
-
-  // const endDate = currentWeek[6]
-  //   ? normalize(
-  //     new Date(Date.UTC(
-  //       currentWeek[6].getFullYear(),
-  //       currentWeek[6].getMonth(),
-  //       currentWeek[6].getDate(),
-  //       23, 59, 59
-  //     )).toISOString()
-  //   )
-  //   : new Date().toISOString();
 
   const startDate = new Date(selectedDate);
   startDate.setUTCHours(0, 0, 0, 0);
 
   const endDate = new Date(selectedDate);
   endDate.setUTCHours(23, 59, 59, 999);
-  console.log(selectedDate, 'selectedDate')
+
   const startISO = startDate.toISOString();
   const endISO = endDate.toISOString();
 
-  console.log(startISO, endISO);
+  const { events = [], eventsLoading } = useCalendarEventsByRange(startISO, endISO);
 
-  const { events = [] } = useCalendarEventsByRange(startISO, endISO);
-  console.log(events, "events")
   const syncDate = (date) => {
     setSelectedDate(date);
     if (date < currentWeek[0] || date > currentWeek[6]) {
@@ -79,22 +41,6 @@ const CalendarPopup = () => {
     setCurrentDate(d);
   };
 
-  // const postsForDay = useMemo(() => {
-
-  //   const selectedKey = dayKeyUTC(selectedDate);
-  //   return events.filter((e) => {
-  //     const d = safeDate(e.scheduledAt);
-  //     if (!d) return false;
-  //     return dayKeyUTC(d) === selectedKey && e.channelId === channelId;
-  //   });
-  // }, [events, selectedDate]);
-  
-  // console.log(postsForDay, 'postsForDay')
-      console.log("selectedDate:", selectedDate);
-console.log("selectedKey:", dayKeyUTC(selectedDate));
-events.forEach(e => {
-  console.log("event", e.id, dayKeyUTC(new Date(e.scheduledAt)), e.channelId);
-})
   return (
     <CalendarContent>
       <CalendarHeader
@@ -113,7 +59,11 @@ events.forEach(e => {
         events={events}
         selectedDate={selectedDate}
       />
-      <CalendarPostsList posts={events} />
+      {eventsLoading ? (
+        <ModernLoading text="Загрузка постов..." />
+      ) : (
+        <CalendarPostsList posts={events} />
+      )}
     </CalendarContent>
   );
 };
