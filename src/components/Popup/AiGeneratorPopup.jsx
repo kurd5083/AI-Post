@@ -478,15 +478,17 @@ const ItemText = styled.div`
     min-height: 120px;
   }
 `;
-const ImagesContainer = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin: 12px 0;
-`;
 
 const BodyRight = styled.div`
   display: flex;
+  flex-direction: column;
+  gap: 14px;
+`;
+const ImagesContainer = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px;
 `;
 
 const ImagePreview = styled.div`
