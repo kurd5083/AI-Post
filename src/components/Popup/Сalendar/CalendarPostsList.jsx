@@ -15,10 +15,6 @@ const CalendarPostsList = ({ posts }) => {
     return `${hours}:${minutes}`;
   };
 
-  if (!posts || posts.length === 0) {
-    return <EmptyText>Нет запланированных постов</EmptyText>;
-  }
-
   return (
     <ListContainer>
       {posts.map((post) => (

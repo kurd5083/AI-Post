@@ -13,7 +13,7 @@ import crossed from "@/assets/ai-generator/crossed.svg";
 import link from "@/assets/ai-generator/link.svg";
 
 import BtnBase from "@/shared/BtnBase";
-import CheckboxCircle from "@/shared/CheckboxCircle";
+// import CheckboxCircle from "@/shared/CheckboxCircle";
 import AiGeneratorIcon from "@/icons/AiGeneratorIcon";
 import useFadeOnScroll from "@/lib/useFadeOnScroll";
 import Preview from "@/components/Preview";
@@ -196,14 +196,13 @@ const AiGeneratorPopup = () => {
         {posts.map(post => (
           <ListItem key={post.postId}>
             <ItemHead>
-              <CheckboxCircle>
-                <HeadTitle
+              {/* <CheckboxCircle></CheckboxCircle> */}
+              <HeadTitle
                   tape="text"
                   placeholder={post.placeholder}
                   value={post.title}
                   onChange={e => handleTitleChange(post.postId, e.target.value)}
                 />
-              </CheckboxCircle>
               <p>{post.progress}</p>
             </ItemHead>
 
@@ -451,7 +450,7 @@ const ItemBody = styled.div`
   display: flex;
   gap: 20px;
   justify-content: space-between;
-  align-items: flex-end;
+  align-items: flex-start;
   margin: 24px 0;
 `
 const ItemText = styled.div`
