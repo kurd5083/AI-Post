@@ -20,7 +20,7 @@ const Tape = () => {
     limit: '10',
     stopWords: 'спам,реклама,вирус',
     language: 'ru',
-    priorityWords: "спорт",
+    priorityWords: "путин",
   });
   const { newsData, newsLoding } = useNews(filters);
   console.log(newsData)
