@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
+import EmojiPicker from "emoji-picker-react";
+
 import create from "@/assets/create.svg";
-import BtnBase from "@/shared/BtnBase";
 import hide from "@/assets/hide.svg";
 import paper from "@/assets/ai-generator/paper.svg";
 import smiley from "@/assets/ai-generator/smiley.svg";
@@ -10,14 +11,15 @@ import italics from "@/assets/ai-generator/italics.svg";
 import underlined from "@/assets/ai-generator/underlined.svg";
 import crossed from "@/assets/ai-generator/crossed.svg";
 import link from "@/assets/ai-generator/link.svg";
+
+import BtnBase from "@/shared/BtnBase";
 import CheckboxCircle from "@/shared/CheckboxCircle";
 import AiGeneratorIcon from "@/icons/AiGeneratorIcon";
 import useFadeOnScroll from "@/lib/useFadeOnScroll";
 import Preview from "@/components/Preview";
 import ChangeTimePopup from "@/components/PopupWindow/ChangeTimePopup";
 import { useCreatePost } from "@/lib/posts/useCreatePost";
-import { usePopupStore } from "@/store/popupStore"
-import EmojiPicker from "emoji-picker-react";
+import { usePopupStore } from "@/store/popupStore";
 
 const AiGeneratorPopup = () => {
   const { popup } = usePopupStore();
@@ -31,8 +33,21 @@ const AiGeneratorPopup = () => {
   const [collapsed, setCollapsed] = useState(false);
   const [popupPostId, setPopupPostId] = useState(null);
   const [showEmoji, setShowEmoji] = useState(false);
+  const [selectionRange, setSelectionRange] = useState(null);
+  const [activePostId, setActivePostId] = useState(null);
 
   const { fadeVisible, ref } = useFadeOnScroll(20);
+  const { mutate: createPostMutation } = useCreatePost();
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth > 1400) setCollapsed(false);
+    };
+
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   const handleAddPost = () => {
     const newPost = {
@@ -47,41 +62,24 @@ const AiGeneratorPopup = () => {
   };
 
   const handleRemovePost = (postId) => {
-    setPosts((prev) => prev.filter((p) => p.postId !== postId));
+    setPosts(prev => prev.filter(p => p.postId !== postId));
     if (selectedPost?.postId === postId) {
-      setSelectedPost(posts.find((p) => p.postId !== postId) || null);
+      setSelectedPost(posts.find(p => p.postId !== postId) || null);
     }
   };
 
   const handleTitleChange = (postId, newTitle) => {
-    setPosts((prev) => prev.map((p) => (p.postId === postId ? { ...p, title: newTitle } : p)));
+    setPosts(prev => prev.map(p => p.postId === postId ? { ...p, title: newTitle } : p));
   };
 
   const handleTextChange = (postId, newText) => {
-    setPosts((prev) => prev.map((p) => (p.postId === postId ? { ...p, text: newText } : p)));
+    setPosts(prev => prev.map(p => p.postId === postId ? { ...p, text: newText } : p));
   };
 
   const handleSaveTime = (newTime) => {
-    setPosts((prev) =>
-      prev.map((p) => (p.postId === popupPostId ? { ...p, time: newTime } : p))
-    );
+    setPosts(prev => prev.map(p => p.postId === popupPostId ? { ...p, time: newTime } : p));
     setPopupPostId(null);
   };
-
-  useEffect(() => {
-    const handleResize = () => {
-      if (window.innerWidth > 1400) {
-        setCollapsed(false);
-      }
-    };
-
-    handleResize();
-    window.addEventListener("resize", handleResize);
-
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
-
-  const { mutate: createPostMutation } = useCreatePost();
 
   const handleSavePost = (post) => {
     const [hours, minutes] = post.time.split(":").map(Number);
@@ -111,26 +109,40 @@ const AiGeneratorPopup = () => {
     createPostMutation(payload);
   };
 
-
-  const addEmoji = (postId, emoji) => {
-    setPosts((prev) =>
-      prev.map((p) =>
-        p.postId === postId ? { ...p, text: p.text + emoji } : p
-      )
-    );
-  };
-
-  const formatText = (command) => {
-    document.execCommand(command, false, null);
-  };
+  const formatText = (command) => document.execCommand(command, false, null);
 
   const addLink = () => {
     const url = prompt("Введите ссылку");
-    if (url) {
-      document.execCommand("createLink", false, url);
+    if (url) document.execCommand("createLink", false, url);
+  };
+
+  const saveSelection = (postId) => {
+    const selection = window.getSelection();
+    if (selection && selection.rangeCount > 0) {
+      setSelectionRange(selection.getRangeAt(0));
+      setActivePostId(postId);
     }
   };
 
+  const insertEmojiAtCursor = (emoji) => {
+    if (!selectionRange || activePostId === null) return;
+
+    const range = selectionRange;
+    range.deleteContents();
+
+    const textNode = document.createTextNode(emoji);
+    range.insertNode(textNode);
+
+    range.setStartAfter(textNode);
+    range.collapse(true);
+
+    const selection = window.getSelection();
+    selection.removeAllRanges();
+    selection.addRange(range);
+
+    const el = document.getElementById(`text-${activePostId}`);
+    handleTextChange(activePostId, el.innerHTML);
+  };
 
   return (
     <GeneratorContainer>
@@ -139,12 +151,13 @@ const AiGeneratorPopup = () => {
           <AiGeneratorIcon width={16} height={16} color="#336CFF" />
           Создать пост
         </h2>
-        <BtnBase $padding="21px 24px" onClick={() => handleAddPost()}>
+        <BtnBase $padding="21px 24px" onClick={handleAddPost}>
           + Добавить пост
         </BtnBase>
       </GeneratorHead>
+
       <GeneratorList $fadeVisible={fadeVisible} ref={ref}>
-        {posts.map((post) => (
+        {posts.map(post => (
           <ListItem key={post.postId}>
             <ItemHead>
               <CheckboxCircle>
@@ -152,65 +165,61 @@ const AiGeneratorPopup = () => {
                   tape="text"
                   placeholder={post.placeholder}
                   value={post.title}
-                  onChange={(e) => handleTitleChange(post.postId, e.target.value)}
+                  onChange={e => handleTitleChange(post.postId, e.target.value)}
                 />
               </CheckboxCircle>
               <p>{post.progress}</p>
             </ItemHead>
+
             <ItemBody>
               <ItemText
                 contentEditable
                 suppressContentEditableWarning
                 id={`text-${post.postId}`}
-                onInput={(e) =>
-                  handleTextChange(post.postId, e.currentTarget.innerHTML)
-                }
+                onInput={e => {
+                  handleTextChange(post.postId, e.currentTarget.innerHTML);
+                  saveSelection(post.postId);
+                }}
+                onClick={() => saveSelection(post.postId)}
+                onKeyUp={() => saveSelection(post.postId)}
                 dangerouslySetInnerHTML={{ __html: post.text }}
               />
               <ItemTime>Время публикации: {post.time}</ItemTime>
             </ItemBody>
+
             <ItemActions>
               <ActionsLeft>
                 <ItemAI>
                   <p><AiGeneratorIcon color="#336CFF" />Написать с AI</p>
                   <p><img src={create} alt="create icon" />Создать фото с AI</p>
                 </ItemAI>
-                <ItemActionsAdd>
-                  <img
-                    src={paper}
-                    alt="paper icon"
-                    onClick={() => alert("Загрузка изображения")}
-                  />
-                 <img
-                  src={smiley}
-                  onClick={() => setShowEmoji((p) => !p)}
-                />
 
-                  <img
-                    src={fat}
-                    alt="fat icon"
-                    onClick={() => formatText("bold")}
-                  />
-                  <img
-                    src={italics}
-                    alt="italics icon"
-                    onClick={() => formatText("italic")}
-                  />
-                  <img
-                    src={underlined}
-                    alt="underlined icon"
-                    onClick={() => formatText("underline")}
-                  />
-                  <img
-                    src={crossed}
-                    alt="crossed icon"
-                    onClick={() => formatText("strikeThrough")}
-                  />
-                  <img
-                    src={link}
-                    alt="link icon"
-                    onClick={() => addLink(post.postId)}
-                  />
+                <ItemActionsAdd>
+                  <img src={paper} alt="paper icon" onClick={() => alert("Загрузка изображения")} />
+
+                  <div style={{ position: "relative" }}>
+                    <img
+                      src={smiley}
+                      alt="emoji"
+                      onClick={() => setShowEmoji(p => !p)}
+                    />
+                    {showEmoji && (
+                      <div style={{ position: "absolute", zIndex: 100 }}>
+                        <EmojiPicker
+                          onEmojiClick={emojiData => {
+                            insertEmojiAtCursor(emojiData.emoji);
+                            setShowEmoji(false);
+                          }}
+                        />
+                      </div>
+                    )}
+                  </div>
+
+                  <img src={fat} alt="fat icon" onClick={() => formatText("bold")} />
+                  <img src={italics} alt="italics icon" onClick={() => formatText("italic")} />
+                  <img src={underlined} alt="underlined icon" onClick={() => formatText("underline")} />
+                  <img src={crossed} alt="crossed icon" onClick={() => formatText("strikeThrough")} />
+                  <img src={link} alt="link icon" onClick={() => addLink(post.postId)} />
                 </ItemActionsAdd>
               </ActionsLeft>
 
@@ -218,44 +227,38 @@ const AiGeneratorPopup = () => {
                 <HideButton onClick={() => setSelectedPost(post)}>
                   <img src={hide} alt="hide icon" width={24} height={17} />
                 </HideButton>
+
                 <ButtonsMain>
                   <ButtonsMainTop>
-                    <BtnBase
-                      $padding="21px 24px"
-                      $color="#EF6284"
-                      $bg="#241E2D"
-                      onClick={() => handleRemovePost(post.postId)}
-                    >Отменить</BtnBase>
-                    <BtnBase
-                      $padding="21px 24px"
-                      $border $bg="transporent"
-                      $color="#6A7080"
-                      onClick={() => setPopupPostId(post.postId)}
-                    >Изменить время</BtnBase>
-                    <BtnBase
-                      $padding="21px 24px"
-                      $color="#336CFF"
-                      $bg="#161F37"
-                      onClick={() => handleSavePost(post)}
-                    >
+                    <BtnBase $padding="21px 24px" $color="#EF6284" $bg="#241E2D" onClick={() => handleRemovePost(post.postId)}>
+                      Отменить
+                    </BtnBase>
+                    <BtnBase $padding="21px 24px" $border $bg="transporent" $color="#6A7080" onClick={() => setPopupPostId(post.postId)}>
+                      Изменить время
+                    </BtnBase>
+                    <BtnBase $padding="21px 24px" $color="#336CFF" $bg="#161F37" onClick={() => handleSavePost(post)}>
                       Сохранить
                     </BtnBase>
                   </ButtonsMainTop>
-                  <BtnBase $padding="21px 24px" $border $width="100%" $bg="transporent" $color="#6A7080">Опубликовать сейчас</BtnBase>
+                  <BtnBase $padding="21px 24px" $border $width="100%" $bg="transporent" $color="#6A7080">
+                    Опубликовать сейчас
+                  </BtnBase>
                 </ButtonsMain>
               </ButtonsAll>
             </ItemActions>
           </ListItem>
         ))}
       </GeneratorList>
+
       <PreviewContainer>
         <Preview collapsed={collapsed} onChange={() => setCollapsed(!collapsed)} testResult={selectedPost} telegramId={telegramId} />
       </PreviewContainer>
+
       {popupPostId && (
         <ChangeTimePopup
           onSave={handleSaveTime}
           onClose={() => setPopupPostId(null)}
-          initialTime={posts.find((p) => p.postId === popupPostId)?.time || "00:00"}
+          initialTime={posts.find(p => p.postId === popupPostId)?.time || "00:00"}
         />
       )}
     </GeneratorContainer>
