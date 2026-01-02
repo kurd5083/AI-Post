@@ -21,15 +21,10 @@ const LinkGenerationMyPopup = () => {
     removeLink(linkId);
   };
 
-  const handleCopy = async () => {
-    try {
-      await navigator.clipboard.writeText(link.inviteLink);
-      setCopied(true);
-
-      setTimeout(() => setCopied(false), 2000);
-    } catch (err) {
-      console.error("Не удалось скопировать текст:", err);
-    }
+  const handleCopy = () => {
+    navigator.clipboard.writeText(link.inviteLink);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
   };
   
   return (
