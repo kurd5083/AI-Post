@@ -392,6 +392,7 @@ const HeadTitle = styled.input`
 `
 const ItemBody = styled.div`
   display: flex;
+  gap: 20px;
   justify-content: space-between;
   align-items: flex-end;
   margin: 24px 0;
@@ -401,9 +402,12 @@ const ItemText = styled.textarea`
   font-weight: 700;
   color: #6A7080;
   background: transparent;
+  width: 100%;
   border: none;
   outline: none;
   resize: none;
+  height: 80px;
+  scrollbar-width: none;
 
   @media(max-width: 1400px) {
       height: 120px;
@@ -438,10 +442,11 @@ const ItemAI = styled.div`
     font-weight: 700;
     font-size: 14px;
     &:first-child {
-      color: #FF7F48;
+      color: #336CFF;
+
     }
     &:last-child {
-      color: #336CFF;
+      color: #FF7F48;
     }
   }
 `
