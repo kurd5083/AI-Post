@@ -12,6 +12,7 @@ import news_stub from "@/assets/news-stub.png";
 import ModernLoading from "@/components/ModernLoading";
 import { usePopupStore } from "@/store/popupStore"
 import { useLightboxStore } from "@/store/lightboxStore";
+import { useCopyNewsToChannel } from "@/lib/news/useCopyNewsToChannel";
 
 const TapeList = ({ forceHorizontal = false, padding, newsData, loding }) => {
   const { popup, changeContent, openPopup } = usePopupStore();
@@ -21,14 +22,41 @@ const TapeList = ({ forceHorizontal = false, padding, newsData, loding }) => {
   const { isSwipe } = useSwipeAllowed(1400);
 
   const direction = forceHorizontal ? "horizontal" : (isSwipe ? "horizontal" : "vertical");
-  
+
+  const { mutate: copyToChannel, isLoading: copyingLoading } = useCopyNewsToChannel();
+
   const handleClick = (id) => {
     if (popup && popup?.status) {
-      changeContent("select_channel", "popup_window", { newsId: id });
+      changeContent("select_channel", "popup_window", {
+        onSave: (channelId) => {
+          copyToChannel({
+            id,
+            data: {
+              channelId,
+              publishedAt: new Date().toISOString(),
+              calendarScheduledAt: new Date().toISOString(),
+            },
+          });
+        },
+        loading: copyingLoading
+      });
     } else {
-      openPopup("select_channel", "popup_window", { newsId: id });
+      openPopup("select_channel", "popup_window", {
+        onSave: (channelId) => {
+          copyToChannel({
+            id,
+            data: {
+              channelId,
+              publishedAt: new Date().toISOString(),
+              calendarScheduledAt: new Date().toISOString(),
+            },
+          });
+        },
+        loading: copyingLoading
+      });
     }
   };
+
 
   return (
     <>
@@ -57,7 +85,7 @@ const TapeList = ({ forceHorizontal = false, padding, newsData, loding }) => {
                   <p>{news.sourceName}</p>
                 </TapeItemHead>
                 <Link to={`/news/${news.id}`}>
-                    <TapeItemText>{news.title}</TapeItemText>
+                  <TapeItemText>{news.title}</TapeItemText>
                 </Link>
                 <TapeItemAction onClick={() => handleClick(news.id)}>
                   Сохранить в канал
@@ -67,10 +95,10 @@ const TapeList = ({ forceHorizontal = false, padding, newsData, loding }) => {
                   <span>{news.readingTime}</span>
                 </TapeTime>
               </TapeItemContent>
-              <TapePostImg 
-                src={news.images && news.images[0] ? `http://77.37.65.40:3000/${news.images[0]}` : news_stub} 
-                alt="post img" 
-                $forceHorizontal={forceHorizontal} 
+              <TapePostImg
+                src={news.images && news.images[0] ? `http://77.37.65.40:3000/${news.images[0]}` : news_stub}
+                alt="post img"
+                $forceHorizontal={forceHorizontal}
                 onClick={() => openLightbox({
                   images: news?.images?.map(img => `http://77.37.65.40:3000/${img}`) || [news_stub],
                   initialIndex: 0

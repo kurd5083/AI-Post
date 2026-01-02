@@ -63,6 +63,7 @@ const NewsDetail = () => {
 													},
 												});
 											},
+											loading: copyingLoading
 										})
 									}
 								>

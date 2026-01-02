@@ -6,8 +6,11 @@ import CustomSelect from "@/shared/CustomSelectSec";
 import CloseIcon from "@/icons/CloseIcon";
 import { useUserChannels } from "@/lib/channels/useUserChannels";
 
-const SelectChannelsPopup = ({onSave, loading}) => {
+const SelectChannelsPopup = () => {
 	const { popup, goBack, closePopup } = usePopupStore();
+	const onSave = popup?.data?.onSave;
+	const loading = popup?.data?.loading;
+
 	const { userChannels } = useUserChannels();
 	const [selectedChannelId, setSelectedChannelId] = useState(null);
 
