@@ -4,12 +4,12 @@ import create from "@/assets/create.svg";
 import BtnBase from "@/shared/BtnBase";
 import hide from "@/assets/hide.svg";
 import paper from "@/assets/ai-generator/paper.svg";
-import img from "@/assets/ai-generator/img.svg";
-import comment from "@/assets/ai-generator/comment.svg";
-import map from "@/assets/ai-generator/map.svg";
-import text from "@/assets/ai-generator/text.svg";
-import setting from "@/assets/ai-generator/setting.svg";
-import ellipsis from "@/assets/ai-generator/ellipsis.svg";
+import smiley from "@/assets/ai-generator/smiley.svg";
+import fat from "@/assets/ai-generator/fat.svg";
+import italics from "@/assets/ai-generator/italics.svg";
+import underlined from "@/assets/ai-generator/underlined.svg";
+import crossed from "@/assets/ai-generator/crossed.svg";
+import link from "@/assets/ai-generator/link.svg";
 import CheckboxCircle from "@/shared/CheckboxCircle";
 import AiGeneratorIcon from "@/icons/AiGeneratorIcon";
 import useFadeOnScroll from "@/lib/useFadeOnScroll";
@@ -79,8 +79,8 @@ const AiGeneratorPopup = () => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  const {mutate: createPostMutation} = useCreatePost();
-  
+  const { mutate: createPostMutation } = useCreatePost();
+
   const handleSavePost = (post) => {
     const [hours, minutes] = post.time.split(":").map(Number);
 
@@ -108,7 +108,46 @@ const AiGeneratorPopup = () => {
 
     createPostMutation(payload);
   };
-  
+
+  const wrapSelectedText = (postId, before, after = before) => {
+    setPosts((prev) =>
+      prev.map((p) => {
+        if (p.postId !== postId) return p;
+
+        const textarea = document.getElementById(`text-${postId}`);
+        if (!textarea) return p;
+
+        const start = textarea.selectionStart;
+        const end = textarea.selectionEnd;
+
+        const selected = p.text.slice(start, end);
+        const newText =
+          p.text.slice(0, start) +
+          before +
+          selected +
+          after +
+          p.text.slice(end);
+
+        return { ...p, text: newText };
+      })
+    );
+  };
+
+  const addEmoji = (postId, emoji) => {
+    setPosts((prev) =>
+      prev.map((p) =>
+        p.postId === postId ? { ...p, text: p.text + emoji } : p
+      )
+    );
+  };
+
+  const addLink = (postId) => {
+    const url = prompt("Введите ссылку");
+    if (!url) return;
+
+    wrapSelectedText(postId, "[", `](${url})`);
+  };
+
   return (
     <GeneratorContainer>
       <GeneratorHead>
@@ -121,7 +160,7 @@ const AiGeneratorPopup = () => {
         </BtnBase>
       </GeneratorHead>
       <GeneratorList $fadeVisible={fadeVisible} ref={ref}>
-       {posts.map((post) => (
+        {posts.map((post) => (
           <ListItem key={post.postId}>
             <ItemHead>
               <CheckboxCircle>
@@ -136,6 +175,7 @@ const AiGeneratorPopup = () => {
             </ItemHead>
             <ItemBody>
               <ItemText
+                id={`text-${post.postId}`}
                 placeholder="Текст публикации..."
                 type="text"
                 value={post.text}
@@ -146,18 +186,45 @@ const AiGeneratorPopup = () => {
             <ItemActions>
               <ActionsLeft>
                 <ItemAI>
-                  <p><img src={create} alt="create icon" />Создать фото с AI</p>
                   <p><AiGeneratorIcon color="#336CFF" />Написать с AI</p>
+                  <p><img src={create} alt="create icon" />Создать фото с AI</p>
                 </ItemAI>
                 <ItemActionsAdd>
-                  <AiGeneratorIcon width={24} height={24} color="#336CFF" />
-                  <img src={paper} alt="paper icon" width={14} height={16} />
-                  <img src={img} alt="img icon" width={16} height={16} />
-                  <img src={comment} alt="comment icon" width={16} height={16} />
-                  <img src={map} alt="map icon" width={18} height={20} />
-                  <img src={text} alt="text icon" width={18} height={20} />
-                  <img src={setting} alt="setting icon" width={18} height={20} />
-                  <img src={ellipsis} alt="ellipsis icon" width={18} height={4} />
+                  <img
+                    src={paper}
+                    alt="paper icon"
+                    onClick={() => alert("Загрузка изображения")}
+                  />
+                  <img
+                    src={smiley}
+                    alt="smiley icon"
+                    onClick={() => addEmoji(post.postId, "😊")}
+                  />
+                  <img
+                    src={fat}
+                    alt="fat icon"
+                    onClick={() => wrapSelectedText(post.postId, "**")}
+                  />
+                  <img
+                    src={italics}
+                    alt="italics icon"
+                    onClick={() => wrapSelectedText(post.postId, "_")}
+                  />
+                  <img
+                    src={underlined}
+                    alt="underlined icon"
+                    onClick={() => wrapSelectedText(post.postId, "<u>", "</u>")}
+                  />
+                  <img
+                    src={crossed}
+                    alt="crossed icon"
+                    onClick={() => wrapSelectedText(post.postId, "~~")}
+                  />
+                  <img
+                    src={link}
+                    alt="link icon"
+                    onClick={() => addLink(post.postId)}
+                  />
                 </ItemActionsAdd>
               </ActionsLeft>
 
@@ -196,7 +263,7 @@ const AiGeneratorPopup = () => {
         ))}
       </GeneratorList>
       <PreviewContainer>
-        <Preview collapsed={collapsed} onChange={() => setCollapsed(!collapsed)} testResult={selectedPost} telegramId={telegramId}/>
+        <Preview collapsed={collapsed} onChange={() => setCollapsed(!collapsed)} testResult={selectedPost} telegramId={telegramId} />
       </PreviewContainer>
       {popupPostId && (
         <ChangeTimePopup
