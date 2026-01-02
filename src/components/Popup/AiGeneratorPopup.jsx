@@ -35,7 +35,7 @@ const AiGeneratorPopup = () => {
   const channelId = popup?.data?.channelId;
   const telegramId = user?.telegramId;
   const [posts, setPosts] = useState([
-    { postId: generatePostId(), placeholder: "Пост 1", title: "", progress: "0 / 1024", text: "", summary: "", time: "00:00" },
+    { postId: generatePostId(), placeholder: "Пост 1", title: "", progress: "0 / 1024", text: "", summary: "", time: "00:00", images: [] },
   ]);
   const [selectedPost, setSelectedPost] = useState(posts[0]);
   const [collapsed, setCollapsed] = useState(false);
@@ -66,6 +66,7 @@ const AiGeneratorPopup = () => {
       text: "",
       summary: "",
       time: "00:00",
+      images: []
     };
     setPosts([newPost, ...posts]);
   };
@@ -110,7 +111,7 @@ const AiGeneratorPopup = () => {
       const payload = {
         title: post.title,
         text: post.text,
-        images: [],
+        images: post.images || [],
         source: "",
         channelId: finalChannelId,
         publishedAt: new Date().toISOString(),
