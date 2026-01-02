@@ -125,32 +125,41 @@ const AiGeneratorPopup = () => {
   };
 
   const insertEmojiAtCursor = (emoji, postId) => {
-    const el = document.getElementById(`text-${postId}`);
-    el.focus();
+  const el = document.getElementById(`text-${postId}`);
+  el.focus();
 
-    const selection = window.getSelection();
-    if (!selection || selection.rangeCount === 0) return;
+  const selection = window.getSelection();
 
-    const range = selection.getRangeAt(0);
-    range.deleteContents();
+  if (!selection) return;
 
-    const textNode = document.createTextNode(emoji);
-    range.insertNode(textNode);
+  let range = selection.rangeCount > 0 ? selection.getRangeAt(0) : null;
 
-    // Ставим курсор после эмоджи
-    range.setStartAfter(textNode);
-    range.collapse(true);
+  // Если курсора нет или он не внутри нашего div — ставим в конец
+  if (!range || !el.contains(range.commonAncestorContainer)) {
+    range = document.createRange();
+    range.selectNodeContents(el);
+    range.collapse(false); // курсор в конец
+  }
 
-    selection.removeAllRanges();
-    selection.addRange(range);
+  // Вставляем эмоджи
+  range.deleteContents();
+  const textNode = document.createTextNode(emoji);
+  range.insertNode(textNode);
 
-    // Обновляем состояние текста
-    setPosts(prev =>
-      prev.map(p =>
-        p.postId === postId ? { ...p, text: el.innerHTML } : p
-      )
-    );
-  };
+  // Ставим курсор после эмоджи
+  range.setStartAfter(textNode);
+  range.collapse(true);
+
+  selection.removeAllRanges();
+  selection.addRange(range);
+
+  // Обновляем состояние текста, чтобы React знал про изменения
+  setPosts(prev =>
+    prev.map(p =>
+      p.postId === postId ? { ...p, text: el.innerHTML } : p
+    )
+  );
+};
 
   return (
     <GeneratorContainer>
@@ -184,7 +193,11 @@ const AiGeneratorPopup = () => {
   contentEditable
   suppressContentEditableWarning
   id={`text-${post.postId}`}
-  ref={el => el && el.innerHTML !== post.text && (el.innerHTML = post.text)}
+  ref={el => {
+    if (!el) return;
+    // обновляем HTML только если он отличается, чтобы не сбивать курсор
+    if (el.innerHTML !== post.text) el.innerHTML = post.text;
+  }}
   onInput={e => handleTextChange(post.postId, e.currentTarget.innerHTML)}
   onClick={() => saveSelection(post.postId)}
   onKeyUp={() => saveSelection(post.postId)}
