@@ -53,7 +53,7 @@ const CalendarPopup = () => {
     : new Date().toISOString();
     console.log(startDate, endDate)
   const { events = [] } = useCalendarEventsByRange(startDate, endDate);
-
+  console.log(events, "events")
   const syncDate = (date) => {
     setSelectedDate(date);
     if (date < currentWeek[0] || date > currentWeek[6]) {
@@ -76,7 +76,7 @@ const CalendarPopup = () => {
     });
 
   }, [events, selectedDate]);
-
+  console.log(postsForDay, 'postsForDay')
   return (
     <CalendarContent>
       <CalendarHeader

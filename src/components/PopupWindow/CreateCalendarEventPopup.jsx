@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import styled from "styled-components";
 import BtnBase from "@/shared/BtnBase";
 import { usePopupStore } from "@/store/popupStore";
@@ -14,27 +14,16 @@ const CreateCalendarEventPopup = () => {
   const { mutate: createEvent, isPending } = useCreateCalendarEvent();
   const { posts, loadingPosts } = usePostsByChannel(channelId);
 
-  const [title, setTitle] = useState("Scheduled Post");
   const [description, setDescription] = useState("Post description");
   const [selectedPostId, setSelectedPostId] = useState(null);
-  const [duration, setDuration] = useState(60);
-  const [priority, setPriority] = useState(0);
   const [scheduledAt, setScheduledAt] = useState('');
 
   const handleCreate = () => {
     const data = {
       channelId,
-      eventType: "POST_SCHEDULED",
-      title,
       description,
       scheduledAt,
-      timezone: "UTC",
-      duration,
-      priority,
       postId: selectedPostId,
-      scheduleId: 1,
-      intervalId: 1,
-      metadata: { source: "manual" },
     };
 
     createEvent(data, {
@@ -53,8 +42,6 @@ const CreateCalendarEventPopup = () => {
         </CloseButton>
       </PopupHead>
 
-      <InputLabel>Название</InputLabel>
-      <PopupInput value={title} onChange={(e) => setTitle(e.target.value)} />
 
       <InputLabel>Описание</InputLabel>
       <PopupInput value={description} onChange={(e) => setDescription(e.target.value)} />
@@ -64,20 +51,6 @@ const CreateCalendarEventPopup = () => {
         type="datetime-local"
         value={scheduledAt.slice(0, 16)}
         onChange={(e) => setScheduledAt(new Date(e.target.value).toISOString())}
-      />
-
-      <InputLabel>Длительность (минуты)</InputLabel>
-      <PopupInput
-        type="number"
-        value={duration}
-        onChange={(e) => setDuration(Number(e.target.value))}
-      />
-
-      <InputLabel>Приоритет</InputLabel>
-      <PopupInput
-        type="number"
-        value={priority}
-        onChange={(e) => setPriority(Number(e.target.value))}
       />
 
       <InputLabel>Выбрать пост</InputLabel>
