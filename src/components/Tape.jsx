@@ -29,11 +29,11 @@ const Tape = () => {
   const [stopWords, setStopWords] = useState([]);
   const [priorityWord, setPriorityWord] = useState("");
   const [priorityWords, setPriorityWords] = useState([]);
-  const [topic, setTopic] = useState(filters.topic || "");
+  // const [topic, setTopic] = useState(filters.topic || "");
   const [language, setLanguage] = useState(filters.language || "");
-  const [isProcessed, setIsProcessed] = useState(filters.isProcessed || false);
-  const [isPublished, setIsPublished] = useState(filters.isPublished || false);
-  const [search, setSearch] = useState(filters.search || "");
+  // const [isProcessed, setIsProcessed] = useState(filters.isProcessed || false);
+  // const [isPublished, setIsPublished] = useState(filters.isPublished || false);
+  // const [search, setSearch] = useState(filters.search || "");
 
   const handleFilterClick = () => {
     setIsFilterOpen(!isFilterOpen);
@@ -67,7 +67,7 @@ const Tape = () => {
 
       {isFilterOpen && (
         <FilterWrapper>
-          <FilterTitle>Тема</FilterTitle>
+          {/* <FilterTitle>Тема</FilterTitle>
           <CustomSelectSec
             options={[{ value: "test", label: "test" }]}
             value={topic}
@@ -75,7 +75,7 @@ const Tape = () => {
             width="340px"
             fs="16px"
             padding="24px"
-          />
+          /> */}
           <FilterTitle>ЯЗЫК</FilterTitle>
           <CustomSelectSec
             options={[{ value: "ru", label: "Русский" }, { value: "en", label: "Английский" }]}
@@ -85,14 +85,14 @@ const Tape = () => {
             fs="16px"
             padding="24px"
           />
-          <FilterKeyCheckbox>
+          {/* <FilterKeyCheckbox>
             <Checkbox checked={isProcessed} onChange={() => setIsProcessed(!isProcessed)}>
               <CheckboxText>Обработано</CheckboxText>
             </Checkbox>
             <Checkbox checked={isPublished} onChange={() => setIsPublished(!isPublished)}>
               <CheckboxText>Опубликовано</CheckboxText>
             </Checkbox>
-          </FilterKeyCheckbox>
+          </FilterKeyCheckbox> */}
           <FilterKey>
             <InputPlus
               title="Стоп-слова"
@@ -151,12 +151,12 @@ const Tape = () => {
             )}
             
           </FilterKey>
-            <FilterInput
-              type="text"
-              placeholder="Поиск по заголовку и содержимому"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-            />
+          {/* <FilterInput
+            type="text"
+            placeholder="Поиск по заголовку и содержимому"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          /> */}
           <BtnBase
             $color="#D6DCEC"
             $bg="#336CFF"
@@ -326,38 +326,38 @@ const FilterTitle = styled.h3`
 const FilterKey = styled.div`
   margin-top: 40px;
 `
-const FilterKeyCheckbox = styled.div`
-  display: flex;
-  flex-direction: column;
-  margin-top: 40px;
-  gap: 20px;
-`
-const CheckboxText = styled.p`
-  display: flex;
-  align-items: center;
-  font-weight: 600;
-`
+// const FilterKeyCheckbox = styled.div`
+//   display: flex;
+//   flex-direction: column;
+//   margin-top: 40px;
+//   gap: 20px;
+// `
+// const CheckboxText = styled.p`
+//   display: flex;
+//   align-items: center;
+//   font-weight: 600;
+// `
 const EmptyText = styled.p`
   font-size: 16px;
   font-weight: 600;
   color: #6A7080;
   margin-top: 32px;
 `;
-const FilterInput = styled.input`
-  margin-top: 40px; 
-  background-color: transparent;
-  color: #D6DCEC;
-  font-size: 16px;
-  font-weight: 700;
-  border: none;
-  max-width: 340px;
-  width: 100%;
-  border-bottom: 2px solid rgb(46, 57, 84);
-  padding-bottom: 16px;
+// const FilterInput = styled.input`
+//   margin-top: 40px; 
+//   background-color: transparent;
+//   color: #D6DCEC;
+//   font-size: 16px;
+//   font-weight: 700;
+//   border: none;
+//   max-width: 340px;
+//   width: 100%;
+//   border-bottom: 2px solid rgb(46, 57, 84);
+//   padding-bottom: 16px;
 
-  &::placeholder {
-    color: #6A7080;
-  }
-`;
+//   &::placeholder {
+//     color: #6A7080;
+//   }
+// `;
 
 export default Tape;
