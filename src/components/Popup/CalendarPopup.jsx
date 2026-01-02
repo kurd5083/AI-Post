@@ -54,10 +54,10 @@ const CalendarPopup = () => {
   //   : new Date().toISOString();
 
   const startDate = new Date(selectedDate);
-  startDate.setUTCHours(0, 0, 0);
+  startDate.setUTCHours(0, 0, 0, 0);
 
   const endDate = new Date(selectedDate);
-  endDate.setUTCHours(23, 59, 59);
+  endDate.setUTCHours(23, 59, 59, 999);
   console.log(selectedDate, 'selectedDate')
   const startISO = startDate.toISOString();
   const endISO = endDate.toISOString();
@@ -79,17 +79,17 @@ const CalendarPopup = () => {
     setCurrentDate(d);
   };
 
-  const postsForDay = useMemo(() => {
+  // const postsForDay = useMemo(() => {
 
-    const selectedKey = dayKeyUTC(selectedDate);
-    return events.filter((e) => {
-      const d = safeDate(e.scheduledAt);
-      if (!d) return false;
-      return dayKeyUTC(d) === selectedKey && e.channelId === channelId;
-    });
-  }, [events, selectedDate]);
+  //   const selectedKey = dayKeyUTC(selectedDate);
+  //   return events.filter((e) => {
+  //     const d = safeDate(e.scheduledAt);
+  //     if (!d) return false;
+  //     return dayKeyUTC(d) === selectedKey && e.channelId === channelId;
+  //   });
+  // }, [events, selectedDate]);
   
-  console.log(postsForDay, 'postsForDay')
+  // console.log(postsForDay, 'postsForDay')
       console.log("selectedDate:", selectedDate);
 console.log("selectedKey:", dayKeyUTC(selectedDate));
 events.forEach(e => {
@@ -113,7 +113,7 @@ events.forEach(e => {
         events={events}
         selectedDate={selectedDate}
       />
-      <CalendarPostsList posts={postsForDay} />
+      <CalendarPostsList posts={events} />
     </CalendarContent>
   );
 };
