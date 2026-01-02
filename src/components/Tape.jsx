@@ -1,6 +1,6 @@
 import { useState } from "react";
 import styled from "styled-components";
-import Checkbox from "@/shared/Checkbox";
+// import Checkbox from "@/shared/Checkbox";
 import fire from "@/assets/tape/fire.svg";
 import filter from "@/assets/tape/filter.svg";
 import TapeList from "@/components/TapeList";
@@ -15,7 +15,7 @@ const Tape = () => {
   const [filters, setFilters] = useState({
     // isProcessed: "false",
     // isPublished: "false",
-    topic: "спорт",
+    // topic: "спорт",
     page: '1',
     limit: '20',
     stopWords: 'путин',
