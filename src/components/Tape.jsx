@@ -17,8 +17,8 @@ const Tape = () => {
     // isPublished: "false",
     // topic: "спорт",
     page: '1',
-    limit: '20',
-    stopWords: 'путин',
+    limit: '10',
+    stopWords: 'спам,реклама.вирус',
     language: 'ru',
     priorityWords: "спорт",
   });
