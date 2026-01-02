@@ -30,7 +30,12 @@ const CalendarPostsList = ({ posts }) => {
               <MetaItem><strong>Запланировано:</strong> {new Date(post.scheduledAt).toLocaleString()}</MetaItem>
             </Meta>
           </Content>
-          <ButtonEdit>
+          <ButtonEdit
+            onClick={(e) => {
+              e.stopPropagation();
+              changeContent("create_calendar_event", "popup_window");
+            }}
+          >
             <img src={edit} alt="edit icon" width={22} height={16} />
           </ButtonEdit>
           <DeleteButton

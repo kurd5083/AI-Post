@@ -249,8 +249,11 @@ const PublicationsList = styled.div`
 
 const EmptyState = styled.p`
   text-align: center;
-  font-size: 14px;
-  color: #6a7080;
+  color: #6A7080;
+  padding: 48px 0;
+  font-weight: 600;
+  background-color: #1C2438;
+  border-radius: 16px;
 `;
 
 const PaginationWrapper = styled.div`
