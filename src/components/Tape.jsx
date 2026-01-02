@@ -18,7 +18,7 @@ const Tape = () => {
     // topic: "спорт",
     page: '1',
     limit: '10',
-    stopWords: 'спам,реклама.вирус',
+    stopWords: 'спам,реклама,вирус',
     language: 'ru',
     priorityWords: "спорт",
   });
