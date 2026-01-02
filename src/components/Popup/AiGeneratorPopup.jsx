@@ -383,22 +383,31 @@ const ItemBody = styled.div`
   align-items: flex-end;
   margin: 24px 0;
 `
-const ItemText = styled.textarea`
+const ItemText = styled.div`
   font-size: 16px;
-  font-weight: 700;
+  font-weight: 400;
   color: #6A7080;
   background: transparent;
   width: 100%;
   border: none;
   outline: none;
-  resize: none;
-  height: 80px;
-  scrollbar-width: none;
+  min-height: 80px;
+  max-height: 300px;
+  overflow-y: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
 
-  @media(max-width: 1400px) {
-      height: 120px;
+  &[contenteditable="true"]:empty:before {
+    content: "Текст публикации...";
+    color: #6A7080;
+    opacity: 0.6;
   }
-`
+
+  @media (max-width: 1400px) {
+    min-height: 120px;
+  }
+`;
+
 const ItemTime = styled.p`
   font-size: 14px;
   color: #6a7080;
