@@ -33,8 +33,7 @@ const AiGeneratorPopup = () => {
 
   const { popup, changeContent } = usePopupStore();
   const channelId = popup?.data?.channelId;
-  const telegramId = user.telegramId;
-  console.log(telegramId, 'telegramId')
+  const telegramId = user?.telegramId;
   const [posts, setPosts] = useState([
     { postId: generatePostId(), placeholder: "Пост 1", title: "", progress: "0 / 1024", text: "", summary: "", time: "00:00" },
   ]);
