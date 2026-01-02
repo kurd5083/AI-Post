@@ -214,26 +214,17 @@ const AiGeneratorPopup = () => {
                 onClick={() => saveSelection(post.postId)}
                 onKeyUp={() => saveSelection(post.postId)}
               />
-              <ImagesContainer>
-                <input
-                  type="file"
-                  accept="image/*"
-                  style={{ display: "none" }}
-                  id={`file-input-${post.postId}`}
-                  onChange={e => {
-                    if (e.target.files[0]) handleAddImage(post.postId, e.target.files[0]);
-                    e.target.value = "";
-                  }}
-                />
-
-                {(post.images || []).map((img, index) => (
-                  <ImagePreview key={index}>
-                    <img src={img} alt={`preview-${index}`} />
-                    <RemoveImageButton onClick={() => handleRemoveImage(post.postId, index)}>×</RemoveImageButton>
-                  </ImagePreview>
-                ))}
-              </ImagesContainer>
-              <ItemTime>Время публикации: {post.time}</ItemTime>
+              <BodyRight>
+                <ImagesContainer>
+                  {(post.images || []).map((img, index) => (
+                    <ImagePreview key={index}>
+                      <img src={img} alt={`preview-${index}`} />
+                      <RemoveImageButton onClick={() => handleRemoveImage(post.postId, index)}>×</RemoveImageButton>
+                    </ImagePreview>
+                  ))}
+                </ImagesContainer>
+                <ItemTime>Время публикации: {post.time}</ItemTime>
+              </BodyRight>
             </ItemBody>
 
             <ItemActions>
@@ -484,22 +475,27 @@ const ImagesContainer = styled.div`
   margin: 12px 0;
 `;
 
+const BodyRight = styled.div`
+  display: flex;
+`;
+
 const ImagePreview = styled.div`
   position: relative;
   width: 48px;
   height: 48px;
-  border-radius: 8px;
-  overflow: hidden;
 
   img {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    border-radius: 8px;
   }
 `;
-
 const RemoveImageButton = styled.button`
   position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   top: -6px;
   right: -6px;
   width: 16px;
@@ -507,11 +503,8 @@ const RemoveImageButton = styled.button`
   border-radius: 50%;
   background: red;
   color: white;
-  border: none;
-  cursor: pointer;
-  font-size: 10px;
-  line-height: 16px;
-  padding: 0;
+  font-size: 18px;
+  font-weight: 600;
 `;
 const ItemTime = styled.p`
   font-size: 14px;
