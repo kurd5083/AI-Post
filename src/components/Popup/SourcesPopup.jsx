@@ -7,6 +7,7 @@ import BlocksItems from "@/shared/BlocksItems";
 import { useChannelById } from "@/lib/channels/useChannelById";
 import { useAddChannelSource } from "@/lib/channels/sources/useAddChannelSource";
 import { useDeleteChannelSource } from "@/lib/channels/sources/useDeleteChannelSource";
+import { v4 as uuidv4 } from "uuid";
 
 const SourcesPopup = () => {
   const { popup, changeContent } = usePopupStore()
@@ -40,7 +41,7 @@ const SourcesPopup = () => {
           onChange={setUrl}
           onSubmit={() => {
             if (!url.trim()) return;
-            setLocalSources((prev) => [...prev, { id: `temp-${Date.now()}`, name: url },]);
+            setLocalSources((prev) => [...prev, { id: `temp-${uuidv4()}`, name: url },]);
             addSource({ channelId, url });
             setUrl("");
           }}

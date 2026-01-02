@@ -21,6 +21,7 @@ import ChangeTimePopup from "@/components/PopupWindow/ChangeTimePopup";
 import { useCreatePost } from "@/lib/posts/useCreatePost";
 import { usePopupStore } from "@/store/popupStore";
 import { formatText } from "@/lib/formatText";
+import { v4 as uuidv4 } from "uuid";
 
 const AiGeneratorPopup = () => {
   const { popup } = usePopupStore();
@@ -28,7 +29,7 @@ const AiGeneratorPopup = () => {
   const telegramId = popup?.data?.telegramId;
 
   const [posts, setPosts] = useState([
-    { postId: Date.now(), placeholder: "Пост 1", title: "", progress: "0 / 1024", text: "", summary: "",  time: "00:00" },
+    { postId: uuidv4(), placeholder: "Пост 1", title: "", progress: "0 / 1024", text: "", summary: "",  time: "00:00" },
   ]);
   const [selectedPost, setSelectedPost] = useState(posts[0]);
   const [collapsed, setCollapsed] = useState(false);
@@ -52,7 +53,7 @@ const AiGeneratorPopup = () => {
 
   const handleAddPost = () => {
     const newPost = {
-      postId: Date.now(),
+      postId: uuidv4(),
       placeholder: `Новый пост ${posts.length + 1}`,
       title: "",
       progress: "0 / 1024",
