@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { moveChannelToFolder } from "@/api/channels/moveChannelToFolder";
+import { moveChannelToFolder } from "@/api/channels/folder/moveChannelToFolder";
 import { usePopupStore } from "@/store/popupStore";
 
 export const useMoveChannelToFolder = () => {
