@@ -24,11 +24,10 @@ const CalendarPostsList = ({ posts }) => {
             <Title>{post.title}</Title>
             <Description>{post.description}</Description>
             <Meta>
-              <MetaItem><strong>Channel ID:</strong> {post.channelId}</MetaItem>
-              <MetaItem><strong>Status:</strong> {post.status}</MetaItem>
-              <MetaItem><strong>Event Type:</strong> {post.eventType}</MetaItem>
-              <MetaItem><strong>Scheduled:</strong> {new Date(post.scheduledAt).toLocaleString()}</MetaItem>
-              <MetaItem><strong>Duration:</strong> {post.duration} мин</MetaItem>
+              <MetaItem><strong>Канал:</strong> {post.channelId}</MetaItem>
+              <MetaItem><strong>Статус</strong> {post.status}</MetaItem>
+              <MetaItem><strong>Тип события:</strong> {post.eventType}</MetaItem>
+              <MetaItem><strong>Запланировано:</strong> {new Date(post.scheduledAt).toLocaleString()}</MetaItem>
             </Meta>
           </Content>
           <ButtonEdit>

@@ -14,7 +14,7 @@ const CreateCalendarEventPopup = () => {
   const { mutate: createEvent, isPending } = useCreateCalendarEvent();
   const { posts, loadingPosts } = usePostsByChannel(channelId);
 
-  const [description, setDescription] = useState("Post description");
+  const [description, setDescription] = useState("");
   const [selectedPostId, setSelectedPostId] = useState(null);
   const [scheduledAt, setScheduledAt] = useState('');
 
