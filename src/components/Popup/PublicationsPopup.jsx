@@ -254,6 +254,7 @@ const EmptyState = styled.p`
   font-weight: 600;
   background-color: #1C2438;
   border-radius: 16px;
+  grid-column: 1 / span 3;
 `;
 
 const PaginationWrapper = styled.div`

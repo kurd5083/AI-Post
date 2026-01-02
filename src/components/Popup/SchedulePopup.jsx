@@ -108,7 +108,7 @@ const SchedulePopup = () => {
               minutes={currentTime.minutes}
               onChange={(h, m) => setCurrentTime({ hours: h, minutes: m })}
             />
-            <ScheduleBtn onClick={handleAddTime}>
+            <ScheduleBtn  onClick={handleAddTime}>
               <PlusIcon color="#FFF980" />
             </ScheduleBtn>
           </ScheduleInputContainer>
@@ -227,6 +227,8 @@ const ScheduleDays = styled.div`
     font-size: 16px;
     font-weight: 700;
     width: 120px;
+    display: flex;
+    align-items: center;
   }
 `;
 const ScheduleDaysBlock = styled.div`
