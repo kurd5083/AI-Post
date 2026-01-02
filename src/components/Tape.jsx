@@ -12,16 +12,7 @@ import { useNews } from "@/lib/news/useNews";
 
 const Tape = () => {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
-  const [filters, setFilters] = useState({
-    // isProcessed: "false",
-    // isPublished: "false",
-    // topic: "спорт",
-    page: '1',
-    limit: '10',
-    stopWords: 'спам,реклама,вирус',
-    language: 'ru',
-    priorityWords: "путин",
-  });
+  const [filters, setFilters] = useState({});
   const { newsData, newsLoding } = useNews(filters);
   console.log(newsData)
 
@@ -43,11 +34,9 @@ const Tape = () => {
     setFilters({
       stopWords: stopWords.join(","),
       priorityWords: priorityWords.join(","),
-      topic,
       language,
-      isProcessed,
-      isPublished,
-      search,
+      page: '1',
+      limit: '10',
     });
     setIsFilterOpen(false);
   };
