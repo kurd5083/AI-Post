@@ -9,39 +9,62 @@ import { usePostsByChannel } from "@/lib/posts/usePostsByChannel";
 
 const CreateCalendarEventPopup = () => {
   const { goBack, popup } = usePopupStore();
-  const channelId = popup?.data?.channelId;
 
-  const { mutate: createEvent, isPending } = useCreateCalendarEvent();
+  const channelId = popup?.data?.channelId;
+  const selectedDate = popup?.data?.selectedDate;
+  const event = popup?.data?.event; 
+
+  const isEdit = Boolean(event);
+
+  const { mutate: createEvent, isPending: creating } = useCreateCalendarEvent();
+  const { mutate: updateEvent, isPending: updating } = useUpdateCalendarEvent();
+
   const { posts, loadingPosts } = usePostsByChannel(channelId);
 
   const [description, setDescription] = useState("");
   const [selectedPostId, setSelectedPostId] = useState(null);
   const [scheduledAt, setScheduledAt] = useState('');
 
-  const handleCreate = () => {
-    const data = {
-      channelId,
+  useEffect(() => {
+    if (isEdit) {
+      setDescription(event.description || "");
+      setSelectedPostId(event.postId || null);
+      setScheduledAt(event.scheduledAt);
+    } else if (selectedDate) {
+      setScheduledAt(new Date(selectedDate).toISOString());
+    }
+  }, [event, selectedDate, isEdit]);
+
+  const handleSave = () => {
+    const payload = {
       description,
       scheduledAt,
       postId: selectedPostId,
     };
 
-    createEvent(data, {
-      onSuccess: () => {
-        goBack();
-      },
-    });
+    if (isEdit) {
+      updateEvent(
+        { id: event.id, payload },
+        { onSuccess: goBack }
+      );
+    } else {
+      createEvent(
+        { channelId, ...payload },
+        { onSuccess: goBack }
+      );
+    }
   };
+
+  const isPending = creating || updating;
 
   return (
     <div>
       <PopupHead>
-        <HeadTitle>Создать событие</HeadTitle>
+        <HeadTitle>{isEdit ? "Редактировать событие" : "Создать событие"}</HeadTitle>
         <CloseButton onClick={() => goBack()}>
           <CloseIcon color="#336CFF" />
         </CloseButton>
       </PopupHead>
-
 
       <InputLabel>Описание</InputLabel>
       <PopupInput value={description} onChange={(e) => setDescription(e.target.value)} />
@@ -67,10 +90,23 @@ const CreateCalendarEventPopup = () => {
       />
 
       <PopupButtons>
-        <BtnBase $color="#D6DCEC" $bg="#336CFF" onClick={() => handleCreate()} disabled={isPending}>
-          {isPending ? "Создание..." : "Создать"}
+        <BtnBase
+          $color="#D6DCEC"
+          $bg="#336CFF"
+          onClick={handleSave}
+          disabled={isPending}
+        >
+          {isPending
+            ? "Сохранение..."
+            : isEdit
+            ? "Обновить"
+            : "Создать"}
         </BtnBase>
-        <BtnBase onClick={() => goBack()} $color="#D6DCEC" $bg="#242A3A">
+        <BtnBase 
+          onClick={() => goBack()} 
+          $color="#D6DCEC" 
+          $bg="#242A3A"
+        >
           Отменить
         </BtnBase>
       </PopupButtons>

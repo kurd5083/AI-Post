@@ -28,7 +28,9 @@ export const CalendarFooter = ({ events, selectedDate }) => {
         <BtnBase
           onClick={(e) => {
             e.stopPropagation();
-            changeContent("create_calendar_event", "popup_window");
+            changeContent("create_calendar_event", "popup_window", {
+              selectedDate,
+            });
           }}
           $color="#AC60FD"
           $bg="#1F203D"

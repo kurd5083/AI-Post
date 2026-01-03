@@ -33,7 +33,10 @@ const CalendarPostsList = ({ posts }) => {
           <ButtonEdit
             onClick={(e) => {
               e.stopPropagation();
-              changeContent("create_calendar_event", "popup_window");
+              changeContent("create_calendar_event", "popup_window", {
+                event: post,
+                channelId: post.channelId,
+              });
             }}
           >
             <img src={edit} alt="edit icon" width={22} height={16} />
