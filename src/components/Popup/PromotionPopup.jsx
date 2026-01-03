@@ -23,6 +23,8 @@ const PromotionPopup = () => {
   const [maxViews, setMaxViews] = useState("");
 
   const [postLink, setPostLink] = useState("");
+  const [postMinViews, setPostMinViews] = useState("");
+  const [postMaxViews, setPostMaxViews] = useState("");
   const [manualPosts, setManualPosts] = useState([]);
 
   useEffect(() => {
@@ -33,15 +35,19 @@ const PromotionPopup = () => {
       setMaxViews(promotionConfig.maxViews);
     }
   }, [promotionConfig]);
-  console.log(promotionConfig, 'promotionConfig')
 
   const handleAddPost = () => {
-    if (!postLink) return;
+    if (!postLink || !postMinViews || !postMaxViews) return;
     if (manualPosts.length >= 10) return;
 
-    setManualPosts(prev => [...prev, { link: postLink, minViews, maxViews }]);
+    setManualPosts(prev => [
+      ...prev,
+      { link: postLink, minViews: postMinViews, maxViews: postMaxViews }
+    ]);
 
     setPostLink("");
+    setPostMinViews("");
+    setPostMaxViews("");
   };
   const buildPayload = () => ({
     isEnabled: autoViews,
@@ -52,6 +58,7 @@ const PromotionPopup = () => {
     minViews,
     maxViews,
   });
+
   const handleSave = () => {
     const payload = buildPayload();
 
@@ -101,51 +108,50 @@ const PromotionPopup = () => {
                 Введите ссылку на пост и количество просмотров для ручного продвижения
               </PromoteText>
               {manualPosts.map((post, index) => (
-                <PostContainer key={index}>
-                  <CounterContainer>
-                    <CounterTitle>Ссылка на пост:</CounterTitle>
-                    <PostInput
-                      value={post.link}
-                      onChange={(e) => {
-                        const newPosts = [...manualPosts];
-                        newPosts[index].link = e.target.value;
-                        setManualPosts(newPosts);
-                      }}
-                    />
-                  </CounterContainer>
-                  <CounterContainer>
-                    <CounterTitle>Мин. просмотры:</CounterTitle>
-                    <Counter
-                      value={post.minViews || ""}
-                      onChange={(value) => {
-                        const newPosts = [...manualPosts];
-                        newPosts[index].minViews = value;
-                        setManualPosts(newPosts);
-                      }}
-                    />
-                  </CounterContainer>
-
-                  <CounterContainer>
-                    <CounterTitle>Макс. просмотры:</CounterTitle>
-                    <Counter
-                      value={post.maxViews || ""}
-                      onChange={(value) => {
-                        const newPosts = [...manualPosts];
-                        newPosts[index].maxViews = value;
-                        setManualPosts(newPosts);
-                      }}
-                    />
-                  </CounterContainer>
-                  {manualPosts.length <= 1 ? null : (
-                    <ButtonDel
-                      onClick={() => setManualPosts((prev) => prev.filter((_, i) => i !== index))}
-                      title="Удалить"
-                    >
-                      <img src={del} alt="del icon" width={14} height={16} />
-                    </ButtonDel>
-                  )}
-                </PostContainer>
-              ))}
+  <PostContainer key={index}>
+    <CounterContainer>
+      <CounterTitle>Ссылка на пост:</CounterTitle>
+      <PostInput
+        value={post.link}
+        onChange={(e) => {
+          const newPosts = [...manualPosts];
+          newPosts[index].link = e.target.value;
+          setManualPosts(newPosts);
+        }}
+      />
+    </CounterContainer>
+    <CounterContainer>
+      <CounterTitle>Мин. просмотры:</CounterTitle>
+      <Counter
+        value={post.minViews}
+        onChange={(value) => {
+          const newPosts = [...manualPosts];
+          newPosts[index].minViews = value;
+          setManualPosts(newPosts);
+        }}
+      />
+    </CounterContainer>
+    <CounterContainer>
+      <CounterTitle>Макс. просмотры:</CounterTitle>
+      <Counter
+        value={post.maxViews}
+        onChange={(value) => {
+          const newPosts = [...manualPosts];
+          newPosts[index].maxViews = value;
+          setManualPosts(newPosts);
+        }}
+      />
+    </CounterContainer>
+    {manualPosts.length > 1 && (
+      <ButtonDel
+        onClick={() => setManualPosts(prev => prev.filter((_, i) => i !== index))}
+        title="Удалить"
+      >
+        <img src={del} alt="del icon" width={14} height={16} />
+      </ButtonDel>
+    )}
+  </PostContainer>
+))}
 
               <PostContainer>
                 <CounterContainer>
@@ -158,12 +164,12 @@ const PromotionPopup = () => {
                 </CounterContainer>
                 <CounterContainer>
                   <CounterTitle>Мин. просмотры:</CounterTitle>
-                  <Counter value={minViews} onChange={setMinViews} />
+                  <Counter/>
                 </CounterContainer>
 
                 <CounterContainer>
                   <CounterTitle>Макс. просмотры:</CounterTitle>
-                  <Counter value={maxViews} onChange={setMaxViews} />
+                  <Counter/>
                 </CounterContainer>
 
                 <BtnBase
