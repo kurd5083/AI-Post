@@ -555,6 +555,8 @@ const ItemHead = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 20px;
+  
   h3 {
     display: flex;
     align-items: center;
@@ -566,6 +568,7 @@ const HeadTitle = styled.input`
   color: #D6DCEC;
   background: transparent;
   border: none;
+  flex: 1;
 `
 const ItemBody = styled.div`
   display: flex;
