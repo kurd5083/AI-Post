@@ -24,6 +24,7 @@ import { formatText } from "@/lib/formatText";
 import { useLightboxStore } from "@/store/lightboxStore";
 import { useUser } from "@/lib/useUser";
 import { useGenerateSimpleImage } from "@/lib/channels/image-generation/useGenerateSimpleImage";
+import { useGeneratePost } from "@/lib/posts/useGeneratePost";
 
 const AiGeneratorPopup = () => {
   const generatePostId = () => Math.floor(Math.random() * 2_000_000_000);
@@ -34,9 +35,11 @@ const AiGeneratorPopup = () => {
   const { popup, changeContent } = usePopupStore();
   const channelId = popup?.data?.channelId;
   const telegramId = user?.telegramId;
+
   const [posts, setPosts] = useState([
     { postId: generatePostId(), placeholder: "Пост 1", title: "", progress: "0 / 1024", text: "", summary: "", time: "00:00", images: [] },
   ]);
+
   const [selectedPost, setSelectedPost] = useState(posts[0]);
   const [collapsed, setCollapsed] = useState(false);
   const [popupPostId, setPopupPostId] = useState(null);
@@ -47,6 +50,33 @@ const AiGeneratorPopup = () => {
   const { fadeVisible, ref } = useFadeOnScroll(20);
   const { mutate: createPostMutation } = useCreatePost();
   const { mutate: generateImage, isLoading: isGenerating } = useGenerateSimpleImage();
+  const { mutate: generatePost, isLoading } = useGeneratePost();
+
+  const handleWriteWithAI = (postId) => {
+    if (!channelId) {
+      alert("Выберите канал!");
+      return;
+    }
+
+    generatePost({ channelId },
+      {
+        onSuccess: (data) => {
+          setPosts(prev =>
+            prev.map(p =>
+              p.postId === postId
+                ? {
+                    ...p,
+                    text: data.post?.text || "",
+                    summary: data.post?.summary || "",
+                    images: data.images || [],
+                  }
+                : p
+            )
+          );
+        }
+      }
+    );
+  };
 
   useEffect(() => {
     const handleResize = () => {
@@ -279,8 +309,12 @@ const AiGeneratorPopup = () => {
             <ItemActions>
               <ActionsLeft>
                 <ItemAI>
-                  <p><AiGeneratorIcon color="#336CFF" />Написать с AI</p>
-                  <p><img src={create} alt="create icon" />Создать фото с AI</p>
+                  <p 
+                    onClick={() => handleWriteWithAI(post.postId)} 
+                    disabled={isLoading}
+                  >
+                    <AiGeneratorIcon color="#336CFF" />{isLoading ? "Генерация с AI..." : "Написать с AI"}
+                  </p>
                   <p>
                     <img
                       src={create}
