@@ -61,6 +61,7 @@ const AiGeneratorPopup = () => {
     generatePost(channelId,
       {
         onSuccess: (data) => {
+          console.log(data, 'data 1')
           setPosts(prev =>
             prev.map(p =>
               p.postId === postId
