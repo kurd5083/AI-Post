@@ -46,7 +46,10 @@ const Preview = ({ collapsed, onChange, testResult, telegramId }) => {
                         key={index} 
                         src={img} 
                         alt={`image-${index}`} 
-                        onClick={() => openLightbox(images, index)}
+                        onClick={() => openLightbox({
+                          images: images,
+                          initialIndex: index
+                        })}
                       />
                     ))}
                   </ImagesContainer>

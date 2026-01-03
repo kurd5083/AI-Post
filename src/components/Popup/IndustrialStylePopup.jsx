@@ -12,8 +12,6 @@ import { useUpdateChannelCaption } from "@/lib/channels/caption/useUpdateChannel
 import Preview from "@/components/Preview";
 import { useTestDrivePrompt } from "@/lib/posts/useTestDrivePrompt";
 
-const MAX_PROMPT_LENGTH = 100;
-
 const IndustrialStylePopup = () => {
   const { popup, changeContent } = usePopupStore();
   const channelId = popup?.data?.channelId;
@@ -81,7 +79,6 @@ const IndustrialStylePopup = () => {
             >
               {isLoading ? "Тестируем..." : "Тест"}
             </button>
-            <p>{localPrompt?.length} / {MAX_PROMPT_LENGTH}</p>
           </IndustrialStyleInfo>
           <IndustrialStyleDesc>Введите промпт — это задание для генерации поста. <mark>Чем точнее формулировка, тем лучше результат.</mark></IndustrialStyleDesc>
           <IndustrialStyleTitle>Подпись</IndustrialStyleTitle>
