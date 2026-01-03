@@ -9,7 +9,7 @@ import { useChannelGlobalPrompt } from "@/lib/channels/global-prompt/useChannelG
 import ModernLoading from "@/components/ModernLoading";
 
 const IndustrialLibraryPopup = () => {
-  const { popup } = usePopupStore();
+  const { popup, goBack } = usePopupStore();
   const channelId = popup?.data?.channelId;
   const { promptLibrary, promptLoading } = usePromptLibrary();
   const [selectedIndex, setSelectedIndex] = useState(null);
@@ -42,8 +42,10 @@ const IndustrialLibraryPopup = () => {
     updateGlobalPrompt({
       channelId,
       value: localPrompt,
-    });
-  };
+    }, {
+      onSuccess: () => goBack(),
+    }
+  )};
 
   return (
     <IndustrialStyleContainer>
