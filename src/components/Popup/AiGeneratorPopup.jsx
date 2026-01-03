@@ -59,20 +59,22 @@ const AiGeneratorPopup = () => {
     }
 
     generatePost(channelId,
-      {onSuccess: (data) => {
-        setPosts(prev =>
-          prev.map(p =>
-            p.postId === postId
-              ?{
-                ...p,
-                text: data.post?.text || "",
-                summary: data.post?.summary || "",
-                images: data.images || [],
-              }
-            : p
-          )
-        );
-      }}
+      {
+        onSuccess: (data) => {
+          setPosts(prev =>
+            prev.map(p =>
+              p.postId === postId
+                ? {
+                  ...p,
+                  text: data.post?.text || "",
+                  summary: data.post?.summary || "",
+                  images: data.images || [],
+                }
+                : p
+            )
+          );
+        }
+      }
     );
   };
 
@@ -86,29 +88,40 @@ const AiGeneratorPopup = () => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
   const handleCreateAIImage = (postId) => {
-  const post = posts.find(p => p.postId === postId);
-  if (!post) return;
+    const post = posts.find(p => p.postId === postId);
+    if (!post) return;
 
-  const prompt = post.text;
+    const prompt = post.text;
 
-  generateImage(
-    { prompt },
-    {
-      onSuccess: (data) => {
-        const imageUrl = data.imageUrls?.[0]; 
-        if (!imageUrl) return;
+    generateImage(
+      { prompt },
+      {
+        onSuccess: (data) => {
+          let imageUrl = null;
 
-        setPosts(prev =>
-          prev.map(p =>
-            p.postId === postId
-              ? { ...p, images: [...(p.images || []), imageUrl] }
-              : p
-          )
-        );
-      },
-    }
-  );
-};
+
+          const inlineData = data?.candidates?.[0]?.content?.parts?.find(
+            part => part.inlineData
+          )?.inlineData;
+
+          if (inlineData?.data && inlineData?.mimeType) {
+            imageUrl = `data:${inlineData.mimeType};base64,${inlineData.data}`;
+          }
+
+          if (!imageUrl) return;
+
+          setPosts(prev =>
+            prev.map(p =>
+              p.postId === postId
+                ? { ...p, images: [...(p.images || []), imageUrl] }
+                : p
+            )
+          );
+        },
+      }
+    );
+  };
+
   const handleAddPost = () => {
     const newPost = {
       postId: generatePostId(),
@@ -307,7 +320,7 @@ const AiGeneratorPopup = () => {
             <ItemActions>
               <ActionsLeft>
                 <ItemAI>
-                  <BtnBase 
+                  <BtnBase
                     $padding="0"
                     $color="#336CFF"
                     $bg="transporent"
