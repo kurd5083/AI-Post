@@ -13,6 +13,7 @@ import ModernLoading from "@/components/ModernLoading";
 import { usePopupStore } from "@/store/popupStore"
 import { useLightboxStore } from "@/store/lightboxStore";
 import { useCopyNewsToChannel } from "@/lib/news/useCopyNewsToChannel";
+import timeAgo from "@/lib/timeAgo";
 
 const TapeList = ({ forceHorizontal = false, padding, newsData, loding }) => {
   const { popup, changeContent, openPopup } = usePopupStore();
@@ -92,7 +93,7 @@ const TapeList = ({ forceHorizontal = false, padding, newsData, loding }) => {
                 </TapeItemAction>
                 <TapeTime>
                   <TimeIcons />
-                  <span>{news.readingTime}</span>
+                  <span>{timeAgo(news.createdAt)}</span>
                 </TapeTime>
               </TapeItemContent>
               <TapePostImg
