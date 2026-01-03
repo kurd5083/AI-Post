@@ -66,6 +66,7 @@ const AiGeneratorPopup = () => {
               p.postId === postId
                 ? {
                   ...p,
+                  title: data.post?.title || "",
                   text: data.post?.text || "",
                   summary: data.post?.summary || "",
                   images: data.images || [],
