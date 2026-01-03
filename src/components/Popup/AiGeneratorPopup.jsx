@@ -308,18 +308,18 @@ const AiGeneratorPopup = () => {
               <ActionsLeft>
                 <ItemAI>
                   <BtnBase 
-                    $padding="12px 24px"
+                    $padding="0"
                     $color="#336CFF"
-                    $bg="#161F37"
+                    $bg="transporent"
                     onClick={() => handleWriteWithAI(post.postId)}
                     disabled={isLoading}
                   >
                     <AiGeneratorIcon color="#336CFF" />{isLoading ? "Генерация с AI..." : "Написать с AI"}
                   </BtnBase>
                   <BtnBase
-                    $padding="12px 24px"
-                    $color="#FF7F48;"
-                    $bg="#161F37"
+                    $padding="0"
+                    $color="#FF7F48"
+                    $bg="transporent"
                     onClick={() => handleCreateAIImage(post.postId)}
                     disabled={isGenerating || !post.text}
                   >

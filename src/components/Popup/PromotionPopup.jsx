@@ -23,7 +23,6 @@ const PromotionPopup = () => {
   const [maxViews, setMaxViews] = useState("");
 
   const [postLink, setPostLink] = useState("");
-  const [postViews, setPostViews] = useState("");
   const [manualPosts, setManualPosts] = useState([]);
 
   useEffect(() => {
@@ -37,12 +36,12 @@ const PromotionPopup = () => {
   console.log(promotionConfig, 'promotionConfig')
 
   const handleAddPost = () => {
-    if (!postLink || !postViews) return;
+    if (!postLink) return;
     if (manualPosts.length >= 10) return;
+
     setManualPosts(prev => [...prev, { link: postLink, minViews, maxViews }]);
+
     setPostLink("");
-    setMinViews("");
-    setMaxViews("");
   };
   const buildPayload = () => ({
     isEnabled: autoViews,
