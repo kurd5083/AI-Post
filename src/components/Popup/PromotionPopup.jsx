@@ -7,6 +7,7 @@ import { usePopupStore } from "@/store/popupStore";
 import { useCreateConfigСhannel } from "@/lib/channels/promotion/useCreateConfigСhannel";
 import { useGetChannelPromotionConfig } from "@/lib/channels/promotion/useGetChannelPromotionConfig";
 import { useUpdatePromotionConfig } from "@/lib/channels/promotion/useUpdatePromotionConfig";
+import { useCreatePromotionOrders } from "@/lib/channels/promotion/useCreatePromotionOrders";
 import del from "@/assets/del.svg";
 import ModernLoading from "@/components/ModernLoading";
 
@@ -16,6 +17,7 @@ const PromotionPopup = () => {
   const { promotionConfig, promotionLoading } = useGetChannelPromotionConfig(channelId);
   const { mutate: createConfigСhannel, isLoading: createConfigLoading } = useCreateConfigСhannel();
   const { mutate: updatePromotionConfig, isLoading: updatePromotionLoading } = useUpdatePromotionConfig();
+  const { mutate: createPromotionOrders, isLoading: creatingOrders } = useCreatePromotionOrders();
 
   const [autoViews, setAutoViews] = useState(false);
   const [autoViewsLink, setAutoViewsLink] = useState(false);
@@ -49,6 +51,20 @@ const PromotionPopup = () => {
     setPostMinViews("");
     setPostMaxViews("");
   };
+
+  const handlePromotePosts = () => {
+    if (!manualPosts.length) return;
+
+    const orders = manualPosts.map(post => ({
+      link: post.link,
+      username: popup?.data?.channelUsername || "",
+      min: Number(post.minViews),
+      max: Number(post.maxViews),
+    }));
+
+    createPromotionOrders(orders);
+  };
+
   const buildPayload = () => ({
     isEnabled: autoViews,
     allowedServiceIds: [272],
@@ -108,50 +124,50 @@ const PromotionPopup = () => {
                 Введите ссылку на пост и количество просмотров для ручного продвижения
               </PromoteText>
               {manualPosts.map((post, index) => (
-  <PostContainer key={index}>
-    <CounterContainer>
-      <CounterTitle>Ссылка на пост:</CounterTitle>
-      <PostInput
-        value={post.link}
-        onChange={(e) => {
-          const newPosts = [...manualPosts];
-          newPosts[index].link = e.target.value;
-          setManualPosts(newPosts);
-        }}
-      />
-    </CounterContainer>
-    <CounterContainer>
-      <CounterTitle>Мин. просмотры:</CounterTitle>
-      <Counter
-        value={post.minViews}
-        onChange={(value) => {
-          const newPosts = [...manualPosts];
-          newPosts[index].minViews = value;
-          setManualPosts(newPosts);
-        }}
-      />
-    </CounterContainer>
-    <CounterContainer>
-      <CounterTitle>Макс. просмотры:</CounterTitle>
-      <Counter
-        value={post.maxViews}
-        onChange={(value) => {
-          const newPosts = [...manualPosts];
-          newPosts[index].maxViews = value;
-          setManualPosts(newPosts);
-        }}
-      />
-    </CounterContainer>
-    {manualPosts.length > 1 && (
-      <ButtonDel
-        onClick={() => setManualPosts(prev => prev.filter((_, i) => i !== index))}
-        title="Удалить"
-      >
-        <img src={del} alt="del icon" width={14} height={16} />
-      </ButtonDel>
-    )}
-  </PostContainer>
-))}
+                <PostContainer key={index}>
+                  <CounterContainer>
+                    <CounterTitle>Ссылка на пост:</CounterTitle>
+                    <PostInput
+                      value={post.link}
+                      onChange={(e) => {
+                        const newPosts = [...manualPosts];
+                        newPosts[index].link = e.target.value;
+                        setManualPosts(newPosts);
+                      }}
+                    />
+                  </CounterContainer>
+                  <CounterContainer>
+                    <CounterTitle>Мин. просмотры:</CounterTitle>
+                    <Counter
+                      value={post.minViews}
+                      onChange={(value) => {
+                        const newPosts = [...manualPosts];
+                        newPosts[index].minViews = value;
+                        setManualPosts(newPosts);
+                      }}
+                    />
+                  </CounterContainer>
+                  <CounterContainer>
+                    <CounterTitle>Макс. просмотры:</CounterTitle>
+                    <Counter
+                      value={post.maxViews}
+                      onChange={(value) => {
+                        const newPosts = [...manualPosts];
+                        newPosts[index].maxViews = value;
+                        setManualPosts(newPosts);
+                      }}
+                    />
+                  </CounterContainer>
+                  {manualPosts.length > 1 && (
+                    <ButtonDel
+                      onClick={() => setManualPosts(prev => prev.filter((_, i) => i !== index))}
+                      title="Удалить"
+                    >
+                      <img src={del} alt="del icon" width={14} height={16} />
+                    </ButtonDel>
+                  )}
+                </PostContainer>
+              ))}
 
               <PostContainer>
                 <CounterContainer>
@@ -164,12 +180,12 @@ const PromotionPopup = () => {
                 </CounterContainer>
                 <CounterContainer>
                   <CounterTitle>Мин. просмотры:</CounterTitle>
-                  <Counter/>
+                  <Counter />
                 </CounterContainer>
 
                 <CounterContainer>
                   <CounterTitle>Макс. просмотры:</CounterTitle>
-                  <Counter/>
+                  <Counter />
                 </CounterContainer>
 
                 <BtnBase
@@ -187,8 +203,10 @@ const PromotionPopup = () => {
                 $padding="21px 24px"
                 $color="#EF6284"
                 $bg="#241F31"
+                onClick={handlePromotePosts}
+                disabled={!manualPosts.length || creatingOrders}
               >
-                Начать продвижение
+                {creatingOrders ? "Продвигаем..." : "Начать продвижение"}
               </BtnBase>
             </PromotePost>
           )}
