@@ -9,7 +9,7 @@ import { Link } from "react-router";
 import ModernLoading from "@/components/ModernLoading";
 
 const LinkGenerationMyPopup = () => {
-  const [copied, setCopied] = useState(false);
+  const [copied, setCopied] = useState(null);
 
   const { popup, changeContent } = usePopupStore();
   const channelId = popup?.data?.channelId;
@@ -21,10 +21,10 @@ const LinkGenerationMyPopup = () => {
     removeLink(linkId);
   };
 
-  const handleCopy = () => {
+  const handleCopy = (link) => {
     navigator.clipboard.writeText(link.inviteLink);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+    setCopied(link.id);
+    setTimeout(() => setCopied(null), 2000);
   };
   
   return (
@@ -64,7 +64,9 @@ const LinkGenerationMyPopup = () => {
                   <TableCell>
                     <CellInviteLink>
                       <Link>{link.inviteLink}</Link>
-                      <span onClick={handleCopy}>{copied ? "Скопировано!" : "Скопировать"}</span>
+                      <span onClick={() => handleCopy(link)}>
+                        {copied === link.id ? "Скопировано!" : "Скопировать"}
+                      </span>
                     </CellInviteLink>
                   </TableCell>
                   <TableCell>+ {link.netJoins}</TableCell>
