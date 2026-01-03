@@ -37,7 +37,16 @@ const AiGeneratorPopup = () => {
   const telegramId = user?.telegramId;
 
   const [posts, setPosts] = useState([
-    { postId: generatePostId(), placeholder: "Пост 1", title: "", progress: "0 / 1024", text: "", summary: "", time: "00:00", images: [] },
+    { 
+      postId: generatePostId(), 
+      placeholder: "Пост 1", 
+      title: "", 
+      progress: "0 / 1024", 
+      text: "", 
+      summary: "", 
+      time: "00:00", 
+      images: [] 
+    },
   ]);
 
   const [selectedPost, setSelectedPost] = useState(posts[0]);
@@ -150,9 +159,11 @@ const AiGeneratorPopup = () => {
   };
 
   const handleTextChange = (postId, newText) => {
-    setPosts(prev => prev.map(p =>
-      p.postId === postId ? { ...p, text: newText, summary: newText.slice(0, 150) } : p
-    ));
+    setPosts(prev =>
+      prev.map(p =>
+        p.postId === postId ? { ...p, text: newText, summary: newText } : p
+      )
+    );
   };
 
   const handleSaveTime = (newTime) => {
@@ -299,7 +310,7 @@ const AiGeneratorPopup = () => {
                 contentEditable
                 suppressContentEditableWarning
                 id={`text-${post.postId}`}
-                ref={el => el && el.innerHTML !== post.text && (el.innerHTML = post.text)}
+                ref={el => el && el.innerHTML !== post.summary && (el.innerHTML = post.summary)}
                 onInput={e => handleTextChange(post.postId, e.currentTarget.innerHTML)}
                 onClick={() => saveSelection(post.postId)}
                 onKeyUp={() => saveSelection(post.postId)}
