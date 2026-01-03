@@ -49,8 +49,8 @@ const AiGeneratorPopup = () => {
 
   const { fadeVisible, ref } = useFadeOnScroll(20);
   const { mutate: createPostMutation } = useCreatePost();
-  const { mutate: generateImage, isPending: generateImage } = useGenerateSimpleImage();
-  const { mutate: generatePost, isPending: generatePost } = useGeneratePost();
+  const { mutate: generateImage, isPending: imagePending } = useGenerateSimpleImage();
+  const { mutate: generatePost, isPending: postPending } = useGeneratePost();
 
   const handleWriteWithAI = (postId) => {
     if (!channelId) {
@@ -325,22 +325,22 @@ const AiGeneratorPopup = () => {
                     $color="#336CFF"
                     $bg="transporent"
                     onClick={() => handleWriteWithAI(post.postId)}
-                    disabled={generatePost}
+                    disabled={postPending}
                   >
-                    <AiGeneratorIcon color="#336CFF" />{generatePost ? "Генерация с AI..." : "Написать с AI"}
+                    <AiGeneratorIcon color="#336CFF" />{postPending ? "Генерация с AI..." : "Написать с AI"}
                   </BtnBase>
                   <BtnBase
                     $padding="0"
                     $color="#FF7F48"
                     $bg="transporent"
                     onClick={() => handleCreateAIImage(post.postId)}
-                    disabled={generateImage || !post.text}
+                    disabled={imagePending || !post.text}
                   >
                     <img
                       src={create}
                       alt="create icon"
                     />
-                    {generateImage ? "Генерация фото с AI" : "Создать фото с AI"}
+                    {imagePending ? "Генерация фото с AI" : "Создать фото с AI"}
                   </BtnBase>
                 </ItemAI>
                 <ItemActionsAdd>
