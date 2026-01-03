@@ -39,9 +39,10 @@ const PromotionPopup = () => {
   const handleAddPost = () => {
     if (!postLink || !postViews) return;
     if (manualPosts.length >= 10) return;
-    setManualPosts(prev => [...prev, { link: postLink, views: postViews }]);
+    setManualPosts(prev => [...prev, { link: postLink, minViews, maxViews }]);
     setPostLink("");
-    setPostViews("");
+    setMinViews("");
+    setMaxViews("");
   };
   const buildPayload = () => ({
     isEnabled: autoViews,
@@ -114,19 +115,29 @@ const PromotionPopup = () => {
                     />
                   </CounterContainer>
                   <CounterContainer>
-                    <CounterTitle>Количество просмотров</CounterTitle>
+                    <CounterTitle>Мин. просмотры:</CounterTitle>
                     <Counter
-                      value={post.views}
+                      value={post.minViews || ""}
                       onChange={(value) => {
                         const newPosts = [...manualPosts];
-                        newPosts[index].views = value;
+                        newPosts[index].minViews = value;
                         setManualPosts(newPosts);
                       }}
                     />
                   </CounterContainer>
-                  {manualPosts.length <= 1 ? (
-                    <></>
-                  ) : (
+
+                  <CounterContainer>
+                    <CounterTitle>Макс. просмотры:</CounterTitle>
+                    <Counter
+                      value={post.maxViews || ""}
+                      onChange={(value) => {
+                        const newPosts = [...manualPosts];
+                        newPosts[index].maxViews = value;
+                        setManualPosts(newPosts);
+                      }}
+                    />
+                  </CounterContainer>
+                  {manualPosts.length <= 1 ? null : (
                     <ButtonDel
                       onClick={() => setManualPosts((prev) => prev.filter((_, i) => i !== index))}
                       title="Удалить"
@@ -134,7 +145,6 @@ const PromotionPopup = () => {
                       <img src={del} alt="del icon" width={14} height={16} />
                     </ButtonDel>
                   )}
-
                 </PostContainer>
               ))}
 
@@ -148,8 +158,13 @@ const PromotionPopup = () => {
                   />
                 </CounterContainer>
                 <CounterContainer>
-                  <CounterTitle>Количество просмотров</CounterTitle>
-                  <Counter placeholder="" value={postViews} onChange={setPostViews} />
+                  <CounterTitle>Мин. просмотры:</CounterTitle>
+                  <Counter value={minViews} onChange={setMinViews} />
+                </CounterContainer>
+
+                <CounterContainer>
+                  <CounterTitle>Макс. просмотры:</CounterTitle>
+                  <Counter value={maxViews} onChange={setMaxViews} />
                 </CounterContainer>
 
                 <BtnBase
@@ -157,7 +172,7 @@ const PromotionPopup = () => {
                   $color="#fff"
                   $bg="#336CFF"
                   onClick={handleAddPost}
-                  disabled={!postLink || !postViews}
+                  disabled={!postLink || !minViews || !maxViews}
                 >
                   + Добавить ссылку на пост
                 </BtnBase>
