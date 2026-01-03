@@ -23,7 +23,7 @@ import { usePopupStore } from "@/store/popupStore";
 import { formatText } from "@/lib/formatText";
 import { useLightboxStore } from "@/store/lightboxStore";
 import { useUser } from "@/lib/useUser";
-
+import { useGenerateSimpleImage } from "@/lib/channels/image-generation/useGenerateSimpleImage";
 
 const AiGeneratorPopup = () => {
   const generatePostId = () => Math.floor(Math.random() * 2_000_000_000);
@@ -46,6 +46,7 @@ const AiGeneratorPopup = () => {
 
   const { fadeVisible, ref } = useFadeOnScroll(20);
   const { mutate: createPostMutation } = useCreatePost();
+  const { mutate: generateImage, isLoading: isGenerating } = useGenerateSimpleImage();
 
   useEffect(() => {
     const handleResize = () => {
@@ -56,7 +57,30 @@ const AiGeneratorPopup = () => {
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
+  const handleCreateAIImage = (postId) => {
+  const post = posts.find(p => p.postId === postId);
+  if (!post) return;
 
+  const prompt = post.text;
+
+  generateImage(
+    { prompt },
+    {
+      onSuccess: (data) => {
+        const imageUrl = data.imageUrls?.[0]; 
+        if (!imageUrl) return;
+
+        setPosts(prev =>
+          prev.map(p =>
+            p.postId === postId
+              ? { ...p, images: [...(p.images || []), imageUrl] }
+              : p
+          )
+        );
+      },
+    }
+  );
+};
   const handleAddPost = () => {
     const newPost = {
       postId: generatePostId(),
@@ -257,8 +281,15 @@ const AiGeneratorPopup = () => {
                 <ItemAI>
                   <p><AiGeneratorIcon color="#336CFF" />Написать с AI</p>
                   <p><img src={create} alt="create icon" />Создать фото с AI</p>
+                  <p>
+                    <img
+                      src={create}
+                      alt="create icon"
+                      onClick={() => handleCreateAIImage(post.postId)}
+                    />
+                    {isGenerating ? "Генерация фото с AI" : "Создать фото с AI"}
+                  </p>
                 </ItemAI>
-
                 <ItemActionsAdd>
                   <input
                     type="file"
@@ -562,6 +593,8 @@ const ItemAI = styled.div`
     gap: 16px;
     font-weight: 700;
     font-size: 14px;
+    cursor: pointer;
+
     &:first-child {
       color: #336CFF;
 
