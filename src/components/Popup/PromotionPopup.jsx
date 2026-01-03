@@ -180,12 +180,12 @@ const PromotionPopup = () => {
                 </CounterContainer>
                 <CounterContainer>
                   <CounterTitle>Мин. просмотры:</CounterTitle>
-                  <Counter />
+                  <Counter value={postMinViews} onChange={setPostMinViews} />
                 </CounterContainer>
 
                 <CounterContainer>
                   <CounterTitle>Макс. просмотры:</CounterTitle>
-                  <Counter />
+                  <Counter value={postMaxViews} onChange={setPostMaxViews}/>
                 </CounterContainer>
 
                 <BtnBase
