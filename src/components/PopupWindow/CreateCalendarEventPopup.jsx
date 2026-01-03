@@ -16,7 +16,7 @@ const CreateCalendarEventPopup = () => {
   const event = popup?.data?.event; 
 
   const isEdit = Boolean(event);
-  console.log(event.id)
+  console.log(event?.id)
   const { mutate: createEvent, isPending: creating } = useCreateCalendarEvent();
   const { mutate: updateEvent, isPending: updating } = useUpdateCalendarEvent();
 
@@ -47,7 +47,7 @@ const CreateCalendarEventPopup = () => {
 
     if (isEdit) {
       updateEvent(
-        { id: event.id, payload },
+        { id: event?.id, payload },
         { onSuccess: goBack }
       );
     } else {
