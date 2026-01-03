@@ -58,23 +58,21 @@ const AiGeneratorPopup = () => {
       return;
     }
 
-    generatePost({ channelId },
-      {
-        onSuccess: (data) => {
-          setPosts(prev =>
-            prev.map(p =>
-              p.postId === postId
-                ? {
-                    ...p,
-                    text: data.post?.text || "",
-                    summary: data.post?.summary || "",
-                    images: data.images || [],
-                  }
-                : p
-            )
-          );
-        }
-      }
+    generatePost(channelId,
+      {onSuccess: (data) => {
+        setPosts(prev =>
+          prev.map(p =>
+            p.postId === postId
+              ?{
+                ...p,
+                text: data.post?.text || "",
+                summary: data.post?.summary || "",
+                images: data.images || [],
+              }
+            : p
+          )
+        );
+      }}
     );
   };
 
@@ -309,20 +307,28 @@ const AiGeneratorPopup = () => {
             <ItemActions>
               <ActionsLeft>
                 <ItemAI>
-                  <p 
-                    onClick={() => handleWriteWithAI(post.postId)} 
+                  <BtnBase 
+                    $padding="12px 24px"
+                    $color="#336CFF"
+                    $bg="#161F37"
+                    onClick={() => handleWriteWithAI(post.postId)}
                     disabled={isLoading}
                   >
                     <AiGeneratorIcon color="#336CFF" />{isLoading ? "Генерация с AI..." : "Написать с AI"}
-                  </p>
-                  <p>
+                  </BtnBase>
+                  <BtnBase
+                    $padding="12px 24px"
+                    $color="#FF7F48;"
+                    $bg="#161F37"
+                    onClick={() => handleCreateAIImage(post.postId)}
+                    disabled={isGenerating || !post.text}
+                  >
                     <img
                       src={create}
                       alt="create icon"
-                      onClick={() => handleCreateAIImage(post.postId)}
                     />
                     {isGenerating ? "Генерация фото с AI" : "Создать фото с AI"}
-                  </p>
+                  </BtnBase>
                 </ItemAI>
                 <ItemActionsAdd>
                   <input
@@ -628,14 +634,6 @@ const ItemAI = styled.div`
     font-weight: 700;
     font-size: 14px;
     cursor: pointer;
-
-    &:first-child {
-      color: #336CFF;
-
-    }
-    &:last-child {
-      color: #FF7F48;
-    }
   }
 `
 const ItemActionsAdd = styled.div`
