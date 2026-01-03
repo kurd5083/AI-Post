@@ -16,7 +16,7 @@ const CreateCalendarEventPopup = () => {
   const event = popup?.data?.event; 
 
   const isEdit = Boolean(event);
-
+  console.log(event.id)
   const { mutate: createEvent, isPending: creating } = useCreateCalendarEvent();
   const { mutate: updateEvent, isPending: updating } = useUpdateCalendarEvent();
 
@@ -38,6 +38,8 @@ const CreateCalendarEventPopup = () => {
 
   const handleSave = () => {
     const payload = {
+      title: "Updated Post Title",
+      status: "COMPLETED",
       description,
       scheduledAt,
       postId: selectedPostId,
