@@ -5,6 +5,7 @@
   import { usePopupStore } from "@/store/popupStore"
   import { useChannelById } from "@/lib/channels/useChannelById";
   import { useUpdateChannelField } from "@/lib/channels/useUpdateChannelField";
+  import BtnBase from "@/shared/BtnBase";
 
   const AdvancedPopup = () => {
     const { popup } = usePopupStore();

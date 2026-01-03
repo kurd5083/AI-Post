@@ -8,6 +8,7 @@ import { useAddChannelKeyword } from "@/lib/channels/filtration/useAddChannelKey
 import { useRemoveChannelKeyword } from "@/lib/channels/filtration/useRemoveChannelKeyword";
 import { useAddChannelStopWord } from "@/lib/channels/filtration/useAddChannelStopWord";
 import { useRemoveChannelStopWord } from "@/lib/channels/filtration/useRemoveChannelStopWord";
+import BtnBase from "@/shared/BtnBase";
 
 const FilteringPopup = () => {
   const { popup } = usePopupStore();
@@ -20,10 +21,16 @@ const FilteringPopup = () => {
   const [localKeywords, setLocalKeywords] = useState([]);
   const [localStopWords, setLocalStopWords] = useState([]);
 
-  const { mutate: addKeyword } = useAddChannelKeyword();
-  const { mutate: removeKeyword } = useRemoveChannelKeyword();
-  const { mutate: addStopWord } = useAddChannelStopWord();
-  const { mutate: removeStopWord } = useRemoveChannelStopWord();
+  const { mutate: addKeyword, isPending: addKeywordPending } = useAddChannelKeyword();
+  const { mutate: removeKeyword, isPending: removeKeywordPending } = useRemoveChannelKeyword();
+  const { mutate: addStopWord, isPending: addStopWordPending } = useAddChannelStopWord();
+  const { mutate: removeStopWord, isPending: removeStopWordPending } = useRemoveChannelStopWord();
+
+  const isPending =
+    addKeywordPending ||
+    removeKeywordPending ||
+    addStopWordPending ||
+    removeStopWordPending;
 
   useEffect(() => {
     if (!channel) return;
@@ -35,12 +42,42 @@ const FilteringPopup = () => {
       prev.length ? prev : channel.stopWords ?? []
     );
   }, [channel]);
+  const handleSave = () => {
+    if (!channel) return;
+
+    const serverKeywords = channel.keywords ?? [];
+    const serverStopWords = channel.stopWords ?? [];
+
+    localKeywords
+      .filter(k => !serverKeywords.includes(k))
+      .forEach(keyword => {
+        addKeyword({ channelId, keyword });
+      });
+
+    localStopWords
+      .filter(w => !serverStopWords.includes(w))
+      .forEach(stopWord => {
+        addStopWord({ channelId, stopWord });
+      });
+
+    serverKeywords
+      .filter(k => !localKeywords.includes(k))
+      .forEach(keyword => {
+        removeKeyword({ channelId, keyword });
+      });
+
+    serverStopWords
+      .filter(w => !localStopWords.includes(w))
+      .forEach(stopWord => {
+        removeStopWord({ channelId, stopWord });
+      });
+  };
   return (
     <FilteringContainer>
       <FilteringText>
         Добавьте ключевые слова для фильтрации новостей по заголовкам, или<br />
         оставьте список пустым, чтобы получать все новости. <mark>В Telegram-каналах <br />
-        и группах/пабликах VK</mark> поиск осуществляется по всему содержанию.
+          и группах/пабликах VK</mark> поиск осуществляется по всему содержанию.
       </FilteringText>
 
       <FilteringKey>
@@ -54,8 +91,9 @@ const FilteringPopup = () => {
           onSubmit={() => {
             if (!keyword.trim()) return;
 
-            setLocalKeywords((prev) => [...prev, keyword]);
-            addKeyword({ channelId, keyword });
+            setLocalKeywords(prev =>
+              prev.includes(keyword) ? prev : [...prev, keyword]
+            );
             setKeyword("");
           }}
         />
@@ -67,10 +105,7 @@ const FilteringPopup = () => {
             items={localKeywords.map((k) => ({ value: k }))}
             color="#EF6284"
             onRemove={(value) => {
-              setLocalKeywords((prev) =>
-                prev.filter((k) => k !== value)
-              );
-              removeKeyword({ channelId, keyword: value });
+              setLocalKeywords(prev => prev.filter(k => k !== value));
             }}
           />
         )}
@@ -93,8 +128,9 @@ const FilteringPopup = () => {
           onSubmit={() => {
             if (!stopWord.trim()) return;
 
-            setLocalStopWords((prev) => [...prev, stopWord]);
-            addStopWord({ channelId, stopWord });
+            setLocalStopWords(prev =>
+              prev.includes(stopWord) ? prev : [...prev, stopWord]
+            );
             setStopWord("");
           }}
         />
@@ -106,14 +142,18 @@ const FilteringPopup = () => {
             items={localStopWords.map((w) => ({ value: w }))}
             color="#EF6284"
             onRemove={(value) => {
-              setLocalStopWords((prev) =>
-                prev.filter((w) => w !== value)
-              );
-              removeStopWord({ channelId, stopWord: value });
+              setLocalStopWords(prev => prev.filter(w => w !== value));
             }}
           />
         )}
       </FilteringKey>
+      <BtnBase
+        $margin="64"
+        onClick={handleSave}
+        disabled={isPending}
+      >
+        {isPending ? "Сохраняем..." : "Сохранить"}
+      </BtnBase>
     </FilteringContainer>
   );
 };
