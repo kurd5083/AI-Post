@@ -9,7 +9,7 @@ import CheckboxText from "@/shared/CheckboxText";
 const BoostsPopup = () => {
   const { changeContent, popup } = usePopupStore();
   const channelId = popup?.data?.channelId;
-  const createBoostOrder = useCreateBoostOrder();
+  const { mutate: createBoostOrder, isPending: boostOrderPending } = useCreateBoostOrder();
 
   const [quantity, setQuantity] = useState(null);
   const [boostDays, setBoostDays] = useState(null);
@@ -20,7 +20,7 @@ const BoostsPopup = () => {
     createBoostOrder.mutate({
       channelId,
       quantity,
-      boostDays, // теперь число: 1, 7 или 30
+      boostDays,
     });
   };
 
@@ -53,10 +53,10 @@ const BoostsPopup = () => {
         $color="#D6DCEC"
         $bg="#2B89ED"
         onClick={handleStartBoost}
-        disabled={createBoostOrder.isLoading}
+        disabled={boostOrderPending}
         $margin="40"
       >
-        {createBoostOrder.isLoading ? "Продвигаем..." : "Начать продвижение"}
+        {boostOrderPending ? "Продвигаем..." : "Начать продвижение"}
       </BtnBase>
     </BoostsContainer>
   );
