@@ -9,7 +9,7 @@ const MyTeamAddPopup = () => {
   const channelName = popup?.data?.channelName;
   const [copied, setCopied] = useState(false);
 
-   const handleCopy = () => {
+  const handleCopy = () => {
     navigator.clipboard.writeText(channelName);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
