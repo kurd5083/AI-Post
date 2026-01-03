@@ -311,5 +311,12 @@ const EmptyState = styled.div`
   font-weight: 600;
   background-color: #1C2438;
   border-radius: 16px;
+  
+  @media (max-width: 1400px) {
+    margin: 32px 32px 0;
+  }
+  @media (max-width: 768px) {
+    margin: 32px 24px 0;
+  }
 `;
 export default TapeList
