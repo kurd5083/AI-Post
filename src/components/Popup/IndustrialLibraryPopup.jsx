@@ -1,37 +1,73 @@
 import styled from "styled-components";
 import Checkbox from "@/shared/Checkbox";
-import { industrialLibraryDatas } from "@/data/industrialLibraryDatas";
 import BtnBase from "@/shared/BtnBase";
 import { usePromptLibrary } from "@/lib/channels/usePromptLibrary";
-import { useUpdateChannelGlobalPrompt } from "@/lib/channels/global-prompt/useUpdateChannelGlobalPrompt";
 import { usePopupStore } from "@/store/popupStore"
+import { useUpdateChannelGlobalPrompt } from "@/lib/channels/global-prompt/useUpdateChannelGlobalPrompt";
+import { useChannelGlobalPrompt } from "@/lib/channels/global-prompt/useChannelGlobalPrompt";
 
 const IndustrialLibraryPopup = () => {
   const { popup } = usePopupStore();
   const channelId = popup?.data?.channelId;
   const { promptLibrary } = usePromptLibrary();
-  console.log(promptLibrary)
+  const [selectedIndex, setSelectedIndex] = useState(null);
+  const [localPrompt, setLocalPrompt] = useState("");
+  const { globalPrompt } = useChannelGlobalPrompt(channelId);
+
+  useEffect(() => {
+    if (!globalPrompt || !promptLibrary) return;
+
+    const foundIndex = promptLibrary.findIndex(
+      item => item.prompt === globalPrompt.globalPromt
+    );
+
+    if (foundIndex !== -1) {
+      setSelectedIndex(foundIndex);
+      setLocalPrompt(promptLibrary[foundIndex].prompt);
+    } else {
+      setSelectedIndex(null);
+      setLocalPrompt(globalPrompt.globalPromt);
+    }
+  }, [globalPrompt, promptLibrary]);
+
   const { mutate: updateGlobalPrompt } = useUpdateChannelGlobalPrompt();
 
-  const handleSave = () => {
-    updateGlobalPrompt({ channelId, value: localPrompt });
+  const handleSelectPrompt = (item, index) => {
+    setSelectedIndex(index);
+    setLocalPrompt(item.prompt);
   };
-  
-	return (
-		<IndustrialStyleContainer>
-			{industrialLibraryDatas.map((item, index) => (
-				<IndustrialLibraryContentItem key={index}>
-					<Checkbox>
-						<div>
-							<h4>{item.title}</h4>
-							<p>{item.desc}</p>
-						</div>
-					</Checkbox>
-				</IndustrialLibraryContentItem>
-			))}
-			<BtnBase $color="#336CFF" $bg="#1B243E" $margin="64">Сохранить</BtnBase>
-		</IndustrialStyleContainer>
-	)
+  const handleSave = () => {
+    updateGlobalPrompt({
+      channelId,
+      value: localPrompt,
+    });
+  };
+
+  return (
+    <IndustrialStyleContainer>
+      {promptLibrary?.map((item, index) => (
+        <IndustrialLibraryContentItem key={index}>
+          <Checkbox
+            checked={selectedIndex === index}
+            onChange={() => handleSelectPrompt(item, index)}
+          >
+            <div>
+              <h4>{item.title}</h4>
+              <p>{item.description}</p>
+            </div>
+          </Checkbox>
+        </IndustrialLibraryContentItem>
+      ))}
+      <BtnBase 
+        $color="#336CFF" 
+        $bg="#1B243E" 
+        $margin="64"
+        onClick={handleSave}
+      >
+        Сохранить
+      </BtnBase>
+    </IndustrialStyleContainer>
+  )
 }
 const IndustrialStyleContainer = styled.div`
   padding: 0 56px;
