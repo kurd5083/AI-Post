@@ -144,9 +144,9 @@ const SchedulePopup = () => {
         <BtnBase
           $margin="64"
           onClick={handleSave}
-          disabled={createSchedule.isLoading}
+          disabled={createSchedule.isPending}
         >
-          {createSchedule.isLoading ? "Сохраняем..." : "Сохранить"}
+          {createSchedule.isPending ? "Сохраняем..." : "Сохранить"}
         </BtnBase>
       </ScheduleContent>
     </ScheduleContainer>
