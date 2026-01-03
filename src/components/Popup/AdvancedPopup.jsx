@@ -128,7 +128,7 @@
       padding-top: 0;
     }
       
-    &:last-child {
+    &:last-of-type {
       padding-bottom: 0;
       border-bottom: 0;
     }

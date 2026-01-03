@@ -61,67 +61,82 @@ const TapeList = ({ forceHorizontal = false, padding, newsData, loding }) => {
 
   return (
     <>
-      {!loding ? (
-        <TapeContainer
-          ref={ref}
-          key={isSwipe}
-          spaceBetween={16}
-          direction={direction}
-          slidesPerView="auto"
-          allowTouchMove={forceHorizontal || isSwipe}
-          $fadeVisible={fadeVisible}
-          $forceHorizontal={forceHorizontal}
-          $padding={padding}
-          modules={[Navigation]}
-          navigation={{
-            nextEl: ".TapeNext",
-            prevEl: ".TapePrev",
-          }}
-        >
-          {newsData?.map((news) => (
-            <TapeItem key={news.id} $forceHorizontal={forceHorizontal}>
-              <TapeItemContent $forceHorizontal={forceHorizontal}>
-                <TapeItemHead>
-                  <img src={dzen_icon} alt="ava icon" />
-                  <p>{news.sourceName}</p>
-                </TapeItemHead>
-                <Link to={`/news/${news.id}`}>
-                  <TapeItemText>{news.title}</TapeItemText>
-                </Link>
-                <TapeItemAction onClick={() => handleClick(news.id)}>
-                  Сохранить в канал
-                </TapeItemAction>
-                <TapeTime>
-                  <TimeIcons />
-                  <span>{timeAgo(news.createdAt)}</span>
-                </TapeTime>
-              </TapeItemContent>
-              <TapePostImg
-                src={news.images && news.images[0] ? `http://77.37.65.40:3000/${news.images[0]}` : news_stub}
-                alt="post img"
-                $forceHorizontal={forceHorizontal}
-                onClick={() => openLightbox({
-                  images: news?.images?.map(img => `http://77.37.65.40:3000/${img}`) || [news_stub],
-                  initialIndex: 0
-                })}
-              />
-            </TapeItem>
-          ))}
-          {(forceHorizontal || isSwipe) && (
-            <div>
-              <TapePostButton className="TapePrev">
-                <img src={arrow} alt="arrow icon" />
-              </TapePostButton>
+      {loding ? (
+  <ModernLoading text="Загрузка новостей..." />
+) : newsData && newsData.length > 0 ? (
+  <TapeContainer
+    ref={ref}
+    key={isSwipe}
+    spaceBetween={16}
+    direction={direction}
+    slidesPerView="auto"
+    allowTouchMove={forceHorizontal || isSwipe}
+    $fadeVisible={fadeVisible}
+    $forceHorizontal={forceHorizontal}
+    $padding={padding}
+    modules={[Navigation]}
+    navigation={{
+      nextEl: ".TapeNext",
+      prevEl: ".TapePrev",
+    }}
+  >
+    {newsData.map((news) => (
+      <TapeItem key={news.id} $forceHorizontal={forceHorizontal}>
+        <TapeItemContent $forceHorizontal={forceHorizontal}>
+          <TapeItemHead>
+            <img src={dzen_icon} alt="ava icon" />
+            <p>{news.sourceName}</p>
+          </TapeItemHead>
 
-              <TapePostButton className="TapeNext">
-                <img src={arrow} alt="arrow icon" />
-              </TapePostButton>
-            </div>
-          )}
-        </TapeContainer>
-      ) : (
-        <ModernLoading text="Загрузка новостей..." />
-      )}
+          <Link to={`/news/${news.id}`}>
+            <TapeItemText>{news.title}</TapeItemText>
+          </Link>
+
+          <TapeItemAction onClick={() => handleClick(news.id)}>
+            Сохранить в канал
+          </TapeItemAction>
+
+          <TapeTime>
+            <TimeIcons />
+            <span>{timeAgo(news.createdAt)}</span>
+          </TapeTime>
+        </TapeItemContent>
+
+        <TapePostImg
+          src={
+            news.images?.[0]
+              ? `http://77.37.65.40:3000/${news.images[0]}`
+              : news_stub
+          }
+          alt="post img"
+          $forceHorizontal={forceHorizontal}
+          onClick={() =>
+            openLightbox({
+              images: news.images?.length
+                ? news.images.map(img => `http://77.37.65.40:3000/${img}`)
+                : [news_stub],
+              initialIndex: 0,
+            })
+          }
+        />
+      </TapeItem>
+    ))}
+
+    {(forceHorizontal || isSwipe) && (
+      <div>
+        <TapePostButton className="TapePrev">
+          <img src={arrow} alt="arrow icon" />
+        </TapePostButton>
+
+        <TapePostButton className="TapeNext">
+          <img src={arrow} alt="arrow icon" />
+        </TapePostButton>
+      </div>
+    )}
+  </TapeContainer>
+) : (
+  <EmptyState>Новостей нет</EmptyState>
+)}
     </>
   )
 }
@@ -289,4 +304,12 @@ const TapePostButton = styled.button`
     }
   }
 `
+const EmptyState = styled.div`
+  padding: 48px 0;
+  text-align: center;
+  color: #6A7080;
+  font-weight: 600;
+  background-color: #1C2438;
+  border-radius: 16px;
+`;
 export default TapeList
