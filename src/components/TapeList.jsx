@@ -311,6 +311,7 @@ const EmptyState = styled.div`
   font-weight: 600;
   background-color: #1C2438;
   border-radius: 16px;
+  margin-top: 32px;
   
   @media (max-width: 1400px) {
     margin: 32px 32px 0;
