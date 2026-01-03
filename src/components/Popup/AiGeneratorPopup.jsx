@@ -238,19 +238,24 @@ const AiGeneratorPopup = () => {
       )
     );
   };
-  const handleAddImage = (postId, file) => {
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      const imageUrl = e.target.result;
+  const handleAddImages = (postId, files) => {
+    const readFiles = Array.from(files).map(file =>
+      new Promise(resolve => {
+        const reader = new FileReader();
+        reader.onload = (e) => resolve(e.target.result);
+        reader.readAsDataURL(file);
+      })
+    );
+
+    Promise.all(readFiles).then(images => {
       setPosts(prev =>
         prev.map(p =>
           p.postId === postId
-            ? { ...p, images: [...(p.images || []), imageUrl] }
+            ? { ...p, images: [...(p.images || []), ...images] }
             : p
         )
       );
-    };
-    reader.readAsDataURL(file);
+    });
   };
 
   const handleRemoveImage = (postId, index) => {
@@ -348,10 +353,13 @@ const AiGeneratorPopup = () => {
                   <input
                     type="file"
                     accept="image/*"
+                    multiple
                     style={{ display: "none" }}
                     id={`file-input-${post.postId}`}
                     onChange={e => {
-                      if (e.target.files[0]) handleAddImage(post.postId, e.target.files[0]);
+                      if (e.target.files?.length) {
+                        handleAddImages(post.postId, e.target.files);
+                      }
                       e.target.value = "";
                     }}
                   />
