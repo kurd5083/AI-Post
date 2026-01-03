@@ -13,6 +13,7 @@ const CompilationUploadPopup = () => {
   console.log(category)
   return (
     <CompilationContainer>
+      <CompilationTitle>Источники категорий:</CompilationTitle>
       <BlocksItems
         items={category?.sources?.map((source) => ({ value: source.name }))}
         view={false}
@@ -33,5 +34,8 @@ const CompilationContainer = styled.div`
     padding: 0 24px;
   }
 `;
-
+const CompilationTitle = styled.h2`
+  font-weight: 700;
+  font-size: 24px;
+`
 export default CompilationUploadPopup
