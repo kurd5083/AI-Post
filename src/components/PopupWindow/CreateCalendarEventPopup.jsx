@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import styled from "styled-components";
 import CloseIcon from "@/icons/CloseIcon";
 import CustomSelectSec from "@/shared/CustomSelectSec";
