@@ -15,7 +15,7 @@ const CompilationPopup = () => {
   const { popup, changeContent, goBack } = usePopupStore()
   const channelId = popup?.data?.channelId;
 
-  const { mutate: applyCategory, isLoading } = useApplyCategory();
+  const { mutate: applyCategory, isPending: categoryPending } = useApplyCategory();
 
   const { categories, categoriesLoading } = useAvailableCategories();
   console.log(categories, categoriesLoading)
@@ -79,9 +79,9 @@ const CompilationPopup = () => {
       <BtnBase
         $margin="64"
         onClick={handleSave}
-        disabled={!selectedCategory || isLoading}
+        disabled={!selectedCategory || categoryPending}
       >
-        {isLoading ? "Сохраняем..." : "Сохранить"}
+        {categoryPending ? "Сохраняем..." : "Сохранить"}
       </BtnBase>
     </CompilationContainer>
   )

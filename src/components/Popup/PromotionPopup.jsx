@@ -15,9 +15,9 @@ const PromotionPopup = () => {
   const { popup, changeContent } = usePopupStore();
   const channelId = popup?.data?.channelId;
   const { promotionConfig, promotionLoading } = useGetChannelPromotionConfig(channelId);
-  const { mutate: createConfigСhannel, isLoading: createConfigLoading } = useCreateConfigСhannel();
-  const { mutate: updatePromotionConfig, isLoading: updatePromotionLoading } = useUpdatePromotionConfig();
-  const { mutate: createPromotionOrders, isLoading: creatingOrders } = useCreatePromotionOrders();
+  const { mutate: createConfigСhannel, isPending: createConfigPending } = useCreateConfigСhannel();
+  const { mutate: updatePromotionConfig, isPending: updatePromotionPending} = useUpdatePromotionConfig();
+  const { mutate: createPromotionOrders, isPending: creatingOrdersPending } = useCreatePromotionOrders();
 
   const [autoViews, setAutoViews] = useState(false);
   const [autoViewsLink, setAutoViewsLink] = useState(false);
@@ -204,9 +204,9 @@ const PromotionPopup = () => {
                 $color="#EF6284"
                 $bg="#241F31"
                 onClick={handlePromotePosts}
-                disabled={!manualPosts.length || creatingOrders}
+                disabled={!manualPosts.length || creatingOrdersPending}
               >
-                {creatingOrders ? "Продвигаем..." : "Начать продвижение"}
+                {creatingOrdersPending ? "Продвигаем..." : "Начать продвижение"}
               </BtnBase>
             </PromotePost>
           )}
@@ -217,10 +217,10 @@ const PromotionPopup = () => {
         $margin="64"
         onClick={handleSave}
         disabled={
-          createConfigLoading || updatePromotionLoading
+          createConfigPending || updatePromotionPending
         }
       >
-        {createConfigLoading || updatePromotionLoading
+        {createConfigPending || updatePromotionPending
           ? "Сохраняем..."
           : "Сохранить"}
       </BtnBase>

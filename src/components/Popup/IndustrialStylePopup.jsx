@@ -27,7 +27,7 @@ const IndustrialStylePopup = () => {
   const { creativity } = useGetChannelCreativity(channelId);
   const { caption } = useGetChannelCaption(channelId);
 
-  const { mutateAsync: testDrive, isPanding: testPanding } = useTestDrivePrompt();
+  const { mutateAsync: testDrive, isPending: testPending } = useTestDrivePrompt();
 
   useEffect(() => {
     if (globalPrompt !== undefined) setLocalPrompt(globalPrompt.globalPromt);
@@ -74,10 +74,10 @@ const IndustrialStylePopup = () => {
               ></textarea>
             </div>
             <button
-              disabled={!localPrompt?.trim() || testPanding}
+              disabled={!localPrompt?.trim() || testPending}
               onClick={handleTest}
             >
-              {testPanding ? "Тестируем..." : "Тест"}
+              {testPending ? "Тестируем..." : "Тест"}
             </button>
           </IndustrialStyleInfo>
           <IndustrialStyleDesc>Введите промпт — это задание для генерации поста. <mark>Чем точнее формулировка, тем лучше результат.</mark></IndustrialStyleDesc>
