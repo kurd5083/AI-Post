@@ -63,7 +63,7 @@ const LinkGenerationMyPopup = () => {
                   </TableCell>
                   <TableCell>
                     <CellInviteLink>
-                      <Link>{link.inviteLink}</Link>
+                      <p>{link.inviteLink}</p>
                       <span onClick={() => handleCopy(link)}>
                         {copied === link.id ? "Скопировано!" : "Скопировать"}
                       </span>
@@ -184,7 +184,7 @@ const CellInviteLink = styled.div`
   display: flex;
   flex-direction: column;
   gap: 8px;
-  a {
+  p {
     color: #D6DCEC;
   }
   span {
