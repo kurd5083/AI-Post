@@ -6,11 +6,12 @@ import { usePromptLibrary } from "@/lib/channels/usePromptLibrary";
 import { usePopupStore } from "@/store/popupStore"
 import { useUpdateChannelGlobalPrompt } from "@/lib/channels/global-prompt/useUpdateChannelGlobalPrompt";
 import { useChannelGlobalPrompt } from "@/lib/channels/global-prompt/useChannelGlobalPrompt";
+import ModernLoading from "@/components/ModernLoading";
 
 const IndustrialLibraryPopup = () => {
   const { popup } = usePopupStore();
   const channelId = popup?.data?.channelId;
-  const { promptLibrary } = usePromptLibrary();
+  const { promptLibrary, promptLoading } = usePromptLibrary();
   const [selectedIndex, setSelectedIndex] = useState(null);
   const [localPrompt, setLocalPrompt] = useState("");
   const { globalPrompt } = useChannelGlobalPrompt(channelId);
@@ -46,22 +47,26 @@ const IndustrialLibraryPopup = () => {
 
   return (
     <IndustrialStyleContainer>
-      {promptLibrary?.map((item, index) => (
-        <IndustrialLibraryContentItem key={index}>
-          <Checkbox
-            checked={selectedIndex === index}
-            onChange={() => handleSelectPrompt(item, index)}
-          >
-            <div>
-              <h4>{item.title}</h4>
-              <p>{item.description}</p>
-            </div>
-          </Checkbox>
-        </IndustrialLibraryContentItem>
-      ))}
-      <BtnBase 
-        $color="#336CFF" 
-        $bg="#1B243E" 
+      {promptLoading ? (
+        <ModernLoading text="Загрузка промптов..." />
+      ) : (
+        promptLibrary?.map((item, index) => (
+          <IndustrialLibraryContentItem key={index}>
+            <Checkbox
+              checked={selectedIndex === index}
+              onChange={() => handleSelectPrompt(item, index)}
+            >
+              <div>
+                <h4>{item.title}</h4>
+                <p>{item.description}</p>
+              </div>
+            </Checkbox>
+          </IndustrialLibraryContentItem>
+        ))
+      )}
+      <BtnBase
+        $color="#336CFF"
+        $bg="#1B243E"
         $margin="64"
         onClick={handleSave}
       >
