@@ -1,15 +1,18 @@
 import styled from "styled-components";
-// import TimeIcons from "@/icons/TimeIcons";
-// import timeAgo from "@/lib/timeAgo";
 import BtnBase from "@/shared/BtnBase";
 import { useLightboxStore } from "@/store/lightboxStore";
-// import { formatText } from "@/lib/formatText";
+import { useApprovePost } from "@/lib/posts/usePostsModeration";
+
 const MAX_VISIBLE_IMAGES = 3;
 
-const CardPablishPremoderation = ({ item, bg }) => {
+const CardPablishPremoderation = ({ item, bg, channelId }) => {
   const { openLightbox } = useLightboxStore();
+  const { mutate: approvePostMutation } = useApprovePost();
 
-  console.log(item)
+  const handleApprove = () => {
+    approvePostMutation({ postId: item.id, channelId });
+  };
+
   return (
     <CardPablishItem $bg={bg}>
       <CardPablishItemHead>
@@ -55,12 +58,13 @@ const CardPablishPremoderation = ({ item, bg }) => {
         dangerouslySetInnerHTML={{ __html: item.summary }}
       />
       <CardPablishButtons>
-        <BtnBase
+         <BtnBase
           $padding="16px 24px"
           $width="100%"
-          $bg="transporent"
+          $bg="transparent"
           $color="#D6DCEC"
           $border={true}
+          onClick={handleApprove}
         >
           Принять
         </BtnBase>
