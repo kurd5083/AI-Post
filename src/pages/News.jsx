@@ -1,17 +1,19 @@
 import styled from "styled-components";
 import { useParams } from 'react-router-dom';
-import fire from "@/assets/tape/fire.svg";
 import TimeIcons from "@/icons/TimeIcons";
 import TapeList from "@/components/TapeList";
-import BtnBase from "@/shared/BtnBase";
-import { usePopupStore } from "@/store/popupStore"
+import ModernLoading from "@/components/ModernLoading";
 import { useNews } from "@/lib/news/useNews";
 import { useNewsById } from "@/lib/news/useNewsById";
-import ModernLoading from "@/components/ModernLoading";
+import { useCopyNewsToChannel } from "@/lib/news/useCopyNewsToChannel";
+import timeAgo from "@/lib/timeAgo";
 import news_stub from "@/assets/news-stub.png";
 import dzen_icon from "@/assets/dzen-icon.svg";
+import fire from "@/assets/tape/fire.svg";
 import { useLightboxStore } from "@/store/lightboxStore";
-import { useCopyNewsToChannel } from "@/lib/news/useCopyNewsToChannel";
+import { usePopupStore } from "@/store/popupStore"
+import BtnBase from "@/shared/BtnBase";
+
 
 const NewsDetail = () => {
 	const { openPopup } = usePopupStore();
@@ -66,10 +68,9 @@ const NewsDetail = () => {
 											loading: copyingLoading
 										})
 									}
-								>
-									Сохранить в канал
+								>Сохранить в канал
 								</BtnBase>
-								<PostTime><TimeIcons color="#336CFF" />{news?.readingTime}</PostTime>
+								<PostTime><TimeIcons color="#336CFF" />{timeAgo(news?.createdAt)}</PostTime>
 							</PostFooter>
 						</PostLeft>
 						<NewsImg
