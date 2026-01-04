@@ -78,12 +78,12 @@ const CreateCalendarEventPopup = () => {
 
       <InputLabel>Выбрать пост</InputLabel>
       <CustomSelectSec
-				options={posts?.map((post) => ({
+        options={(posts || []).map((post) => ({
           value: post.id,
-          label: post.title,
+          label: post.title || "Без названия",
         }))}
         value={selectedPostId}
-        onChange={(option) => setSelectedPostId(option.value)}
+        onChange={(option) => setSelectedPostId(option?.value ?? null)}
         width="100%"
         fs="16px"
         padding="24px"
