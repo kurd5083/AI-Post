@@ -170,6 +170,7 @@ const AiGeneratorPopup = () => {
     });
   };
   const handleSavePost = (post) => {
+    console.log(post)
     const saveWithChannel = (finalChannelId) => {
       const [hours, minutes] = post.time.split(":").map(Number);
 
