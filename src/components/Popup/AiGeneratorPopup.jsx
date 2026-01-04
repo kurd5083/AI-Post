@@ -320,11 +320,11 @@ const AiGeneratorPopup = () => {
                     $color="#FF7F48"
                     $bg="transporent"
                     onClick={() => handleCreateAIImage(post.postId)}
-                    disabled={imagePending || !post.text} 
+                    disabled={imagePending || !post.text}
                   >
                     <img src={create} alt="create icon" />
-                    {imagePending && postProgress[post.postId] != null
-                      ? `Генерация фото с AI... ${imageProgress[post.postId] || 0}%`
+                    {imageProgress[post.postId] != null && imageProgress[post.postId] < 100
+                      ? `Генерация фото с AI... ${imageProgress[post.postId]}%`
                       : "Создать фото с AI"}
                   </BtnBase>
                 </ItemAI>

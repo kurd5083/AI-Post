@@ -8,9 +8,10 @@ const MAX_VISIBLE_IMAGES = 3;
 
 const CardPablishPremoderation = ({ item, bg, channelId }) => {
   const { openLightbox } = useLightboxStore();
-  const { mutate: approvePostMutation } = useApprovePost();
-  const { mutate: rejectPostMutation } = useRejectPost();
-  console.log(item.id, channelId)
+  const { mutate: approvePostMutation, isPending: isApprovePending } = useApprovePost();
+
+  const { mutate: rejectPostMutation, isPending: isRejectPending } = useRejectPost();
+
   const handleApprove = () => {
     approvePostMutation({ postId: item.id, channelId });
   };
@@ -63,16 +64,18 @@ const CardPablishPremoderation = ({ item, bg, channelId }) => {
         dangerouslySetInnerHTML={{ __html: item.summary }}
       />
       <CardPablishButtons>
-         <BtnBase
+        <BtnBase
           $padding="16px 24px"
           $width="100%"
           $bg="transparent"
           $color="#D6DCEC"
           $border={true}
           onClick={handleApprove}
+          disabled={isApprovePending || isRejectPending}
         >
-          Принять
+          {isApprovePending ? "Одобрение..." : "Принять"}
         </BtnBase>
+
         <BtnBase
           $padding="16px 24px"
           $width="100%"
@@ -80,8 +83,9 @@ const CardPablishPremoderation = ({ item, bg, channelId }) => {
           $color="#D6DCEC"
           $border={true}
           onClick={handleReject}
+          disabled={isApprovePending || isRejectPending}
         >
-          Отклонить
+          {isRejectPending ? "Отклонение..." : "Отклонить"}
         </BtnBase>
       </CardPablishButtons>
     </CardPablishItem>
