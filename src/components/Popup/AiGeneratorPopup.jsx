@@ -26,6 +26,7 @@ import { useUser } from "@/lib/useUser";
 import { useGenerateSimpleImage } from "@/lib/channels/image-generation/useGenerateSimpleImage";
 import { useGeneratePost } from "@/lib/posts/useGeneratePost";
 import { usePostsStore } from "@/store/postsStore";
+import { useSendPostToChannel } from "@/lib/posts/useSendPostToChannel";
 
 const AiGeneratorPopup = () => {
   const { openLightbox } = useLightboxStore();
@@ -56,6 +57,7 @@ const AiGeneratorPopup = () => {
   const { mutate: createPostMutation } = useCreatePost();
   const { mutate: generateImage, isPending: imagePending } = useGenerateSimpleImage();
   const { mutate: generatePost, isPending: postPending } = useGeneratePost();
+  const { mutate: sendPost, isPending: isSendPending } = useSendPostToChannel();
 
   const handleWriteWithAI = (postId) => {
     const runGenerate = (finalChannelId) => {
@@ -243,6 +245,38 @@ const AiGeneratorPopup = () => {
 
     updatePost(postId, { text: el.innerHTML, summary: el.innerHTML });
   };
+  const handlePublishNow = (post) => {
+    const publishWithChannel = (finalChannelId) => {
+      if (!post.postId) {
+        console.error("Пост ещё не сохранён");
+        return;
+      }
+
+      sendPost(
+        {
+          postId: post.postId,
+          channelId: finalChannelId,
+        },
+        {
+          onSuccess: () => {
+            console.log("Пост опубликован");
+            removePost(post.postId);
+          },
+        }
+      );
+    };
+
+    if (!channelId) {
+      changeContent("select_channel", "popup_window", {
+        onSave: (selectedChannelId) => {
+          publishWithChannel(selectedChannelId);
+        },
+      });
+      return;
+    }
+
+    publishWithChannel(channelId);
+  };
 
   return (
     <GeneratorContainer>
@@ -299,7 +333,6 @@ const AiGeneratorPopup = () => {
                 <ItemTime>Время публикации: {post.time}</ItemTime>
               </BodyRight>
             </ItemBody>
-
             <ItemActions>
               <ActionsLeft>
                 <ItemAI>
@@ -308,13 +341,13 @@ const AiGeneratorPopup = () => {
                     $color="#336CFF"
                     $bg="transporent"
                     onClick={() => handleWriteWithAI(post.postId)}
+                    disabled={postPending}
                   >
                     <AiGeneratorIcon color="#336CFF" />
                     {postProgress[post.postId] != null && postProgress[post.postId] < 100
                       ? `Генерация с AI... ${postProgress[post.postId]}%`
                       : "Написать с AI"}
                   </BtnBase>
-
                   <BtnBase
                     $padding="0"
                     $color="#FF7F48"
@@ -342,16 +375,13 @@ const AiGeneratorPopup = () => {
                       e.target.value = "";
                     }}
                   />
-
                   <img
                     src={paper}
                     alt="paper icon"
                     style={{ cursor: "pointer" }}
                     onClick={() => document.getElementById(`file-input-${post.postId}`).click()}
                   />
-
                   <div style={{ position: "relative" }}>
-
                     <img
                       src={smiley}
                       onClick={() =>
@@ -373,7 +403,6 @@ const AiGeneratorPopup = () => {
                       </div>
                     )}
                   </div>
-
                   <img src={fat} alt="fat icon" onClick={() => formatText("bold")} />
                   <img src={italics} alt="italics icon" onClick={() => formatText("italic")} />
                   <img src={underlined} alt="underlined icon" onClick={() => formatText("underline")} />
@@ -381,12 +410,10 @@ const AiGeneratorPopup = () => {
                   <img src={link} alt="link icon" onClick={() => addLink(post.postId)} />
                 </ItemActionsAdd>
               </ActionsLeft>
-
               <ButtonsAll>
                 <HideButton onClick={() => setSelectedPost(post)}>
                   <img src={hide} alt="hide icon" width={24} height={17} />
                 </HideButton>
-
                 <ButtonsMain>
                   <ButtonsMainTop>
                     <BtnBase $padding="21px 24px" $color="#EF6284" $bg="#241E2D" onClick={() => removePost(post.postId)}>
@@ -399,8 +426,16 @@ const AiGeneratorPopup = () => {
                       Сохранить
                     </BtnBase>
                   </ButtonsMainTop>
-                  <BtnBase $padding="21px 24px" $border $width="100%" $bg="transporent" $color="#6A7080">
-                    Опубликовать сейчас
+                  <BtnBase
+                    $padding="21px 24px"
+                    $border
+                    $width="100%"
+                    $bg="transporent"
+                    $color="#6A7080"
+                    onClick={() => handlePublishNow(post)}
+                    disabled={isSendPending}
+                  >
+                    {isSendPending ? "Публикация..." : "Опубликовать сейчас"}
                   </BtnBase>
                 </ButtonsMain>
               </ButtonsAll>
@@ -408,11 +443,9 @@ const AiGeneratorPopup = () => {
           </ListItem>
         ))}
       </GeneratorList>
-
       <PreviewContainer>
         <Preview collapsed={collapsed} onChange={() => setCollapsed(!collapsed)} testResult={selectedPost} telegramId={telegramId} />
       </PreviewContainer>
-
       {popupPostId && (
         <ChangeTimePopup
           onSave={handleSaveTime}
