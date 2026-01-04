@@ -142,8 +142,10 @@ const AiGeneratorPopup = () => {
             console.error("No images returned from AI");
             return;
           }
+
           const imageUrl = `data:${inlineData.mimeType};base64,${inlineData.data}`;
-          addImages(postId, [imageUrl]);
+
+          updatePost(postId, { images: [imageUrl] });
         },
         onError: (err) => {
           clearInterval(interval);
@@ -447,10 +449,10 @@ const AiGeneratorPopup = () => {
                     >
                       Изменить время
                     </BtnBase>
-                    <BtnBase 
-                      $padding="21px 24px" 
-                      $color="#336CFF" 
-                      $bg="#161F37" 
+                    <BtnBase
+                      $padding="21px 24px"
+                      $color="#336CFF"
+                      $bg="#161F37"
                       onClick={() => handleSavePost(post)}
                       disabled={updatePending || postPending}
                     >
@@ -616,6 +618,7 @@ const ItemText = styled.div`
   min-height: 80px;
   max-height: 300px;
   overflow-y: auto;
+  scrollbar-width: none;
   white-space: pre-wrap;
   word-break: break-word;
 
