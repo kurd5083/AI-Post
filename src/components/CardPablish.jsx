@@ -55,7 +55,7 @@ const CardPablish = ({ item, bg }) => {
         dangerouslySetInnerHTML={{ __html: item.summary }}
       />
       <CardPablishButtons>
-        <BtnBase
+        {/* <BtnBase
           $padding="16px 24px"
           $width="100%"
           $bg="transporent"
@@ -72,7 +72,7 @@ const CardPablish = ({ item, bg }) => {
           $border={true}
         >
           Отклонить
-        </BtnBase>
+        </BtnBase> */}
       </CardPablishButtons>
     </CardPablishItem>
   )

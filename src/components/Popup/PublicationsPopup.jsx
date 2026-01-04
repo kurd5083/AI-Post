@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo } from "react";
 import styled from "styled-components";
 import CardPablish from "@/components/CardPablish";
+import CardPablishPremoderation from "@/components/CardPablishPremoderation";
 import { usePopupStore } from "@/store/popupStore";
 import { usePostsByChannel } from "@/lib/posts/usePostsByChannel";
 import ModernLoading from "@/components/ModernLoading";

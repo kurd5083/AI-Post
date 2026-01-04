@@ -308,10 +308,9 @@ const AiGeneratorPopup = () => {
                     $color="#336CFF"
                     $bg="transporent"
                     onClick={() => handleWriteWithAI(post.postId)}
-                    disabled={postPending}
                   >
-                    {postPending
-                      ? `Генерация с AI... ${postProgress[post.postId] || 0}%`
+                    {postProgress[post.postId] != null && postProgress[post.postId] < 100
+                      ? `Генерация с AI... ${postProgress[post.postId]}%`
                       : "Написать с AI"}
                   </BtnBase>
 
@@ -320,11 +319,11 @@ const AiGeneratorPopup = () => {
                     $color="#FF7F48"
                     $bg="transporent"
                     onClick={() => handleCreateAIImage(post.postId)}
-                    disabled={imagePending || !post.text}
+                    disabled={!post.text}
                   >
                     <img src={create} alt="create icon" />
-                    {imagePending
-                      ? `Генерация фото с AI... ${imageProgress[post.postId] || 0}%`
+                    {imageProgress[post.postId] != null && imageProgress[post.postId] < 100
+                      ? `Генерация фото с AI... ${imageProgress[post.postId]}%`
                       : "Создать фото с AI"}
                   </BtnBase>
                 </ItemAI>
