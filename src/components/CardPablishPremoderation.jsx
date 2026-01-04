@@ -6,7 +6,7 @@ import { useLightboxStore } from "@/store/lightboxStore";
 // import { formatText } from "@/lib/formatText";
 const MAX_VISIBLE_IMAGES = 3;
 
-const CardPablish = ({ item, bg }) => {
+const CardPablishPremoderation = ({ item, bg }) => {
   const { openLightbox } = useLightboxStore();
 
   console.log(item)
@@ -208,4 +208,4 @@ const CardPablishButtons = styled.div`
   margin-top: 24px;
 `
 
-export default CardPablish
+export default CardPablishPremoderation

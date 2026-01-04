@@ -5,7 +5,7 @@ import { usePopupStore } from "@/store/popupStore";
 import { usePostsByChannel } from "@/lib/posts/usePostsByChannel";
 import ModernLoading from "@/components/ModernLoading";
 import CustomSelectSec from "@/shared/CustomSelectSec";
-  
+
 const itemsPerPageDefault = 9;
 const itemsPerPageSmall = 6;
 const itemsPerPageMob = 4;
@@ -115,7 +115,7 @@ const PublicationsPopup = () => {
         { value: 21, label: "Последние 21 день" },
       ];
     }
-    
+
     return [];
   }, [dateFilter.period]);
 
@@ -169,7 +169,13 @@ const PublicationsPopup = () => {
         <>
           <PublicationsList>
             {currentItems?.length > 0 ? (
-              currentItems.map((item) => <CardPablish key={item.id} item={item} bg />)
+              currentItems.map((item) =>
+                filter === "premoderation" ? (
+                  <CardPablishPremoderation key={item.id} item={item} />
+                ) : (
+                  <CardPablish key={item.id} item={item} bg />
+                )
+              )
             ) : (
               <EmptyState>Публикаций пока нет</EmptyState>
             )}

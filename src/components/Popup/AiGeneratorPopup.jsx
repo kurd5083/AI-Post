@@ -118,10 +118,10 @@ const AiGeneratorPopup = () => {
     const post = posts.find(p => p.postId === postId);
     if (!post || !post.text) return;
 
-    setImageProgress(0);
+    setImageProgressPercent(0);
 
     const interval = setInterval(() => {
-      setImageProgress(prev => {
+      setImageProgressPercent(prev => {
         if (prev >= 90) {
           clearInterval(interval);
           return prev;
@@ -135,7 +135,7 @@ const AiGeneratorPopup = () => {
       {
         onSuccess: (data) => {
           clearInterval(interval);
-          setImageProgress(100);
+          setImageProgressPercent(100);
 
           const inlineData = data?.candidates?.[0]?.content?.parts?.find(part => part.inlineData)?.inlineData;
           if (!inlineData?.data) {
@@ -147,7 +147,7 @@ const AiGeneratorPopup = () => {
         },
         onError: (err) => {
           clearInterval(interval);
-          setImageProgress(0);
+          setImageProgressPercent(0);
           console.error(err);
         },
       }
