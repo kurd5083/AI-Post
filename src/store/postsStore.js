@@ -24,9 +24,9 @@ export const usePostsStore = create((set, get) => ({
 
   setSelectedPost: (post) => set({ selectedPost: post }),
 
-  addPost: () =>
+  addPost: (post) =>
     set(state => ({
-      posts: [createEmptyPost(state.posts.length + 1), ...state.posts],
+        posts: [post || createEmptyPost(state.posts.length + 1), ...state.posts],
     })),
 
   removePost: (postId) =>

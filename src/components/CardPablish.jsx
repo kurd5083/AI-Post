@@ -7,8 +7,8 @@ const MAX_VISIBLE_IMAGES = 3;
 
 const CardPablish = ({ item, bg }) => {
   const { openLightbox } = useLightboxStore();
-  const { addPost, updatePost } = usePostsStore();
-
+  const { addPost } = usePostsStore();
+  console.log(item)
   const handleEdit = () => {
     addPost({
       postId: item.id,   
