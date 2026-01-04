@@ -5,7 +5,7 @@ export const useCopyNewsToChannel = () => {
   return useMutation({
     mutationFn: ({ id, data }) => copyNewsToChannel(id, data),
     onSuccess: (id) => {
-      queryClient.invalidateQueries([ "posts-by-channel", id ]);
+      queryClient.invalidateQueries(["posts-by-channel"]);
     }
   });
 };
