@@ -28,8 +28,6 @@ import { useGeneratePost } from "@/lib/posts/useGeneratePost";
 import { usePostsStore } from "@/store/postsStore";
 
 const AiGeneratorPopup = () => {
-  // const generatePostId = () => Math.floor(Math.random() * 2_000_000_000);
-
   const { openLightbox } = useLightboxStore();
   const { user } = useUser();
 
@@ -37,21 +35,6 @@ const AiGeneratorPopup = () => {
   const channelId = popup?.data?.channelId;
   const telegramId = user?.telegramId;
 
-  // const [posts, setPosts] = useState([
-  //   { 
-  //     postId: generatePostId(), 
-  //     placeholder: "Пост 1", 
-  //     title: "", 
-  //     progress: "0 / 1024", 
-  //     text: "", 
-  //     summary: "", 
-  //     time: "00:00", 
-  //     images: [] 
-  //   },
-  // ]);
-
-  // const [selectedPost, setSelectedPost] = useState(posts[0]);
-  
   const {
     posts,
     selectedPost,
@@ -65,8 +48,6 @@ const AiGeneratorPopup = () => {
   const [collapsed, setCollapsed] = useState(false);
   const [popupPostId, setPopupPostId] = useState(null);
   const [emojiPostId, setEmojiPostId] = useState(null);
-  // const [selectionRange, setSelectionRange] = useState(null);
-  // const [activePostId, setActivePostId] = useState(null);
 
   const { fadeVisible, ref } = useFadeOnScroll(20);
   const { mutate: createPostMutation } = useCreatePost();
@@ -74,24 +55,29 @@ const AiGeneratorPopup = () => {
   const { mutate: generatePost, isPending: postPending } = useGeneratePost();
 
   const handleWriteWithAI = (postId) => {
-    if (!channelId) {
-      alert("Выберите канал!");
-      return;
-    }
-
-    generatePost(channelId,
-      {
+    const runGenerate = (finalChannelId) => {
+      generatePost(finalChannelId, {
         onSuccess: (data) => {
-          console.log(data, 'data 1')
           updatePost(postId, {
             title: data.post?.title || "",
             text: data.post?.text || "",
             summary: data.post?.summary || "",
             images: data.images || [],
           });
-        }
-      }
-    );
+        },
+      });
+    };
+
+    if (!channelId) {
+      changeContent("select_channel", "popup_window", {
+        onSave: (selectedChannelId) => {
+          runGenerate(selectedChannelId);
+        },
+      });
+      return;
+    }
+
+    runGenerate(channelId);
   };
 
   useEffect(() => {
@@ -125,48 +111,30 @@ const AiGeneratorPopup = () => {
           }
 
           if (!imageUrl) return;
-            addImages(postId, [imageUrl]);
+          addImages(postId, [imageUrl]);
         },
       }
     );
   };
 
-  // const handleAddPost = () => {
-    
-  // };
-
-  // const handleRemovePost = (postId) => {
-  //   setPosts(prev => prev.filter(p => p.postId !== postId));
-  //   if (selectedPost?.postId === postId) {
-  //     setSelectedPost(posts.find(p => p.postId !== postId) || null);
-  //   }
-  // };
-
-//   const handleTitleChange = (postId, title) => {
-//   updatePost(postId, { title });
-// }; 
-
-//   const handleTextChange = (postId, text) => {
-//   updatePost(postId, { text, summary: text });
-// };
 
   const handleSaveTime = (newTime) => {
-  updatePost(popupPostId, { time: newTime });
-  setPopupPostId(null);
-};
-const handleAddImages = (postId, files) => {
-  const readFiles = Array.from(files).map(file =>
-    new Promise(resolve => {
-      const reader = new FileReader();
-      reader.onload = e => resolve(e.target.result);
-      reader.readAsDataURL(file);
-    })
-  );
+    updatePost(popupPostId, { time: newTime });
+    setPopupPostId(null);
+  };
+  const handleAddImages = (postId, files) => {
+    const readFiles = Array.from(files).map(file =>
+      new Promise(resolve => {
+        const reader = new FileReader();
+        reader.onload = e => resolve(e.target.result);
+        reader.readAsDataURL(file);
+      })
+    );
 
-  Promise.all(readFiles).then(images => {
-    addImages(postId, images);
-  });
-};
+    Promise.all(readFiles).then(images => {
+      addImages(postId, images);
+    });
+  };
 
   const handleSavePost = (post) => {
     const saveWithChannel = (finalChannelId) => {
@@ -214,14 +182,6 @@ const handleAddImages = (postId, files) => {
     if (url) document.execCommand("createLink", false, url);
   };
 
-  // const saveSelection = (postId) => {
-  //   const selection = window.getSelection();
-  //   if (selection && selection.rangeCount > 0) {
-  //     setSelectionRange(selection.getRangeAt(0));
-  //     setActivePostId(postId);
-  //   }
-  // };
-
   const insertEmojiAtCursor = (emoji, postId) => {
     const el = document.getElementById(`text-${postId}`);
     el.focus();
@@ -243,35 +203,7 @@ const handleAddImages = (postId, files) => {
 
     updatePost(postId, { text: el.innerHTML, summary: el.innerHTML });
   };
-  // const handleAddImages = (postId, files) => {
-  //   const readFiles = Array.from(files).map(file =>
-  //     new Promise(resolve => {
-  //       const reader = new FileReader();
-  //       reader.onload = (e) => resolve(e.target.result);
-  //       reader.readAsDataURL(file);
-  //     })
-  //   );
 
-  //   Promise.all(readFiles).then(images => {
-  //     setPosts(prev =>
-  //       prev.map(p =>
-  //         p.postId === postId
-  //           ? { ...p, images: [...(p.images || []), ...images] }
-  //           : p
-  //       )
-  //     );
-  //   });
-  // };
-
-  // const handleRemoveImage = (postId, index) => {
-  //   setPosts(prev =>
-  //     prev.map(p =>
-  //       p.postId === postId
-  //         ? { ...p, images: p.images.filter((_, i) => i !== index) }
-  //         : p
-  //     )
-  //   );
-  // };
   return (
     <GeneratorContainer>
       <GeneratorHead>
@@ -305,8 +237,8 @@ const handleAddImages = (postId, files) => {
                 id={`text-${post.postId}`}
                 ref={el => el && el.innerHTML !== post.summary && (el.innerHTML = post.summary)}
                 onInput={e => updatePost(post.postId, { text: e.currentTarget.innerHTML, summary: e.currentTarget.innerHTML })}
-                // onClick={() => saveSelection(post.postId)}
-                // onKeyUp={() => saveSelection(post.postId)}
+              // onClick={() => saveSelection(post.postId)}
+              // onKeyUp={() => saveSelection(post.postId)}
               />
               <BodyRight>
                 <ImagesContainer>
@@ -377,15 +309,15 @@ const handleAddImages = (postId, files) => {
                   />
 
                   <div style={{ position: "relative" }}>
-                
-                  <img
-                    src={smiley}
-                    onClick={() =>
-                      setEmojiPostId(prev =>
-                        prev === post.postId ? null : post.postId
-                      )
-                    }
-                  />
+
+                    <img
+                      src={smiley}
+                      onClick={() =>
+                        setEmojiPostId(prev =>
+                          prev === post.postId ? null : post.postId
+                        )
+                      }
+                    />
                     {emojiPostId === post.postId && (
                       <div style={{ position: "absolute", zIndex: 100 }}>
                         <EmojiPicker
