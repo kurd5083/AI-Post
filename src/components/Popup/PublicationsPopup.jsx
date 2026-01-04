@@ -46,38 +46,42 @@ const PublicationsPopup = () => {
     const now = new Date();
     let result = [...posts];
 
+    // Фильтр по дате
     switch (dateFilter.period) {
       case "year":
-        if (!dateFilter.value) return result;
-        result = result.filter(
-          (p) => new Date(p.publishedAt).getFullYear() === dateFilter.value
-        );
-        break;
-
-      case "month":
-        if (!dateFilter.value) return result;
-        result = result.filter((p) => {
-          const postDate = new Date(p.publishedAt);
-          return (
-            postDate.getFullYear() === dateFilter.value.year &&
-            postDate.getMonth() === dateFilter.value.month
+        if (dateFilter.value) {
+          result = result.filter(
+            (p) => new Date(p.publishedAt).getFullYear() === dateFilter.value
           );
-        });
+        }
         break;
-
+      case "month":
+        if (dateFilter.value) {
+          result = result.filter((p) => {
+            const postDate = new Date(p.publishedAt);
+            return (
+              postDate.getFullYear() === dateFilter.value.year &&
+              postDate.getMonth() === dateFilter.value.month
+            );
+          });
+        }
+        break;
       case "week":
-        if (!dateFilter.value) return result;
-        const threshold = new Date();
-        threshold.setDate(now.getDate() - dateFilter.value);
-        result = result.filter((p) => new Date(p.publishedAt) >= threshold);
+        if (dateFilter.value) {
+          const threshold = new Date();
+          threshold.setDate(now.getDate() - dateFilter.value);
+          result = result.filter((p) => new Date(p.publishedAt) >= threshold);
+        }
         break;
-
       default:
         break;
     }
 
+    // Фильтр по типу (premoderation / common)
     if (filter === "premoderation") {
       result = result.filter((p) => p.status === "PENDING_MODERATION");
+    } else {
+      result = result.filter((p) => p.status !== "PENDING_MODERATION");
     }
 
     return result;
@@ -86,6 +90,7 @@ const PublicationsPopup = () => {
   const totalPages = filteredPosts.length
     ? Math.ceil(filteredPosts.length / itemsPerPage)
     : 0;
+
   const indexOfLast = currentPage * itemsPerPage;
   const indexOfFirst = indexOfLast - itemsPerPage;
   const currentItems = filteredPosts.slice(indexOfFirst, indexOfLast);
@@ -179,23 +184,20 @@ const PublicationsPopup = () => {
       {!loadingPosts && channelId ? (
         <>
           <PublicationsList>
-            {filter === "premoderation" ? (
-              premoderationPosts.length > 0 ? (
-                premoderationPosts.map(item => (
+            {currentItems.length > 0 ? (
+              currentItems.map((item) =>
+                item.status === "PENDING_MODERATION" ? (
                   <CardPablishPremoderation key={item.id} item={item} />
-                ))
-              ) : (
-                <EmptyState>Постов на премодерации пока нет</EmptyState>
+                ) : (
+                  <CardPablish key={item.id} item={item} bg />
+                )
               )
-            ) : commonPosts.length > 0 ? (
-              commonPosts.map(item => (
-                <CardPablish key={item.id} item={item} bg />
-              ))
             ) : (
-              <EmptyState>Постов пока нет</EmptyState>
+              <EmptyState>
+                {filter === "premoderation" ? "Постов на премодерации пока нет" : "Постов пока нет"}
+              </EmptyState>
             )}
           </PublicationsList>
-
 
           {totalPages > 1 && (
             <PaginationWrapper>
