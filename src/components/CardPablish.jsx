@@ -20,8 +20,8 @@ const CardPablish = ({ item, bg }) => {
       summary: item.summary || "",
       images: item.images || [],
       time: "",
-      serverId: item.serverId || null,
-      placeholder: item.title || "Новый пост",
+      serverId: item.id,
+      placeholder: "Новый пост",
     });
     changeContent('create_post', 'popup')
   };
