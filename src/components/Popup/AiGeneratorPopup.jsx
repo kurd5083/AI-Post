@@ -60,7 +60,6 @@ const AiGeneratorPopup = () => {
     const runGenerate = (finalChannelId) => {
       setPostProgressPercent(0);
 
-      // имитация прогресса
       const interval = setInterval(() => {
         setPostProgressPercent(prev => {
           if (prev >= 90) {
@@ -73,10 +72,12 @@ const AiGeneratorPopup = () => {
 
       generatePost(finalChannelId, {
         onSuccess: (data) => {
+          console.log(data, 'general img');
           clearInterval(interval);
           setPostProgressPercent(100);
 
           updatePost(postId, {
+            postId: data.post?.id || postId,
             title: data.post?.title || "",
             text: data.post?.text || "",
             summary: data.post?.summary || "",
@@ -112,13 +113,13 @@ const AiGeneratorPopup = () => {
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
+
   const handleCreateAIImage = (postId) => {
     const post = posts.find(p => p.postId === postId);
     if (!post || !post.text) return;
 
     setImageProgress(0);
 
-    // если твой AI не отдаёт прогресс, можно сделать имитацию
     const interval = setInterval(() => {
       setImageProgress(prev => {
         if (prev >= 90) {
@@ -152,8 +153,6 @@ const AiGeneratorPopup = () => {
       }
     );
   };
-
-
   const handleSaveTime = (newTime) => {
     updatePost(popupPostId, { time: newTime });
     setPopupPostId(null);
@@ -171,7 +170,6 @@ const AiGeneratorPopup = () => {
       addImages(postId, images);
     });
   };
-
   const handleSavePost = (post) => {
     const saveWithChannel = (finalChannelId) => {
       const [hours, minutes] = post.time.split(":").map(Number);
@@ -198,7 +196,13 @@ const AiGeneratorPopup = () => {
         summary: post.summary,
       };
 
-      createPostMutation(payload);
+      createPostMutation(payload, {
+        onSuccess: (data) => {
+          updatePost(postId, {
+            postId: data.id, 
+          });
+        },
+      });
     };
 
     if (!channelId) {
@@ -306,7 +310,10 @@ const AiGeneratorPopup = () => {
                     onClick={() => handleWriteWithAI(post.postId)}
                     disabled={postPending}
                   >
-                    <AiGeneratorIcon color="#336CFF" />{postPending ? "Генерация с AI..." : "Написать с AI"}
+                    <AiGeneratorIcon color="#336CFF" />
+                    {postPending
+                      ? `Генерация с AI... ${postProgressPercent}%`
+                      : "Написать с AI"}
                   </BtnBase>
                   <BtnBase
                     $padding="0"
@@ -316,7 +323,9 @@ const AiGeneratorPopup = () => {
                     disabled={imagePending || !post.text}
                   >
                     <img src={create} alt="create icon" />
-                    {imagePending ? `Генерация фото с AI... ${imageProgress}%` : "Создать фото с AI"}
+                    {imagePending
+                      ? `Генерация фото с AI... ${imageProgressPercent}%`
+                      : "Создать фото с AI"}
                   </BtnBase>
                 </ItemAI>
                 <ItemActionsAdd>
