@@ -428,10 +428,13 @@ const AiGeneratorPopup = () => {
                       $border
                       $bg="transporent"
                       $color="#6A7080"
-                      onClick={() => changeContent("change_time_popup", "popup_window", {
-                        onSave: (newTime) => handleSaveTime(newTime, post.postId),
-                        initialTime: posts.find(p => p.postId === popupPostId)?.time || "00:00"
-                      })}
+                      onClick={() => {
+                        setPopupPostId(post.postId);
+                        changeContent("change_time_popup", "popup_window", {
+                          onSave: (newTime) => handleSaveTime(newTime, post.postId),
+                          initialTime: post.time || "00:00"
+                        });
+                      }}
                     >
                       Изменить время
                     </BtnBase>
