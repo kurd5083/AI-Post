@@ -58,6 +58,7 @@ const AiGeneratorPopup = () => {
     const runGenerate = (finalChannelId) => {
       generatePost(finalChannelId, {
         onSuccess: (data) => {
+          console.log(data, 'general img')
           updatePost(postId, {
             title: data.post?.title || "",
             text: data.post?.text || "",
