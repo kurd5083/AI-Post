@@ -25,6 +25,9 @@ import { useGeneratePost } from "@/lib/posts/useGeneratePost";
 import { usePostsStore } from "@/store/postsStore";
 import { useSendPostToChannel } from "@/lib/posts/useSendPostToChannel";
 
+
+
+
 const AiGeneratorPopup = () => {
   const { openLightbox } = useLightboxStore();
   const { user } = useUser();
@@ -246,7 +249,7 @@ const AiGeneratorPopup = () => {
 
       const publish = (serverPostId) => {
         sendPost(
-          { postId: serverPostId, channelId: finalChannelId },
+          { postId: serverPostId, channelId: finalChannelId, channelTelegramId: telegramId },
           {
             onSuccess: () => {
               removePost(post.postId);
