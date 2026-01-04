@@ -48,8 +48,9 @@ const AiGeneratorPopup = () => {
   const [collapsed, setCollapsed] = useState(false);
   const [popupPostId, setPopupPostId] = useState(null);
   const [emojiPostId, setEmojiPostId] = useState(null);
-  const [postProgressPercent, setPostProgressPercent] = useState(0);
-  const [imageProgressPercent, setImageProgressPercent] = useState(0);
+
+  const [postProgress, setPostProgress] = useState({});
+  const [imageProgress, setImageProgress] = useState({});
 
   const { fadeVisible, ref } = useFadeOnScroll(20);
   const { mutate: createPostMutation } = useCreatePost();
@@ -58,23 +59,23 @@ const AiGeneratorPopup = () => {
 
   const handleWriteWithAI = (postId) => {
     const runGenerate = (finalChannelId) => {
-      setPostProgressPercent(0);
+      setPostProgress(prev => ({ ...prev, [postId]: 0 }));
 
       const interval = setInterval(() => {
-        setPostProgressPercent(prev => {
-          if (prev >= 90) {
+        setPostProgress(prev => {
+          const current = prev[postId] || 0;
+          if (current >= 90) {
             clearInterval(interval);
             return prev;
           }
-          return prev + Math.floor(Math.random() * 10);
+          return { ...prev, [postId]: current + Math.floor(Math.random() * 10) };
         });
       }, 500);
 
       generatePost(finalChannelId, {
         onSuccess: (data) => {
-          console.log(data, 'general img');
           clearInterval(interval);
-          setPostProgressPercent(100);
+          setPostProgress(prev => ({ ...prev, [postId]: 100 }));
 
           updatePost(postId, {
             postId: data.post?.id || postId,
@@ -86,7 +87,7 @@ const AiGeneratorPopup = () => {
         },
         onError: (err) => {
           clearInterval(interval);
-          setPostProgressPercent(0);
+          setPostProgress(prev => ({ ...prev, [postId]: 0 }));
           console.error(err);
         },
       });
@@ -94,9 +95,7 @@ const AiGeneratorPopup = () => {
 
     if (!channelId) {
       changeContent("select_channel", "popup_window", {
-        onSave: (selectedChannelId) => {
-          runGenerate(selectedChannelId);
-        },
+        onSave: (selectedChannelId) => runGenerate(selectedChannelId),
       });
       return;
     }
@@ -118,15 +117,16 @@ const AiGeneratorPopup = () => {
     const post = posts.find(p => p.postId === postId);
     if (!post || !post.text) return;
 
-    setImageProgressPercent(0);
+    setImageProgress(prev => ({ ...prev, [postId]: 0 }));
 
     const interval = setInterval(() => {
-      setImageProgressPercent(prev => {
-        if (prev >= 90) {
+      setImageProgress(prev => {
+        const current = prev[postId] || 0;
+        if (current >= 90) {
           clearInterval(interval);
           return prev;
         }
-        return prev + Math.floor(Math.random() * 10);
+        return { ...prev, [postId]: current + Math.floor(Math.random() * 10) };
       });
     }, 500);
 
@@ -135,7 +135,7 @@ const AiGeneratorPopup = () => {
       {
         onSuccess: (data) => {
           clearInterval(interval);
-          setImageProgressPercent(100);
+          setImageProgress(prev => ({ ...prev, [postId]: 100 }));
 
           const inlineData = data?.candidates?.[0]?.content?.parts?.find(part => part.inlineData)?.inlineData;
           if (!inlineData?.data) {
@@ -147,7 +147,7 @@ const AiGeneratorPopup = () => {
         },
         onError: (err) => {
           clearInterval(interval);
-          setImageProgressPercent(0);
+          setImageProgress(prev => ({ ...prev, [postId]: 0 }));
           console.error(err);
         },
       }
@@ -199,7 +199,7 @@ const AiGeneratorPopup = () => {
       createPostMutation(payload, {
         onSuccess: (data) => {
           updatePost(postId, {
-            postId: data.id, 
+            postId: data.id,
           });
         },
       });
@@ -310,11 +310,11 @@ const AiGeneratorPopup = () => {
                     onClick={() => handleWriteWithAI(post.postId)}
                     disabled={postPending}
                   >
-                    <AiGeneratorIcon color="#336CFF" />
                     {postPending
-                      ? `Генерация с AI... ${postProgressPercent}%`
+                      ? `Генерация с AI... ${postProgress[post.postId] || 0}%`
                       : "Написать с AI"}
                   </BtnBase>
+
                   <BtnBase
                     $padding="0"
                     $color="#FF7F48"
@@ -324,7 +324,7 @@ const AiGeneratorPopup = () => {
                   >
                     <img src={create} alt="create icon" />
                     {imagePending
-                      ? `Генерация фото с AI... ${imageProgressPercent}%`
+                      ? `Генерация фото с AI... ${imageProgress[post.postId] || 0}%`
                       : "Создать фото с AI"}
                   </BtnBase>
                 </ItemAI>
