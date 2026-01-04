@@ -120,6 +120,16 @@ const PublicationsPopup = () => {
     return [];
   }, [dateFilter.period]);
 
+  const premoderationPosts = useMemo(
+    () => posts?.filter(p => p.status === "PENDING_MODERATION") || [],
+    [posts]
+  );
+
+  const commonPosts = useMemo(
+    () => posts?.filter(p => p.status !== "PENDING_MODERATION") || [],
+    [posts]
+  );
+
   return (
     <>
       <PublicationsHead>
@@ -169,18 +179,23 @@ const PublicationsPopup = () => {
       {!loadingPosts && channelId ? (
         <>
           <PublicationsList>
-            {currentItems?.length > 0 ? (
-              currentItems.map((item) =>
-                filter === "premoderation" ? (
+            {filter === "premoderation" ? (
+              premoderationPosts.length > 0 ? (
+                premoderationPosts.map(item => (
                   <CardPablishPremoderation key={item.id} item={item} />
-                ) : (
-                  <CardPablish key={item.id} item={item} bg />
-                )
+                ))
+              ) : (
+                <EmptyState>Постов на премодерации пока нет</EmptyState>
               )
+            ) : commonPosts.length > 0 ? (
+              commonPosts.map(item => (
+                <CardPablish key={item.id} item={item} bg />
+              ))
             ) : (
-              <EmptyState>Публикаций пока нет</EmptyState>
+              <EmptyState>Постов пока нет</EmptyState>
             )}
           </PublicationsList>
+
 
           {totalPages > 1 && (
             <PaginationWrapper>
