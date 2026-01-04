@@ -10,7 +10,7 @@ const CardPablishPremoderation = ({ item, bg, channelId }) => {
   const { openLightbox } = useLightboxStore();
   const { mutate: approvePostMutation } = useApprovePost();
   const { mutate: rejectPostMutation } = useRejectPost();
-
+  console.log(item.id, channelId)
   const handleApprove = () => {
     approvePostMutation({ postId: item.id, channelId });
   };
