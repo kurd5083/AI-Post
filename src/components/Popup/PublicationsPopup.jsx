@@ -39,7 +39,7 @@ const PublicationsPopup = () => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  useEffect(() => setCurrentPage(1), [dateFilter]);
+  useEffect(() => setCurrentPage(1), [dateFilter, filter]);
 
   const filteredPosts = useMemo(() => {
     if (!posts) return [];
