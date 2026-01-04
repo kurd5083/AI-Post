@@ -15,7 +15,7 @@ const CardPablishPremoderation = ({ item, bg, channelId }) => {
     approvePostMutation({ postId: item.id, channelId });
   };
   const handleReject = () => {
-    rejectPostMutation.mutate({ postId: item.id, channelId });
+    rejectPostMutation({ postId: item.id, channelId });
   };
 
   return (
