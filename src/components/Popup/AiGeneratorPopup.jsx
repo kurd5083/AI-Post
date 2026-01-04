@@ -60,6 +60,7 @@ const AiGeneratorPopup = () => {
         onSuccess: (data) => {
           console.log(data, 'general img')
           updatePost(postId, {
+            postId: data.post?.id || postId,
             title: data.post?.title || "",
             text: data.post?.text || "",
             summary: data.post?.summary || "",
@@ -144,7 +145,7 @@ const AiGeneratorPopup = () => {
       const calendarScheduledAt = new Date(
         Date.UTC(
           new Date().getFullYear(),
-          new Date().getMonth(),
+          new Date().getMonth(),  
           new Date().getDate(),
           hours || 0,
           minutes || 0,
@@ -152,7 +153,7 @@ const AiGeneratorPopup = () => {
         )
       ).toISOString();
 
-      const payload = {
+      const payload = { 
         title: post.title,
         text: post.text,
         images: post.images || [],
