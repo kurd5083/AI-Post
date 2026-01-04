@@ -199,12 +199,11 @@ const AiGeneratorPopup = () => {
       };
 
       createPostMutation(payload, {
-        onSuccess: (data) => {
-          updatePost(postId, {
-            postId: data.id,
-          });
-        },
-      });
+      onSuccess: (data) => {
+        removePost(post.postId);
+        console.log("Пост сохранён, id:", data.id);
+      },
+    });
     };
 
     if (!channelId) {
@@ -246,37 +245,52 @@ const AiGeneratorPopup = () => {
     updatePost(postId, { text: el.innerHTML, summary: el.innerHTML });
   };
   const handlePublishNow = (post) => {
-    const publishWithChannel = (finalChannelId) => {
-      if (!post.postId) {
-        console.error("Пост ещё не сохранён");
-        return;
-      }
+  const publishWithChannel = (finalChannelId) => {
 
+    const publish = (serverPostId) => {
       sendPost(
-        {
-          postId: post.postId,
-          channelId: finalChannelId,
-        },
+        { postId: serverPostId, channelId: finalChannelId },
         {
           onSuccess: () => {
-            console.log("Пост опубликован");
             removePost(post.postId);
           },
         }
       );
     };
 
-    if (!channelId) {
-      changeContent("select_channel", "popup_window", {
-        onSave: (selectedChannelId) => {
-          publishWithChannel(selectedChannelId);
+    // ❗ если пост ещё не сохранён — сначала сохраняем
+    if (!post.serverId) {
+      const payload = {
+        title: post.title,
+        text: post.text,
+        images: post.images || [],
+        channelId: finalChannelId,
+        publishedAt: new Date().toISOString(),
+        summary: post.summary,
+      };
+
+      createPostMutation(payload, {
+        onSuccess: (data) => {
+          updatePost(post.postId, { serverId: data.id });
+          publish(data.id);
         },
       });
+
       return;
     }
 
-    publishWithChannel(channelId);
+    publish(post.serverId);
   };
+
+  if (!channelId) {
+    changeContent("select_channel", "popup_window", {
+      onSave: publishWithChannel,
+    });
+    return;
+  }
+
+  publishWithChannel(channelId);
+};
 
   return (
     <GeneratorContainer>
