@@ -54,7 +54,8 @@ const GridGroups = () => {
             {channel?.workMode === "PREMODERATION" && "Предмодерация"}
             {channel?.workMode === "AUTOPOSTING" && "Автопостинг"}
           </p>
-          <GridStatus onClick={() => openPopup("premoderation", "popup", { channelId: channel.id })}>Премодерация</GridStatus>
+          
+          <GridStatus onClick={() => openPopup("premoderation", "popup", { channelId: channel.id, filter: "premoderation" })}>Премодерация</GridStatus>
           <ButtonsWrap>
             <ButtonDir onClick={() => openPopup("move_channel", "popup_window", { channelId: channel.id })} title="Перейти">
               <DirIcon />

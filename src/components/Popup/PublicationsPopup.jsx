@@ -5,21 +5,24 @@ import { usePopupStore } from "@/store/popupStore";
 import { usePostsByChannel } from "@/lib/posts/usePostsByChannel";
 import ModernLoading from "@/components/ModernLoading";
 import CustomSelectSec from "@/shared/CustomSelectSec";
-
+  
 const itemsPerPageDefault = 9;
 const itemsPerPageSmall = 6;
 const itemsPerPageMob = 4;
 
 const PublicationsPopup = () => {
+  const { popup } = usePopupStore();
+  const initialFilter = popup?.data?.filter || "common";
+
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(itemsPerPageDefault);
-  const [filter, setFilter] = useState("common");
+  const [filter, setFilter] = useState(initialFilter);
+
   const [dateFilter, setDateFilter] = useState({
     period: "all",
     value: null,
   });
 
-  const { popup } = usePopupStore();
   const channelId = popup?.data?.channelId;
   const { posts, loadingPosts } = usePostsByChannel(channelId);
 

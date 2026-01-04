@@ -72,9 +72,9 @@ const TableGroups = () => {
               </p>
             </TableCell>
             <TableCell>
-              <TableCellStatus>{isSmall ? 'Премодерация' : 'Премодерация постов'}</TableCellStatus>
+              <TableCellStatus onClick={() => openPopup("premoderation", "popup", { channelId: channel.id, filter: "premoderation" })}>{isSmall ? 'Премодерация' : 'Премодерация постов'}</TableCellStatus>
             </TableCell>
-            <TableCell>
+            <TableCell >
               <p>
                 {channel?.workMode === "PREMODERATION" && "Предмодерация"}
                 {channel?.workMode === "AUTOPOSTING" && "Автопостинг"}
