@@ -42,7 +42,6 @@ const CreateCalendarEventPopup = () => {
       status: "COMPLETED",
       description,
       scheduledAt,
-      postId: selectedPostId,
     };
 
     if (isEdit) {
