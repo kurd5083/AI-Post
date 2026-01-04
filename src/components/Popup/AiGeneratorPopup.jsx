@@ -23,6 +23,7 @@ import { useGenerateSimpleImage } from "@/lib/channels/image-generation/useGener
 import { useGeneratePost } from "@/lib/posts/useGeneratePost";
 import { usePostsStore } from "@/store/postsStore";
 import { useSendPostToChannel } from "@/lib/posts/useSendPostToChannel";
+import { useUpdatePost } from "@/lib/posts/useUpdatePost";
 
 const AiGeneratorPopup = () => {
   const { openLightbox } = useLightboxStore();
@@ -54,6 +55,7 @@ const AiGeneratorPopup = () => {
   const { mutate: generateImage, isPending: imagePending } = useGenerateSimpleImage();
   const { mutate: generatePost, isPending: postPending } = useGeneratePost();
   const { mutate: sendPost, isPending: isSendPending } = useSendPostToChannel();
+  const { mutate: updatePostMutation, isPending: updatePending } = useUpdatePost();
 
   const handleWriteWithAI = (postId) => {
     const runGenerate = (finalChannelId) => {
@@ -177,8 +179,7 @@ const AiGeneratorPopup = () => {
           new Date().getMonth(),
           new Date().getDate(),
           hours || 0,
-          minutes || 0,
-          0
+          minutes || 0
         )
       ).toISOString();
 
@@ -193,19 +194,26 @@ const AiGeneratorPopup = () => {
         summary: post.summary,
       };
 
-      createPostMutation(payload, {
-        onSuccess: (data) => {
-          removePost(post.postId);
-          console.log("Пост сохранён, id:", data.id);
-        },
-      });
+      if (!post.serverId) {
+        createPostMutation(payload, {
+          onSuccess: (data) => {
+            removePost(post.postId);
+            console.log("Пост создан, id:", data.id);
+          },
+        });
+      } else {
+        updatePostMutation({ postId: post.serverId, postData: payload }, {
+          onSuccess: (data) => {
+            console.log("Пост обновлён, id:", data.id);
+          },
+          onError: (err) => console.error(err),
+        });
+      }
     };
 
     if (!channelId) {
       changeContent("select_channel", "popup_window", {
-        onSave: (selectedChannelId) => {
-          saveWithChannel(selectedChannelId);
-        },
+        onSave: (selectedChannelId) => saveWithChannel(selectedChannelId),
       });
       return;
     }
@@ -438,7 +446,13 @@ const AiGeneratorPopup = () => {
                     >
                       Изменить время
                     </BtnBase>
-                    <BtnBase $padding="21px 24px" $color="#336CFF" $bg="#161F37" onClick={() => handleSavePost(post)}>
+                    <BtnBase 
+                      $padding="21px 24px" 
+                      $color="#336CFF" 
+                      $bg="#161F37" 
+                      onClick={() => handleSavePost(post)}
+                      disabled={updatePending || postPending}
+                    >
                       Сохранить
                     </BtnBase>
                   </ButtonsMainTop>
