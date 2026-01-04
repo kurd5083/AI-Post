@@ -172,8 +172,8 @@ const PublicationsPopup = () => {
           <PublicationsList>
             {currentItems.length > 0 ? (
               currentItems.map((item) =>
-                item.status === "PENDING_MODERATION" ? (
-                  <CardPablishPremoderation key={item.id} item={item} channelId={channelId}/>
+                filter === "premoderation" ? (
+                  <CardPablishPremoderation key={item.id} item={item} channelId={channelId} />
                 ) : (
                   <CardPablish key={item.id} item={item} bg />
                 )
