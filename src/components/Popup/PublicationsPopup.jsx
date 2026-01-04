@@ -72,8 +72,12 @@ const PublicationsPopup = () => {
         break;
     }
 
+    if (filter === "premoderation") {
+      result = result.filter((p) => p.status === "PENDING_MODERATION");
+    }
+
     return result;
-  }, [posts, dateFilter]);
+  }, [posts, dateFilter, filter]);
 
   const totalPages = filteredPosts.length
     ? Math.ceil(filteredPosts.length / itemsPerPage)
@@ -108,7 +112,7 @@ const PublicationsPopup = () => {
         { value: 21, label: "Последние 21 день" },
       ];
     }
-
+    
     return [];
   }, [dateFilter.period]);
 
@@ -119,14 +123,13 @@ const PublicationsPopup = () => {
           $active={filter === "common"}
           onClick={() => setFilter("common")}
         >
-          Общие посты <span>{posts?.length || 0}</span>
+          Общие посты <span>{posts?.filter(p => filter !== "premoderation" || p.status !== "PENDING_MODERATION").length || 0}</span>
         </PublicationsFilter>
-
         <PublicationsFilter
           $active={filter === "premoderation"}
           onClick={() => setFilter("premoderation")}
         >
-          Премодерация <span>0</span>
+          Премодерация <span>{posts?.filter(p => p.status === "PENDING_MODERATION").length || 0}</span>
         </PublicationsFilter>
 
         <CustomSelectSec

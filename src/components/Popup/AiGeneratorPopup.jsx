@@ -48,6 +48,8 @@ const AiGeneratorPopup = () => {
   const [collapsed, setCollapsed] = useState(false);
   const [popupPostId, setPopupPostId] = useState(null);
   const [emojiPostId, setEmojiPostId] = useState(null);
+  const [postProgressPercent, setPostProgressPercent] = useState(0);
+  const [imageProgressPercent, setImageProgressPercent] = useState(0);
 
   const { fadeVisible, ref } = useFadeOnScroll(20);
   const { mutate: createPostMutation } = useCreatePost();
@@ -56,16 +58,35 @@ const AiGeneratorPopup = () => {
 
   const handleWriteWithAI = (postId) => {
     const runGenerate = (finalChannelId) => {
+      setPostProgressPercent(0);
+
+      // имитация прогресса
+      const interval = setInterval(() => {
+        setPostProgressPercent(prev => {
+          if (prev >= 90) {
+            clearInterval(interval);
+            return prev;
+          }
+          return prev + Math.floor(Math.random() * 10);
+        });
+      }, 500);
+
       generatePost(finalChannelId, {
         onSuccess: (data) => {
-          console.log(data, 'general img')
+          clearInterval(interval);
+          setPostProgressPercent(100);
+
           updatePost(postId, {
-            postId: data.post?.id || postId,
             title: data.post?.title || "",
             text: data.post?.text || "",
             summary: data.post?.summary || "",
             images: data.images || [],
           });
+        },
+        onError: (err) => {
+          clearInterval(interval);
+          setPostProgressPercent(0);
+          console.error(err);
         },
       });
     };
@@ -93,27 +114,40 @@ const AiGeneratorPopup = () => {
   }, []);
   const handleCreateAIImage = (postId) => {
     const post = posts.find(p => p.postId === postId);
-    if (!post) return;
+    if (!post || !post.text) return;
 
-    const prompt = post.text;
+    setImageProgress(0);
+
+    // если твой AI не отдаёт прогресс, можно сделать имитацию
+    const interval = setInterval(() => {
+      setImageProgress(prev => {
+        if (prev >= 90) {
+          clearInterval(interval);
+          return prev;
+        }
+        return prev + Math.floor(Math.random() * 10);
+      });
+    }, 500);
 
     generateImage(
-      { prompt },
+      { prompt: post.text },
       {
         onSuccess: (data) => {
-          let imageUrl = null;
+          clearInterval(interval);
+          setImageProgress(100);
 
-
-          const inlineData = data?.candidates?.[0]?.content?.parts?.find(
-            part => part.inlineData
-          )?.inlineData;
-
-          if (inlineData?.data && inlineData?.mimeType) {
-            imageUrl = `data:${inlineData.mimeType};base64,${inlineData.data}`;
+          const inlineData = data?.candidates?.[0]?.content?.parts?.find(part => part.inlineData)?.inlineData;
+          if (!inlineData?.data) {
+            console.error("No images returned from AI");
+            return;
           }
-
-          if (!imageUrl) return;
+          const imageUrl = `data:${inlineData.mimeType};base64,${inlineData.data}`;
           addImages(postId, [imageUrl]);
+        },
+        onError: (err) => {
+          clearInterval(interval);
+          setImageProgress(0);
+          console.error(err);
         },
       }
     );
@@ -145,7 +179,7 @@ const AiGeneratorPopup = () => {
       const calendarScheduledAt = new Date(
         Date.UTC(
           new Date().getFullYear(),
-          new Date().getMonth(),  
+          new Date().getMonth(),
           new Date().getDate(),
           hours || 0,
           minutes || 0,
@@ -153,7 +187,7 @@ const AiGeneratorPopup = () => {
         )
       ).toISOString();
 
-      const payload = { 
+      const payload = {
         title: post.title,
         text: post.text,
         images: post.images || [],
@@ -281,11 +315,8 @@ const AiGeneratorPopup = () => {
                     onClick={() => handleCreateAIImage(post.postId)}
                     disabled={imagePending || !post.text}
                   >
-                    <img
-                      src={create}
-                      alt="create icon"
-                    />
-                    {imagePending ? "Генерация фото с AI" : "Создать фото с AI"}
+                    <img src={create} alt="create icon" />
+                    {imagePending ? `Генерация фото с AI... ${imageProgress}%` : "Создать фото с AI"}
                   </BtnBase>
                 </ItemAI>
                 <ItemActionsAdd>

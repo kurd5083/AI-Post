@@ -4,7 +4,6 @@ const generatePostId = () => Math.floor(Math.random() * 2_000_000_000);
 
 const createEmptyPost = (index = 1) => ({
   postId: generatePostId(),
-  serverPostId: null,
   placeholder: `Пост ${index}`,
   title: "",
   progress: "0 / 1024",
