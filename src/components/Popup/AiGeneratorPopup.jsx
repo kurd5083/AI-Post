@@ -207,6 +207,7 @@ const AiGeneratorPopup = () => {
       } else {
         updatePostMutation({ postId: post.serverId, postData: payload }, {
           onSuccess: (data) => {
+            removePost(post.postId);
             console.log("Пост обновлён, id:", data.id);
           },
           onError: (err) => console.error(err),
