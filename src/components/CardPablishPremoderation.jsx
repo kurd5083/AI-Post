@@ -2,15 +2,20 @@ import styled from "styled-components";
 import BtnBase from "@/shared/BtnBase";
 import { useLightboxStore } from "@/store/lightboxStore";
 import { useApprovePost } from "@/lib/posts/usePostsModeration";
+import { useRejectPost } from "@/lib/posts/useRejectPost";
 
 const MAX_VISIBLE_IMAGES = 3;
 
 const CardPablishPremoderation = ({ item, bg, channelId }) => {
   const { openLightbox } = useLightboxStore();
   const { mutate: approvePostMutation } = useApprovePost();
+  const { mutate: rejectPostMutation } = useRejectPost();
 
   const handleApprove = () => {
     approvePostMutation({ postId: item.id, channelId });
+  };
+  const handleReject = () => {
+    rejectPostMutation.mutate({ postId: item.id, channelId });
   };
 
   return (
@@ -71,9 +76,10 @@ const CardPablishPremoderation = ({ item, bg, channelId }) => {
         <BtnBase
           $padding="16px 24px"
           $width="100%"
-          $bg="transporent"
+          $bg="transparent"
           $color="#D6DCEC"
           $border={true}
+          onClick={handleReject}
         >
           Отклонить
         </BtnBase>
