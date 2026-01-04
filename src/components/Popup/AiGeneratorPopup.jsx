@@ -14,7 +14,6 @@ import BtnBase from "@/shared/BtnBase";
 import AiGeneratorIcon from "@/icons/AiGeneratorIcon";
 import useFadeOnScroll from "@/lib/useFadeOnScroll";
 import Preview from "@/components/Preview";
-import ChangeTimePopup from "@/components/PopupWindow/ChangeTimePopup";
 import { useCreatePost } from "@/lib/posts/useCreatePost";
 import { usePopupStore } from "@/store/popupStore";
 import { formatText } from "@/lib/formatText";
@@ -24,9 +23,6 @@ import { useGenerateSimpleImage } from "@/lib/channels/image-generation/useGener
 import { useGeneratePost } from "@/lib/posts/useGeneratePost";
 import { usePostsStore } from "@/store/postsStore";
 import { useSendPostToChannel } from "@/lib/posts/useSendPostToChannel";
-
-
-
 
 const AiGeneratorPopup = () => {
   const { openLightbox } = useLightboxStore();
@@ -155,9 +151,8 @@ const AiGeneratorPopup = () => {
       }
     );
   };
-  const handleSaveTime = (newTime) => {
-    updatePost(popupPostId, { time: newTime });
-    setPopupPostId(null);
+  const handleSaveTime = (newTime, postId) => {
+    updatePost(postId, { time: newTime });
   };
   const handleAddImages = (postId, files) => {
     const readFiles = Array.from(files).map(file =>
@@ -199,11 +194,11 @@ const AiGeneratorPopup = () => {
       };
 
       createPostMutation(payload, {
-      onSuccess: (data) => {
-        removePost(post.postId);
-        console.log("Пост сохранён, id:", data.id);
-      },
-    });
+        onSuccess: (data) => {
+          removePost(post.postId);
+          console.log("Пост сохранён, id:", data.id);
+        },
+      });
     };
 
     if (!channelId) {
@@ -428,7 +423,16 @@ const AiGeneratorPopup = () => {
                     <BtnBase $padding="21px 24px" $color="#EF6284" $bg="#241E2D" onClick={() => removePost(post.postId)}>
                       Отменить
                     </BtnBase>
-                    <BtnBase $padding="21px 24px" $border $bg="transporent" $color="#6A7080" onClick={() => setPopupPostId(post.postId)}>
+                    <BtnBase
+                      $padding="21px 24px"
+                      $border
+                      $bg="transporent"
+                      $color="#6A7080"
+                      onClick={() => changeContent("change_time_popup", "popup_window", {
+                        onSave: (newTime) => handleSaveTime(newTime, post.postId),
+                        initialTime: posts.find(p => p.postId === popupPostId)?.time || "00:00"
+                      })}
+                    >
                       Изменить время
                     </BtnBase>
                     <BtnBase $padding="21px 24px" $color="#336CFF" $bg="#161F37" onClick={() => handleSavePost(post)}>
@@ -455,13 +459,6 @@ const AiGeneratorPopup = () => {
       <PreviewContainer>
         <Preview collapsed={collapsed} onChange={() => setCollapsed(!collapsed)} testResult={selectedPost} telegramId={telegramId} />
       </PreviewContainer>
-      {popupPostId && (
-        <ChangeTimePopup
-          onSave={handleSaveTime}
-          onClose={() => setPopupPostId(null)}
-          initialTime={posts.find(p => p.postId === popupPostId)?.time || "00:00"}
-        />
-      )}
     </GeneratorContainer>
   );
 };

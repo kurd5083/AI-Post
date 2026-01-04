@@ -2,12 +2,15 @@ import styled from "styled-components";
 import BtnBase from "@/shared/BtnBase";
 import { useLightboxStore } from "@/store/lightboxStore";
 import { usePostsStore } from "@/store/postsStore";
+import { usePopupStore } from "@/store/popupStore";
 
 const MAX_VISIBLE_IMAGES = 3;
 
 const CardPablish = ({ item, bg }) => {
   const { openLightbox } = useLightboxStore();
   const { addPost } = usePostsStore();
+  const { changeContent } = usePopupStore();
+
   console.log(item)
   const handleEdit = () => {
     addPost({
@@ -20,6 +23,7 @@ const CardPablish = ({ item, bg }) => {
       serverId: item.serverId || null,
       placeholder: item.title || "Новый пост",
     });
+    changeContent('create_post', 'popup')
   };
   
   return (

@@ -2,8 +2,10 @@ import { useState } from "react";
 import styled from "styled-components";
 import BtnBase from "@/shared/BtnBase";
 import CloseIcon from "@/icons/CloseIcon";
+import { usePopupStore } from "@/store/popupStore";
 
-const ChangeTimePopup = ({ initialTime = "00:00", onClose, onSave }) => {
+const ChangeTimePopup = ({ initialTime = "00:00", onSave }) => {
+  const { goBack } = usePopupStore();
   const [hours, setHours] = useState(initialTime.split(":")[0]);
   const [minutes, setMinutes] = useState(initialTime.split(":")[1]);
 
@@ -33,11 +35,11 @@ const ChangeTimePopup = ({ initialTime = "00:00", onClose, onSave }) => {
     goBack();
   };
   return (
-    <PopupContainer onClick={onClose}>
+    <PopupContainer onClick={() => goBack()}>
       <PopupContent onClick={(e) => e.stopPropagation()}>
         <ChangeTimeHead>
           <HeadTitle>Изменить время</HeadTitle>
-          <CloseButton onClick={onClose}>
+          <CloseButton onClick={() => goBack()}>
             <CloseIcon color="#336CFF" />
           </CloseButton>
         </ChangeTimeHead>
@@ -61,7 +63,7 @@ const ChangeTimePopup = ({ initialTime = "00:00", onClose, onSave }) => {
           <BtnBase $color="#D6DCEC" $bg="#336CFF" onClick={handleSave}>
             Сохранить
           </BtnBase>
-          <BtnBase $color="#D6DCEC" $bg="#242A3A" onClick={onClose}>
+          <BtnBase $color="#D6DCEC" $bg="#242A3A" onClick={() => goBack()}>
             Отменить
           </BtnBase>
         </ChangeTimeButtons>
