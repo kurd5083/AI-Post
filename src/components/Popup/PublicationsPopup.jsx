@@ -46,7 +46,6 @@ const PublicationsPopup = () => {
     const now = new Date();
     let result = [...posts];
 
-    // Фильтр по дате
     switch (dateFilter.period) {
       case "year":
         if (dateFilter.value) {
@@ -77,11 +76,8 @@ const PublicationsPopup = () => {
         break;
     }
 
-    // Фильтр по типу (premoderation / common)
     if (filter === "premoderation") {
       result = result.filter((p) => p.status === "PENDING_MODERATION");
-    } else {
-      result = result.filter((p) => p.status !== "PENDING_MODERATION");
     }
 
     return result;
@@ -124,16 +120,6 @@ const PublicationsPopup = () => {
 
     return [];
   }, [dateFilter.period]);
-
-  const premoderationPosts = useMemo(
-    () => posts?.filter(p => p.status === "PENDING_MODERATION") || [],
-    [posts]
-  );
-
-  const commonPosts = useMemo(
-    () => posts?.filter(p => p.status !== "PENDING_MODERATION") || [],
-    [posts]
-  );
 
   return (
     <>
