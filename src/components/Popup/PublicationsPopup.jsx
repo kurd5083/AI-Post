@@ -127,7 +127,7 @@ const PublicationsPopup = () => {
           $active={filter === "common"}
           onClick={() => setFilter("common")}
         >
-          Общие посты <span>{posts?.filter(p => filter !== "premoderation" || p.status !== "PENDING_MODERATION").length || 0}</span>
+          Общие посты <span>{posts?.filter(p => p.status !== "PENDING_MODERATION").length || 0}</span>
         </PublicationsFilter>
         <PublicationsFilter
           $active={filter === "premoderation"}
