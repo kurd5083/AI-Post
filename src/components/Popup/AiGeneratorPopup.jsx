@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import EmojiPicker from "emoji-picker-react";
-
 import create from "@/assets/create.svg";
 import hide from "@/assets/hide.svg";
 import paper from "@/assets/ai-generator/paper.svg";
@@ -11,9 +10,7 @@ import italics from "@/assets/ai-generator/italics.svg";
 import underlined from "@/assets/ai-generator/underlined.svg";
 import crossed from "@/assets/ai-generator/crossed.svg";
 import link from "@/assets/ai-generator/link.svg";
-
 import BtnBase from "@/shared/BtnBase";
-// import CheckboxCircle from "@/shared/CheckboxCircle";
 import AiGeneratorIcon from "@/icons/AiGeneratorIcon";
 import useFadeOnScroll from "@/lib/useFadeOnScroll";
 import Preview from "@/components/Preview";
@@ -245,52 +242,50 @@ const AiGeneratorPopup = () => {
     updatePost(postId, { text: el.innerHTML, summary: el.innerHTML });
   };
   const handlePublishNow = (post) => {
-  const publishWithChannel = (finalChannelId) => {
+    const publishWithChannel = (finalChannelId) => {
 
-    const publish = (serverPostId) => {
-      sendPost(
-        { postId: serverPostId, channelId: finalChannelId },
-        {
-          onSuccess: () => {
-            removePost(post.postId);
-          },
-        }
-      );
-    };
-
-    // ❗ если пост ещё не сохранён — сначала сохраняем
-    if (!post.serverId) {
-      const payload = {
-        title: post.title,
-        text: post.text,
-        images: post.images || [],
-        channelId: finalChannelId,
-        publishedAt: new Date().toISOString(),
-        summary: post.summary,
+      const publish = (serverPostId) => {
+        sendPost(
+          { postId: serverPostId, channelId: finalChannelId },
+          {
+            onSuccess: () => {
+              removePost(post.postId);
+            },
+          }
+        );
       };
 
-      createPostMutation(payload, {
-        onSuccess: (data) => {
-          updatePost(post.postId, { serverId: data.id });
-          publish(data.id);
-        },
-      });
+      if (!post.serverId) {
+        const payload = {
+          title: post.title,
+          text: post.text,
+          images: post.images || [],
+          channelId: finalChannelId,
+          publishedAt: new Date().toISOString(),
+          summary: post.summary,
+        };
 
+        createPostMutation(payload, {
+          onSuccess: (data) => {
+            publish(data.id);
+          },
+        });
+
+        return;
+      }
+
+      publish(post.serverId);
+    };
+
+    if (!channelId) {
+      changeContent("select_channel", "popup_window", {
+        onSave: publishWithChannel,
+      });
       return;
     }
 
-    publish(post.serverId);
+    publishWithChannel(channelId);
   };
-
-  if (!channelId) {
-    changeContent("select_channel", "popup_window", {
-      onSave: publishWithChannel,
-    });
-    return;
-  }
-
-  publishWithChannel(channelId);
-};
 
   return (
     <GeneratorContainer>
@@ -308,7 +303,6 @@ const AiGeneratorPopup = () => {
         {posts.map(post => (
           <ListItem key={post.postId}>
             <ItemHead>
-              {/* <CheckboxCircle></CheckboxCircle> */}
               <HeadTitle
                 tape="text"
                 placeholder={post.placeholder}
@@ -325,8 +319,6 @@ const AiGeneratorPopup = () => {
                 id={`text-${post.postId}`}
                 ref={el => el && el.innerHTML !== post.summary && (el.innerHTML = post.summary)}
                 onInput={e => updatePost(post.postId, { text: e.currentTarget.innerHTML, summary: e.currentTarget.innerHTML })}
-              // onClick={() => saveSelection(post.postId)}
-              // onKeyUp={() => saveSelection(post.postId)}
               />
               <BodyRight>
                 <ImagesContainer>
