@@ -1,15 +1,27 @@
 import styled from "styled-components";
-// import TimeIcons from "@/icons/TimeIcons";
-// import timeAgo from "@/lib/timeAgo";
 import BtnBase from "@/shared/BtnBase";
 import { useLightboxStore } from "@/store/lightboxStore";
-// import { formatText } from "@/lib/formatText";
+import { usePostsStore } from "@/store/postsStore";
+
 const MAX_VISIBLE_IMAGES = 3;
 
 const CardPablish = ({ item, bg }) => {
   const { openLightbox } = useLightboxStore();
+  const { addPost, updatePost } = usePostsStore();
 
-  console.log(item)
+  const handleEdit = () => {
+    addPost({
+      postId: item.id,   
+      title: item.title,
+      text: item.text || "",
+      summary: item.summary || "",
+      images: item.images || [],
+      time: "",
+      serverId: item.serverId || null,
+      placeholder: item.title || "Новый пост",
+    });
+  };
+  
   return (
     <CardPablishItem $bg={bg}>
       <CardPablishItemHead>
@@ -55,28 +67,21 @@ const CardPablish = ({ item, bg }) => {
         dangerouslySetInnerHTML={{ __html: item.summary }}
       />
       <CardPablishButtons>
-        {/* <BtnBase
-          $padding="16px 24px"
-          $width="100%"
-          $bg="transporent"
-          $color="#D6DCEC"
-          $border={true}
-        >
-          Принять
-        </BtnBase>
         <BtnBase
           $padding="16px 24px"
           $width="100%"
           $bg="transporent"
           $color="#D6DCEC"
           $border={true}
+          onClick={handleEdit}
         >
-          Отклонить
-        </BtnBase> */}
+          Редактировать
+        </BtnBase>
       </CardPablishButtons>
     </CardPablishItem>
   )
 }
+
 const CardPablishOpen = styled.button`
   display: flex;
   align-items: center;
