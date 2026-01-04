@@ -22,6 +22,7 @@ const IndustrialStylePopup = () => {
   const [localPrompt, setLocalPrompt] = useState("");
   const [localCaption, setLocalCaption] = useState("");
   const [localCreativity, setLocalCreativity] = useState(0);
+  const [testProgress, setTestProgress] = useState(0);
 
   const { globalPrompt } = useChannelGlobalPrompt(channelId);
   const { creativity } = useGetChannelCreativity(channelId);
@@ -41,12 +42,37 @@ const IndustrialStylePopup = () => {
     }
   };
   const handleTest = async () => {
-    const data = await testDrive({
-      topic: "Спорт",
-      promtManage: localPrompt,
-      channelId,
-    });
-    setResult(data);
+    if (!localPrompt?.trim()) return;
+
+    setTestProgress(0);
+
+    const interval = setInterval(() => {
+      setTestProgress(prev => {
+        if (prev >= 90) {
+          clearInterval(interval);
+          return prev;
+        }
+        return prev + Math.floor(Math.random() * 10);
+      });
+    }, 500);
+
+    try {
+      const data = await testDrive({
+        topic: "IT",
+        promtManage: localPrompt,
+        channelId,
+      });
+
+      clearInterval(interval);
+      setTestProgress(100);
+      setResult(data);
+
+      setTimeout(() => setTestProgress(0), 500);
+    } catch (err) {
+      console.error(err);
+      clearInterval(interval);
+      setTestProgress(0);
+    }
   };
 
   const { mutate: updateGlobalPrompt } = useUpdateChannelGlobalPrompt();
@@ -73,11 +99,12 @@ const IndustrialStylePopup = () => {
                 onChange={handlePromptChange}
               ></textarea>
             </div>
+        
             <button
-              disabled={!localPrompt?.trim() || testPending}
+              disabled={!localPrompt?.trim() || testProgress > 0}
               onClick={handleTest}
             >
-              {testPending ? "Тестируем..." : "Тест"}
+              {testProgress > 0 && testProgress < 100 ? `Тестируем... ${testProgress}%` : "Тест"}
             </button>
           </IndustrialStyleInfo>
           <IndustrialStyleDesc>Введите промпт — это задание для генерации поста. <mark>Чем точнее формулировка, тем лучше результат.</mark></IndustrialStyleDesc>
@@ -93,7 +120,7 @@ const IndustrialStylePopup = () => {
           <IndustrialStyleDesc>Подпись будет добавлена в <mark>конец каждого поста.</mark> Например: ссылка или призыв подписаться.</IndustrialStyleDesc>
         </IndustrialStyleLeft>
         <IndustrialStyleRight>
-          <Preview collapsed={collapsed} onChange={() => setCollapsed(!collapsed)} testResult={result} telegramId={telegramId}/>
+          <Preview collapsed={collapsed} onChange={() => setCollapsed(!collapsed)} testResult={result} telegramId={telegramId} />
         </IndustrialStyleRight>
       </IndustrialStyleContent>
       <IndustrialStyleTitle>Креативность</IndustrialStyleTitle>
