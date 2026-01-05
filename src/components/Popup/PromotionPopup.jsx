@@ -10,13 +10,16 @@ import { useUpdatePromotionConfig } from "@/lib/channels/promotion/useUpdateProm
 import { useCreatePromotionOrders } from "@/lib/channels/promotion/useCreatePromotionOrders";
 import del from "@/assets/del.svg";
 import ModernLoading from "@/components/ModernLoading";
+import { useNotificationStore } from "@/store/notificationStore";
 
 const PromotionPopup = () => {
   const { popup, changeContent } = usePopupStore();
   const channelId = popup?.data?.channelId;
   const { promotionConfig, promotionLoading } = useGetChannelPromotionConfig(channelId);
+  const { addNotification } = useNotificationStore();
+
   const { mutate: createConfigСhannel, isPending: createConfigPending } = useCreateConfigСhannel();
-  const { mutate: updatePromotionConfig, isPending: updatePromotionPending} = useUpdatePromotionConfig();
+  const { mutate: updatePromotionConfig, isPending: updatePromotionPending } = useUpdatePromotionConfig();
   const { mutate: createPromotionOrders, isPending: creatingOrdersPending } = useCreatePromotionOrders();
 
   const [autoViews, setAutoViews] = useState(false);
@@ -39,8 +42,15 @@ const PromotionPopup = () => {
   }, [promotionConfig]);
 
   const handleAddPost = () => {
-    if (!postLink || !postMinViews || !postMaxViews) return;
-    if (manualPosts.length >= 10) return;
+    if (!postLink) {
+      return addNotification("Введите ссылку на пост", "error");
+    }
+    if (!postMinViews || !postMaxViews) {
+      return addNotification("Укажите минимальное и максимальное количество просмотров", "error");
+    }
+    if (manualPosts.length >= 10) {
+      return addNotification("Максимум 10 постов можно добавить", "error");
+    }
 
     setManualPosts(prev => [
       ...prev,
@@ -53,7 +63,9 @@ const PromotionPopup = () => {
   };
 
   const handlePromotePosts = () => {
-    if (!manualPosts.length) return;
+    if (!manualPosts.length) {
+      return addNotification("Сначала добавьте хотя бы один пост для продвижения", "error");
+    }
 
     const orders = manualPosts.map(post => ({
       link: post.link,
@@ -63,25 +75,35 @@ const PromotionPopup = () => {
     }));
 
     createPromotionOrders(orders);
+    addNotification("Посты успешно продвинуты", "update");
   };
 
-  const buildPayload = () => ({
-    isEnabled: autoViews,
-    allowedServiceIds: [272],
-    viewsOnNewPostEnabled: autoViewsLink,
-    boostsEnabled: false,
-    boostsRetentionDays: 7,
-    minViews,
-    maxViews,
-  });
-
   const handleSave = () => {
-    const payload = buildPayload();
+    if (autoViews) {
+      if (!minViews || !maxViews) {
+        return addNotification("Укажите минимальное и максимальное количество просмотров для автозакупки", "error");
+      }
+      if (Number(minViews) > Number(maxViews)) {
+        return addNotification("Минимальные просмотры не могут быть больше максимальных", "error");
+      }
+    }
 
-    if (promotionConfig) {
+    const payload = {
+      isEnabled: autoViews,
+      allowedServiceIds: [272],
+      viewsOnNewPostEnabled: autoViewsLink,
+      boostsEnabled: false,
+      boostsRetentionDays: 7,
+      minViews,
+      maxViews,
+    };
+
+    if (promotionConfig?.id) {
       updatePromotionConfig({ channelId, payload });
+      addNotification("Настройки продвижения успешно обновлены", "update");
     } else {
       createConfigСhannel({ channelId, ...payload });
+      addNotification("Настройки продвижения успешно созданы", "update");
     }
   };
 
@@ -185,7 +207,7 @@ const PromotionPopup = () => {
 
                 <CounterContainer>
                   <CounterTitle>Макс. просмотры:</CounterTitle>
-                  <Counter value={postMaxViews} onChange={setPostMaxViews}/>
+                  <Counter value={postMaxViews} onChange={setPostMaxViews} />
                 </CounterContainer>
 
                 <BtnBase
@@ -193,7 +215,7 @@ const PromotionPopup = () => {
                   $color="#fff"
                   $bg="#336CFF"
                   onClick={handleAddPost}
-                  disabled={!postLink || !minViews || !maxViews}
+                  disabled={!postLink || !postMinViews || !postMaxViews}
                 >
                   + Добавить ссылку на пост
                 </BtnBase>
