@@ -87,7 +87,7 @@ const SchedulePopup = () => {
 
     if (scheduleId) {
       updateSchedule.mutate(payload, {
-        onSuccess: () => addNotification("Расписание обновлено", "success"),
+        onSuccess: () => addNotification("Расписание обновлено", "update"),
       });
     } else {
       createSchedule.mutate(payload, {

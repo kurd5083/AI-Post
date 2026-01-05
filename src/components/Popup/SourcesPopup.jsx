@@ -53,7 +53,7 @@ const SourcesPopup = () => {
 
     const tempId = `temp-${uuidv4()}`;
     setLocalSources(prev => [...prev, { id: tempId, name: domain }]);
-    addSource({ channelId, url }); // сохраняем полную ссылку
+    addSource({ channelId, url });
     addNotification("Источник успешно добавлен", "success");
     setUrl("");
   };
