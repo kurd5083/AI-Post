@@ -11,6 +11,7 @@ import { useUpdateChannelCreativity } from "@/lib/channels/creativity/useUpdateC
 import { useUpdateChannelCaption } from "@/lib/channels/caption/useUpdateChannelCaption";
 import Preview from "@/components/Preview";
 import { useTestDrivePrompt } from "@/lib/posts/useTestDrivePrompt";
+import { useNotificationStore } from "@/store/notificationStore";
 
 const IndustrialStylePopup = () => {
   const { popup, changeContent } = usePopupStore();
@@ -23,6 +24,7 @@ const IndustrialStylePopup = () => {
   const [localCaption, setLocalCaption] = useState("");
   const [localCreativity, setLocalCreativity] = useState(0);
   const [testProgress, setTestProgress] = useState(0);
+  const { addNotification } = useNotificationStore();
 
   const { globalPrompt } = useChannelGlobalPrompt(channelId);
   const { creativity } = useGetChannelCreativity(channelId);
@@ -42,7 +44,10 @@ const IndustrialStylePopup = () => {
     }
   };
   const handleTest = async () => {
-    if (!localPrompt?.trim()) return;
+    if (!localPrompt?.trim()) {
+      addNotification("Введите промпт для тестирования", "error");
+      return;
+    }
 
     setTestProgress(0);
 
@@ -62,6 +67,7 @@ const IndustrialStylePopup = () => {
         promtManage: localPrompt,
         channelId,
       });
+      addNotification("Тест успешно выполнен", "success");
 
       clearInterval(interval);
       setTestProgress(100);
@@ -69,21 +75,30 @@ const IndustrialStylePopup = () => {
 
       setTimeout(() => setTestProgress(0), 500);
     } catch (err) {
-      console.error(err);
+      addNotification("Ошибка при тестировании промпта", "error");
+
       clearInterval(interval);
       setTestProgress(0);
     }
   };
 
-  const { mutate: updateGlobalPrompt } = useUpdateChannelGlobalPrompt();
-  const { mutate: updateCreativity } = useUpdateChannelCreativity();
-  const { mutate: updateCaption } = useUpdateChannelCaption();
+  const { mutate: updateGlobalPrompt, isPending: isPromptPending } = useUpdateChannelGlobalPrompt();
+  const { mutate: updateCreativity, isPending: isCreativityPending } = useUpdateChannelCreativity();
+  const { mutate: updateCaption, isPending: isCaptionPending } = useUpdateChannelCaption();
 
   const handleSave = () => {
+    if (!localPrompt?.trim()) {
+      addNotification("Промпт не может быть пустым", "error");
+      return;
+    }
     updateGlobalPrompt({ channelId, value: localPrompt });
     updateCreativity({ channelId, value: localCreativity });
     updateCaption({ channelId, value: localCaption });
+
+    addNotification("Настройки успешно сохранены", "success");
   };
+
+  const isSaving = isPromptPending || isCreativityPending || isCaptionPending;
 
   return (
     <IndustrialStyleContainer>
@@ -136,7 +151,9 @@ const IndustrialStylePopup = () => {
         </IndustrialStyleDesc>
       </IndustrialStyleBlock>
       <IndustrialStyleButton>
-        <BtnBase onClick={handleSave}>Сохранить</BtnBase>
+        <BtnBase onClick={handleSave} disabled={isSaving}>
+          {isSaving ? "Сохраняем..." : "Сохранить"}
+        </BtnBase>
       </IndustrialStyleButton>
     </IndustrialStyleContainer>
   )
