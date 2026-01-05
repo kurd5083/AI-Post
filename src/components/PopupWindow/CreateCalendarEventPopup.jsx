@@ -7,19 +7,22 @@ import { useCreateCalendarEvent } from "@/lib/calendar/useCreateCalendarEvent";
 import { useUpdateCalendarEvent } from "@/lib/calendar/useUpdateCalendarEvent";
 import { usePostsByChannel } from "@/lib/posts/usePostsByChannel";
 import { usePopupStore } from "@/store/popupStore";
+import { useNotificationStore } from "@/store/notificationStore";
+
 
 const CreateCalendarEventPopup = () => {
   const { goBack, popup } = usePopupStore();
+  const { addNotification } = useNotificationStore();
 
   const channelId = popup?.data?.channelId;
   const selectedDate = popup?.data?.selectedDate;
   const event = popup?.data?.event;
-
   const isEdit = Boolean(event);
+
   const { mutate: createEvent, isPending: creating } = useCreateCalendarEvent();
   const { mutate: updateEvent, isPending: updating } = useUpdateCalendarEvent();
-
   const { posts, loadingPosts } = usePostsByChannel(channelId);
+
   const [description, setDescription] = useState("");
   const [selectedPostId, setSelectedPostId] = useState(null);
   const [scheduledAt, setScheduledAt] = useState('');
@@ -35,22 +38,40 @@ const CreateCalendarEventPopup = () => {
   }, [event, selectedDate, isEdit]);
 
   const handleSave = () => {
+    if (!description.trim()) {
+      addNotification("Описание не может быть пустым", "error");
+      return;
+    }
+
+    if (!scheduledAt) {
+      addNotification("Выберите дату и время", "error");
+      return;
+    }
 
     if (isEdit) {
-      updateEvent({
-        id: event?.id,
-        payload: {
-          title: "Updated Post Title",
-          description,
-          scheduledAt,
+      updateEvent(
+        {
+          id: event?.id,
+          payload: { title: event.title || "Без названия", description, scheduledAt },
+        },
+        {
+          onSuccess: () => {
+            addNotification("Событие успешно обновлено", "success");
+            goBack();
+          },
+          onError: () => addNotification("Ошибка при обновлении события", "error"),
         }
-      },
-        { onSuccess: goBack }
       );
     } else {
       createEvent(
         { channelId, description, scheduledAt, postId: selectedPostId },
-        { onSuccess: goBack }
+        {
+          onSuccess: () => {
+            addNotification("Событие успешно создано", "success");
+            goBack();
+          },
+          onError: () => addNotification("Ошибка при создании события", "error"),
+        }
       );
     }
   };

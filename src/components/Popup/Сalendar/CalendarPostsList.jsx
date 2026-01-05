@@ -3,16 +3,34 @@ import { useDeleteCalendarEvent } from "@/lib/calendar/useDeleteCalendarEvent";
 import edit from "@/assets/templates/edit.svg";
 import del from "@/assets/del.svg";
 import { usePopupStore } from "@/store/popupStore"
+import { useNotificationStore } from "@/store/notificationStore";
 
 const CalendarPostsList = ({ posts }) => {
   const { mutate: deleteMutation } = useDeleteCalendarEvent();
   const { popup, changeContent } = usePopupStore();
+  const { addNotification } = useNotificationStore();
 
   const formatTime = (dateStr) => {
     const d = new Date(dateStr);
     const hours = String(d.getHours()).padStart(2, "0");
     const minutes = String(d.getMinutes()).padStart(2, "0");
     return `${hours}:${minutes}`;
+  };
+
+  const handleDelete = (post) => {
+    if (!post?.id) {
+      addNotification("Не удалось удалить пост: нет ID", "error");
+      return;
+    }
+
+    deleteMutation(post.id, {
+      onSuccess: () => {
+        addNotification(`Пост "${post.title}" успешно удален`, "success");
+      },
+      onError: () => {
+        addNotification(`Ошибка при удалении поста "${post.title}"`, "error");
+      },
+    });
   };
 
   return (
@@ -46,7 +64,7 @@ const CalendarPostsList = ({ posts }) => {
               e.stopPropagation(); 
               changeContent("delete_confirm", "popup_window", {
                 itemName: post.title,
-                onDelete: () => deleteMutation(post.id),
+                onDelete: () => handleDelete(post),
               });
             }}
             disabled={deleteMutation.isLoading}
