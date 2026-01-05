@@ -121,6 +121,23 @@ const PublicationsPopup = () => {
     return [];
   }, [dateFilter.period]);
 
+  const getPaginationRange = (current, total, max = 5) => {
+    if (total <= max) {
+      return Array.from({ length: total }, (_, i) => i + 1);
+    }
+
+    const half = Math.floor(max / 2);
+    let start = Math.max(current - half, 1);
+    let end = start + max - 1;
+
+    if (end > total) {
+      end = total;
+      start = end - max + 1;
+    }
+
+    return Array.from({ length: max }, (_, i) => start + i);
+  };
+
   return (
     <>
       <PublicationsHead>
@@ -187,15 +204,43 @@ const PublicationsPopup = () => {
 
           {totalPages > 1 && (
             <PaginationWrapper>
-              {Array.from({ length: totalPages }, (_, i) => (
+              {currentPage > 1 && (
+                <PageBtn onClick={() => setCurrentPage(currentPage - 1)}>
+                  ←
+                </PageBtn>
+              )}
+
+              {currentPage > 3 && (
+                <>
+                  <PageBtn onClick={() => setCurrentPage(1)}>1</PageBtn>
+                  <span>…</span>
+                </>
+              )}
+
+              {getPaginationRange(currentPage, totalPages).map((page) => (
                 <PageBtn
-                  key={i}
-                  onClick={() => setCurrentPage(i + 1)}
-                  active={currentPage === i + 1}
+                  key={page}
+                  onClick={() => setCurrentPage(page)}
+                  active={currentPage === page}
                 >
-                  {i + 1}
+                  {page}
                 </PageBtn>
               ))}
+
+              {currentPage < totalPages - 2 && (
+                <>
+                  <span>…</span>
+                  <PageBtn onClick={() => setCurrentPage(totalPages)}>
+                    {totalPages}
+                  </PageBtn>
+                </>
+              )}
+
+              {currentPage < totalPages && (
+                <PageBtn onClick={() => setCurrentPage(currentPage + 1)}>
+                  →
+                </PageBtn>
+              )}
             </PaginationWrapper>
           )}
         </>
