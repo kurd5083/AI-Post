@@ -7,12 +7,15 @@ import CalendarWeek from "@/components/Popup/Сalendar/CalendarWeek";
 import CalendarFooter from "@/components/Popup/Сalendar/CalendarFooter";
 import CalendarPostsList from "@/components/Popup/Сalendar/CalendarPostsList";
 import ModernLoading from "@/components/ModernLoading";
+import { usePopupStore } from "@/store/popupStore"
 
 const CalendarPopup = () => {
+  const { popup } = usePopupStore();
   const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [currentWeek, setCurrentWeek] = useState([]);
- 
+  const channelId = popup?.data?.channelId;
+  
   useEffect(() => {
     setCurrentWeek(generateWeek(currentDate));
   }, [currentDate]);
@@ -27,6 +30,7 @@ const CalendarPopup = () => {
   const endISO = endDate.toISOString();
 
   const { events = [], eventsLoading } = useCalendarEventsByRange(startISO, endISO);
+  const filteredEvents = events.filter( event => event.id === channelId);
 
   const syncDate = (date) => {
     setSelectedDate(date);
@@ -56,13 +60,14 @@ const CalendarPopup = () => {
         syncDate={syncDate}
       />
       <CalendarFooter
-        events={events}
+        events={filteredEvents}
+        channelId={channelId}
         selectedDate={selectedDate}
       />
       {eventsLoading ? (
         <ModernLoading text="Загрузка постов..." />
       ) : (
-        <CalendarPostsList posts={events} />
+        <CalendarPostsList posts={filteredEvents} />
       )}
     </CalendarContent>
   );

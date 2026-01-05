@@ -10,7 +10,7 @@ const safeDate = (value) => {
 const dayKeyUTC = (d) =>
   `${d.getUTCFullYear()}-${d.getUTCMonth() + 1}-${d.getUTCDate()}`;
 
-export const CalendarFooter = ({ events, selectedDate }) => {
+export const CalendarFooter = ({ events, channelId, selectedDate }) => {
   const { changeContent } = usePopupStore();
   
   const selectedKey = dayKeyUTC(selectedDate);
@@ -30,6 +30,7 @@ export const CalendarFooter = ({ events, selectedDate }) => {
             e.stopPropagation();
             changeContent("create_calendar_event", "popup_window", {
               selectedDate,
+              channelId
             });
           }}
           $color="#AC60FD"
