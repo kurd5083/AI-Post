@@ -7,11 +7,13 @@ import { useUpdateChannelImagePreset } from "@/lib/channels/image-generation/use
 import { usePopupStore } from "@/store/popupStore"
 import ModernLoading from "@/components/ModernLoading";
 import { useNotificationStore } from "@/store/notificationStore";
+import { useLightboxStore } from "@/store/lightboxStore";
 
 const ImageGenerationPopup = () => {
   const { popup } = usePopupStore();
   const channelId = popup?.data?.channelId;
 
+  const { openLightbox } = useLightboxStore();
   const { imagePresets, imagePresetsLoading } = useImagePresets();
   const { imageChannelPreset } = useGetChannelImagePreset(channelId);
   const [selectedPresetId, setSelectedPresetId] = useState(null);
@@ -47,12 +49,21 @@ const ImageGenerationPopup = () => {
                 checked={selectedPresetId === item.id}
                 onChange={() => handlePresetChange(item.id)}
               >
-                  <div>
-                    <h4>{item.name}</h4>
-                    <p>{item.description}</p>
-                  </div>
+                <div>
+                  <h4>{item.name}</h4>
+                  <p>{item.description}</p>
+                </div>
               </Checkbox>
-              <ImageGenerationImg src={`http://77.37.65.40:3000${item.imageUrl}`} alt="icon style" />
+              <ImageGenerationImg
+                src={`http://77.37.65.40:3000${item.imageUrl}`} alt="icon style"
+                onClick={() =>
+                  openLightbox({
+                    images: `http://77.37.65.40:3000${item.imageUrl}`,
+                    initialIndex: 0,
+                  })
+                }
+
+              />
             </ImageGenerationContentItem>
           ))}
         </div>
@@ -112,6 +123,7 @@ const ImageGenerationImg = styled.img`
   height: 65px;
   border-radius: 12px;
   object-fit: cover;
+  cursor: pointer;
 `
 
 export default ImageGenerationPopup
