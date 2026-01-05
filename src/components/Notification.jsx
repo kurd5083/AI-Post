@@ -1,9 +1,10 @@
 import styled, { keyframes } from "styled-components";
-import { CheckCircle, XCircle, Info, RefreshCw } from "lucide-react"; // добавим иконку обновления
+import { CheckCircle, XCircle, Info, RefreshCw, Trash2 } from "lucide-react";
 import { useNotificationStore } from "../store/notificationStore";
+import { useEffect } from "react";
 
 const Notification = () => {
-  const { notifications } = useNotificationStore();
+  const { notifications, removeNotification } = useNotificationStore();
 
   const getIcon = (type) => {
     switch (type) {
@@ -14,12 +15,21 @@ const Notification = () => {
       case "update":
         return <RefreshCw size={24} color="#fff" />;
       case "delete":
-        return <RefreshCw size={24} color="#fff" />;
+        return <Trash2 size={24} color="#fff" />;
       case "info":
       default:
         return <Info size={24} color="#fff" />;
     }
   };
+
+  // Автоудаление уведомления через 5 секунд
+  useEffect(() => {
+    const timers = notifications.map((n) =>
+      setTimeout(() => removeNotification(n.id), 5000)
+    );
+
+    return () => timers.forEach((t) => clearTimeout(t));
+  }, [notifications, removeNotification]);
 
   return (
     <Container>
@@ -27,6 +37,9 @@ const Notification = () => {
         <NotificationItem key={n.id} $type={n.type}>
           <IconWrapper>{getIcon(n.type)}</IconWrapper>
           <Message>{n.message}</Message>
+          <CloseButton onClick={() => removeNotification(n.id)}>
+            <XCircle size={18} color="#fff" />
+          </CloseButton>
         </NotificationItem>
       ))}
     </Container>
@@ -65,6 +78,8 @@ const NotificationItem = styled.div`
         return "#F44336";
       case "update":
         return "#FF9800";
+      case "delete":
+        return "#F44336"; 
       case "info":
       default:
         return "#2196F3";
@@ -72,6 +87,7 @@ const NotificationItem = styled.div`
   }};
   animation: ${slideDown} 0.3s ease forwards;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  position: relative;
 `;
 
 const IconWrapper = styled.div`
@@ -81,6 +97,16 @@ const IconWrapper = styled.div`
 
 const Message = styled.div`
   font-weight: 600;
+  flex: 1;
+`;
+
+const CloseButton = styled.button`
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
 `;
 
 export default Notification;
