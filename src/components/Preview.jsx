@@ -2,34 +2,50 @@ import styled from "styled-components";
 import eye_blue from "@/assets/eye-blue.svg";
 import PreviewBG from "@/assets/ai-generator/PreviewBG.png";
 import arrow from "@/assets/arrow.svg";
-import CustomSelect from "@/shared/CustomSelectSec";
-import BtnBase from "@/shared/BtnBase";
 import TgIcon from "@/icons/TgIcon";
 import { useSendPostToChannel } from "@/lib/posts/useSendPostToChannel";
+import { useCreatePost } from "@/lib/posts/useCreatePost";
 import { usePopupStore } from "@/store/popupStore"
 import { useLightboxStore } from "@/store/lightboxStore";
 
 const Preview = ({ collapsed, onChange, testResult, telegramId }) => {
   const { openLightbox } = useLightboxStore();
   const { popup, changeContent } = usePopupStore();
-  
-  const { title, summary, url, images, postId } = testResult || {};
+
+  const { title, summary, url, images, postId: localPostId, serverId } = testResult || {};
   const { mutate: sendPost, isPending: sendPostPending } = useSendPostToChannel();
+  const { mutate: createPost } = useCreatePost();
   const channelId = popup?.data?.channelId;
 
   const handleSend = () => {
     if (!channelId) {
-      // Если канал не выбран — открыть попап выбора канала
       changeContent("select_channel", "popup_window", {
-        onSave: (selectedChannelId) => {
-          sendPost({ postId, channelId: selectedChannelId, channelTelegramId: telegramId });
-        },
+        onSave: (selectedChannelId) => handleSendWithChannel(selectedChannelId),
       });
       return;
     }
+    handleSendWithChannel(channelId);
+  };
 
-    // Если канал есть — отправляем напрямую
-    sendPost({ postId, channelId, channelTelegramId: telegramId });
+  const handleSendWithChannel = (finalChannelId) => {
+    if (!serverId) {
+      const payload = {
+        title: title || summary || "Без названия",
+        text: summary || "",
+        images: images || [],
+        channelId: finalChannelId,
+        publishedAt: new Date().toISOString(),
+        summary,
+      };
+
+      createPost(payload, {
+        onSuccess: (data) => {
+          sendPost({ postId: data.id, channelId: finalChannelId, channelTelegramId: telegramId });
+        },
+      });
+    } else {
+      sendPost({ postId: serverId, channelId: finalChannelId, channelTelegramId: telegramId });
+    }
   };
 
   return (
@@ -89,6 +105,7 @@ const Preview = ({ collapsed, onChange, testResult, telegramId }) => {
     </GeneratorPreview>
   )
 }
+
 const GeneratorPreview = styled.div`
   width: 100%;
 `;
