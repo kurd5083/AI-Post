@@ -7,6 +7,7 @@ import { usePopupStore } from "@/store/popupStore"
 import { useUpdateChannelGlobalPrompt } from "@/lib/channels/global-prompt/useUpdateChannelGlobalPrompt";
 import { useChannelGlobalPrompt } from "@/lib/channels/global-prompt/useChannelGlobalPrompt";
 import ModernLoading from "@/components/ModernLoading";
+import { useNotificationStore } from "@/store/notificationStore";
 
 const IndustrialLibraryPopup = () => {
   const { popup, goBack } = usePopupStore();
@@ -15,7 +16,8 @@ const IndustrialLibraryPopup = () => {
   const [selectedIndex, setSelectedIndex] = useState(null);
   const [localPrompt, setLocalPrompt] = useState("");
   const { globalPrompt } = useChannelGlobalPrompt(channelId);
-
+  const { addNotification } = useNotificationStore();
+  
   useEffect(() => {
     if (!globalPrompt || !promptLibrary) return;
 
@@ -32,20 +34,34 @@ const IndustrialLibraryPopup = () => {
     }
   }, [globalPrompt, promptLibrary]);
 
-  const { mutate: updateGlobalPrompt } = useUpdateChannelGlobalPrompt();
+  const { mutate: updateGlobalPrompt, isPending } = useUpdateChannelGlobalPrompt();
 
   const handleSelectPrompt = (item, index) => {
     setSelectedIndex(index);
     setLocalPrompt(item.prompt);
   };
   const handleSave = () => {
-    updateGlobalPrompt({
-      channelId,
-      value: localPrompt,
-    }, {
-      onSuccess: () => goBack(),
+    if (!localPrompt?.trim()) {
+      addNotification("Выберите промпт", "error");
+      return;
     }
-  )};
+
+    updateGlobalPrompt(
+      {
+        channelId,
+        value: localPrompt,
+      },
+      {
+        onSuccess: () => {
+          addNotification("Промпт успешно сохранён", "success");
+          goBack();
+        },
+        onError: () => {
+          addNotification("Ошибка при сохранении промпта", "error");
+        },
+      }
+    );
+  };
 
   return (
     <IndustrialStyleContainer>
@@ -71,8 +87,9 @@ const IndustrialLibraryPopup = () => {
         $bg="#1B243E"
         $margin="64"
         onClick={handleSave}
+        disabled={isPending}
       >
-        Сохранить
+        {isPending ? "Сохраняем..." : "Сохранить"}
       </BtnBase>
     </IndustrialStyleContainer>
   )
