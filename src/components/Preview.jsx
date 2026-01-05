@@ -16,7 +16,9 @@ const Preview = ({ collapsed, onChange, testResult, telegramId }) => {
   const { mutate: sendPost, isPending: sendPostPending } = useSendPostToChannel();
   const { popup } = usePopupStore();
   const channelId = popup?.data?.channelId;
+
   console.log(postId, channelId, telegramId )
+  
   return (
     <GeneratorPreview $collapsed={collapsed}>
       <PreviewContent>
