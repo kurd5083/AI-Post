@@ -6,7 +6,7 @@ import { usePopupStore } from "@/store/popupStore"
 import { useNotificationStore } from "@/store/notificationStore";
 
 const CalendarPostsList = ({ posts }) => {
-  const { deleteMutation } = useDeleteCalendarEvent();
+  const { deleteMutation, isPending } = useDeleteCalendarEvent();
   const { popup, changeContent } = usePopupStore();
   const { addNotification } = useNotificationStore();
 
@@ -67,7 +67,7 @@ const CalendarPostsList = ({ posts }) => {
                 onDelete: () => handleDelete(post),
               });
             }}
-            disabled={deleteMutation.isLoading}
+            disabled={isPending}
           >
             <img src={del} alt="del icon" width={14} height={16} />
           </DeleteButton>
