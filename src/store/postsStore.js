@@ -17,25 +17,24 @@ export const usePostsStore = create((set, get) => ({
 	posts: [createEmptyPost(1)],
 	selectedPost: null,
 
-	/** ПРОГРЕСС */
 	postProgress: {},
 	imageProgress: {},
 
 	setPostProgress: (postId, value) =>
-		set(state => ({
-			postProgress: {
-				...state.postProgress,
-				[postId]: value,
-			},
-		})),
+    set((state) => ({
+      postProgress: {
+        ...state.postProgress,
+        [postId]: value,
+      },
+    })),
 
-	setImageProgress: (postId, value) =>
-		set(state => ({
-			imageProgress: {
-				...state.imageProgress,
-				[postId]: value,
-			},
-		})),
+  setImageProgress: (postId, value) =>
+    set((state) => ({
+      imageProgress: {
+        ...state.imageProgress,
+        [postId]: value,
+      },
+    })),
 
 	resetPostProgress: (postId) =>
 		set(state => {
