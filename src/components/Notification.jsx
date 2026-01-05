@@ -22,7 +22,6 @@ const Notification = () => {
     }
   };
 
-  // Автоудаление уведомления через 5 секунд
   useEffect(() => {
     const timers = notifications.map((n) =>
       setTimeout(() => removeNotification(n.id), 5000)

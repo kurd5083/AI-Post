@@ -131,6 +131,7 @@ const AiGeneratorPopup = () => {
 
   const handleCreateAIImage = (postId) => {
     const post = posts.find(p => p.postId === postId);
+    console.log(post)
     if (!post) {
       addNotification("Пост не найден", "error");
       return;
@@ -159,7 +160,7 @@ const AiGeneratorPopup = () => {
         }
 
         const imageUrl = data.imageUrls[0];
-        updatePost(postId, { images: [imageUrl] });
+        updatePost(postId, { images: [...(post.images || []), imageUrl] });
         addNotification("Изображение успешно сгенерировано", "success");
 
         setTimeout(() => resetImageProgress(postId), 500);
