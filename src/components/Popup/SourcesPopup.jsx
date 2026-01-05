@@ -20,7 +20,6 @@ const SourcesPopup = () => {
   const { mutate: addSource } = useAddChannelSource();
   const { mutate: deleteSource } = useDeleteChannelSource();
 
-  console.log(channel)
   useEffect(() => {
     if (channel?.sources) {
       setLocalSources(channel.sources);

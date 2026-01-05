@@ -7,7 +7,6 @@ import { useAvailableCategories } from "@/lib/channels/categories/useAvailableCa
 import ModernLoading from "@/components/ModernLoading";
 import Checkbox from "@/shared/Checkbox";
 import { useApplyCategory } from "@/lib/channels/categories/useApplyCategory";
-// import { useAllSources } from "@/lib/channels/sources/useAllSources";
 
 const CompilationPopup = () => {
   const [selectedCategory, setSelectedCategory] = useState(null);
@@ -18,10 +17,7 @@ const CompilationPopup = () => {
   const { mutate: applyCategory, isPending: categoryPending } = useApplyCategory();
 
   const { categories, categoriesLoading } = useAvailableCategories();
-  console.log(categories, categoriesLoading)
-  // const { sources } = useAllSources();
-  // console.log(sources)
-  
+
   const handleSave = () => {
   if (!selectedCategory || !channelId) return;
     applyCategory(

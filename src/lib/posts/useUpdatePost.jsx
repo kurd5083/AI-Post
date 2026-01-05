@@ -7,7 +7,6 @@ export const useUpdatePost = () => {
   return useMutation({
     mutationFn: ({ postId, postData }) => updatePost(postId, postData),
     onSuccess: (data) => {
-      console.log("Пост успешно обновлён:", data);
       queryClient.invalidateQueries(["posts"]);
     },
   });

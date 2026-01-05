@@ -7,7 +7,6 @@ export const useCreatePost = () => {
   return useMutation({
     mutationFn: (postData) => createPost(postData),
     onSuccess: (data) => {
-      console.log("Пост успешно создан:", data);
       queryClient.invalidateQueries(["posts"]);
     },
   });

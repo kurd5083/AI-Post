@@ -7,7 +7,6 @@ export const useRejectPost = () => {
   return useMutation({
     mutationFn: ({ postId, channelId }) => rejectPost(postId, channelId),
     onSuccess: (data, variables) => {
-      console.log(`Пост ${variables.postId} успешно отклонен`);
       queryClient.invalidateQueries(["posts"]);
     },
   });

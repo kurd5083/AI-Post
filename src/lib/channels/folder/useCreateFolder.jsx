@@ -8,10 +8,6 @@ export const useCreateFolder = () => {
     mutationFn: (folderData) => createFolder(folderData),
     onSuccess: (data) => {
       queryClient.invalidateQueries(["channelsGroupedByFolders"]);
-      console.log("Папка успешно создана:", data);
-    },
-    onError: (error) => {
-      console.error("Ошибка создания папки:", error.message);
     },
   });
 };

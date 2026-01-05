@@ -7,7 +7,6 @@ export const useCreateChannelSchedule = (channelId) => {
     return useMutation({
         mutationFn: ({ postDays, publicationTimes, timezone }) => createSchedule({ channelId, postDays, publicationTimes, timezone }),
         onSuccess: (data) => {
-            console.log("Результат мутации:", data);
             queryClient.invalidateQueries(["channel", channelId]);
         },
     });

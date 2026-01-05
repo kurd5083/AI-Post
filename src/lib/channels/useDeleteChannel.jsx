@@ -8,10 +8,6 @@ export const useDeleteChannel = () => {
     mutationFn: (channelId) => deleteChannel(channelId),
     onSuccess: (channelId) => {
       queryClient.invalidateQueries(["channelsGroupedByFolders"]);
-      console.log(`Канал ${channelId} успешно удалён`);
-    },
-    onError: (error) => {
-      console.error("Ошибка при удалении канала:", error);
     },
   });
 };

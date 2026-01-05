@@ -8,7 +8,6 @@ export const useGeneratePost = () => {
         mutationFn: (channelId) => generatePost(channelId),
 
         onSuccess: (data, channelId) => {
-            console.log("Пост успешно сгенерирован:", data);
             queryClient.invalidateQueries([ "posts-by-channel", channelId ]);
         }
     });

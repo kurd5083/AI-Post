@@ -7,7 +7,6 @@ export const useCreatePromotionOrders = () => {
   return useMutation({
     mutationFn: (data) => createPromotionOrders(data),
     onSuccess: (data) => {
-      console.log("Заказы на просмотры созданы:", data);
       queryClient.invalidateQueries(["promotion-orders"]);
     },
   });

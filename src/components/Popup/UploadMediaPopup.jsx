@@ -60,7 +60,7 @@ const UploadMediaPopup = () => {
   };
 
   const handleSave = async () => {
-	console.log("aasd", selectedFile)
+
     if (!selectedFile) return;
 
     try {

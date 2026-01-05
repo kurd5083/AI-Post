@@ -8,7 +8,6 @@ export const useTestDrivePrompt = () => {
 		mutationFn: ({ topic, promtManage, channelId }) => testDrivePrompt({ topic, promtManage, channelId }),
 
 		onSuccess: (data, variables) => {
-			console.log("Test-drive успешно выполнен:", data);
 			queryClient.invalidateQueries(["posts-by-channel", variables.channelId]);
 		},
 	});

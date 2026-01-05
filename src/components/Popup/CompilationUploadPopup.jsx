@@ -10,7 +10,7 @@ const CompilationUploadPopup = () => {
   const { categories } = useAvailableCategories();
   const categoryId = popup?.data?.id;
   const category = categories.find(cat => cat.id === categoryId);
-  console.log(category)
+
   return (
     <CompilationContainer>
       <CompilationTitle>Источники категорий:</CompilationTitle>

@@ -6,7 +6,7 @@ const Auth = () => {
   const navigate = useNavigate();
   const { search } = useLocation();
   const { mutate: telegramAuth } = useAuthTelegram();
-  console.log(telegramAuth)
+
   useEffect(() => {
     const params = new URLSearchParams(search);
     const data = {

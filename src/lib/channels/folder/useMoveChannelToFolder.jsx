@@ -10,7 +10,6 @@ export const useMoveChannelToFolder = () => {
     mutationFn: moveChannelToFolder,
 
     onSuccess: (data) => {
-      console.log("Канал успешно перемещён:", data);
       queryClient.invalidateQueries({ queryKey: ["channelFolders"] });
       queryClient.invalidateQueries({ queryKey: ["channelsGroupedByFolders"] });
       closePopup();
@@ -18,7 +17,6 @@ export const useMoveChannelToFolder = () => {
 
     onError: (error) => {
       console.error(
-        "Ошибка перемещения канала:",
         error instanceof Error ? error.message : error
       );
     },

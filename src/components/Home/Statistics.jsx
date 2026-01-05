@@ -16,7 +16,7 @@ const Statistics = () => {
   const { isSwipe } = useSwipeAllowed(1600);
   const { userChannels } = useUserChannels();
   const [selectedChannels, setSelectedChannels] = useState([]);
-  console.log(userChannels, 'aaaaaaaa13') 
+
   useEffect(() => {
     if (userChannels?.length) {
       setSelectedChannels(userChannels?.map(c => c.id));
@@ -26,7 +26,6 @@ const Statistics = () => {
   const { channelStat, channelStatLoading } = useChannelStat({
     channelIds: selectedChannels,
   });
-    console.log(channelStat)
 
   // const channelStatItems = useMemo(() => {
   //   if (!channelStat?.response) return [];

@@ -56,8 +56,8 @@ const Templates = () => {
 	const filteredTemplates = activeFilter === "all"
 		? localTemplates
 		: localTemplates?.filter(t => t.category.toLowerCase() === activeFilter.toLowerCase());
-	console.log(filteredTemplates)
-	return (
+
+		return (
 		<>
 			<PageHead>
 				<BtnBase

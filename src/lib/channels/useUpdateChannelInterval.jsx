@@ -8,7 +8,6 @@ export const useUpdateChannelInterval = (channelId) => {
     mutationFn: ({ intervalMinutes, isEnabled, avoidNight, activeStartHour, activeEndHour }) =>
       updateChannelInterval(channelId, { intervalMinutes, isEnabled, avoidNight, activeStartHour, activeEndHour }),
     onSuccess: (data) => {
-      console.log("Настройки интервала успешно сохранены:", data);
       queryClient.invalidateQueries(["channelInterval", channelId]);
     },
   });

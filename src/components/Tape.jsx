@@ -14,7 +14,6 @@ const Tape = () => {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [filters, setFilters] = useState({});
   const { newsData, newsLoding } = useNews(filters);
-  console.log(newsData)
 
   const [stopWord, setStopWord] = useState("");
   const [stopWords, setStopWords] = useState([]);

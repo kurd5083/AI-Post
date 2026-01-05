@@ -10,20 +10,13 @@ import { usePopupStore } from "@/store/popupStore"
 import { useLightboxStore } from "@/store/lightboxStore";
 
 const Preview = ({ collapsed, onChange, testResult, telegramId }) => {
-  console.log(testResult)
-
   const { openLightbox } = useLightboxStore();
   
   const { title, summary, url, images, postId } = testResult || {};
-  const { mutate: sendPost, isLoading: sendPostLoading } = useSendPostToChannel();
+  const { mutate: sendPost, isPending: sendPostPending } = useSendPostToChannel();
   const { popup } = usePopupStore();
   const channelId = popup?.data?.channelId;
-
-  const handleSendToTelegram = () => {
-    if (!postId || !channelId || !telegramId) return;
-    sendPost({ postId, channelId, channelTelegramId: telegramId });
-  };
-
+  console.log(postId, channelId, telegramId )
   return (
     <GeneratorPreview $collapsed={collapsed}>
       <PreviewContent>
@@ -33,9 +26,6 @@ const Preview = ({ collapsed, onChange, testResult, telegramId }) => {
         </PreviewHead>
         {!collapsed && (
           <>
-              {/* <PreviewHeadButton>
-                <BtnBase $padding="16px 24px">Telegram</BtnBase>
-              </PreviewHeadButton> */}
             <PreviewInfo>
               <PreviewInfoBG src={PreviewBG} alt="bg" />
               <PreviewInfoContainer>
@@ -71,9 +61,12 @@ const Preview = ({ collapsed, onChange, testResult, telegramId }) => {
                 </PreviewInfoText>
               </PreviewInfoContainer>
             </PreviewInfo>
-            <PreviewButton onClick={handleSendToTelegram} disabled={sendPostLoading}>
+            <PreviewButton 
+              onClick={() => sendPost({ postId, channelId, channelTelegramId: telegramId })} 
+              disabled={sendPostPending}
+            >
               <TgIcon color="#336CFF" width="24" height="20"/>
-              <p>{sendPostLoading ? "Отправляем..." : "Отправить в Telegram"}</p>
+              <p>{sendPostPending ? "Отправляем..." : "Отправить в Telegram"}</p>
             </PreviewButton>
           </>
         )}

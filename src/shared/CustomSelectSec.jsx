@@ -14,7 +14,7 @@ const CustomSelect = ({
   const [open, setOpen] = useState(false);
   const [selected, setSelected] = useState(null);
   const selectRef = useRef(null);
-  console.log(value, 'asgsdh')
+
   const toggle = () => setOpen(prev => !prev);
 
   const handleSelect = (option) => {

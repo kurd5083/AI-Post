@@ -11,7 +11,6 @@ const CardPablish = ({ item, bg }) => {
   const { addPost } = usePostsStore();
   const { changeContent } = usePopupStore();
 
-  console.log(item)
   const handleEdit = () => {
     addPost({
       postId: item.id,   
