@@ -46,7 +46,6 @@ const ImageGenerationPopup = () => {
               <Checkbox
                 checked={selectedPresetId === item.id}
                 onChange={() => handlePresetChange(item.id)}
-                width="100%"
               >
                   <div>
                     <h4>{item.name}</h4>
@@ -54,7 +53,6 @@ const ImageGenerationPopup = () => {
                   </div>
               </Checkbox>
               <ImageGenerationImg src={`http://77.37.65.40:3000${item.imageUrl}`} alt="icon style" />
-
             </ImageGenerationContentItem>
           ))}
         </div>
