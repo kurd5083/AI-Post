@@ -28,25 +28,39 @@ const Preview = ({ collapsed, onChange, testResult, telegramId }) => {
   };
 
   const handleSendWithChannel = (finalChannelId) => {
-    if (!serverId) {
-      const payload = {
-        title: title || summary || "Без названия",
-        text: summary || "",
-        images: images || [],
-        channelId: finalChannelId,
-        publishedAt: new Date().toISOString(),
-        summary,
-      };
+  if (!serverId) {
+    // Пост ещё не сохранён на сервере
+    const payload = {
+      title: title || summary || "Без названия",
+      text: summary || "",
+      images: images || [],
+      channelId: finalChannelId,
+      publishedAt: new Date().toISOString(),
+      summary,
+    };
 
-      createPost(payload, {
-        onSuccess: (data) => {
-          sendPost({ postId: data.id, channelId: finalChannelId, channelTelegramId: telegramId });
-        },
-      });
-    } else {
-      sendPost({ postId: serverId, channelId: finalChannelId, channelTelegramId: telegramId });
-    }
-  };
+    createPost(payload, {
+      onSuccess: (data) => {
+        // Обновляем локальный postId на serverId
+        if (testResult.postId) testResult.serverId = data.id;
+
+        // После сохранения сразу отправляем
+        sendPost({
+          postId: data.id,
+          channelId: finalChannelId,
+          channelTelegramId: telegramId,
+        });
+      },
+    });
+  } else {
+    sendPost({
+      postId: serverId,
+      channelId: finalChannelId,
+      channelTelegramId: telegramId,
+    });
+  }
+};
+
 
   return (
     <GeneratorPreview $collapsed={collapsed}>
