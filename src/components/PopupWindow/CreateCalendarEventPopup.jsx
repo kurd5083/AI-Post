@@ -13,7 +13,7 @@ const CreateCalendarEventPopup = () => {
 
   const channelId = popup?.data?.channelId;
   const selectedDate = popup?.data?.selectedDate;
-  const event = popup?.data?.event; 
+  const event = popup?.data?.event;
 
   const isEdit = Boolean(event);
   const { mutate: createEvent, isPending: creating } = useCreateCalendarEvent();
@@ -35,21 +35,36 @@ const CreateCalendarEventPopup = () => {
   }, [event, selectedDate, isEdit]);
 
   const handleSave = () => {
-    const payload = {
-      title: "Updated Post Title",
-      status: "COMPLETED",
+    const basePayload = {
       description,
       scheduledAt,
     };
 
     if (isEdit) {
+      const payload = {
+        ...basePayload,
+        title: "Updated Post Title",
+        status: "COMPLETED",
+      };
+
       updateEvent(
-        { id: event?.id, payload },
+        {
+          id: event?.id,
+          payload,
+        },
         { onSuccess: goBack }
       );
     } else {
+      const payload = {
+        ...basePayload,
+        postId: selectedPostId,
+      };
+
       createEvent(
-        { channelId, ...payload },
+        {
+          channelId,
+          payload,
+        },
         { onSuccess: goBack }
       );
     }
@@ -99,12 +114,12 @@ const CreateCalendarEventPopup = () => {
           {isPending
             ? "Сохранение..."
             : isEdit
-            ? "Обновить"
-            : "Создать"}
+              ? "Обновить"
+              : "Создать"}
         </BtnBase>
-        <BtnBase 
-          onClick={() => goBack()} 
-          $color="#D6DCEC" 
+        <BtnBase
+          onClick={() => goBack()}
+          $color="#D6DCEC"
           $bg="#242A3A"
         >
           Отменить
