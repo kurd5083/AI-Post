@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-const Checkbox = ({ checked, onChange, color, children, width, height }) => {
+const Checkbox = ({ checked, onChange, color, children, width, height, }) => {
   return (
     <CheckboxContainer onClick={() => onChange()}>
       <HiddenCheckbox type="checkbox" checked={checked} readOnly />

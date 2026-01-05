@@ -275,7 +275,7 @@ const PromotionViews = styled.div`
   @media(max-width: 480px) { align-items: flex-start; }
 `;
 const PostTitle = styled.h2` font-size: 24px; font-weight: 700; `;
-const PostContainer = styled.div` display: flex; gap: 16px; align-items: flex-end;`;
+const PostContainer = styled.div` display: flex; gap: 16px; align-items: flex-end; flex-wrap: wrap;`;
 const ViewsPost = styled.div`
   margin-top: 64px;
   display: flex;

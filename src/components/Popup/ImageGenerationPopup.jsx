@@ -46,16 +46,15 @@ const ImageGenerationPopup = () => {
               <Checkbox
                 checked={selectedPresetId === item.id}
                 onChange={() => handlePresetChange(item.id)}
-                
+                width="100%"
               >
-                <CheckboxBlock>
                   <div>
                     <h4>{item.name}</h4>
                     <p>{item.description}</p>
                   </div>
-                  <img src={`http://77.37.65.40:3000${item.imageUrl}`} alt="icon style" />
-                </CheckboxBlock>
               </Checkbox>
+              <ImageGenerationImg src={`http://77.37.65.40:3000${item.imageUrl}`} alt="icon style" />
+
             </ImageGenerationContentItem>
           ))}
         </div>
@@ -85,6 +84,8 @@ const ImageGenerationContentTitle = styled.h3`
 `
 const ImageGenerationContentItem = styled.div`
   display: flex;
+  justify-content: space-between;
+  align-items: center;
   padding: 24px 0;
   border-bottom: 2px solid #2E3954;
 
@@ -96,13 +97,6 @@ const ImageGenerationContentItem = styled.div`
     padding-bottom: 0;
     border-bottom: 0;
   }
-`
-const CheckboxBlock = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-
   h4 {
     font-size: 24px;
     font-weight: 700;
@@ -114,12 +108,12 @@ const CheckboxBlock = styled.div`
     font-weight: 600;
     color: #6A7080;
   }
-  img {
-    width: 65px;
-    height: 65px;
-    border-radius: 12px;
-    object-fit: cover;
-  }
+`
+const ImageGenerationImg = styled.img`
+  width: 65px;
+  height: 65px;
+  border-radius: 12px;
+  object-fit: cover;
 `
 
 export default ImageGenerationPopup
