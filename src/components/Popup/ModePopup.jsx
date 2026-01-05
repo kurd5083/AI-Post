@@ -5,20 +5,18 @@ import { useUpdateWorkMode } from "@/lib/channels/mode/useUpdateWorkMode";
 import { usePopupStore } from "@/store/popupStore"
 import CustomSelectSec from "@/shared/CustomSelectSec";
 import { useUpdateChannelPremoderationMinutes } from "@/lib/channels/mode/useUpdateChannelPremoderationMinutes";
-import { useUpdateChannelField } from "@/lib/channels/useUpdateChannelField";
-
+import { useNotificationStore } from "@/store/notificationStore";
 
 const ModePopup = () => {
     const { popup } = usePopupStore();
     const channelId = popup?.data?.channelId;
 
     const [selectedMode, setSelectedMode] = useState(null);
-    const [requireApproval, setRequireApproval] = useState(false);
     const [premoderationMinutes, setPremoderationMinutes] = useState(30);
+    const { addNotification } = useNotificationStore();
 
     const { mutate: setWorkMode } = useUpdateWorkMode(channelId);
     const { mutate: updatePremoderationMinutes } = useUpdateChannelPremoderationMinutes(channelId);
-    const { mutate: toggleField } = useUpdateChannelField();
 
 
     useEffect(() => {
@@ -37,16 +35,15 @@ const ModePopup = () => {
     const handleSelectMode = (mode) => {
         setSelectedMode(mode);
         setWorkMode({ workMode: mode });
+        addNotification("Режим работы обновлён", "update");
     };
+
     const handleChangeMinutes = (option) => {
         setPremoderationMinutes(option.value);
         updatePremoderationMinutes({ minutes: option.value });
+        addNotification(`Время премодерации обновлено: ${option.label}`, "update");
     };
-    const handleToggleApproval = () => {
-        const newValue = !requireApproval;
-        setRequireApproval(newValue);
-        toggleField({ channelId, field: "canPublishWithoutApproval" });
-    };
+
 
     return (
         <ModeContent>

@@ -9,11 +9,13 @@ import { useRemoveChannelKeyword } from "@/lib/channels/filtration/useRemoveChan
 import { useAddChannelStopWord } from "@/lib/channels/filtration/useAddChannelStopWord";
 import { useRemoveChannelStopWord } from "@/lib/channels/filtration/useRemoveChannelStopWord";
 import BtnBase from "@/shared/BtnBase";
+import { useNotificationStore } from "@/store/notificationStore";
 
 const FilteringPopup = () => {
   const { popup } = usePopupStore();
   const channelId = popup?.data?.channelId;
   const { channel } = useChannelById(channelId);
+  const { addNotification } = useNotificationStore();
 
   const [keyword, setKeyword] = useState("");
   const [stopWord, setStopWord] = useState("");
@@ -42,11 +44,25 @@ const FilteringPopup = () => {
       prev.length ? prev : channel.stopWords ?? []
     );
   }, [channel]);
+
   const handleSave = () => {
     if (!channel) return;
 
     const serverKeywords = channel.keywords ?? [];
     const serverStopWords = channel.stopWords ?? [];
+
+    const keywordsChanged =
+      localKeywords.filter(k => !serverKeywords.includes(k)).length > 0 ||
+      serverKeywords.filter(k => !localKeywords.includes(k)).length > 0;
+
+    const stopWordsChanged =
+      localStopWords.filter(w => !serverStopWords.includes(w)).length > 0 ||
+      serverStopWords.filter(w => !localStopWords.includes(w)).length > 0;
+
+    if (!keywordsChanged && !stopWordsChanged) {
+      addNotification("Нет изменений для сохранения", "info");
+      return;
+    }
 
     localKeywords
       .filter(k => !serverKeywords.includes(k))
@@ -71,7 +87,10 @@ const FilteringPopup = () => {
       .forEach(stopWord => {
         removeStopWord({ channelId, stopWord });
       });
+
+    addNotification("Фильтры успешно обновлены", "update");
   };
+
   return (
     <FilteringContainer>
       <FilteringText>

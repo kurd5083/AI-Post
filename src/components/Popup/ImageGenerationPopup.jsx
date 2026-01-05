@@ -6,6 +6,7 @@ import { useGetChannelImagePreset } from "@/lib/channels/image-generation/useGet
 import { useUpdateChannelImagePreset } from "@/lib/channels/image-generation/useUpdateChannelImagePreset";
 import { usePopupStore } from "@/store/popupStore"
 import ModernLoading from "@/components/ModernLoading";
+import { useNotificationStore } from "@/store/notificationStore";
 
 const ImageGenerationPopup = () => {
   const { popup } = usePopupStore();
@@ -14,7 +15,8 @@ const ImageGenerationPopup = () => {
   const { imagePresets, imagePresetsLoading } = useImagePresets();
   const { imageChannelPreset } = useGetChannelImagePreset(channelId);
   const [selectedPresetId, setSelectedPresetId] = useState(null);
-  console.log(imagePresets)
+  const { addNotification } = useNotificationStore();
+
   useEffect(() => {
     if (!imageChannelPreset) return;
 
@@ -30,6 +32,8 @@ const ImageGenerationPopup = () => {
 
     setSelectedPresetId(presetId);
     updateImagePreset({ channelId, presetId });
+
+    addNotification("Стилизация успешно применена", "success");
   };
 
   return (
@@ -48,7 +52,7 @@ const ImageGenerationPopup = () => {
                     <h4>{item.name}</h4>
                     <p>{item.description}</p>
                   </div>
-                  <img src={`http://77.37.65.40:3000/${item.imageUrl}`} alt="icon style" />
+                  <img src={`http://77.37.65.40:3000${item.imageUrl}`} alt="icon style" />
                 </CheckboxBlock>
               </Checkbox>
             </ImageGenerationContentItem>

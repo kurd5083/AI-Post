@@ -1,5 +1,5 @@
 import styled, { keyframes } from "styled-components";
-import { CheckCircle, XCircle, Info } from "lucide-react";
+import { CheckCircle, XCircle, Info, RefreshCw } from "lucide-react"; // добавим иконку обновления
 import { useNotificationStore } from "../store/notificationStore";
 
 const Notification = () => {
@@ -11,6 +11,8 @@ const Notification = () => {
         return <CheckCircle size={24} color="#fff" />;
       case "error":
         return <XCircle size={24} color="#fff" />;
+      case "update":
+        return <RefreshCw size={24} color="#fff" />;
       case "info":
       default:
         return <Info size={24} color="#fff" />;
@@ -53,12 +55,19 @@ const NotificationItem = styled.div`
   min-width: 250px;
   border-radius: 8px;
   color: #fff;
-  background-color: ${({ $type }) =>
-    $type === "success"
-      ? "#4CAF50"
-      : $type === "error"
-      ? "#F44336"
-      : "#2196F3"};
+  background-color: ${({ $type }) => {
+    switch ($type) {
+      case "success":
+        return "#4CAF50";
+      case "error":
+        return "#F44336";
+      case "update":
+        return "#FF9800";
+      case "info":
+      default:
+        return "#2196F3";
+    }
+  }};
   animation: ${slideDown} 0.3s ease forwards;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 `;
