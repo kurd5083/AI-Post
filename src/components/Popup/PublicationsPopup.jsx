@@ -323,7 +323,7 @@ const PaginationWrapper = styled.div`
   display: flex;
   justify-content: center;
   align-items: flex-end;
-  gap: 37px;
+  gap: 24px;
   padding-top: 40px;
 `;
 

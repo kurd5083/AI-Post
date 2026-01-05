@@ -67,7 +67,7 @@ const AiGeneratorPopup = () => {
       setPostProgress(postId, 0);
 
       const interval = setInterval(() => {
-        const current = postProgress[postId] ?? 0;
+        const current = usePostsStore.getState().postProgress[postId] ?? 0;
 
         if (current >= 90) {
           clearInterval(interval);
@@ -76,7 +76,7 @@ const AiGeneratorPopup = () => {
 
         setPostProgress(
           postId,
-          current + Math.floor(Math.random() * 10)
+          Math.min(current + Math.floor(Math.random() * 10), 90)
         );
       }, 500);
 
@@ -92,18 +92,22 @@ const AiGeneratorPopup = () => {
             summary: data.post?.summary || "",
             images: data.images || [],
           });
+          setTimeout(() => {
+            resetPostProgress(postId);
+          }, 500);
         },
-        onError: (err) => {
+        onError: () => {
           clearInterval(interval);
           setPostProgress(postId, 0);
-          console.error(err);
+          
+          resetPostProgress(postId);
         },
       });
     };
 
     if (!channelId) {
       changeContent("select_channel", "popup_window", {
-        onSave: (selectedChannelId) => runGenerate(selectedChannelId),
+        onSave: runGenerate,
       });
       return;
     }
@@ -128,7 +132,7 @@ const AiGeneratorPopup = () => {
     setImageProgress(postId, 0);
 
     const interval = setInterval(() => {
-      const current = imageProgress[postId] ?? 0;
+      const current = usePostsStore.getState().imageProgress[postId] ?? 0;
 
       if (current >= 90) {
         clearInterval(interval);
@@ -155,11 +159,16 @@ const AiGeneratorPopup = () => {
 
           const imageUrl = `data:${inlineData.mimeType};base64,${inlineData.data}`;
           updatePost(postId, { images: [imageUrl] });
+
+          setTimeout(() => {
+            resetImageProgress(postId);
+          }, 500);
         },
         onError: (err) => {
           clearInterval(interval);
           setImageProgress(postId, 0);
-          console.error(err);
+
+          resetImageProgress(postId);
         },
       }
     );
