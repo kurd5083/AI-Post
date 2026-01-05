@@ -562,9 +562,8 @@ const GeneratorList = styled.div`
     }
   }
   
-  @media(max-width: 1600px) {
-    gap: 104px;
-    padding-bottom: 100px;
+  @media(max-width: 2000px) {
+    gap: 200px;
     max-height: calc(100dvh - 490px);
   } 
   @media(max-width: 1400px) {
@@ -572,8 +571,6 @@ const GeneratorList = styled.div`
     grid-row: 3;
   }
   @media(max-width: 768px) {
-    gap: 104px;
-    padding-bottom: 100px;
     max-height: calc(100dvh - 550px);
   } 
 `;
@@ -709,7 +706,8 @@ const ItemAI = styled.div`
 const ItemActionsAdd = styled.div`
   display: flex;
   align-items: center;
-  gap: 32px;
+  flex-wrap: wrap;
+  gap: 16px 32px;
   @media(max-width: 480px) {
     gap: 16px;
   }
@@ -721,9 +719,9 @@ const ButtonsAll = styled.div`
   display: flex;
   gap: 8px;
   align-items: flex-end;
-  @media(max-width: 1600px) {
+  @media(max-width: 2000px) {
     position: absolute;
-    bottom: -72px;
+    bottom: -160px;
     right: 0;
   } 
 `;
