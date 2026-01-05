@@ -5,33 +5,40 @@ import CheckboxText from "@/shared/CheckboxText";
 import CustomSelect from "@/shared/CustomSelect";
 import BtnBase from "@/shared/BtnBase";
 import { useCreateChannelInviteLink } from "@/lib/channels/invite-link/useCreateChannelInviteLink";
+import { useNotificationStore } from "@/store/notificationStore";
 
 const LinkGenerationPopup = () => {
   const { popup, goBack } = usePopupStore();
   const channelId = popup?.data?.channelId;
 
   const createInviteLink = useCreateChannelInviteLink(channelId);
+  const { addNotification } = useNotificationStore();
 
   const [createsJoinRequest, setCreatesJoinRequest] = useState(false);
-  const [name, setName] = useState(null);
+  const [name, setName] = useState("");
   const [memberLimit, setMemberLimit] = useState(null);
   const [expirePeriod, setExpirePeriod] = useState(null);
 
   const handleCreate = () => {
+    if (name.length > 100) {
+      return addNotification("Название ссылки не должно превышать 100 символов", "error");
+    }
+
+    if (!createsJoinRequest && memberLimit) {
+      const numLimit = Number(memberLimit);
+      if (isNaN(numLimit) || numLimit <= 0) {
+        return addNotification("Лимит участников должен быть положительным числом", "error");
+      }
+    }
+
     let customExpireDate = null;
     const now = new Date();
 
     if (expirePeriod) {
       switch (expirePeriod) {
-        case "ONE_HOUR":
-          now.setHours(now.getHours() + 1);
-          break;
-        case "ONE_DAY":
-          now.setDate(now.getDate() + 1);
-          break;
-        case "ONE_WEEK":
-          now.setDate(now.getDate() + 7);
-          break;
+        case "ONE_HOUR": now.setHours(now.getHours() + 1); break;
+        case "ONE_DAY": now.setDate(now.getDate() + 1); break;
+        case "ONE_WEEK": now.setDate(now.getDate() + 7); break;
       }
       const yyyy = now.getUTCFullYear();
       const mm = String(now.getUTCMonth() + 1).padStart(2, "0");
@@ -53,11 +60,15 @@ const LinkGenerationPopup = () => {
       },
       {
         onSuccess: () => {
+          addNotification("Ссылка успешно создана", "update");
           setCreatesJoinRequest(false);
           setName("");
           setMemberLimit(null);
           setExpirePeriod(null);
         },
+        onError: () => {
+          addNotification("Ошибка при создании ссылки", "error");
+        }
       }
     );
   };
