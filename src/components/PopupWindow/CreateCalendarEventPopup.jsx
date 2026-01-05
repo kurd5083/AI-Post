@@ -28,7 +28,8 @@ const CreateCalendarEventPopup = () => {
     if (isEdit) {
       setDescription(event.description || "");
       setSelectedPostId(event.postId || null);
-      setScheduledAt(event.scheduledAt);
+      // Для редактирования сохраняем ISO строку для input
+      setScheduledAt(event.scheduledAt ? new Date(event.scheduledAt).toISOString() : '');
     } else if (selectedDate) {
       setScheduledAt(new Date(selectedDate).toISOString());
     }
