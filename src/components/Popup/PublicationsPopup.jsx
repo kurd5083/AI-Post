@@ -45,6 +45,8 @@ const PublicationsPopup = () => {
     if (!posts) return [];
     const now = new Date();
     let result = [...posts];
+    
+    result.sort((a, b) => new Date(b.publishedAt) - new Date(a.publishedAt));
 
     switch (dateFilter.period) {
       case "year":
