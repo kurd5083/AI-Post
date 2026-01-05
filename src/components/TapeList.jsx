@@ -14,6 +14,7 @@ import { usePopupStore } from "@/store/popupStore"
 import { useLightboxStore } from "@/store/lightboxStore";
 import { useCopyNewsToChannel } from "@/lib/news/useCopyNewsToChannel";
 import timeAgo from "@/lib/timeAgo";
+import { useNotificationStore } from "@/store/notificationStore";
 
 const TapeList = ({ forceHorizontal = false, padding, newsData, loding }) => {
   const { popup, changeContent, openPopup } = usePopupStore();
@@ -21,39 +22,34 @@ const TapeList = ({ forceHorizontal = false, padding, newsData, loding }) => {
 
   const { fadeVisible, ref } = useFadeOnScroll(20);
   const { isSwipe } = useSwipeAllowed(1400);
+  const { addNotification } = useNotificationStore();
 
   const direction = forceHorizontal ? "horizontal" : (isSwipe ? "horizontal" : "vertical");
 
   const { mutate: copyToChannel, isLoading: copyingLoading } = useCopyNewsToChannel();
 
   const handleClick = (id) => {
+    const copyNews = (channelId) => {
+      copyToChannel({
+        id,
+        data: {
+          channelId,
+          publishedAt: new Date().toISOString(),
+          calendarScheduledAt: new Date().toISOString(),
+        },
+      });
+      addNotification("Новость успешно скопирована в канал", "update");
+    };
+
     if (popup && popup?.status) {
       changeContent("select_channel", "popup_window", {
-        onSave: (channelId) => {
-          copyToChannel({
-            id,
-            data: {
-              channelId,
-              publishedAt: new Date().toISOString(),
-              calendarScheduledAt: new Date().toISOString(),
-            },
-          });
-        },
-        loading: copyingLoading
+        onSave: copyNews,
+        loading: copyingLoading,
       });
     } else {
       openPopup("select_channel", "popup_window", {
-        onSave: (channelId) => {
-          copyToChannel({
-            id,
-            data: {
-              channelId,
-              publishedAt: new Date().toISOString(),
-              calendarScheduledAt: new Date().toISOString(),
-            },
-          });
-        },
-        loading: copyingLoading
+        onSave: copyNews,
+        loading: copyingLoading,
       });
     }
   };

@@ -13,7 +13,7 @@ import fire from "@/assets/tape/fire.svg";
 import { useLightboxStore } from "@/store/lightboxStore";
 import { usePopupStore } from "@/store/popupStore"
 import BtnBase from "@/shared/BtnBase";
-
+import { useNotificationStore } from "@/store/notificationStore";
 
 const NewsDetail = () => {
 	const { openPopup } = usePopupStore();
@@ -21,6 +21,7 @@ const NewsDetail = () => {
 	const { id } = useParams();
 	const { newsData, newsLoding } = useNews({});
 	const { news, newsIdLoading } = useNewsById(id);
+	const { addNotification } = useNotificationStore();
 	const { mutate: copyToChannel, isLoading: copyingLoading } = useCopyNewsToChannel();
 
 	return (
@@ -53,22 +54,26 @@ const NewsDetail = () => {
 									$bg="#336CFF"
 									$color="#fff"
 									$padding="21px 40px"
-									onClick={() =>
+									onClick={() => {
+										const handleSaveToChannel = (channelId) => {
+											copyToChannel({
+												id,
+												data: {
+													channelId,
+													publishedAt: new Date().toISOString(),
+													calendarScheduledAt: new Date().toISOString(),
+												},
+											});
+											addNotification("Новость успешно скопирована в канал", "update");
+										};
+
 										openPopup("select_channel", "popup_window", {
-											onSave: (channelId) => {
-												copyToChannel({
-													id,
-													data: {
-														channelId,
-														publishedAt: new Date().toISOString(),
-														calendarScheduledAt: new Date().toISOString(),
-													},
-												});
-											},
-											loading: copyingLoading
-										})
-									}
-								>Сохранить в канал
+											onSave: handleSaveToChannel,
+											loading: copyingLoading,
+										});
+									}}
+								>
+									Сохранить в канал
 								</BtnBase>
 								<PostTime><TimeIcons color="#336CFF" />{timeAgo(news?.createdAt)}</PostTime>
 							</PostFooter>
