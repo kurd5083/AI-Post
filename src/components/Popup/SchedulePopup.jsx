@@ -72,8 +72,12 @@ const SchedulePopup = () => {
   };
 
   const handleSave = () => {
-    if (!selectedDays.length) return addNotification("Выберите хотя бы один день", "error");
-    if (!publicationTimes.length) return addNotification("Добавьте хотя бы одно время публикации", "error");
+    if (!timezone) {
+      return addNotification("Выберите часовой пояс", "error");
+    }
+    if (!selectedDays.length || !publicationTimes.length) {
+      return addNotification("Выберите дни недели и время публикаций", "error");
+    }
 
     const payload = {
       postDays: selectedDays,
@@ -83,11 +87,11 @@ const SchedulePopup = () => {
 
     if (scheduleId) {
       updateSchedule.mutate(payload, {
-        onSuccess: () => addNotification("Расписание успешно обновлено", "success"),
+        onSuccess: () => addNotification("Расписание обновлено", "success"),
       });
     } else {
       createSchedule.mutate(payload, {
-        onSuccess: () => addNotification("Расписание успешно создано", "success"),
+        onSuccess: () => addNotification("Расписание создано", "success"),
       });
     }
   };
