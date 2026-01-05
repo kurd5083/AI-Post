@@ -64,50 +64,53 @@ const AiGeneratorPopup = () => {
   const { mutate: updatePostMutation, isPending: updatePending } = useUpdatePost();
 
   const handleWriteWithAI = (postId) => {
-    const runGenerate = (finalChannelId) => {
-      setPostProgress(prev => ({ ...prev, [postId]: 0 }));
+  const runGenerate = (finalChannelId) => {
+    setPostProgress(postId, 0);
 
-      const interval = setInterval(() => {
-        setPostProgress(prev => {
-          const current = prev[postId] || 0;
-          if (current >= 90) {
-            clearInterval(interval);
-            return prev;
-          }
-          return { ...prev, [postId]: current + Math.floor(Math.random() * 10) };
+    const interval = setInterval(() => {
+      const current = postProgress[postId] ?? 0;
+
+      if (current >= 90) {
+        clearInterval(interval);
+        return;
+      }
+
+      setPostProgress(
+        postId,
+        current + Math.floor(Math.random() * 10)
+      );
+    }, 500);
+
+    generatePost(finalChannelId, {
+      onSuccess: (data) => {
+        clearInterval(interval);
+        setPostProgress(postId, 100);
+
+        updatePost(postId, {
+          serverId: data.post?.id,
+          title: data.post?.title || "",
+          text: data.post?.text || "",
+          summary: data.post?.summary || "",
+          images: data.images || [],
         });
-      }, 500);
-
-      generatePost(finalChannelId, {
-        onSuccess: (data) => {
-          clearInterval(interval);
-          setPostProgress(prev => ({ ...prev, [postId]: 100 }));
-
-          updatePost(postId, {
-            postId: data.post?.id || postId,
-            title: data.post?.title || "",
-            text: data.post?.text || "",
-            summary: data.post?.summary || "",
-            images: data.images || [],
-          });
-        },
-        onError: (err) => {
-          clearInterval(interval);
-          setPostProgress(prev => ({ ...prev, [postId]: 0 }));
-          console.error(err);
-        },
-      });
-    };
-
-    if (!channelId) {
-      changeContent("select_channel", "popup_window", {
-        onSave: (selectedChannelId) => runGenerate(selectedChannelId),
-      });
-      return;
-    }
-
-    runGenerate(channelId);
+      },
+      onError: (err) => {
+        clearInterval(interval);
+        setPostProgress(postId, 0);
+        console.error(err);
+      },
+    });
   };
+
+  if (!channelId) {
+    changeContent("select_channel", "popup_window", {
+      onSave: (selectedChannelId) => runGenerate(selectedChannelId),
+    });
+    return;
+  }
+
+  runGenerate(channelId);
+};
 
   useEffect(() => {
     const handleResize = () => {
@@ -120,47 +123,48 @@ const AiGeneratorPopup = () => {
   }, []);
 
   const handleCreateAIImage = (postId) => {
-    const post = posts.find(p => p.postId === postId);
-    if (!post || !post.text) return;
+  const post = posts.find(p => p.postId === postId);
+  if (!post || !post.text) return;
 
-    setImageProgress(prev => ({ ...prev, [postId]: 0 }));
+  setImageProgress(postId, 0);
 
-    const interval = setInterval(() => {
-      setImageProgress(prev => {
-        const current = prev[postId] || 0;
-        if (current >= 90) {
-          clearInterval(interval);
-          return prev;
-        }
-        return { ...prev, [postId]: current + Math.floor(Math.random() * 10) };
-      });
-    }, 500);
+  const interval = setInterval(() => {
+    const current = imageProgress[postId] ?? 0;
 
-    generateImage(
-      { prompt: post.text },
-      {
-        onSuccess: (data) => {
-          clearInterval(interval);
-          setImageProgress(prev => ({ ...prev, [postId]: 100 }));
+    if (current >= 90) {
+      clearInterval(interval);
+      return;
+    }
 
-          const inlineData = data?.candidates?.[0]?.content?.parts?.find(part => part.inlineData)?.inlineData;
-          if (!inlineData?.data) {
-            console.error("No images returned from AI");
-            return;
-          }
-
-          const imageUrl = `data:${inlineData.mimeType};base64,${inlineData.data}`;
-
-          updatePost(postId, { images: [imageUrl] });
-        },
-        onError: (err) => {
-          clearInterval(interval);
-          setImageProgress(prev => ({ ...prev, [postId]: 0 }));
-          console.error(err);
-        },
-      }
+    setImageProgress(
+      postId,
+      current + Math.floor(Math.random() * 10)
     );
-  };
+  }, 500);
+
+  generateImage(
+    { prompt: post.text },
+    {
+      onSuccess: (data) => {
+        clearInterval(interval);
+        setImageProgress(postId, 100);
+
+        const inlineData =
+          data?.candidates?.[0]?.content?.parts?.find(p => p.inlineData)?.inlineData;
+
+        if (!inlineData?.data) return;
+
+        const imageUrl = `data:${inlineData.mimeType};base64,${inlineData.data}`;
+        updatePost(postId, { images: [imageUrl] });
+      },
+      onError: (err) => {
+        clearInterval(interval);
+        setImageProgress(postId, 0);
+        console.error(err);
+      },
+    }
+  );
+};
   const handleSaveTime = (newTime, postId) => {
     updatePost(postId, { time: newTime });
   };
