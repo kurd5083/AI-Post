@@ -55,7 +55,7 @@ const ImageGenerationPopup = () => {
                 </div>
               </Checkbox>
               <ImageGenerationImg
-                src={`http://77.37.65.40:3000${item.imageUrl}`} alt="icon style"
+                src={[`http://77.37.65.40:3000${item.imageUrl}`]} alt="icon style"
                 onClick={() =>
                   openLightbox({
                     images: `http://77.37.65.40:3000${item.imageUrl}`,

@@ -5,7 +5,7 @@ import { usePopupStore } from "@/store/popupStore";
 
 const DeleteConfirmPopup = () => {
   const { popup, goBack, closePopup } = usePopupStore();
-
+  
   const handleDelete = () => {
     if (popup?.data?.onDelete) {
       popup.data.onDelete();
