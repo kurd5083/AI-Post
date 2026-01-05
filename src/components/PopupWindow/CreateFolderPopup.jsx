@@ -5,29 +5,28 @@ import { usePopupStore } from "@/store/popupStore";
 import CloseIcon from "@/icons/CloseIcon";
 import { useCreateFolder } from "@/lib/channels/folder/useCreateFolder";
 import { useUser } from "@/lib/useUser";
+import { useNotificationStore } from "@/store/notificationStore";
 
 const CreateFolderPopup = () => {
   const { closePopup } = usePopupStore();
   const { user } = useUser();
-  const { mutate: createFolder, isLoading } = useCreateFolder();
+  const { addNotification } = useNotificationStore();
+  const { mutate: createFolder, isPending: folderPending } = useCreateFolder();
+  
   const [folderName, setFolderName] = useState("");
   const [folderDescription, setFolderDescription] = useState("");
   const [selectedColor, setSelectedColor] = useState("#264780");
 
   const colorOptions = [
-    "#264780",
-    "#185D53",
-    "#71531F",
-    "#EB4644",
-    "#4B3F94",
-    "#186184",
-    "#466A33",
-    "#74442B",
-    "#69315B",
+    "#264780", "#185D53", "#71531F", "#EB4644", "#4B3F94", 
+    "#186184","#466A33","#74442B","#69315B",
   ];
 
   const handleCreate = () => {
-    if (!folderName) return alert("Введите название папки");
+    if (!folderName.trim()) {
+      addNotification("Введите название папки", "error");
+      return;
+    }
 
     createFolder(
       {
@@ -41,7 +40,13 @@ const CreateFolderPopup = () => {
         ownerTelegramId: user.telegramId
       },
       {
-        onSuccess: () => closePopup(),
+        onSuccess: () => {
+          addNotification("Папка успешно создана", "success");
+          closePopup();
+        },
+        onError: () => {
+          addNotification("Ошибка при создании папки", "error");
+        }
       }
     );
   };
@@ -91,9 +96,9 @@ const CreateFolderPopup = () => {
           $color="#D6DCEC"
           $bg="#336CFF"
           onClick={handleCreate}
-          disabled={isLoading}
+          disabled={folderPending}
         >
-          {isLoading ? "Создание..." : "Создать"}
+          {folderPending ? "Создание..." : "Создать"}
         </BtnBase>
         <BtnBase onClick={closePopup} $color="#D6DCEC" $bg="#242A3A">
           Отменить
