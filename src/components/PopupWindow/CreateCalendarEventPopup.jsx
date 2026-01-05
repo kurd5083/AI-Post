@@ -39,7 +39,7 @@ const CreateCalendarEventPopup = () => {
     if (isEdit) {
       const payload = {
         description,
-        scheduledAt: new Date(scheduledAt),
+        scheduledAt: '2025-06-26T12:00:00Z',
         title: "Updated Post Title",
         status: "COMPLETED",
       };
