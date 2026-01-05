@@ -7,19 +7,25 @@ import { useAvailableCategories } from "@/lib/channels/categories/useAvailableCa
 import ModernLoading from "@/components/ModernLoading";
 import Checkbox from "@/shared/Checkbox";
 import { useApplyCategory } from "@/lib/channels/categories/useApplyCategory";
+import { useNotificationStore } from "@/store/notificationStore";
 
 const CompilationPopup = () => {
   const [selectedCategory, setSelectedCategory] = useState(null);
 
   const { popup, changeContent, goBack } = usePopupStore()
   const channelId = popup?.data?.channelId;
+  const { addNotification } = useNotificationStore();
 
   const { mutate: applyCategory, isPending: categoryPending } = useApplyCategory();
 
   const { categories, categoriesLoading } = useAvailableCategories();
 
   const handleSave = () => {
-  if (!selectedCategory || !channelId) return;
+    if (!selectedCategory || !channelId) {
+      addNotification("Выберите категорию для сохранения", "error");
+      return;
+    }
+
     applyCategory(
       {
         channelId,
@@ -27,7 +33,11 @@ const CompilationPopup = () => {
       },
       {
         onSuccess: () => {
-          goBack(); 
+          addNotification(`Категория "${selectedCategory}" успешно применена`, "success");
+          goBack();
+        },
+        onError: () => {
+          addNotification("Ошибка при сохранении категории", "error");
         },
       }
     );
