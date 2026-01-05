@@ -541,7 +541,7 @@ const GeneratorList = styled.div`
   overflow-y: auto;
   scrollbar-width: none;
   max-height: calc(100dvh - 280px);
-  padding-bottom: 30px;
+  padding-bottom: 160px;
   min-height: 500px;
   &::after {
     content: '';

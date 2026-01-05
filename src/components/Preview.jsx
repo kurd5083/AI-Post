@@ -16,7 +16,7 @@ const Preview = ({ collapsed, onChange, testResult, telegramId }) => {
   const { mutate: sendPost, isPending: sendPostPending } = useSendPostToChannel();
   const { mutate: createPost } = useCreatePost();
   const channelId = popup?.data?.channelId;
-
+  
   const handleSend = () => {
     if (!channelId) {
       changeContent("select_channel", "popup_window", {
