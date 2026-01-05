@@ -8,12 +8,12 @@ const Notification = () => {
   const getIcon = (type) => {
     switch (type) {
       case "success":
-        return <CheckCircle size={24} color="#4CAF50" />;
+        return <CheckCircle size={24} color="#fff" />;
       case "error":
-        return <XCircle size={24} color="#F44336" />;
+        return <XCircle size={24} color="#fff" />;
       case "info":
       default:
-        return <Info size={24} color="#2196F3" />;
+        return <Info size={24} color="#fff" />;
     }
   };
 
