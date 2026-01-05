@@ -24,6 +24,7 @@ import { useGeneratePost } from "@/lib/posts/useGeneratePost";
 import { usePostsStore } from "@/store/postsStore";
 import { useSendPostToChannel } from "@/lib/posts/useSendPostToChannel";
 import { useUpdatePost } from "@/lib/posts/useUpdatePost";
+import { useDeletePostImage } from "@/lib/posts/useDeletePostImage";
 
 const AiGeneratorPopup = () => {
   const { openLightbox } = useLightboxStore();
@@ -63,6 +64,7 @@ const AiGeneratorPopup = () => {
   const { mutate: generatePost, isPending: postPending } = useGeneratePost();
   const { mutate: sendPost, isPending: isSendPending } = useSendPostToChannel();
   const { mutate: updatePostMutation, isPending: updatePending } = useUpdatePost();
+  const { mutate: deleteImageFromServer, isLoading: deletingImage } = useDeletePostImage();
 
   const handleWriteWithAI = (postId) => {
     const runGenerate = (finalChannelId) => {
@@ -171,7 +173,6 @@ const AiGeneratorPopup = () => {
     });
   };
   const handleSavePost = (post) => {
-    console.log(post)
     const saveWithChannel = (finalChannelId) => {
       const [hours, minutes] = post.time.split(":").map(Number);
 
@@ -341,7 +342,14 @@ const AiGeneratorPopup = () => {
                           initialIndex: 0
                         })}
                       />
-                      <RemoveImageButton onClick={() => removeImage(post.postId, index)}>×</RemoveImageButton>
+                      <RemoveImageButton
+                        onClick={() => {
+                          removeImage(post.postId, index);
+                          if (post.serverId) {
+                            deleteImageFromServer({ postId: post.serverId, imageIndex: index });
+                          }
+                        }}
+                      >×</RemoveImageButton>
                     </ImagePreview>
                   ))}
                 </ImagesContainer>
