@@ -3,99 +3,99 @@ import { create } from "zustand";
 const generatePostId = () => Math.floor(Math.random() * 2_000_000_000);
 
 const createEmptyPost = (index = 1) => ({
-    postId: generatePostId(),
-    placeholder: `Пост ${index}`,
-    title: "",
-    progress: "0 / 1024",
-    text: "",
-    summary: "",
-    time: "00:00",
-    images: [],
+	postId: generatePostId(),
+	placeholder: `Пост ${index}`,
+	title: "",
+	progress: "0 / 1024",
+	text: "",
+	summary: "",
+	time: "00:00",
+	images: [],
 });
 
 export const usePostsStore = create((set, get) => ({
-    posts: [createEmptyPost(1)],
-    selectedPost: null,
+	posts: [createEmptyPost(1)],
+	selectedPost: null,
 
-    /** ПРОГРЕСС */
-    postProgress: {},
-    imageProgress: {},
+	/** ПРОГРЕСС */
+	postProgress: {},
+	imageProgress: {},
 
-    setPostProgress: (postId, value) =>
-        set(state => ({
-            postProgress: {
-                ...state.postProgress,
-                [postId]: value,
-            },
-        })),
+	setPostProgress: (postId, value) =>
+		set(state => ({
+			postProgress: {
+				...state.postProgress,
+				[postId]: value,
+			},
+		})),
 
-    setImageProgress: (postId, value) =>
-        set(state => ({
-            imageProgress: {
-                ...state.imageProgress,
-                [postId]: value,
-            },
-        })),
+	setImageProgress: (postId, value) =>
+		set(state => ({
+			imageProgress: {
+				...state.imageProgress,
+				[postId]: value,
+			},
+		})),
 
-    resetPostProgress: (postId) =>
-        set(state => {
-            const next = { ...state.postProgress };
-            delete next[postId];
-            return { postProgress: next };
-        }),
+	resetPostProgress: (postId) =>
+		set(state => {
+			const next = { ...state.postProgress };
+			delete next[postId];
+			return { postProgress: next };
+		}),
 
-    resetImageProgress: (postId) =>
-        set(state => {
-            const next = { ...state.imageProgress };
-            delete next[postId];
-            return { imageProgress: next };
-        }),
+	resetImageProgress: (postId) =>
+		set(state => {
+			const next = { ...state.imageProgress };
+			delete next[postId];
+			return { imageProgress: next };
+		}),
 
-    /** ПОСТЫ */
-    setPosts: (updater) =>
-        set(state => ({
-            posts: typeof updater === "function" ? updater(state.posts) : updater
-        })),
+	/** ПОСТЫ */
+	setPosts: (updater) =>
+		set(state => ({
+			posts: typeof updater === "function" ? updater(state.posts) : updater
+		})),
 
-    setSelectedPost: (post) => set({ selectedPost: post }),
+	setSelectedPost: (post) => set({ selectedPost: post }),
 
-    addPost: (post) =>
-        set(state => ({
-            posts: [post || createEmptyPost(state.posts.length + 1), ...state.posts],
-        })),
+	addPost: (post) =>
+		set(state => ({
+			posts: [post || createEmptyPost(state.posts.length + 1), ...state.posts],
+		})),
 
-    removePost: (postId) =>
-        set(state => {
-            const filtered = state.posts.filter(p => p.postId !== postId);
-            return {
-                posts: filtered,
-                selectedPost:
-                    state.selectedPost?.postId === postId ? filtered[0] || null : state.selectedPost,
-            };
-        }),
+	removePost: (postId) =>
+		set(state => {
+			const filtered = state.posts.filter(p => p.postId !== postId);
+			return {
+				posts: filtered,
+				selectedPost:
+					state.selectedPost?.postId === postId ? filtered[0] || null : state.selectedPost,
+			};
+		}),
 
-    updatePost: (postId, data) =>
-        set(state => ({
-            posts: state.posts.map(p =>
-                p.postId === postId ? { ...p, ...data } : p
-            ),
-        })),
+	updatePost: (postId, data) =>
+		set(state => ({
+			posts: state.posts.map(p =>
+				p.postId === postId ? { ...p, ...data } : p
+			),
+		})),
 
-    addImages: (postId, images) =>
-        set(state => ({
-            posts: state.posts.map(p =>
-                p.postId === postId
-                    ? { ...p, images: [...(p.images || []), ...images] }
-                    : p
-            ),
-        })),
+	addImages: (postId, images) =>
+		set(state => ({
+			posts: state.posts.map(p =>
+				p.postId === postId
+					? { ...p, images: [...(p.images || []), ...images] }
+					: p
+			),
+		})),
 
-    removeImage: (postId, index) =>
-        set(state => ({
-            posts: state.posts.map(p =>
-                p.postId === postId
-                    ? { ...p, images: p.images.filter((_, i) => i !== index) }
-                    : p
-            ),
-        })),
+	removeImage: (postId, index) =>
+		set(state => ({
+			posts: state.posts.map(p =>
+				p.postId === postId
+					? { ...p, images: p.images.filter((_, i) => i !== index) }
+					: p
+			),
+		})),
 }));

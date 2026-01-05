@@ -30,7 +30,7 @@ const CalendarPopup = () => {
   const endISO = endDate.toISOString();
 
   const { events = [], eventsLoading } = useCalendarEventsByRange(startISO, endISO);
-  const filteredEvents = events.filter( event => event.id === channelId);
+  const filteredEvents = events.filter( event => event.channelId === channelId);
 
   const syncDate = (date) => {
     setSelectedDate(date);
