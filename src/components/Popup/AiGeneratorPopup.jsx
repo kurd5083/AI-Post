@@ -53,6 +53,8 @@ const AiGeneratorPopup = () => {
     imageProgress,
     setPostProgress,
     setImageProgress,
+    resetPostProgress,
+    resetImageProgress
   } = usePostsStore();
 
   const { fadeVisible, ref } = useFadeOnScroll(20);
