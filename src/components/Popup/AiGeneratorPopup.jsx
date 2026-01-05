@@ -25,11 +25,12 @@ import { usePostsStore } from "@/store/postsStore";
 import { useSendPostToChannel } from "@/lib/posts/useSendPostToChannel";
 import { useUpdatePost } from "@/lib/posts/useUpdatePost";
 import { useDeletePostImage } from "@/lib/posts/useDeletePostImage";
+import { useNotificationStore } from "@/store/notificationStore";
 
 const AiGeneratorPopup = () => {
+  const { addNotification } = useNotificationStore();
   const { openLightbox } = useLightboxStore();
   const { user } = useUser();
-
   const { popup, changeContent } = usePopupStore();
   const channelId = popup?.data?.channelId;
   const telegramId = user?.telegramId;
@@ -67,6 +68,12 @@ const AiGeneratorPopup = () => {
   const { mutate: deleteImageFromServer, isLoading: deletingImage } = useDeletePostImage();
 
   const handleWriteWithAI = (postId) => {
+    const post = posts.find(p => p.postId === postId);
+    if (!post) {
+      addNotification("Пост не найден", "error");
+      return;
+    }
+
     const runGenerate = (finalChannelId) => {
       setPostProgress(postId, 0);
 
@@ -87,23 +94,23 @@ const AiGeneratorPopup = () => {
             summary: data.post?.summary || "",
             images: data.images || [],
           });
-          setTimeout(() => {
-            resetPostProgress(postId);
-          }, 500);
+
+          addNotification("Пост сгенерирован успешно", "success");
+
+          setTimeout(() => resetPostProgress(postId), 500);
         },
         onError: () => {
           clearInterval(interval);
           setPostProgress(postId, 0);
-
           resetPostProgress(postId);
+          addNotification("Ошибка генерации поста с AI", "error");
         },
       });
     };
 
     if (!channelId) {
-      changeContent("select_channel", "popup_window", {
-        onSave: runGenerate,
-      });
+      addNotification("Выберите канал для генерации поста", "warning");
+      changeContent("select_channel", "popup_window", { onSave: runGenerate });
       return;
     }
 
@@ -122,7 +129,14 @@ const AiGeneratorPopup = () => {
 
   const handleCreateAIImage = (postId) => {
     const post = posts.find(p => p.postId === postId);
-    if (!post || !post.text) return;
+    if (!post) {
+      addNotification("Пост не найден", "error");
+      return;
+    }
+    if (!post.text) {
+      addNotification("Для генерации изображения нужен текст", "warning");
+      return;
+    }
 
     setImageProgress(postId, 0);
 
@@ -136,26 +150,27 @@ const AiGeneratorPopup = () => {
         clearInterval(interval);
         setImageProgress(postId, 100);
 
-        const inlineData =
-          data?.candidates?.[0]?.content?.parts?.find(p => p.inlineData)?.inlineData;
-
-        if (!inlineData?.data) return;
+        const inlineData = data?.candidates?.[0]?.content?.parts?.find(p => p.inlineData)?.inlineData;
+        if (!inlineData?.data) {
+          addNotification("Не удалось получить изображение", "error");
+          return;
+        }
 
         const imageUrl = `data:${inlineData.mimeType};base64,${inlineData.data}`;
         updatePost(postId, { images: [imageUrl] });
+        addNotification("Изображение успешно сгенерировано", "success");
 
-        setTimeout(() => {
-          resetImageProgress(postId);
-        }, 500);
+        setTimeout(() => resetImageProgress(postId), 500);
       },
-      onError: (err) => {
+      onError: () => {
         clearInterval(interval);
         setImageProgress(postId, 0);
-
         resetImageProgress(postId);
+        addNotification("Ошибка генерации изображения", "error");
       },
     });
   };
+
   const handleSaveTime = (newTime, postId) => {
     updatePost(postId, { time: newTime });
   };
@@ -173,24 +188,19 @@ const AiGeneratorPopup = () => {
     });
   };
   const handleSavePost = (post) => {
-    const saveWithChannel = (finalChannelId) => {
-      const [hours, minutes] = post.time.split(":").map(Number);
+    if (!post.title || !post.text) {
+      addNotification("Пост должен иметь заголовок и текст", "warning");
+      return;
+    }
 
-      const calendarScheduledAt = new Date(
-        Date.UTC(
-          new Date().getFullYear(),
-          new Date().getMonth(),
-          new Date().getDate(),
-          hours || 0,
-          minutes || 0
-        )
-      ).toISOString();
+    const saveWithChannel = (finalChannelId) => {
+      const [hours, minutes] = post.time?.split(":").map(Number) || [0, 0];
+      const calendarScheduledAt = new Date(Date.UTC(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), hours, minutes)).toISOString();
 
       const payload = {
         title: post.title,
         text: post.text,
         images: post.images || [],
-        source: "",
         channelId: finalChannelId,
         publishedAt: new Date().toISOString(),
         calendarScheduledAt,
@@ -199,20 +209,26 @@ const AiGeneratorPopup = () => {
 
       if (!post.serverId) {
         createPostMutation(payload, {
-          onSuccess: (data) => removePost(post.postId),
+          onSuccess: () => {
+            removePost(post.postId);
+            addNotification("Пост успешно сохранен", "success");
+          },
+          onError: () => addNotification("Ошибка сохранения поста", "error"),
         });
       } else {
         updatePostMutation({ postId: post.serverId, postData: payload }, {
-          onSuccess: (data) => removePost(post.postId),
-          onError: (err) => console.error(err),
+          onSuccess: () => {
+            removePost(post.postId);
+            addNotification("Пост успешно обновлен", "success");
+          },
+          onError: () => addNotification("Ошибка обновления поста", "error"),
         });
       }
     };
 
     if (!channelId) {
-      changeContent("select_channel", "popup_window", {
-        onSave: (selectedChannelId) => saveWithChannel(selectedChannelId),
-      });
+      addNotification("Выберите канал для сохранения поста", "warning");
+      changeContent("select_channel", "popup_window", { onSave: saveWithChannel });
       return;
     }
 
@@ -246,15 +262,21 @@ const AiGeneratorPopup = () => {
     updatePost(postId, { text: el.innerHTML, summary: el.innerHTML });
   };
   const handlePublishNow = (post) => {
-    const publishWithChannel = (finalChannelId) => {
+    if (!post.text) {
+      addNotification("Нельзя публиковать пустой пост", "warning");
+      return;
+    }
 
+    const publishWithChannel = (finalChannelId) => {
       const publish = (serverPostId) => {
         sendPost(
           { postId: serverPostId, channelId: finalChannelId, channelTelegramId: telegramId },
           {
             onSuccess: () => {
               removePost(post.postId);
+              addNotification("Пост успешно опубликован", "success");
             },
+            onError: () => addNotification("Ошибка публикации поста", "error"),
           }
         );
       };
@@ -270,9 +292,8 @@ const AiGeneratorPopup = () => {
         };
 
         createPostMutation(payload, {
-          onSuccess: (data) => {
-            publish(data.id);
-          },
+          onSuccess: (data) => publish(data.id),
+          onError: () => addNotification("Ошибка публикации поста", "error"),
         });
 
         return;
@@ -282,13 +303,20 @@ const AiGeneratorPopup = () => {
     };
 
     if (!channelId) {
-      changeContent("select_channel", "popup_window", {
-        onSave: publishWithChannel,
-      });
+      addNotification("Выберите канал для публикации поста", "warning");
+      changeContent("select_channel", "popup_window", { onSave: publishWithChannel });
       return;
     }
 
     publishWithChannel(channelId);
+  };
+  const handleRemoveImage = (postId, index) => {
+    removeImage(postId, index);
+    addNotification("Изображение удалено", "success");
+    const post = posts.find(p => p.postId === postId);
+    if (post?.serverId) {
+      deleteImageFromServer({ postId: post.serverId, imageIndex: index });
+    }
   };
 
   return (
@@ -336,14 +364,9 @@ const AiGeneratorPopup = () => {
                           initialIndex: 0
                         })}
                       />
-                      <RemoveImageButton
-                        onClick={() => {
-                          removeImage(post.postId, index);
-                          if (post.serverId) {
-                            deleteImageFromServer({ postId: post.serverId, imageIndex: index });
-                          }
-                        }}
-                      >×</RemoveImageButton>
+                      <RemoveImageButton onClick={() => handleRemoveImage(post.postId, index, post.serverId)}>
+                        ×
+                      </RemoveImageButton>
                     </ImagePreview>
                   ))}
                 </ImagesContainer>
