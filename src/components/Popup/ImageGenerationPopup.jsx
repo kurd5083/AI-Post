@@ -46,6 +46,7 @@ const ImageGenerationPopup = () => {
               <Checkbox
                 checked={selectedPresetId === item.id}
                 onChange={() => handlePresetChange(item.id)}
+                
               >
                 <CheckboxBlock>
                   <div>

@@ -17,7 +17,7 @@ const BoostsPopup = () => {
   const handleStartBoost = () => {
     if (!quantity || !boostDays) return;
 
-    createBoostOrder.mutate({
+    createBoostOrder({
       channelId,
       quantity,
       boostDays,
