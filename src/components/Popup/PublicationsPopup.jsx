@@ -121,7 +121,7 @@ const PublicationsPopup = () => {
     return [];
   }, [dateFilter.period]);
 
-  const getPaginationRange = (current, total, max = 5) => {
+  const getPaginationRange = (current, total, max = 3) => {
     if (total <= max) {
       return Array.from({ length: total }, (_, i) => i + 1);
     }
