@@ -94,7 +94,8 @@ const ImageGenerationContentTitle = styled.h3`
 const ImageGenerationContentItem = styled.div`
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
+  gap: 10px;
   padding: 24px 0;
   border-bottom: 2px solid #2E3954;
 
@@ -110,13 +111,20 @@ const ImageGenerationContentItem = styled.div`
     font-size: 24px;
     font-weight: 700;
     margin-bottom: 16px;
+    @media(max-width: 480px) {
+      font-size: 20px;
+    }
   }
     
   p {
     font-size: 14px;
     font-weight: 600;
     color: #6A7080;
+    @media(max-width: 480px) {
+      font-size: 12px;
+    }
   }
+
 `
 const ImageGenerationImg = styled.img`
   width: 65px;
@@ -124,6 +132,10 @@ const ImageGenerationImg = styled.img`
   border-radius: 12px;
   object-fit: cover;
   cursor: pointer;
+  @media(max-width: 480px) {
+    width: 48px;
+    height: 48px;
+  }
 `
 
 export default ImageGenerationPopup

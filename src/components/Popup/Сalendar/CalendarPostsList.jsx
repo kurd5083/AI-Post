@@ -6,7 +6,7 @@ import { usePopupStore } from "@/store/popupStore"
 import { useNotificationStore } from "@/store/notificationStore";
 
 const CalendarPostsList = ({ posts }) => {
-  const { mutate: deleteMutation } = useDeleteCalendarEvent();
+  const { deleteMutation } = useDeleteCalendarEvent();
   const { popup, changeContent } = usePopupStore();
   const { addNotification } = useNotificationStore();
 
@@ -23,7 +23,7 @@ const CalendarPostsList = ({ posts }) => {
       return;
     }
 
-    deleteMutation(post.id, {
+    deleteMutation.mutate(post.id, {
       onSuccess: () => {
         addNotification(`Пост "${post.title}" успешно удален`, "success");
       },
