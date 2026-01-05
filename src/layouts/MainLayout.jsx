@@ -8,6 +8,7 @@ import Header from "@/components/Header";
 import Popup from "@/components/Popup/Popup"
 import PopupWindow from '@/components/PopupWindow/PopupWindow';
 import MobileMenu from "@/components/MobileMenu";
+import Notification from "@/components/Notification";
 import Lightbox from "@/components/Lightbox";
 import { usePopupStore } from "@/store/popupStore";
 import { useLightboxStore } from "@/store/lightboxStore";
@@ -36,6 +37,7 @@ const MainLayout = () => {
         {isOpen && (
           <Lightbox/>
         )}
+        <Notification/>
       </Main>
       <Tape />
     </MainContainer>

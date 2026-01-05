@@ -6,11 +6,13 @@
   import { useChannelById } from "@/lib/channels/useChannelById";
   import { useUpdateChannelField } from "@/lib/channels/useUpdateChannelField";
   import BtnBase from "@/shared/BtnBase";
+  import { useNotificationStore } from "@/store/notificationStore";
 
   const AdvancedPopup = () => {
     const { popup } = usePopupStore();
     const channelId = popup?.data?.channelId;
     const { channel } = useChannelById(channelId);
+    const { addNotification } = useNotificationStore();
 
     const [localSwitches, setLocalSwitches] = useState({
       forced_posting: channel?.forcePosting || false,
@@ -68,9 +70,13 @@
       if (localSwitches.transferring_source_text !== channel.preserveOriginalText) fieldsToUpdate.push("preserveOriginalText");
       if (localSwitches.add_source_post !== channel.includeSourceLink) fieldsToUpdate.push("includeSourceLink");
 
-      if (!fieldsToUpdate.length) return;
+      if (!fieldsToUpdate.length) {
+        addNotification("Нет изменений для сохранения", "info");
+        return;
+      }
 
       fieldsToUpdate.forEach((field) => toggleField({ channelId, field }));
+      addNotification("Изменения успешно сохранены", "success");
     };
     return (
       <AdvancedContainer>
