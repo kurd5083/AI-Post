@@ -397,7 +397,7 @@ const AiGeneratorPopup = () => {
                     $color="#FF7F48"
                     $bg="transporent"
                     onClick={() => handleCreateAIImage(post.postId)}
-                    disabled={imagePending || !post.text}
+                    disabled={imagePending}
                   >
                     <img src={create} alt="create icon" />
                     {imageProgress[post.postId] != null && imageProgress[post.postId] < 100
