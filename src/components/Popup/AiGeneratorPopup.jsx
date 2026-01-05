@@ -47,8 +47,14 @@ const AiGeneratorPopup = () => {
   const [popupPostId, setPopupPostId] = useState(null);
   const [emojiPostId, setEmojiPostId] = useState(null);
 
-  const [postProgress, setPostProgress] = useState({});
-  const [imageProgress, setImageProgress] = useState({});
+  // const [postProgress, setPostProgress] = useState({});
+  // const [imageProgress, setImageProgress] = useState({});
+  const {
+    postProgress,
+    imageProgress,
+    setPostProgress,
+    setImageProgress,
+  } = usePostsStore();
 
   const { fadeVisible, ref } = useFadeOnScroll(20);
   const { mutate: createPostMutation } = useCreatePost();

@@ -1,22 +1,42 @@
-import { create } from "zustand";
-
-const generatePostId = () => Math.floor(Math.random() * 2_000_000_000);
-
-const createEmptyPost = (index = 1) => ({
-  postId: generatePostId(),
-  placeholder: `Пост ${index}`,
-  title: "",
-  progress: "0 / 1024",
-  text: "",
-  summary: "",
-  time: "00:00",
-  images: [],
-});
-
 export const usePostsStore = create((set, get) => ({
   posts: [createEmptyPost(1)],
   selectedPost: null,
 
+  /** ПРОГРЕСС */
+  postProgress: {},
+  imageProgress: {},
+
+  setPostProgress: (postId, value) =>
+    set(state => ({
+      postProgress: {
+        ...state.postProgress,
+        [postId]: value,
+      },
+    })),
+
+  setImageProgress: (postId, value) =>
+    set(state => ({
+      imageProgress: {
+        ...state.imageProgress,
+        [postId]: value,
+      },
+    })),
+
+  resetPostProgress: (postId) =>
+    set(state => {
+      const next = { ...state.postProgress };
+      delete next[postId];
+      return { postProgress: next };
+    }),
+
+  resetImageProgress: (postId) =>
+    set(state => {
+      const next = { ...state.imageProgress };
+      delete next[postId];
+      return { imageProgress: next };
+    }),
+
+  /** ПОСТЫ */
   setPosts: (updater) =>
     set(state => ({
       posts: typeof updater === "function" ? updater(state.posts) : updater
@@ -26,7 +46,7 @@ export const usePostsStore = create((set, get) => ({
 
   addPost: (post) =>
     set(state => ({
-        posts: [post || createEmptyPost(state.posts.length + 1), ...state.posts],
+      posts: [post || createEmptyPost(state.posts.length + 1), ...state.posts],
     })),
 
   removePost: (postId) =>
