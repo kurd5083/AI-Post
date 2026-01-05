@@ -75,442 +75,443 @@ const AiGeneratorPopup = () => {
 
     const runGenerate = (finalChannelId) => {
       const runGenerate = (finalChannelId, existingPostId) => {
-      const postId = existingPostId || postId;
-      setPostProgress(postId, 0);
+        const postId = existingPostId || postId;
+        setPostProgress(postId, 0);
 
-      const interval = setInterval(() => {
-        const current = usePostsStore.getState().postProgress[postId] ?? 0;
-        setPostProgress(postId, Math.min(current + Math.floor(Math.random() * 10), 90));
-      }, 500);
+        const interval = setInterval(() => {
+          const current = usePostsStore.getState().postProgress[postId] ?? 0;
+          setPostProgress(postId, Math.min(current + Math.floor(Math.random() * 10), 90));
+        }, 500);
 
-      generatePost(finalChannelId, {
-        onSuccess: (data) => {
-          clearInterval(interval);
-          setPostProgress(postId, 100);
+        generatePost(finalChannelId, {
+          onSuccess: (data) => {
+            clearInterval(interval);
+            setPostProgress(postId, 100);
 
-          updatePost(postId, {
-            serverId: data.post?.id,
-            title: data.post?.title || "",
-            text: data.post?.text || "",
-            summary: data.post?.summary || "",
-            images: data.images || [],
-          });
+            updatePost(postId, {
+              serverId: data.post?.id,
+              title: data.post?.title || "",
+              text: data.post?.text || "",
+              summary: data.post?.summary || "",
+              images: data.images || [],
+            });
 
-          addNotification("Пост сгенерирован успешно", "success");
+            addNotification("Пост сгенерирован успешно", "success");
 
-          setTimeout(() => resetPostProgress(postId), 500);
-        },
-        onError: () => {
-          clearInterval(interval);
-          setPostProgress(postId, 0);
-          resetPostProgress(postId);
-          addNotification("Ошибка генерации поста с AI", "error");
-        },
-      });
-    };
-
-    if (!channelId) {
-      addNotification("Выберите канал для генерации поста", "warning");
-      changeContent("select_channel", "popup_window", {
-        onSave: (selectedChannelId) => runGenerate(selectedChannelId, postId),
-      });
-      return;
-    }
-
-    runGenerate(channelId);
-  };
-
-  useEffect(() => {
-    const handleResize = () => {
-      if (window.innerWidth > 1400) setCollapsed(false);
-    };
-
-    handleResize();
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
-
-  const handleCreateAIImage = (postId) => {
-    const post = posts.find(p => p.postId === postId);
-    if (!post) {
-      addNotification("Пост не найден", "error");
-      return;
-    }
-    if (!post.text) {
-      addNotification("Для генерации изображения нужен текст", "warning");
-      return;
-    }
-
-    setImageProgress(postId, 0);
-
-    const interval = setInterval(() => {
-      const current = usePostsStore.getState().imageProgress[postId] ?? 0;
-      setImageProgress(postId, current + Math.floor(Math.random() * 10));
-    }, 500);
-
-    generateImage({ prompt: post.text }, {
-      onSuccess: (data) => {
-        clearInterval(interval);
-        setImageProgress(postId, 100);
-
-        const inlineData = data?.candidates?.[0]?.content?.parts?.find(p => p.inlineData)?.inlineData;
-        if (!inlineData?.data) {
-          addNotification("Не удалось получить изображение", "error");
-          return;
-        }
-
-        const imageUrl = `data:${inlineData.mimeType};base64,${inlineData.data}`;
-        updatePost(postId, { images: [imageUrl] });
-        addNotification("Изображение успешно сгенерировано", "success");
-
-        setTimeout(() => resetImageProgress(postId), 500);
-      },
-      onError: () => {
-        clearInterval(interval);
-        setImageProgress(postId, 0);
-        resetImageProgress(postId);
-        addNotification("Ошибка генерации изображения", "error");
-      },
-    });
-  };
-
-  const handleSaveTime = (newTime, postId) => {
-    updatePost(postId, { time: newTime });
-  };
-  const handleAddImages = (postId, files) => {
-    const readFiles = Array.from(files).map(file =>
-      new Promise(resolve => {
-        const reader = new FileReader();
-        reader.onload = e => resolve(e.target.result);
-        reader.readAsDataURL(file);
-      })
-    );
-
-    Promise.all(readFiles).then(images => {
-      addImages(postId, images);
-    });
-  };
-  const handleSavePost = (post) => {
-    if (!post.title || !post.text) {
-      addNotification("Пост должен иметь заголовок и текст", "warning");
-      return;
-    }
-
-    const saveWithChannel = (finalChannelId) => {
-      const [hours, minutes] = post.time?.split(":").map(Number) || [0, 0];
-      const calendarScheduledAt = new Date(
-        Date.UTC(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), hours, minutes)
-      ).toISOString();
-
-      const payload = {
-        title: post.title,
-        text: post.text,
-        channelId: finalChannelId,
-        publishedAt: new Date().toISOString(),
-        calendarScheduledAt,
-        summary: post.summary,
+            setTimeout(() => resetPostProgress(postId), 500);
+          },
+          onError: () => {
+            clearInterval(interval);
+            setPostProgress(postId, 0);
+            resetPostProgress(postId);
+            addNotification("Ошибка генерации поста с AI", "error");
+          },
+        });
       };
 
-      if (!post.serverId) {
-        createPostMutation({ ...payload, images: post.images || [] }, {
-          onSuccess: () => {
-            removePost(post.postId);
-            addNotification("Пост успешно сохранен", "success");
-          },
-          onError: () => addNotification("Ошибка сохранения поста", "error"),
+      if (!channelId) {
+        addNotification("Выберите канал для генерации поста", "warning");
+        changeContent("select_channel", "popup_window", {
+          onSave: (selectedChannelId) => runGenerate(selectedChannelId, postId),
         });
-      } else {
-        updatePostMutation({ postId: post.serverId, postData: payload }, {
-          onSuccess: () => {
-            removePost(post.postId);
-            addNotification("Пост успешно обновлен", "success");
-          },
-          onError: () => addNotification("Ошибка обновления поста", "error"),
-        });
-      }
-    };
-
-    if (!channelId) {
-      addNotification("Выберите канал для сохранения поста", "warning");
-      changeContent("select_channel", "popup_window", { onSave: saveWithChannel });
-      return;
-    }
-
-    saveWithChannel(channelId);
-  };
-
-  const addLink = () => {
-    const url = prompt("Введите ссылку");
-    if (url) document.execCommand("createLink", false, url);
-  };
-
-  const insertEmojiAtCursor = (emoji, postId) => {
-    const el = document.getElementById(`text-${postId}`);
-    el.focus();
-
-    const selection = window.getSelection();
-    if (!selection || selection.rangeCount === 0) return;
-
-    const range = selection.getRangeAt(0);
-    range.deleteContents();
-
-    const textNode = document.createTextNode(emoji);
-    range.insertNode(textNode);
-
-    range.setStartAfter(textNode);
-    range.collapse(true);
-
-    selection.removeAllRanges();
-    selection.addRange(range);
-
-    updatePost(postId, { text: el.innerHTML, summary: el.innerHTML });
-  };
-  const handlePublishNow = (post) => {
-    if (!post.text) {
-      addNotification("Нельзя публиковать пустой пост", "warning");
-      return;
-    }
-
-    const publishWithChannel = (finalChannelId) => {
-      const publish = (serverPostId) => {
-        sendPost(
-          { postId: serverPostId, channelId: finalChannelId, channelTelegramId: telegramId },
-          {
-            onSuccess: () => {
-              removePost(post.postId);
-              addNotification("Пост успешно опубликован", "success");
-            },
-            onError: () => addNotification("Ошибка публикации поста", "error"),
-          }
-        );
-      };
-
-      if (!post.serverId) {
-        const payload = {
-          title: post.title,
-          text: post.text,
-          images: post.images || [],
-          channelId: finalChannelId,
-          publishedAt: new Date().toISOString(),
-          summary: post.summary,
-        };
-
-        createPostMutation(payload, {
-          onSuccess: (data) => publish(data.id),
-          onError: () => addNotification("Ошибка публикации поста", "error"),
-        });
-
         return;
       }
 
-      publish(post.serverId);
+      runGenerate(channelId);
     };
 
-    if (!channelId) {
-      addNotification("Выберите канал для публикации поста", "warning");
-      changeContent("select_channel", "popup_window", { onSave: publishWithChannel });
-      return;
-    }
+    useEffect(() => {
+      const handleResize = () => {
+        if (window.innerWidth > 1400) setCollapsed(false);
+      };
 
-    publishWithChannel(channelId);
-  };
-  const handleRemoveImage = (postId, index) => {
-    removeImage(postId, index);
-    addNotification("Изображение удалено", "success");
-    const post = posts.find(p => p.postId === postId);
-    if (post?.serverId) {
-      deleteImageFromServer({ postId: post.serverId, imageIndex: index });
-    }
-  };
+      handleResize();
+      window.addEventListener("resize", handleResize);
+      return () => window.removeEventListener("resize", handleResize);
+    }, []);
 
-  return (
-    <GeneratorContainer>
-      <GeneratorHead>
-        <h2>
-          <AiGeneratorIcon width={16} height={16} color="#336CFF" />
-          Создать пост
-        </h2>
-        <BtnBase $padding="21px 24px" onClick={() => addPost()}>
-          + Добавить пост
-        </BtnBase>
-      </GeneratorHead>
+    const handleCreateAIImage = (postId) => {
+      const post = posts.find(p => p.postId === postId);
+      if (!post) {
+        addNotification("Пост не найден", "error");
+        return;
+      }
+      if (!post.text) {
+        addNotification("Для генерации изображения нужен текст", "warning");
+        return;
+      }
 
-      <GeneratorList $fadeVisible={fadeVisible} ref={ref}>
-        {posts.map(post => (
-          <ListItem key={post.postId}>
-            <ItemHead>
-              <HeadTitle
-                tape="text"
-                placeholder={post.placeholder}
-                value={post.title}
-                onChange={e => updatePost(post.postId, { title: e.target.value })}
-              />
-              <p>{post.progress}</p>
-            </ItemHead>
+      setImageProgress(postId, 0);
 
-            <ItemBody>
-              <ItemText
-                contentEditable
-                suppressContentEditableWarning
-                id={`text-${post.postId}`}
-                ref={el => el && el.innerHTML !== post.summary && (el.innerHTML = post.summary)}
-                onInput={e => updatePost(post.postId, { text: e.currentTarget.innerHTML, summary: e.currentTarget.innerHTML })}
-              />
-              <BodyRight>
-                <ImagesContainer>
-                  {(post.images || []).map((img, index) => (
-                    <ImagePreview key={index}>
-                      <img
-                        src={img}
-                        alt={`preview-${index}`}
-                        onClick={() => openLightbox({
-                          images: post.images.map(img => img),
-                          initialIndex: 0
-                        })}
-                      />
-                      <RemoveImageButton onClick={() => handleRemoveImage(post.postId, index, post.serverId)}>
-                        ×
-                      </RemoveImageButton>
-                    </ImagePreview>
-                  ))}
-                </ImagesContainer>
-                {/* <ItemTime>Время публикации: {post.time}</ItemTime> */}
-              </BodyRight>
-            </ItemBody>
-            <ItemActions>
-              <ActionsLeft>
-                <ItemAI>
-                  <BtnBase
-                    $padding="0"
-                    $color="#336CFF"
-                    $bg="transporent"
-                    onClick={() => handleWriteWithAI(post.postId)}
-                    disabled={postPending}
-                  >
-                    <AiGeneratorIcon color="#336CFF" />
-                    {postProgress[post.postId] != null && postProgress[post.postId] < 100
-                      ? `Генерация с AI... ${postProgress[post.postId]}%`
-                      : "Написать с AI"}
-                  </BtnBase>
-                  <BtnBase
-                    $padding="0"
-                    $color="#FF7F48"
-                    $bg="transporent"
-                    onClick={() => handleCreateAIImage(post.postId)}
-                    disabled={imagePending || !post.text}
-                  >
-                    <img src={create} alt="create icon" />
-                    {imageProgress[post.postId] != null && imageProgress[post.postId] < 100
-                      ? `Генерация фото с AI... ${imageProgress[post.postId]}%`
-                      : "Создать фото с AI"}
-                  </BtnBase>
-                </ItemAI>
-                <ItemActionsAdd>
-                  <input
-                    type="file"
-                    accept="image/*"
-                    multiple
-                    style={{ display: "none" }}
-                    id={`file-input-${post.postId}`}
-                    onChange={e => {
-                      if (e.target.files?.length) {
-                        handleAddImages(post.postId, e.target.files);
-                      }
-                      e.target.value = "";
-                    }}
-                  />
-                  <img
-                    src={paper}
-                    alt="paper icon"
-                    style={{ cursor: "pointer" }}
-                    onClick={() => document.getElementById(`file-input-${post.postId}`).click()}
-                  />
-                  <div style={{ position: "relative" }}>
-                    <img
-                      src={smiley}
-                      onClick={() =>
-                        setEmojiPostId(prev =>
-                          prev === post.postId ? null : post.postId
-                        )
-                      }
-                    />
-                    {emojiPostId === post.postId && (
-                      <div style={{ position: "absolute", zIndex: 100 }}>
-                        <EmojiPicker
-                          onEmojiClick={emojiData => {
-                            insertEmojiAtCursor(emojiData.emoji, post.postId);
-                            setEmojiPostId(null);
-                          }}
-                          theme="dark"
-                          locale="ru"
+      const interval = setInterval(() => {
+        const current = usePostsStore.getState().imageProgress[postId] ?? 0;
+        setImageProgress(postId, current + Math.floor(Math.random() * 10));
+      }, 500);
+
+      generateImage({ prompt: post.text }, {
+        onSuccess: (data) => {
+          clearInterval(interval);
+          setImageProgress(postId, 100);
+
+          const inlineData = data?.candidates?.[0]?.content?.parts?.find(p => p.inlineData)?.inlineData;
+          if (!inlineData?.data) {
+            addNotification("Не удалось получить изображение", "error");
+            return;
+          }
+
+          const imageUrl = `data:${inlineData.mimeType};base64,${inlineData.data}`;
+          updatePost(postId, { images: [imageUrl] });
+          addNotification("Изображение успешно сгенерировано", "success");
+
+          setTimeout(() => resetImageProgress(postId), 500);
+        },
+        onError: () => {
+          clearInterval(interval);
+          setImageProgress(postId, 0);
+          resetImageProgress(postId);
+          addNotification("Ошибка генерации изображения", "error");
+        },
+      });
+    };
+
+    const handleSaveTime = (newTime, postId) => {
+      updatePost(postId, { time: newTime });
+    };
+    const handleAddImages = (postId, files) => {
+      const readFiles = Array.from(files).map(file =>
+        new Promise(resolve => {
+          const reader = new FileReader();
+          reader.onload = e => resolve(e.target.result);
+          reader.readAsDataURL(file);
+        })
+      );
+
+      Promise.all(readFiles).then(images => {
+        addImages(postId, images);
+      });
+    };
+    const handleSavePost = (post) => {
+      if (!post.title || !post.text) {
+        addNotification("Пост должен иметь заголовок и текст", "warning");
+        return;
+      }
+
+      const saveWithChannel = (finalChannelId) => {
+        const [hours, minutes] = post.time?.split(":").map(Number) || [0, 0];
+        const calendarScheduledAt = new Date(
+          Date.UTC(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), hours, minutes)
+        ).toISOString();
+
+        const payload = {
+          title: post.title,
+          text: post.text,
+          channelId: finalChannelId,
+          publishedAt: new Date().toISOString(),
+          calendarScheduledAt,
+          summary: post.summary,
+        };
+
+        if (!post.serverId) {
+          createPostMutation({ ...payload, images: post.images || [] }, {
+            onSuccess: () => {
+              removePost(post.postId);
+              addNotification("Пост успешно сохранен", "success");
+            },
+            onError: () => addNotification("Ошибка сохранения поста", "error"),
+          });
+        } else {
+          updatePostMutation({ postId: post.serverId, postData: payload }, {
+            onSuccess: () => {
+              removePost(post.postId);
+              addNotification("Пост успешно обновлен", "success");
+            },
+            onError: () => addNotification("Ошибка обновления поста", "error"),
+          });
+        }
+      };
+
+      if (!channelId) {
+        addNotification("Выберите канал для сохранения поста", "warning");
+        changeContent("select_channel", "popup_window", { onSave: saveWithChannel });
+        return;
+      }
+
+      saveWithChannel(channelId);
+    };
+
+    const addLink = () => {
+      const url = prompt("Введите ссылку");
+      if (url) document.execCommand("createLink", false, url);
+    };
+
+    const insertEmojiAtCursor = (emoji, postId) => {
+      const el = document.getElementById(`text-${postId}`);
+      el.focus();
+
+      const selection = window.getSelection();
+      if (!selection || selection.rangeCount === 0) return;
+
+      const range = selection.getRangeAt(0);
+      range.deleteContents();
+
+      const textNode = document.createTextNode(emoji);
+      range.insertNode(textNode);
+
+      range.setStartAfter(textNode);
+      range.collapse(true);
+
+      selection.removeAllRanges();
+      selection.addRange(range);
+
+      updatePost(postId, { text: el.innerHTML, summary: el.innerHTML });
+    };
+    const handlePublishNow = (post) => {
+      if (!post.text) {
+        addNotification("Нельзя публиковать пустой пост", "warning");
+        return;
+      }
+
+      const publishWithChannel = (finalChannelId) => {
+        const publish = (serverPostId) => {
+          sendPost(
+            { postId: serverPostId, channelId: finalChannelId, channelTelegramId: telegramId },
+            {
+              onSuccess: () => {
+                removePost(post.postId);
+                addNotification("Пост успешно опубликован", "success");
+              },
+              onError: () => addNotification("Ошибка публикации поста", "error"),
+            }
+          );
+        };
+
+        if (!post.serverId) {
+          const payload = {
+            title: post.title,
+            text: post.text,
+            images: post.images || [],
+            channelId: finalChannelId,
+            publishedAt: new Date().toISOString(),
+            summary: post.summary,
+          };
+
+          createPostMutation(payload, {
+            onSuccess: (data) => publish(data.id),
+            onError: () => addNotification("Ошибка публикации поста", "error"),
+          });
+
+          return;
+        }
+
+        publish(post.serverId);
+      };
+
+      if (!channelId) {
+        addNotification("Выберите канал для публикации поста", "warning");
+        changeContent("select_channel", "popup_window", { onSave: publishWithChannel });
+        return;
+      }
+
+      publishWithChannel(channelId);
+    };
+    const handleRemoveImage = (postId, index) => {
+      removeImage(postId, index);
+      addNotification("Изображение удалено", "success");
+      const post = posts.find(p => p.postId === postId);
+      if (post?.serverId) {
+        deleteImageFromServer({ postId: post.serverId, imageIndex: index });
+      }
+    };
+
+    return (
+      <GeneratorContainer>
+        <GeneratorHead>
+          <h2>
+            <AiGeneratorIcon width={16} height={16} color="#336CFF" />
+            Создать пост
+          </h2>
+          <BtnBase $padding="21px 24px" onClick={() => addPost()}>
+            + Добавить пост
+          </BtnBase>
+        </GeneratorHead>
+
+        <GeneratorList $fadeVisible={fadeVisible} ref={ref}>
+          {posts.map(post => (
+            <ListItem key={post.postId}>
+              <ItemHead>
+                <HeadTitle
+                  tape="text"
+                  placeholder={post.placeholder}
+                  value={post.title}
+                  onChange={e => updatePost(post.postId, { title: e.target.value })}
+                />
+                <p>{post.progress}</p>
+              </ItemHead>
+
+              <ItemBody>
+                <ItemText
+                  contentEditable
+                  suppressContentEditableWarning
+                  id={`text-${post.postId}`}
+                  ref={el => el && el.innerHTML !== post.summary && (el.innerHTML = post.summary)}
+                  onInput={e => updatePost(post.postId, { text: e.currentTarget.innerHTML, summary: e.currentTarget.innerHTML })}
+                />
+                <BodyRight>
+                  <ImagesContainer>
+                    {(post.images || []).map((img, index) => (
+                      <ImagePreview key={index}>
+                        <img
+                          src={img}
+                          alt={`preview-${index}`}
+                          onClick={() => openLightbox({
+                            images: post.images.map(img => img),
+                            initialIndex: 0
+                          })}
                         />
-                      </div>
-                    )}
-                  </div>
-                  <img src={fat} alt="fat icon" onClick={() => formatText("bold")} />
-                  <img src={italics} alt="italics icon" onClick={() => formatText("italic")} />
-                  <img src={underlined} alt="underlined icon" onClick={() => formatText("underline")} />
-                  <img src={crossed} alt="crossed icon" onClick={() => formatText("strikeThrough")} />
-                  <img src={link} alt="link icon" onClick={() => addLink(post.postId)} />
-                </ItemActionsAdd>
-              </ActionsLeft>
-              <ButtonsAll>
-                <HideButton onClick={() => setSelectedPost(post)}>
-                  <img src={hide} alt="hide icon" width={24} height={17} />
-                </HideButton>
-                <ButtonsMain>
-                  <ButtonsMainTop>
-                    <BtnBase $padding="21px 24px" $color="#EF6284" $bg="#241E2D" onClick={() => removePost(post.postId)}>
-                      Отменить
+                        <RemoveImageButton onClick={() => handleRemoveImage(post.postId, index, post.serverId)}>
+                          ×
+                        </RemoveImageButton>
+                      </ImagePreview>
+                    ))}
+                  </ImagesContainer>
+                  {/* <ItemTime>Время публикации: {post.time}</ItemTime> */}
+                </BodyRight>
+              </ItemBody>
+              <ItemActions>
+                <ActionsLeft>
+                  <ItemAI>
+                    <BtnBase
+                      $padding="0"
+                      $color="#336CFF"
+                      $bg="transporent"
+                      onClick={() => handleWriteWithAI(post.postId)}
+                      disabled={postPending}
+                    >
+                      <AiGeneratorIcon color="#336CFF" />
+                      {postProgress[post.postId] != null && postProgress[post.postId] < 100
+                        ? `Генерация с AI... ${postProgress[post.postId]}%`
+                        : "Написать с AI"}
                     </BtnBase>
+                    <BtnBase
+                      $padding="0"
+                      $color="#FF7F48"
+                      $bg="transporent"
+                      onClick={() => handleCreateAIImage(post.postId)}
+                      disabled={imagePending || !post.text}
+                    >
+                      <img src={create} alt="create icon" />
+                      {imageProgress[post.postId] != null && imageProgress[post.postId] < 100
+                        ? `Генерация фото с AI... ${imageProgress[post.postId]}%`
+                        : "Создать фото с AI"}
+                    </BtnBase>
+                  </ItemAI>
+                  <ItemActionsAdd>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      multiple
+                      style={{ display: "none" }}
+                      id={`file-input-${post.postId}`}
+                      onChange={e => {
+                        if (e.target.files?.length) {
+                          handleAddImages(post.postId, e.target.files);
+                        }
+                        e.target.value = "";
+                      }}
+                    />
+                    <img
+                      src={paper}
+                      alt="paper icon"
+                      style={{ cursor: "pointer" }}
+                      onClick={() => document.getElementById(`file-input-${post.postId}`).click()}
+                    />
+                    <div style={{ position: "relative" }}>
+                      <img
+                        src={smiley}
+                        onClick={() =>
+                          setEmojiPostId(prev =>
+                            prev === post.postId ? null : post.postId
+                          )
+                        }
+                      />
+                      {emojiPostId === post.postId && (
+                        <div style={{ position: "absolute", zIndex: 100 }}>
+                          <EmojiPicker
+                            onEmojiClick={emojiData => {
+                              insertEmojiAtCursor(emojiData.emoji, post.postId);
+                              setEmojiPostId(null);
+                            }}
+                            theme="dark"
+                            locale="ru"
+                          />
+                        </div>
+                      )}
+                    </div>
+                    <img src={fat} alt="fat icon" onClick={() => formatText("bold")} />
+                    <img src={italics} alt="italics icon" onClick={() => formatText("italic")} />
+                    <img src={underlined} alt="underlined icon" onClick={() => formatText("underline")} />
+                    <img src={crossed} alt="crossed icon" onClick={() => formatText("strikeThrough")} />
+                    <img src={link} alt="link icon" onClick={() => addLink(post.postId)} />
+                  </ItemActionsAdd>
+                </ActionsLeft>
+                <ButtonsAll>
+                  <HideButton onClick={() => setSelectedPost(post)}>
+                    <img src={hide} alt="hide icon" width={24} height={17} />
+                  </HideButton>
+                  <ButtonsMain>
+                    <ButtonsMainTop>
+                      <BtnBase $padding="21px 24px" $color="#EF6284" $bg="#241E2D" onClick={() => removePost(post.postId)}>
+                        Отменить
+                      </BtnBase>
+                      <BtnBase
+                        $padding="21px 24px"
+                        $border
+                        $bg="transporent"
+                        $color="#6A7080"
+                        onClick={() => {
+                          setPopupPostId(post.postId);
+                          changeContent("change_time_popup", "popup_window", {
+                            onSave: (newTime) => handleSaveTime(newTime, post.postId),
+                            initialTime: post.time || "00:00"
+                          });
+                        }}
+                      >
+                        Изменить время
+                      </BtnBase>
+                      <BtnBase
+                        $padding="21px 24px"
+                        $color="#336CFF"
+                        $bg="#161F37"
+                        onClick={() => handleSavePost(post)}
+                        disabled={updatePending || postPending}
+                      >
+                        Сохранить
+                      </BtnBase>
+                    </ButtonsMainTop>
                     <BtnBase
                       $padding="21px 24px"
                       $border
+                      $width="100%"
                       $bg="transporent"
                       $color="#6A7080"
-                      onClick={() => {
-                        setPopupPostId(post.postId);
-                        changeContent("change_time_popup", "popup_window", {
-                          onSave: (newTime) => handleSaveTime(newTime, post.postId),
-                          initialTime: post.time || "00:00"
-                        });
-                      }}
+                      onClick={() => handlePublishNow(post)}
+                      disabled={isSendPending}
                     >
-                      Изменить время
+                      {isSendPending ? "Публикация..." : "Опубликовать сейчас"}
                     </BtnBase>
-                    <BtnBase
-                      $padding="21px 24px"
-                      $color="#336CFF"
-                      $bg="#161F37"
-                      onClick={() => handleSavePost(post)}
-                      disabled={updatePending || postPending}
-                    >
-                      Сохранить
-                    </BtnBase>
-                  </ButtonsMainTop>
-                  <BtnBase
-                    $padding="21px 24px"
-                    $border
-                    $width="100%"
-                    $bg="transporent"
-                    $color="#6A7080"
-                    onClick={() => handlePublishNow(post)}
-                    disabled={isSendPending}
-                  >
-                    {isSendPending ? "Публикация..." : "Опубликовать сейчас"}
-                  </BtnBase>
-                </ButtonsMain>
-              </ButtonsAll>
-            </ItemActions>
-          </ListItem>
-        ))}
-      </GeneratorList>
-      <PreviewContainer>
-        <Preview collapsed={collapsed} onChange={() => setCollapsed(!collapsed)} testResult={selectedPost} telegramId={telegramId} />
-      </PreviewContainer>
-    </GeneratorContainer>
-  );
-};
+                  </ButtonsMain>
+                </ButtonsAll>
+              </ItemActions>
+            </ListItem>
+          ))}
+        </GeneratorList>
+        <PreviewContainer>
+          <Preview collapsed={collapsed} onChange={() => setCollapsed(!collapsed)} testResult={selectedPost} telegramId={telegramId} />
+        </PreviewContainer>
+      </GeneratorContainer>
+    );
+  };
+}
 
 const GeneratorContainer = styled.section`
   display: grid;
