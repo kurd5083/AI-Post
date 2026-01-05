@@ -60,7 +60,7 @@ const LinkGenerationPopup = () => {
       },
       {
         onSuccess: () => {
-          addNotification("Ссылка успешно создана", "update");
+          addNotification("Ссылка успешно создана", "success");
           setCreatesJoinRequest(false);
           setName("");
           setMemberLimit(null);

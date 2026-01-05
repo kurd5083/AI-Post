@@ -13,6 +13,8 @@ const Notification = () => {
         return <XCircle size={24} color="#fff" />;
       case "update":
         return <RefreshCw size={24} color="#fff" />;
+      case "delete":
+        return <RefreshCw size={24} color="#fff" />;
       case "info":
       default:
         return <Info size={24} color="#fff" />;

@@ -8,8 +8,9 @@ import BlocksItems from "@/shared/BlocksItems";
 import PlusIcon from "@/icons/PlusIcon";
 import { usePopupStore } from "@/store/popupStore";
 import { useCreateChannelSchedule } from "@/lib/channels/schedule/useCreateChannelSchedule";
-import { useChannelSchedule } from "@/lib/channels/useChannelSchedule";
+import { useChannelSchedule } from "@/lib/channels/schedule/useChannelSchedule";
 import { useUpdateChannelSchedule } from "@/lib/channels/schedule/useUpdateChannelSchedule";
+import { useNotificationStore } from "@/store/notificationStore";
 
 const DAYS = [
   { label: "Понедельник", value: "MONDAY" },
@@ -24,6 +25,7 @@ const DAYS = [
 const SchedulePopup = () => {
   const { popup, changeContent } = usePopupStore();
   const channelId = popup?.data?.channelId;
+  const { addNotification } = useNotificationStore();
 
   const { channelSchedule } = useChannelSchedule(channelId);
   const scheduleId = channelSchedule?.id;
@@ -39,19 +41,26 @@ const SchedulePopup = () => {
   useEffect(() => {
     if (channelSchedule) {
       setTimezone(channelSchedule.timezone);
-      setPublicationTimes(channelSchedule.publicationTimes);
-      setSelectedDays(channelSchedule.postDays);
+      setPublicationTimes(channelSchedule.publicationTimes || []);
+      setSelectedDays(channelSchedule.postDays || []);
     }
   }, [channelSchedule]);
 
   const handleAddTime = () => {
-    const timeStr = `${String(currentTime.hours).padStart(2, "0")}:${String(
-      currentTime.minutes
-    ).padStart(2, "0")}`;
+    const hours = Number(currentTime.hours);
+    const minutes = Number(currentTime.minutes);
 
-    if (!publicationTimes.includes(timeStr)) {
-      setPublicationTimes([...publicationTimes, timeStr]);
+    if (isNaN(hours) || isNaN(minutes) || hours < 0 || hours > 23 || minutes < 0 || minutes > 59) {
+      return addNotification("Введите корректное время", "error");
     }
+
+    const timeStr = `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}`;
+    if (publicationTimes.includes(timeStr)) {
+      return addNotification("Это время уже добавлено", "error");
+    }
+
+    setPublicationTimes([...publicationTimes, timeStr]);
+    addNotification("Время добавлено", "success");
   };
 
   const toggleDay = (day) => {
@@ -63,7 +72,8 @@ const SchedulePopup = () => {
   };
 
   const handleSave = () => {
-    if (!selectedDays.length || !publicationTimes.length) return;
+    if (!selectedDays.length) return addNotification("Выберите хотя бы один день", "error");
+    if (!publicationTimes.length) return addNotification("Добавьте хотя бы одно время публикации", "error");
 
     const payload = {
       postDays: selectedDays,
@@ -72,9 +82,13 @@ const SchedulePopup = () => {
     };
 
     if (scheduleId) {
-      updateSchedule.mutate(payload);
+      updateSchedule.mutate(payload, {
+        onSuccess: () => addNotification("Расписание успешно обновлено", "success"),
+      });
     } else {
-      createSchedule.mutate(payload);
+      createSchedule.mutate(payload, {
+        onSuccess: () => addNotification("Расписание успешно создано", "success"),
+      });
     }
   };
 
@@ -108,24 +122,24 @@ const SchedulePopup = () => {
               minutes={currentTime.minutes}
               onChange={(h, m) => setCurrentTime({ hours: h, minutes: m })}
             />
-            <ScheduleBtn  onClick={handleAddTime}>
+            <ScheduleBtn onClick={handleAddTime}>
               <PlusIcon color="#FFF980" />
             </ScheduleBtn>
           </ScheduleInputContainer>
+
           {publicationTimes.length === 0 ? (
             <EmptyText>Время публикаций не добавлены</EmptyText>
           ) : (
             <BlocksItems
               items={publicationTimes.map((t, index) => ({ value: t, id: index }))}
               color="#FFF980"
-              onRemove={(id) => {
-                setPublicationTimes(publicationTimes.filter((_, i) => i !== id));
-              }}
+              onRemove={(id) => setPublicationTimes(publicationTimes.filter((_, i) => i !== id))}
             />
           )}
         </ScheduleKey>
+
         <ScheduleKey>
-          <ScheduleKeyTitle>Выбирите дни недели</ScheduleKeyTitle>
+          <ScheduleKeyTitle>Выберите дни недели</ScheduleKeyTitle>
           <ScheduleDays>
             {DAYS.map((day) => (
               <ScheduleDaysBlock key={day.value}>
@@ -144,9 +158,9 @@ const SchedulePopup = () => {
         <BtnBase
           $margin="64"
           onClick={handleSave}
-          disabled={createSchedule.isPending}
+          disabled={createSchedule.isPending || updateSchedule.isPending}
         >
-          {createSchedule.isPending ? "Сохраняем..." : "Сохранить"}
+          {createSchedule.isPending || updateSchedule.isPending ? "Сохраняем..." : "Сохранить"}
         </BtnBase>
       </ScheduleContent>
     </ScheduleContainer>
@@ -155,43 +169,27 @@ const SchedulePopup = () => {
 
 const ScheduleContainer = styled.div`
   padding: 0 56px;
-  @media (max-width: 1600px) {
-    padding: 0 32px;
-  }
-  @media (max-width: 768px) {
-    padding: 0 24px;
-  }
+  @media (max-width: 1600px) { padding: 0 32px; }
+  @media (max-width: 768px) { padding: 0 24px; }
 `;
 const ScheduleHead = styled.div`
   display: flex;
   gap: 32px;
   margin-bottom: 48px;
-  @media (max-width: 480px) {
-    margin-bottom: 40px;
-  }
+  @media (max-width: 480px) { margin-bottom: 40px; }
 `;
 const ScheduleHeadText = styled.p`
   color: ${({ $active }) => ($active ? "#D6DCEC" : "#6A7080")};
   padding-bottom: 32px;
-  border-bottom: 2px solid
-    ${({ $active }) => ($active ? "#D6DCEC" : "#2E3954")};
+  border-bottom: 2px solid ${({ $active }) => ($active ? "#D6DCEC" : "#2E3954")};
   font-weight: 700;
   font-size: 24px;
   padding-right: 40px;
   cursor: pointer;
 `;
-const ScheduleContent = styled.div`
-  display: flex;
-  flex-direction: column;
-`;
-const ScheduleTitle = styled.h2`
-  font-size: 24px;
-  font-weight: 700;
-  margin-bottom: 32px;
-`;
-const ScheduleKey = styled.div`
-  margin-top: 40px;
-`;
+const ScheduleContent = styled.div` display: flex; flex-direction: column; `;
+const ScheduleTitle = styled.h2` font-size: 24px; font-weight: 700; margin-bottom: 32px; `;
+const ScheduleKey = styled.div` margin-top: 40px; `;
 const ScheduleKeyTitle = styled.h2`
   text-transform: uppercase;
   font-weight: 700;
@@ -199,11 +197,7 @@ const ScheduleKeyTitle = styled.h2`
   color: #6a7080;
   margin-bottom: 26px;
 `;
-const ScheduleInputContainer = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 24px;
-`;
+const ScheduleInputContainer = styled.div` display: flex; align-items: center; gap: 24px; `;
 const ScheduleBtn = styled.button`
   display: flex;
   align-items: center;
@@ -231,10 +225,6 @@ const ScheduleDays = styled.div`
     align-items: center;
   }
 `;
-const ScheduleDaysBlock = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-`;
+const ScheduleDaysBlock = styled.div` display: flex; flex-direction: column; gap: 24px; `;
 
 export default SchedulePopup;
