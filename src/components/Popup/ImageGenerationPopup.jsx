@@ -42,6 +42,7 @@ const ImageGenerationPopup = () => {
               <Checkbox
                 checked={selectedPresetId === item.id}
                 onChange={() => handlePresetChange(item.id)}
+                style={{ width: "100%" }}
               >
                 <CheckboxBlock>
                   <div>
@@ -96,6 +97,7 @@ const CheckboxBlock = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  width: 100%;
 
   h4 {
     font-size: 24px;
