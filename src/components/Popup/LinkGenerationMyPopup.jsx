@@ -5,7 +5,7 @@ import del from "@/assets/del.svg";
 import hide from "@/assets/hide.svg"
 import { useGetChannelInviteLinks } from "@/lib/channels/invite-link/useGetChannelInviteLinks";
 import { useRemoveInviteLink } from "@/lib/channels/invite-link/useRemoveInviteLink";
-import { Link } from "react-router";
+import { useNotificationStore } from "@/store/notificationStore";
 import ModernLoading from "@/components/ModernLoading";
 
 const LinkGenerationMyPopup = () => {
@@ -13,19 +13,35 @@ const LinkGenerationMyPopup = () => {
 
   const { popup, changeContent } = usePopupStore();
   const channelId = popup?.data?.channelId;
+  const { addNotification } = useNotificationStore();
 
   const { links, linksLoading } = useGetChannelInviteLinks(channelId);
   const { mutate: removeLink, isLoading: removeLoading } = useRemoveInviteLink();
 
   const handleRemove = (linkId) => {
-    removeLink(linkId);
+    removeLink(linkId, {
+      onSuccess: () => {
+        addNotification("Ссылка успешно удалена", "delete");
+      },
+      onError: () => {
+        addNotification("Ошибка при удалении ссылки", "error");
+      },
+    });
   };
 
   const handleCopy = (link) => {
+    if (!link?.inviteLink) {
+      addNotification("Ссылка недоступна для копирования", "error");
+      return;
+    }
+
     navigator.clipboard.writeText(link.inviteLink);
     setCopied(link.id);
+    addNotification("Ссылка скопирована в буфер обмена", "success");
+
     setTimeout(() => setCopied(false), 2000);
   };
+  
   return (
     <TableWrapper>
       {!linksLoading ? (
@@ -81,8 +97,11 @@ const LinkGenerationMyPopup = () => {
                       <img src={hide} alt="hide icon" width={24} height={17} />
                     </HideButton>
                     <DeleteButton
+                      disabled={removeLoading}
                       onClick={(e) => {
                         e.stopPropagation();
+                        if (removeLoading) return;
+
                         changeContent("delete_confirm", "popup_window", {
                           itemName: link.inviteLink,
                           onDelete: () => handleRemove(link.id),

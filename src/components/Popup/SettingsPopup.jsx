@@ -11,14 +11,15 @@ import { useAutoApprovalStatus } from "@/lib/channels/useAutoApprovalStatus";
 import { useEnableChannelPromotion, useDisnableChannelPromotion } from "@/lib/channels/useEnableChannelPromotion";
 import { usePostsByChannel } from "@/lib/posts/usePostsByChannel";
 import { useUser } from "@/lib/useUser";
+import { useNotificationStore } from "@/store/notificationStore";
 
 const SettingsPopup = () => {
   const { changeContent, popup } = usePopupStore();
   const { user } = useUser();
   const channelId = popup?.data?.channelId;
-  const channelName = popup?.data?.channelName;
   const { channel } = useChannelById(channelId);
   const { posts } = usePostsByChannel(channelId);
+  const { addNotification } = useNotificationStore();
 
   const [localSwitches, setLocalSwitches] = useState({
     posting: channel?.posting || false,
@@ -44,24 +45,68 @@ const SettingsPopup = () => {
     posting: {
       checked: localSwitches.posting,
       onChange: () => {
-        setLocalSwitches(prev => ({ ...prev, posting: !prev.posting }));
-        if (!localSwitches.posting) enablePosting(channelId);
-        else disablePosting(channelId);
+        const next = !localSwitches.posting;
+        setLocalSwitches(prev => ({ ...prev, posting: next }));
+
+        if (next) {
+          enablePosting(channelId, {
+            onSuccess: () =>
+              addNotification("Автопостинг включён", "success"),
+            onError: () =>
+              addNotification("Ошибка включения автопостинга", "error"),
+          });
+        } else {
+          disablePosting(channelId, {
+            onSuccess: () =>
+              addNotification("Автопостинг выключен", "delete"),
+            onError: () =>
+              addNotification("Ошибка выключения автопостинга", "error"),
+          });
+        }
       },
     },
     activate_promotion: {
       checked: localSwitches.activate_promotion,
       onChange: () => {
-        setLocalSwitches(prev => ({ ...prev, activate_promotion: !prev.activate_promotion }));
-        if (!localSwitches.activate_promotion) enablePromotion(channelId);
-        else disablePromotion(channelId);
+        const next = !localSwitches.activate_promotion;
+        setLocalSwitches(prev => ({ ...prev, activate_promotion: next }));
+
+        if (next) {
+          enablePromotion(channelId, {
+            onSuccess: () =>
+              addNotification("Продвижение канала включено", "success"),
+            onError: () =>
+              addNotification("Ошибка включения продвижения", "error"),
+          });
+        } else {
+          disablePromotion(channelId, {
+            onSuccess: () =>
+              addNotification("Продвижение канала выключено", "delete"),
+            onError: () =>
+              addNotification("Ошибка выключения продвижения", "error"),
+          });
+        }
       },
     },
     auto_accepting: {
       checked: localSwitches.auto_accepting,
       onChange: () => {
-        setLocalSwitches(prev => ({ ...prev, auto_accepting: !prev.auto_accepting }));
-        autoApprovalStatus({ channelId, autoApprovalEnabled: !localSwitches.auto_accepting });
+        const next = !localSwitches.auto_accepting;
+        setLocalSwitches(prev => ({ ...prev, auto_accepting: next }));
+        autoApprovalStatus(
+          { channelId, autoApprovalEnabled: next },
+          {
+            onSuccess: () =>
+              addNotification(
+                next
+                  ? "Автопринятие постов включено"
+                  : "Автопринятие постов выключено",
+                "update"
+              ),
+            onError: () =>
+              addNotification("Ошибка изменения автопринятия", "error"),
+          }
+        );
       },
     },
   };
