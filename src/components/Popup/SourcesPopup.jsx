@@ -7,13 +7,15 @@ import BlocksItems from "@/shared/BlocksItems";
 import { useChannelById } from "@/lib/channels/useChannelById";
 import { useAddChannelSource } from "@/lib/channels/sources/useAddChannelSource";
 import { useDeleteChannelSource } from "@/lib/channels/sources/useDeleteChannelSource";
+import { useNotificationStore } from "@/store/notificationStore";
 import { v4 as uuidv4 } from "uuid";
 
 const SourcesPopup = () => {
   const { popup, changeContent } = usePopupStore()
   const channelId = popup?.data?.channelId;
   const { channel } = useChannelById(channelId);
-   
+  const { addNotification } = useNotificationStore();
+
   const [url, setUrl] = useState("");
   const [localSources, setLocalSources] = useState([]);
 
@@ -26,9 +28,45 @@ const SourcesPopup = () => {
     }
   }, [channel]);
 
+  // функция для проверки и извлечения домена
+  const parseUrlDomain = (input) => {
+    try {
+      let formatted = input.trim();
+      if (!formatted.startsWith("http")) formatted = "https://" + formatted; // на случай, если пользователь забыл https
+      const urlObj = new URL(formatted);
+      return urlObj.hostname; // вернет t.me или другой домен
+    } catch (err) {
+      return null; // если URL некорректный
+    }
+  }
+
+  const handleAddSource = () => {
+    const domain = parseUrlDomain(url);
+
+    if (!domain) {
+      return addNotification("Введите корректный URL источника", "error");
+    }
+
+    const tempId = `temp-${uuidv4()}`;
+    setLocalSources(prev => [...prev, { id: tempId, name: domain }]);
+    addSource({ channelId, url }); // сохраняем полную ссылку
+    addNotification("Источник успешно добавлен", "update");
+    setUrl("");
+  };
+
+  const handleRemoveSource = (id) => {
+    setLocalSources(prev => prev.filter((s) => s.id !== id));
+    if (!String(id).startsWith("temp-")) {
+      deleteSource({ channelId, sourceId: id });
+      addNotification("Источник успешно удалён", "update");
+    }
+  };
+
   return (
     <SourcesContainer>
-      <SourcesText>Здесь вы можете добавить источник, откуда сервис будет брать посты. Отображается <mark>имя и URL.</mark></SourcesText>
+      <SourcesText>
+        Здесь вы можете добавить источник, откуда сервис будет брать посты. Отображается <mark>имя и URL.</mark>
+      </SourcesText>
       <SourcesKey>
         <SourcesKeyTitle>Мои источники:</SourcesKeyTitle>
         <InputPlus
@@ -38,34 +76,32 @@ const SourcesPopup = () => {
           fs="14px"
           value={url}
           onChange={setUrl}
-          onSubmit={() => {
-            if (!url.trim()) return;
-            setLocalSources((prev) => [...prev, { id: `temp-${uuidv4()}`, name: url },]);
-            addSource({ channelId, url });
-            setUrl("");
-          }}
+          onSubmit={handleAddSource}
         />
-        {channel?.sources.length === 0 ? (
+        {localSources.length === 0 ? (
           <EmptyText>Источники не добавлены</EmptyText>
         ) : (
           <BlocksItems
             items={localSources.map((source) => ({ value: source.name, id: source.id }))}
             color="#2B89ED"
-            onRemove={(id) => {
-              setLocalSources((prev) => prev.filter((s) => s.id !== id));
-              if (!String(id).startsWith("temp-")) {
-                deleteSource({ channelId, sourceId: id });
-              }
-            }}
+            onRemove={handleRemoveSource}
           />
         )}
       </SourcesKey>
       <SourcesButtons>
-        <BtnBase $margin="40" onClick={() => changeContent("compilation")} $color="#D6DCEC" $bg="#2B89ED">Подборки источников</BtnBase>
+        <BtnBase
+          $margin="40"
+          onClick={() => changeContent("compilation")}
+          $color="#D6DCEC"
+          $bg="#2B89ED"
+        >
+          Подборки источников
+        </BtnBase>
       </SourcesButtons>
     </SourcesContainer>
   )
 }
+
 const SourcesContainer = styled.div`
   padding: 0 56px;
 
