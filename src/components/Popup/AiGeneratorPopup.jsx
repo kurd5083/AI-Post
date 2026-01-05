@@ -49,7 +49,6 @@ const AiGeneratorPopup = () => {
   const [popupPostId, setPopupPostId] = useState(null);
   const [emojiPostId, setEmojiPostId] = useState(null);
 
-
   const {
     postProgress,
     imageProgress,
@@ -75,6 +74,8 @@ const AiGeneratorPopup = () => {
     }
 
     const runGenerate = (finalChannelId) => {
+      const runGenerate = (finalChannelId, existingPostId) => {
+      const postId = existingPostId || postId;
       setPostProgress(postId, 0);
 
       const interval = setInterval(() => {
@@ -110,7 +111,9 @@ const AiGeneratorPopup = () => {
 
     if (!channelId) {
       addNotification("Выберите канал для генерации поста", "warning");
-      changeContent("select_channel", "popup_window", { onSave: runGenerate });
+      changeContent("select_channel", "popup_window", {
+        onSave: (selectedChannelId) => runGenerate(selectedChannelId, postId),
+      });
       return;
     }
 
@@ -195,12 +198,13 @@ const AiGeneratorPopup = () => {
 
     const saveWithChannel = (finalChannelId) => {
       const [hours, minutes] = post.time?.split(":").map(Number) || [0, 0];
-      const calendarScheduledAt = new Date(Date.UTC(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), hours, minutes)).toISOString();
+      const calendarScheduledAt = new Date(
+        Date.UTC(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), hours, minutes)
+      ).toISOString();
 
       const payload = {
         title: post.title,
         text: post.text,
-        images: post.images || [],
         channelId: finalChannelId,
         publishedAt: new Date().toISOString(),
         calendarScheduledAt,
@@ -208,7 +212,7 @@ const AiGeneratorPopup = () => {
       };
 
       if (!post.serverId) {
-        createPostMutation(payload, {
+        createPostMutation({ ...payload, images: post.images || [] }, {
           onSuccess: () => {
             removePost(post.postId);
             addNotification("Пост успешно сохранен", "success");
@@ -370,7 +374,7 @@ const AiGeneratorPopup = () => {
                     </ImagePreview>
                   ))}
                 </ImagesContainer>
-                <ItemTime>Время публикации: {post.time}</ItemTime>
+                {/* <ItemTime>Время публикации: {post.time}</ItemTime> */}
               </BodyRight>
             </ItemBody>
             <ItemActions>
