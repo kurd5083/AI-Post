@@ -11,14 +11,27 @@ import { useLightboxStore } from "@/store/lightboxStore";
 
 const Preview = ({ collapsed, onChange, testResult, telegramId }) => {
   const { openLightbox } = useLightboxStore();
+  const { popup, changeContent } = usePopupStore();
   
   const { title, summary, url, images, postId } = testResult || {};
   const { mutate: sendPost, isPending: sendPostPending } = useSendPostToChannel();
-  const { popup } = usePopupStore();
   const channelId = popup?.data?.channelId;
 
-  console.log(postId, channelId, telegramId )
-  
+  const handleSend = () => {
+    if (!channelId) {
+      // Если канал не выбран — открыть попап выбора канала
+      changeContent("select_channel", "popup_window", {
+        onSave: (selectedChannelId) => {
+          sendPost({ postId, channelId: selectedChannelId, channelTelegramId: telegramId });
+        },
+      });
+      return;
+    }
+
+    // Если канал есть — отправляем напрямую
+    sendPost({ postId, channelId, channelTelegramId: telegramId });
+  };
+
   return (
     <GeneratorPreview $collapsed={collapsed}>
       <PreviewContent>
@@ -64,7 +77,7 @@ const Preview = ({ collapsed, onChange, testResult, telegramId }) => {
               </PreviewInfoContainer>
             </PreviewInfo>
             <PreviewButton 
-              onClick={() => sendPost({ postId, channelId, channelTelegramId: telegramId })} 
+              onClick={handleSend} 
               disabled={sendPostPending}
             >
               <TgIcon color="#336CFF" width="24" height="20"/>
