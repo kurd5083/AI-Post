@@ -197,10 +197,24 @@ const AiGeneratorPopup = () => {
     }
 
     const saveWithChannel = (finalChannelId) => {
-      const [hours, minutes] = post.time?.split(":").map(Number) || [0, 0];
-      const calendarScheduledAt = new Date(
-        Date.UTC(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), hours, minutes)
-      ).toISOString();
+      const [hoursStr, minutesStr] = post.time?.split(":") || ["00", "00"];
+      const hours = parseInt(hoursStr);
+      const minutes = parseInt(minutesStr);
+
+      const isValidHour = !isNaN(hours) && hours >= 0 && hours <= 23;
+      const isValidMinute = !isNaN(minutes) && minutes >= 0 && minutes <= 59;
+
+      const calendarScheduledAt = isValidHour && isValidMinute
+        ? new Date(
+            Date.UTC(
+              new Date().getFullYear(),
+              new Date().getMonth(),
+              new Date().getDate(),
+              hours,
+              minutes
+            )
+          ).toISOString()
+        : new Date().toISOString();
 
       const payload = {
         title: post.title,
@@ -567,7 +581,7 @@ const GeneratorList = styled.div`
   grid-row: 2;
   overflow-y: auto;
   scrollbar-width: none;
-  max-height: calc(100dvh - 280px);
+  /* max-height: calc(100dvh - 280px); */
   padding-bottom: 160px;
   min-height: 500px;
   &::after {
@@ -591,14 +605,14 @@ const GeneratorList = styled.div`
   
   @media(max-width: 2000px) {
     gap: 200px;
-    max-height: calc(100dvh - 490px);
+    /* max-height: calc(100dvh - 490px); */
   } 
   @media(max-width: 1400px) {
     grid-column: 1 /span 5;
     grid-row: 3;
   }
   @media(max-width: 768px) {
-    max-height: calc(100dvh - 550px);
+    /* max-height: calc(100dvh - 550px); */
   } 
 `;
 const ListItem = styled.div`
