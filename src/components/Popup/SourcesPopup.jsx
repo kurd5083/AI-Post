@@ -28,15 +28,19 @@ const SourcesPopup = () => {
     }
   }, [channel]);
 
-  // функция для проверки и извлечения домена
   const parseUrlDomain = (input) => {
     try {
-      let formatted = input.trim();
-      if (!formatted.startsWith("http")) formatted = "https://" + formatted; // на случай, если пользователь забыл https
-      const urlObj = new URL(formatted);
-      return urlObj.hostname; // вернет t.me или другой домен
+      const trimmed = input.trim();
+
+      if (!/^https?:\/\//i.test(trimmed)) return null;
+
+      const urlObj = new URL(trimmed);
+
+      if (!urlObj.hostname.includes(".")) return null;
+
+      return urlObj.hostname;
     } catch (err) {
-      return null; // если URL некорректный
+      return null;
     }
   }
 
@@ -44,13 +48,13 @@ const SourcesPopup = () => {
     const domain = parseUrlDomain(url);
 
     if (!domain) {
-      return addNotification("Введите корректный URL источника", "error");
+      return addNotification("Введите корректный URL источника (например https://t.me/username)", "error");
     }
 
     const tempId = `temp-${uuidv4()}`;
     setLocalSources(prev => [...prev, { id: tempId, name: domain }]);
     addSource({ channelId, url }); // сохраняем полную ссылку
-    addNotification("Источник успешно добавлен", "update");
+    addNotification("Источник успешно добавлен", "success");
     setUrl("");
   };
 
@@ -58,7 +62,7 @@ const SourcesPopup = () => {
     setLocalSources(prev => prev.filter((s) => s.id !== id));
     if (!String(id).startsWith("temp-")) {
       deleteSource({ channelId, sourceId: id });
-      addNotification("Источник успешно удалён", "update");
+      addNotification("Источник успешно удалён", "error");
     }
   };
 
