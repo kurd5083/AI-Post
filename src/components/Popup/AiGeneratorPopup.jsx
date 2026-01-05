@@ -68,16 +68,7 @@ const AiGeneratorPopup = () => {
 
       const interval = setInterval(() => {
         const current = usePostsStore.getState().postProgress[postId] ?? 0;
-
-        if (current >= 90) {
-          clearInterval(interval);
-          return;
-        }
-
-        setPostProgress(
-          postId,
-          Math.min(current + Math.floor(Math.random() * 10), 90)
-        );
+        setPostProgress(postId, Math.min(current + Math.floor(Math.random() * 10), 90));
       }, 500);
 
       generatePost(finalChannelId, {
@@ -99,7 +90,7 @@ const AiGeneratorPopup = () => {
         onError: () => {
           clearInterval(interval);
           setPostProgress(postId, 0);
-          
+
           resetPostProgress(postId);
         },
       });
@@ -133,45 +124,33 @@ const AiGeneratorPopup = () => {
 
     const interval = setInterval(() => {
       const current = usePostsStore.getState().imageProgress[postId] ?? 0;
-
-      if (current >= 90) {
-        clearInterval(interval);
-        return;
-      }
-
-      setImageProgress(
-        postId,
-        current + Math.floor(Math.random() * 10)
-      );
+      setImageProgress(postId, current + Math.floor(Math.random() * 10));
     }, 500);
 
-    generateImage(
-      { prompt: post.text },
-      {
-        onSuccess: (data) => {
-          clearInterval(interval);
-          setImageProgress(postId, 100);
+    generateImage({ prompt: post.text }, {
+      onSuccess: (data) => {
+        clearInterval(interval);
+        setImageProgress(postId, 100);
 
-          const inlineData =
-            data?.candidates?.[0]?.content?.parts?.find(p => p.inlineData)?.inlineData;
+        const inlineData =
+          data?.candidates?.[0]?.content?.parts?.find(p => p.inlineData)?.inlineData;
 
-          if (!inlineData?.data) return;
+        if (!inlineData?.data) return;
 
-          const imageUrl = `data:${inlineData.mimeType};base64,${inlineData.data}`;
-          updatePost(postId, { images: [imageUrl] });
+        const imageUrl = `data:${inlineData.mimeType};base64,${inlineData.data}`;
+        updatePost(postId, { images: [imageUrl] });
 
-          setTimeout(() => {
-            resetImageProgress(postId);
-          }, 500);
-        },
-        onError: (err) => {
-          clearInterval(interval);
-          setImageProgress(postId, 0);
-
+        setTimeout(() => {
           resetImageProgress(postId);
-        },
-      }
-    );
+        }, 500);
+      },
+      onError: (err) => {
+        clearInterval(interval);
+        setImageProgress(postId, 0);
+
+        resetImageProgress(postId);
+      },
+    });
   };
   const handleSaveTime = (newTime, postId) => {
     updatePost(postId, { time: newTime });
