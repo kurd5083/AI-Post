@@ -4,12 +4,14 @@ import BtnBase from "@/shared/BtnBase";
 import { usePopupStore } from "@/store/popupStore"
 import { useUser } from "@/lib/useUser";
 import { useUserBalance } from "@/lib/useUserBalance";
+import { useLogout } from "@/lib/useLogout";
 
 const ProfilePopup = () => {
   const { changeContent } = usePopupStore();
   const { user } = useUser();
   const { balance } = useUserBalance();
-  
+  const { mutate: logout, isPending } = useLogout();
+
   return (
     <div>
       <ProfileHead>
@@ -20,7 +22,15 @@ const ProfilePopup = () => {
           <ProfileName>{user?.firstName} {user?.lastName}</ProfileName>
         </ProfileLeft>
         <ButtonAcc>
-          <BtnBase $padding="17px 24px" $bg="#37273F" $color="#EF6284">Выйти из аккаунта</BtnBase>
+          <BtnBase
+            $padding="17px 24px"
+            $bg="#37273F"
+            $color="#EF6284"
+            onClick={() => logout()}
+            disabled={isPending}
+          >
+            {isPending ? "Выходим..." : "Выйти из аккаунта"}
+          </BtnBase>
         </ButtonAcc>
       </ProfileHead>
       <Statistics />
@@ -28,7 +38,7 @@ const ProfilePopup = () => {
         <h2>Ваш баланс:</h2>
         <p>{balance?.balanceRubles}
           {/* <mark>,48</mark> */}
-        руб.</p>
+          руб.</p>
         <BtnBase $padding="21px 24px" onClick={() => changeContent("replenish")}>+ Пополнить кошелек</BtnBase>
       </ProfileBalance>
       <ProfileInfos>
@@ -42,12 +52,20 @@ const ProfilePopup = () => {
         </ProfileInfo>
       </ProfileInfos>
       <ButtonAccMobile>
-        <BtnBase $padding="17px 24px" $bg="#37273F" $color="#EF6284">Выйти из аккаунта</BtnBase>
+        <BtnBase
+          $padding="17px 24px"
+          $bg="#37273F"
+          $color="#EF6284"
+          onClick={() => logout()}
+          disabled={isPending}
+        >
+          {isPending ? "Выходим..." : "Выйти из аккаунта"}
+        </BtnBase>
       </ButtonAccMobile>
     </div>
   )
 }
-  
+
 const ProfileHead = styled.div`
   display: flex;
   justify-content: space-between;

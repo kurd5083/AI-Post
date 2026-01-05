@@ -60,7 +60,6 @@ const SchedulePopup = () => {
     }
 
     setPublicationTimes([...publicationTimes, timeStr]);
-    addNotification("Время добавлено", "success");
   };
 
   const toggleDay = (day) => {
