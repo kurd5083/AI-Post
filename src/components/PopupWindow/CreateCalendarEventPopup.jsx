@@ -35,36 +35,27 @@ const CreateCalendarEventPopup = () => {
   }, [event, selectedDate, isEdit]);
 
   const handleSave = () => {
-    const basePayload = {
-      description,
-      scheduledAt,
-    };
-
     if (isEdit) {
       const payload = {
-        ...basePayload,
+        description,
+        scheduledAt: new Date(scheduledAt),
         title: "Updated Post Title",
         status: "COMPLETED",
       };
 
       updateEvent(
-        {
-          id: event?.id,
-          payload,
-        },
+        { id: event?.id, payload },
         { onSuccess: goBack }
       );
     } else {
       const payload = {
-        ...basePayload,
+        description,
+        scheduledAt,
         postId: selectedPostId,
       };
 
       createEvent(
-        {
-          channelId,
-          ...payload,
-        },
+        { channelId, ...payload },
         { onSuccess: goBack }
       );
     }
