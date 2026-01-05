@@ -155,7 +155,16 @@ const IndustrialStyleContainer = styled.div`
 const IndustrialStyleContent = styled.div`
   display: flex;
   margin-bottom: 42px;
-  gap: 100px;
+  gap: 40px 100px;
+  @media(max-width: 2000px) {
+    flex-direction: column-reverse;
+  }
+  @media(max-width: 1400px) {
+    flex-direction: row;
+  }
+  @media(max-width: 1200px) {
+    flex-direction: column-reverse;
+  }
 `
 const IndustrialStyleLeft = styled.div`
   h2 {
@@ -201,8 +210,7 @@ const IndustrialStyleDesc = styled.p`
 `
 const IndustrialStyleInfo = styled.div`
   position: relative;
-  width: 470px;
-
+  max-width: 470px;
 
   div {
     background-color: #1C2336;
