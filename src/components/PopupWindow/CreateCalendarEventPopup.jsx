@@ -28,35 +28,28 @@ const CreateCalendarEventPopup = () => {
     if (isEdit) {
       setDescription(event.description || "");
       setSelectedPostId(event.postId || null);
-      // Для редактирования сохраняем ISO строку для input
-      setScheduledAt(event.scheduledAt ? new Date(event.scheduledAt).toISOString() : '');
+      setScheduledAt(event.scheduledAt);
     } else if (selectedDate) {
       setScheduledAt(new Date(selectedDate).toISOString());
     }
   }, [event, selectedDate, isEdit]);
 
   const handleSave = () => {
-    if (isEdit) {
-      const payload = {
-        description,
-        scheduledAt: '2025-06-26T12:00:00Z',
-        title: "Updated Post Title",
-        status: "COMPLETED",
-      };
 
-      updateEvent(
-        { id: event?.id, payload },
+    if (isEdit) {
+      updateEvent({
+        id: event?.id,
+        payload: {
+          title: "Updated Post Title",
+          description,
+          scheduledAt,
+        }
+      },
         { onSuccess: goBack }
       );
     } else {
-      const payload = {
-        description,
-        scheduledAt,
-        postId: selectedPostId,
-      };
-
       createEvent(
-        { channelId, ...payload },
+        { channelId, description, scheduledAt, postId: selectedPostId },
         { onSuccess: goBack }
       );
     }
