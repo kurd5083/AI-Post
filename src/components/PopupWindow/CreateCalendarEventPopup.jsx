@@ -63,7 +63,7 @@ const CreateCalendarEventPopup = () => {
       createEvent(
         {
           channelId,
-          payload,
+          ...payload,
         },
         { onSuccess: goBack }
       );
