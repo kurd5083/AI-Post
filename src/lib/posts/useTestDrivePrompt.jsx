@@ -5,7 +5,7 @@ export const useTestDrivePrompt = () => {
 	const queryClient = useQueryClient();
 
 	return useMutation({
-		mutationFn: ({ topic, promtManage, channelId }) => testDrivePrompt({ topic, promtManage, channelId }),
+		mutationFn: ({ promtManage, channelId }) => testDrivePrompt({ promtManage, channelId }),
 
 		onSuccess: (data, variables) => {
 			queryClient.invalidateQueries(["posts-by-channel", variables.channelId]);

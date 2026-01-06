@@ -63,7 +63,6 @@ const IndustrialStylePopup = () => {
 
     try {
       const data = await testDrive({
-        topic: "IT",
         promtManage: localPrompt,
         channelId,
       });
