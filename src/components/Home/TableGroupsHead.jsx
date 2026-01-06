@@ -155,11 +155,18 @@ const baseFolderStyles = css`
   display: flex;
   align-items: center;
   gap: 16px;
-  border-bottom: 2px solid  ${({ $active }) => ($active ? "#FFFFFF" : "#1F273B")};
+  border-bottom: 2px solid ${({ $active }) => ($active ? "#FFFFFF" : "#1F273B")};
   color: ${({ $active }) => ($active ? "#FFFFFF" : "#6A7080")};
   padding-bottom: 18px;
   font-size: 14px;
   font-weight: 700;
+  transition: all 0.2s ease;
+
+  &:hover {
+    color: #fff;
+    border-bottom-color: #336CFF;
+    transform: translateY(-2px);
+  }
 
   mark {
     color: #6A7080;
@@ -220,6 +227,16 @@ const TableGroupsHeadAdd = styled.button`
   font-size: 14px;
   font-weight: 700;
   margin-right: 16px;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background-color: #295BDB;
+    transform: translateY(-2px);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
   
 	@media(max-width: 1600px) {
     margin-right: 0;
@@ -232,11 +249,22 @@ const TableGroupsHeadShow = styled.button`
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 2px solid ${({ $active }) => $active ? 'transporent' : '#1F273B'};
+  border: 2px solid ${({ $active }) => ($active ? 'transparent' : '#1F273B')};
   width: 48px;
   height: 48px;
   border-radius: 12px;
-  background-color: ${({ $active }) => $active ? '#232836' : 'transporent'};
+  background-color: ${({ $active }) => ($active ? '#232836' : 'transparent')};
+  transition: all 0.2s ease;
+
+  &:hover {
+    background-color: #1C2438;
+    transform: scale(1.05);
+  }
+
+  &:active {
+    transform: scale(0.97);
+  }
+
   &:nth-child(n+4) {
     display: none;
   }
