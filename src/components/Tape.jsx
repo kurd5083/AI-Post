@@ -13,7 +13,7 @@ import { useNews } from "@/lib/news/useNews";
 const Tape = () => {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [filters, setFilters] = useState({});
-  const { newsData, newsLoding } = useNews(filters);
+  const { newsData, newsPending } = useNews(filters);
 
   const [stopWord, setStopWord] = useState("");
   const [stopWords, setStopWords] = useState([]);
@@ -157,7 +157,7 @@ const Tape = () => {
       )}
       <TapeList
         newsData={newsData?.data || []}
-        loading={newsLoding}
+        pending={newsPending}
       />
     </TapeContainer>
   );

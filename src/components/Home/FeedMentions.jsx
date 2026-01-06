@@ -24,6 +24,7 @@ const FeedMentions = () => {
 
   const { mentions, mentionsLoading } = useMentions({
     channelIds: selectedChannels,
+    limit: 20
   });
 
   const allMentionItems = mentions?.reduce((acc, c) => acc.concat(c.data.response?.items || []), []) || [];

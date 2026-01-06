@@ -22,7 +22,7 @@ const CompilationPopup = () => {
 
   const handleSave = () => {
     if (!selectedCategory || !channelId) {
-      addNotification("Выберите категорию для сохранения", "error");
+      addNotification("Выберите категорию для сохранения", "info");
       return;
     }
 

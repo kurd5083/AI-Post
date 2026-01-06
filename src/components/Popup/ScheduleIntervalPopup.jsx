@@ -38,9 +38,9 @@ const SchedulePopup = () => {
   }, [channelInterval]);
 
   const handleSave = () => {
-    if (finalMinutes <= 0) return addNotification("Выберите корректный интервал", "error");
+    if (finalMinutes <= 0) return addNotification("Выберите корректный интервал", "info");
     if (activeStartHour === null || activeEndHour === null)
-      return addNotification("Установите активное время публикаций", "error");
+      return addNotification("Установите активное время публикаций", "info");
 
     saveInterval(
       {

@@ -51,14 +51,14 @@ const SettingsPopup = () => {
         if (next) {
           enablePosting(channelId, {
             onSuccess: () =>
-              addNotification("Автопостинг включён", "success"),
+              addNotification("Автопостинг включён", "update"),
             onError: () =>
               addNotification("Ошибка включения автопостинга", "error"),
           });
         } else {
           disablePosting(channelId, {
             onSuccess: () =>
-              addNotification("Автопостинг выключен", "delete"),
+              addNotification("Автопостинг выключен", "update"),
             onError: () =>
               addNotification("Ошибка выключения автопостинга", "error"),
           });
@@ -74,14 +74,14 @@ const SettingsPopup = () => {
         if (next) {
           enablePromotion(channelId, {
             onSuccess: () =>
-              addNotification("Продвижение канала включено", "success"),
+              addNotification("Продвижение канала включено", "update"),
             onError: () =>
               addNotification("Ошибка включения продвижения", "error"),
           });
         } else {
           disablePromotion(channelId, {
             onSuccess: () =>
-              addNotification("Продвижение канала выключено", "delete"),
+              addNotification("Продвижение канала выключено", "update"),
             onError: () =>
               addNotification("Ошибка выключения продвижения", "error"),
           });
@@ -98,10 +98,7 @@ const SettingsPopup = () => {
           {
             onSuccess: () =>
               addNotification(
-                next
-                  ? "Автопринятие постов включено"
-                  : "Автопринятие постов выключено",
-                "update"
+                next ? "Автопринятие постов включено" : "Автопринятие постов выключено", "update"
               ),
             onError: () =>
               addNotification("Ошибка изменения автопринятия", "error"),

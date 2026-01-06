@@ -16,7 +16,7 @@ import { useCopyNewsToChannel } from "@/lib/news/useCopyNewsToChannel";
 import timeAgo from "@/lib/timeAgo";
 import { useNotificationStore } from "@/store/notificationStore";
 
-const TapeList = ({ forceHorizontal = false, padding, newsData, loding }) => {
+const TapeList = ({ forceHorizontal = false, padding, newsData, pending }) => {
   const { popup, changeContent, openPopup } = usePopupStore();
   const { openLightbox } = useLightboxStore();
 
@@ -57,7 +57,7 @@ const TapeList = ({ forceHorizontal = false, padding, newsData, loding }) => {
 
   return (
     <>
-      {loding ? (
+      {pending ? (
         <ModernLoading text="Загрузка новостей..." />
       ) : newsData && newsData.length > 0 ? (
         <TapeContainer

@@ -21,13 +21,13 @@ const LinkGenerationPopup = () => {
 
   const handleCreate = () => {
     if (name.length > 100) {
-      return addNotification("Название ссылки не должно превышать 100 символов", "error");
+      return addNotification("Название ссылки не должно превышать 100 символов", "info");
     }
 
     if (!createsJoinRequest && memberLimit) {
       const numLimit = Number(memberLimit);
       if (isNaN(numLimit) || numLimit <= 0) {
-        return addNotification("Лимит участников должен быть положительным числом", "error");
+        return addNotification("Лимит участников должен быть положительным числом", "info");
       }
     }
 

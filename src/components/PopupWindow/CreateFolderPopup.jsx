@@ -24,7 +24,7 @@ const CreateFolderPopup = () => {
 
   const handleCreate = () => {
     if (!folderName.trim()) {
-      addNotification("Введите название папки", "error");
+      addNotification("Введите название папки", "info");
       return;
     }
 

@@ -19,7 +19,7 @@ const NewsDetail = () => {
 	const { openPopup } = usePopupStore();
 	const { openLightbox } = useLightboxStore();
 	const { id } = useParams();
-	const { newsData, newsLoding } = useNews({});
+	const { newsData, newsPending } = useNews({});
 	const { news, newsIdLoading } = useNewsById(id);
 	const { addNotification } = useNotificationStore();
 	const { mutate: copyToChannel, isLoading: copyingLoading } = useCopyNewsToChannel();
@@ -96,7 +96,7 @@ const NewsDetail = () => {
 				forceHorizontal={true}
 				padding={true}
 				newsData={newsData?.data || []}
-				loading={newsLoding}
+				pending={newsPending}
 			/>
 		</NewsContainer>
 	);

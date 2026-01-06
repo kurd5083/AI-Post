@@ -14,7 +14,6 @@ const Lightbox = () => {
 
   if (!images?.length) return null;
 
-  /* ---------- navigation ---------- */
   const prev = () => {
     resetTransform();
     setIndex(i => (i === 0 ? images.length - 1 : i - 1));
@@ -30,13 +29,11 @@ const Lightbox = () => {
     setOffset({ x: 0, y: 0 });
   };
 
-  /* ---------- mouse wheel zoom ---------- */
   const onWheel = (e) => {
     e.preventDefault();
     setScale(s => Math.min(Math.max(s - e.deltaY * 0.001, 1), 4));
   };
 
-  /* ---------- drag ---------- */
   const onMouseDown = (e) => {
     if (scale === 1) return;
     setDragging(true);
@@ -56,12 +53,10 @@ const Lightbox = () => {
 
   const onMouseUp = () => setDragging(false);
 
-  /* ---------- double click zoom ---------- */
   const onDoubleClick = () => {
     scale === 1 ? setScale(2) : resetTransform();
   };
 
-  /* ---------- keyboard ---------- */
   useEffect(() => {
     const handler = (e) => {
       if (e.key === "Escape") closeLightbox();
@@ -76,9 +71,11 @@ const Lightbox = () => {
     <Overlay onClick={closeLightbox}>
       <Close onClick={closeLightbox}>×</Close>
 
-      <Nav left onClick={(e) => { e.stopPropagation(); prev(); }}>
-        ‹
-      </Nav>
+      {images.length > 1 && (
+        <Nav left onClick={(e) => { e.stopPropagation(); prev(); }}>
+          ‹
+        </Nav>
+      )}
 
       <ImageWrapper
         onClick={(e) => e.stopPropagation()}
@@ -98,9 +95,11 @@ const Lightbox = () => {
         />
       </ImageWrapper>
 
-      <Nav onClick={(e) => { e.stopPropagation(); next(); }}>
-        ›
-      </Nav>
+      {images.length > 1 && (
+        <Nav onClick={(e) => { e.stopPropagation(); next(); }}>
+          ›
+        </Nav>
+      )}
     </Overlay>
   );
 };

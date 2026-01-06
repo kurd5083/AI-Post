@@ -1,5 +1,5 @@
 import styled, { keyframes } from "styled-components";
-import { CheckCircle, XCircle, Info, RefreshCw, Trash2 } from "lucide-react";
+import { CheckCircle2, XCircle, Info, RefreshCw, Trash2 } from "lucide-react";
 import { useNotificationStore } from "../store/notificationStore";
 import { useEffect } from "react";
 
@@ -9,16 +9,16 @@ const Notification = () => {
   const getIcon = (type) => {
     switch (type) {
       case "success":
-        return <CheckCircle size={24} color="#fff" />;
+        return <CheckCircle2 size={20} />;
       case "error":
-        return <XCircle size={24} color="#fff" />;
+        return <XCircle size={20} />;
       case "update":
-        return <RefreshCw size={24} color="#fff" />;
+        return <RefreshCw size={20} />;
       case "delete":
-        return <Trash2 size={24} color="#fff" />;
+        return <Trash2 size={20} />;
       case "info":
       default:
-        return <Info size={24} color="#fff" />;
+        return <Info size={20} />;
     }
   };
 
@@ -26,7 +26,6 @@ const Notification = () => {
     const timers = notifications.map((n) =>
       setTimeout(() => removeNotification(n.id), 5000)
     );
-
     return () => timers.forEach((t) => clearTimeout(t));
   }, [notifications, removeNotification]);
 
@@ -34,10 +33,10 @@ const Notification = () => {
     <Container>
       {notifications.map((n) => (
         <NotificationItem key={n.id} $type={n.type}>
-          <IconWrapper>{getIcon(n.type)}</IconWrapper>
+          <IconWrapper $type={n.type}>{getIcon(n.type)}</IconWrapper>
           <Message>{n.message}</Message>
           <CloseButton onClick={() => removeNotification(n.id)}>
-            <XCircle size={18} color="#fff" />
+            <XCircle size={18} />
           </CloseButton>
         </NotificationItem>
       ))}
@@ -45,8 +44,9 @@ const Notification = () => {
   );
 };
 
-const slideDown = keyframes`
-  from { transform: translateY(-100%); opacity: 0; }
+// Анимация появления
+const slideFade = keyframes`
+  from { transform: translateY(-20px); opacity: 0; }
   to { transform: translateY(0); opacity: 1; }
 `;
 
@@ -65,10 +65,9 @@ const NotificationItem = styled.div`
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 12px 24px;
-  min-width: 250px;
-  border-radius: 8px;
-  color: #fff;
+  padding: 14px 20px;
+  min-width: 300px;
+  border-radius: 12px;
   background-color: ${({ $type }) => {
     switch ($type) {
       case "success":
@@ -76,27 +75,37 @@ const NotificationItem = styled.div`
       case "error":
         return "#F44336";
       case "update":
-        return "#FF9800";
+        return "#FFB74D";
       case "delete":
-        return "#F44336"; 
+        return "#E57373";
       case "info":
       default:
         return "#2196F3";
     }
   }};
-  animation: ${slideDown} 0.3s ease forwards;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  color: #fff;
+  animation: ${slideFade} 0.35s ease forwards;
+  box-shadow: 0 8px 16px rgba(0,0,0,0.25);
   position: relative;
 `;
 
 const IconWrapper = styled.div`
   display: flex;
   align-items: center;
+  justify-content: center;
+  background-color: rgba(255,255,255,0.2);
+  padding: 8px;
+  border-radius: 50%;
+  svg {
+    stroke: #fff;
+    stroke-width: 2;
+  }
 `;
 
 const Message = styled.div`
   font-weight: 600;
   flex: 1;
+  font-size: 15px;
 `;
 
 const CloseButton = styled.button`
@@ -106,6 +115,17 @@ const CloseButton = styled.button`
   padding: 0;
   display: flex;
   align-items: center;
+
+  svg {
+    stroke: #fff;
+    stroke-width: 2;
+    opacity: 0.8;
+    transition: opacity 0.2s;
+  }
+
+  &:hover svg {
+    opacity: 1;
+  }
 `;
 
 export default Notification;

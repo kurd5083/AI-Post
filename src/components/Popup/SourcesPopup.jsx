@@ -48,7 +48,7 @@ const SourcesPopup = () => {
     const domain = parseUrlDomain(url);
 
     if (!domain) {
-      return addNotification("Введите корректный URL источника (например https://t.me/username)", "error");
+      return addNotification("Введите корректный URL источника (например https://t.me/username)", "info");
     }
 
     const tempId = `temp-${uuidv4()}`;

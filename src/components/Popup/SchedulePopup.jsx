@@ -51,12 +51,12 @@ const SchedulePopup = () => {
     const minutes = Number(currentTime.minutes);
 
     if (isNaN(hours) || isNaN(minutes) || hours < 0 || hours > 23 || minutes < 0 || minutes > 59) {
-      return addNotification("Введите корректное время", "error");
+      return addNotification("Введите корректное время", "info");
     }
 
     const timeStr = `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}`;
     if (publicationTimes.includes(timeStr)) {
-      return addNotification("Это время уже добавлено", "error");
+      return addNotification("Это время уже добавлено", "info");
     }
 
     setPublicationTimes([...publicationTimes, timeStr]);
@@ -72,10 +72,10 @@ const SchedulePopup = () => {
 
   const handleSave = () => {
     if (!timezone) {
-      return addNotification("Выберите часовой пояс", "error");
+      return addNotification("Выберите часовой пояс", "info");
     }
     if (!selectedDays.length || !publicationTimes.length) {
-      return addNotification("Выберите дни недели и время публикаций", "error");
+      return addNotification("Выберите дни недели и время публикаций", "info");
     }
 
     const payload = {

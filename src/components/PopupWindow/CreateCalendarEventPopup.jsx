@@ -39,12 +39,12 @@ const CreateCalendarEventPopup = () => {
 
   const handleSave = () => {
     if (!description.trim()) {
-      addNotification("Описание не может быть пустым", "error");
+      addNotification("Описание не может быть пустым", "info");
       return;
     }
 
     if (!scheduledAt) {
-      addNotification("Выберите дату и время", "error");
+      addNotification("Выберите дату и время", "info");
       return;
     }
 
@@ -56,7 +56,7 @@ const CreateCalendarEventPopup = () => {
         },
         {
           onSuccess: () => {
-            addNotification("Событие успешно обновлено", "success");
+            addNotification("Событие успешно обновлено", "update");
             goBack();
           },
           onError: () => addNotification("Ошибка при обновлении события", "error"),

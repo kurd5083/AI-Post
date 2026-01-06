@@ -45,7 +45,7 @@ const IndustrialStylePopup = () => {
   };
   const handleTest = async () => {
     if (!localPrompt?.trim()) {
-      addNotification("Введите промпт для тестирования", "error");
+      addNotification("Введите промпт для тестирования", "info");
       return;
     }
 
@@ -87,7 +87,7 @@ const IndustrialStylePopup = () => {
 
   const handleSave = () => {
     if (!localPrompt?.trim()) {
-      addNotification("Промпт не может быть пустым", "error");
+      addNotification("Промпт не может быть пустым", "info");
       return;
     }
     updateGlobalPrompt({ channelId, value: localPrompt });

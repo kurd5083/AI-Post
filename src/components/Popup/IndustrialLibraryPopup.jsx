@@ -42,7 +42,7 @@ const IndustrialLibraryPopup = () => {
   };
   const handleSave = () => {
     if (!localPrompt?.trim()) {
-      addNotification("Выберите промпт", "error");
+      addNotification("Выберите промпт", "info");
       return;
     }
 

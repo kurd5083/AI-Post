@@ -25,7 +25,7 @@ const CalendarPostsList = ({ posts }) => {
 
     deleteMutation.mutate(post.id, {
       onSuccess: () => {
-        addNotification(`Пост "${post.title}" успешно удален`, "success");
+        addNotification(`Пост "${post.title}" успешно удален`, "delete");
       },
       onError: () => {
         addNotification(`Ошибка при удалении поста "${post.title}"`, "error");

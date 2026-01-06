@@ -119,7 +119,7 @@ const AiGeneratorPopup = () => {
     };
 
     if (!channelId) {
-      addNotification("Выберите канал для генерации поста", "warning");
+      addNotification("Выберите канал для генерации поста", "info");
       changeContent("select_channel", "popup_window", {
         onSave: (selectedChannelId) => runGenerate(selectedChannelId, postId),
       });
@@ -137,7 +137,7 @@ const AiGeneratorPopup = () => {
       return;
     }
     if (!post.text) {
-      addNotification("Для генерации изображения нужен текст", "warning");
+      addNotification("Для генерации изображения нужен текст", "info");
       return;
     }
 
@@ -192,7 +192,7 @@ const AiGeneratorPopup = () => {
   };
   const handleSavePost = (post) => {
     if (!post.title || !post.text) {
-      addNotification("Пост должен иметь заголовок и текст", "warning");
+      addNotification("Пост должен иметь заголовок и текст", "info");
       return;
     }
 
@@ -237,7 +237,7 @@ const AiGeneratorPopup = () => {
         updatePostMutation({ postId: post.serverId, postData: payload }, {
           onSuccess: () => {
             removePost(post.postId);
-            addNotification("Пост успешно обновлен", "success");
+            addNotification("Пост успешно обновлен", "update");
           },
           onError: () => addNotification("Ошибка обновления поста", "error"),
         });
@@ -245,7 +245,7 @@ const AiGeneratorPopup = () => {
     };
 
     if (!channelId) {
-      addNotification("Выберите канал для сохранения поста", "warning");
+      addNotification("Выберите канал для сохранения поста", "info");
       changeContent("select_channel", "popup_window", { onSave: saveWithChannel });
       return;
     }
@@ -281,7 +281,7 @@ const AiGeneratorPopup = () => {
   };
   const handlePublishNow = (post) => {
     if (!post.text) {
-      addNotification("Нельзя публиковать пустой пост", "warning");
+      addNotification("Нельзя публиковать пустой пост", "info");
       return;
     }
 
@@ -321,7 +321,7 @@ const AiGeneratorPopup = () => {
     };
 
     if (!channelId) {
-      addNotification("Выберите канал для публикации поста", "warning");
+      addNotification("Выберите канал для публикации поста", "info");
       changeContent("select_channel", "popup_window", { onSave: publishWithChannel });
       return;
     }
@@ -330,7 +330,7 @@ const AiGeneratorPopup = () => {
   };
   const handleRemoveImage = (postId, index) => {
     removeImage(postId, index);
-    addNotification("Изображение удалено", "success");
+    addNotification("Изображение удалено", "delete");
     const post = posts.find(p => p.postId === postId);
     if (post?.serverId) {
       deleteImageFromServer({ postId: post.serverId, imageIndex: index });
