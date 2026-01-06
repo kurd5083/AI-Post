@@ -166,6 +166,7 @@ const CardPablishImages = styled.div`
   display: flex;
   gap: 8px;
   margin-top: 4px;
+  flex-grow: 1;
 `;
 
 const ImageItemWrapper = styled.div`
