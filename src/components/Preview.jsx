@@ -3,72 +3,51 @@ import eye_blue from "@/assets/eye-blue.svg";
 import PreviewBG from "@/assets/ai-generator/PreviewBG.png";
 import arrow from "@/assets/arrow.svg";
 import TgIcon from "@/icons/TgIcon";
-import { useSendPostToChannel } from "@/lib/posts/useSendPostToChannel";
-import { useCreatePost } from "@/lib/posts/useCreatePost";
-import { usePopupStore } from "@/store/popupStore"
+import { useSendTestPost } from "@/lib/posts/useSendTestPost";
+import { usePopupStore } from "@/store/popupStore";
 import { useLightboxStore } from "@/store/lightboxStore";
 
-const Preview = ({ collapsed, onChange, testResult, telegramId }) => {
+const Preview = ({ collapsed, onChange, testResult }) => {
   const { openLightbox } = useLightboxStore();
   const { popup, changeContent } = usePopupStore();
+  const { mutate: sendTestPost, isLoading: sendPending } = useSendTestPost();
 
-  const { title, summary, url, images, postId: localPostId, serverId } = testResult || {};
-  const { mutate: sendPost, isPending: sendPostPending } = useSendPostToChannel();
-  const { mutate: createPost } = useCreatePost();
+  const { title, summary, url, images } = testResult || {};
   const channelId = popup?.data?.channelId;
-  
+
   const handleSend = () => {
+    if (!testResult) return;
+
+    const payload = {
+      title: title || summary || "Без названия",
+      summary: summary || "",
+      images: images || [],
+      channelId: channelId,
+    };
+
     if (!channelId) {
       changeContent("select_channel", "popup_window", {
-        onSave: (selectedChannelId) => handleSendWithChannel(selectedChannelId),
+        onSave: (selectedChannelId) => {
+          sendTestPost({ ...payload, channelId: selectedChannelId });
+        },
       });
       return;
     }
-    handleSendWithChannel(channelId);
+
+    sendTestPost(payload);
   };
-
-  const handleSendWithChannel = (finalChannelId) => {
-  if (!serverId) {
-    // Пост ещё не сохранён на сервере
-    const payload = {
-      title: title || summary || "Без названия",
-      text: summary || "",
-      images: images || [],
-      channelId: finalChannelId,
-      publishedAt: new Date().toISOString(),
-      summary,
-    };
-
-    createPost(payload, {
-      onSuccess: (data) => {
-        // Обновляем локальный postId на serverId
-        if (testResult.postId) testResult.serverId = data.id;
-
-        // После сохранения сразу отправляем
-        sendPost({
-          postId: data.id,
-          channelId: finalChannelId,
-          channelTelegramId: telegramId,
-        });
-      },
-    });
-  } else {
-    sendPost({
-      postId: serverId,
-      channelId: finalChannelId,
-      channelTelegramId: telegramId,
-    });
-  }
-};
-
 
   return (
     <GeneratorPreview $collapsed={collapsed}>
       <PreviewContent>
         <PreviewHead>
-          <HeadLeft><img src={eye_blue} alt="eye icon" />Лайв превью</HeadLeft>
+          <HeadLeft>
+            <img src={eye_blue} alt="eye icon" />
+            Лайв превью
+          </HeadLeft>
           <HeadArrow src={arrow} alt="arrow icon" onClick={onChange} $collapsed={collapsed} />
         </PreviewHead>
+
         {!collapsed && (
           <>
             <PreviewInfo>
@@ -77,23 +56,23 @@ const Preview = ({ collapsed, onChange, testResult, telegramId }) => {
                 {images?.length > 0 && (
                   <ImagesContainer>
                     {images.map((img, index) => (
-                      <img 
-                        key={index} 
-                        src={img} 
-                        alt={`image-${index}`} 
-                        onClick={() => openLightbox({
-                          images: images,
-                          initialIndex: index
-                        })}
+                      <img
+                        key={index}
+                        src={img}
+                        alt={`image-${index}`}
+                        onClick={() => openLightbox({ images, initialIndex: index })}
                       />
                     ))}
                   </ImagesContainer>
                 )}
+
                 <PreviewInfoText>
                   {title || summary || url ? (
                     <>
-                      {title && <strong>{title}</strong>}<br /><br />
-                      {summary}<br /><br />
+                      {title && <strong>{title}</strong>}
+                      <br />
+                      {summary}
+                      <br />
                       {url && (
                         <a href={url} target="_blank" rel="noopener noreferrer">
                           Источник: {url}
@@ -101,24 +80,24 @@ const Preview = ({ collapsed, onChange, testResult, telegramId }) => {
                       )}
                     </>
                   ) : (
-                    <EmptyText>Превью недоступно. Выберите пост или дождитесь загрузки данных.</EmptyText> 
+                    <EmptyText>
+                      Превью недоступно. Выберите пост или дождитесь загрузки данных.
+                    </EmptyText>
                   )}
                 </PreviewInfoText>
               </PreviewInfoContainer>
             </PreviewInfo>
-            <PreviewButton 
-              onClick={handleSend} 
-              disabled={sendPostPending}
-            >
-              <TgIcon color="#336CFF" width="24" height="20"/>
-              <p>{sendPostPending ? "Отправляем..." : "Отправить в Telegram"}</p>
+
+            <PreviewButton onClick={handleSend} disabled={sendPending}>
+              <TgIcon color="#336CFF" width="24" height="20" />
+              <p>{sendPending ? "Отправляем..." : "Отправить в Telegram"}</p>
             </PreviewButton>
           </>
         )}
       </PreviewContent>
     </GeneratorPreview>
-  )
-}
+  );
+};
 
 const GeneratorPreview = styled.div`
   width: 100%;
@@ -133,14 +112,14 @@ const PreviewHead = styled.div`
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-`
+`;
 const HeadLeft = styled.h2`
   display: flex;
   align-items: center;
   gap: 16px;
   font-size: 24px;
   font-weight: 800;
-`
+`;
 const HeadArrow = styled.img`
   display: none;
   transform: rotate(90deg);
@@ -150,15 +129,15 @@ const HeadArrow = styled.img`
   @media(max-width: 1400px) {
     display: block;
   }
-`
+`;
 const PreviewButton = styled.button`
   display: flex;
   align-items: center;
-	justify-content: center;
-	width: 100%;
+  justify-content: center;
+  width: 100%;
   gap: 16px;
-	margin-top: 40px;
-	color: #D6DCEC;
+  margin-top: 40px;
+  color: #D6DCEC;
 
   p {
     font-size: 14px;
@@ -171,14 +150,14 @@ const PreviewInfo = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-`
+`;
 const PreviewInfoBG = styled.img`
   position: absolute;
   border-radius: 24px;
   width: 100%;
   height: calc(100% + 46px);
   object-fit: cover;
-`
+`;
 const PreviewInfoContainer = styled.div`
   position: relative;
   width: calc(100% - 104px);
@@ -186,43 +165,38 @@ const PreviewInfoContainer = styled.div`
   flex-direction: column;
   gap: 4px;
   z-index: 1;
-  button {
-    display: flex;
-    justify-content: center;
-    width: 100%;
-  }
   @media(max-width: 1600px) {
     width: calc(100% - 28px);
   } 
-`
+`;
 const ImagesContainer = styled.div`
-	background-color: #131C22;
-	padding: 8px;
+  background-color: #131C22;
+  padding: 8px;
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
   margin-bottom: 4px;
-	border-radius: 16px;
+  border-radius: 16px;
 
   img {
     width: 100%;
-		max-width: 250px;
+    max-width: 250px;
     object-fit: cover;
     border-radius: 12px;
     cursor: pointer;
   }
 `;
 const PreviewInfoText = styled.p`
-	box-sizing: border-box;
+  box-sizing: border-box;
   padding: 24px;
   background-color: #131C22;
   border-radius: 24px;
-	font-size: 12px;
+  font-size: 12px;
   line-height: 16px;
   font-weight: 600;
-`
+`;
 const EmptyText = styled.p`
- height: 100px;
- font-size: 14px;
-`
-export default Preview
+  height: 100px;
+  font-size: 14px;
+`;
+export default Preview;

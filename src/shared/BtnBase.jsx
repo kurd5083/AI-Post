@@ -15,11 +15,11 @@ const BtnBase = styled.button`
   width: ${({ $width }) => $width || "fit-content"};
   border: ${({ $border, $bg }) => $border ? '2px solid #333E59' : `2px solid ${$bg}`};
   
-  /* ✨ Добавляем анимацию */
   transition: all 0.2s ease;
 
   &:hover {
-    background-color: ${({ $bg }) => $bg ? lighten(0.05, $bg) : "#242C52"};
+    background-color: ${({ $bg }) => $bg || "#1B243E"};
+    filter: brightness(1.05);
     transform: translateY(-2px);
   }
 
