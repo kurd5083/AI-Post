@@ -41,7 +41,7 @@ const FeedMentions = () => {
       <FeedMentionsHead>
         <FeedMentionsTitle>
           <TitleLeft>
-            <TgIcon color="#579AFF"/>
+            <TgIcon color="#579AFF" />
             Лента упоминаний
           </TitleLeft>
           <CustomSelectThree
@@ -65,24 +65,28 @@ const FeedMentions = () => {
         </FeedMentionsButtons>
       </FeedMentionsHead>
 
-      <FeedMentionsList
-        $fadeVisible={fadeVisible}
-        modules={[Navigation]}
-        navigation={{
-          nextEl: ".FeedMentionsNext",
-          prevEl: ".FeedMentionsPrev",
-        }}
-        spaceBetween={16}
-        slidesPerView="auto"
-        onReachEnd={() => setFadeVisible(false)}
-        onFromEdge={() => setFadeVisible(true)}
-      >
-        {feedmentionsDatas.map((item, index) => (
-          <FeedMentionsItem key={index}>
-            <MentionsCard item={item} />
-          </FeedMentionsItem>
-        ))}
-      </FeedMentionsList>
+      {(!mentions || !selectedChannels?.length) ? (
+        <EmptyMentions>Здесь появятся упоминания ваших каналов</EmptyMentions>
+      ) : (
+        <FeedMentionsList
+          $fadeVisible={fadeVisible}
+          modules={[Navigation]}
+          navigation={{
+            nextEl: ".FeedMentionsNext",
+            prevEl: ".FeedMentionsPrev",
+          }}
+          spaceBetween={16}
+          slidesPerView="auto"
+          onReachEnd={() => setFadeVisible(false)}
+          onFromEdge={() => setFadeVisible(true)}
+        >
+          {mentions.response.items.map((item, index) => (
+            <FeedMentionsItem key={index}>
+              <MentionsCard item={item} />
+            </FeedMentionsItem>
+          ))}
+        </FeedMentionsList>
+      )}
     </FeedMentionsContainer>
   );
 };
@@ -185,7 +189,7 @@ const FeedMentionsList = styled(Swiper)`
     mask-image: linear-gradient(to left, black 50%, transparent);
     z-index: 1;
     transition: opacity 0.25s ease;
-    opacity: ${({$fadeVisible}) => $fadeVisible ? 1 : 0};
+    opacity: ${({ $fadeVisible }) => $fadeVisible ? 1 : 0};
     pointer-events: none;
     @media (max-width: 480px) {
       display: none;
@@ -196,4 +200,15 @@ const FeedMentionsList = styled(Swiper)`
 const FeedMentionsItem = styled(SwiperSlide)`
   max-width: 345px;
 `
+const EmptyMentions = styled.div`
+  box-sizing: border-box;
+  text-align: center;
+  color: #6A7080;
+  padding: 48px 0;
+  font-weight: 600;
+  background-color: #1C2438;
+  border-radius: 16px;
+  margin-top: 24px;
+`;
+
 export default FeedMentions

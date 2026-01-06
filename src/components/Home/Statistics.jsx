@@ -47,62 +47,65 @@ const Statistics = () => {
           Статистика
         </TitleLeft>
         <CustomSelectThree
-            options={userChannels?.map((c) => ({
-              id: c.id,
-              label: c.name,
-              avatar: c.avatarUrl,
-            }))}
-            value={selectedChannels}
-            onChange={setSelectedChannels}
-          />
+          options={userChannels?.map((c) => ({
+            id: c.id,
+            label: c.name,
+            avatar: c.avatarUrl,
+          }))}
+          value={selectedChannels}
+          onChange={setSelectedChannels}
+        />
       </StatisticsTitle>
+      {(!channelStat || !selectedChannels?.length) ? (
+        <EmptyStat>Здесь появится статистика по вашим каналам</EmptyStat>
+      ) : (
+        <StatisticsList
+          key={isSwipe}
+          spaceBetween={16}
+          slidesPerView={isSwipe ? "auto" : 4}
+          allowTouchMove={isSwipe}
+        >
+          <StatisticsItem>
+            <StatisticsItemHead>
+              <StatisticsItemImg $bgColor="#203442">
+                <img src={channels} alt="channels icon" />
+              </StatisticsItemImg>
+              {/* <p>{channelStat.participants_count.toLocaleString()}</p> */}
+            </StatisticsItemHead>
+            <StatisticsText>Подключено каналов</StatisticsText>
+          </StatisticsItem>
 
-      <StatisticsList
-        key={isSwipe}
-        spaceBetween={16}
-        slidesPerView={isSwipe ? "auto" : 4}
-        allowTouchMove={isSwipe}
-      >
-        <StatisticsItem>
-          <StatisticsItemHead>
-            <StatisticsItemImg $bgColor="#203442">
-              <img src={channels} alt="channels icon" />
-            </StatisticsItemImg>
-            {/* <p>{channelStat.participants_count.toLocaleString()}</p> */}
-          </StatisticsItemHead>
-          <StatisticsText>Подключено каналов</StatisticsText>
-        </StatisticsItem>
+          <StatisticsItem>
+            <StatisticsItemHead>
+              <StatisticsItemImg $bgColor="#20356E">
+                <img src={views} alt="views icon" />
+              </StatisticsItemImg>
+              {/* <p>{channelStat.posts_count.toLocaleString()}</p> */}
+            </StatisticsItemHead>
+            <StatisticsText>Общие просмотры постов</StatisticsText>
+          </StatisticsItem>
 
-        <StatisticsItem>
-          <StatisticsItemHead>
-            <StatisticsItemImg $bgColor="#20356E">
-              <img src={views} alt="views icon" />
-            </StatisticsItemImg>
-            {/* <p>{channelStat.posts_count.toLocaleString()}</p> */}
-          </StatisticsItemHead>
-          <StatisticsText>Общие просмотры постов</StatisticsText>
-        </StatisticsItem>
+          <StatisticsItem>
+            <StatisticsItemHead>
+              <StatisticsItemImg $bgColor="#522943">
+                <img src={generated} alt="generated icon" />
+              </StatisticsItemImg>
+              {/* <p>{channelStat.posts_count.toLocaleString()}</p> */}
+            </StatisticsItemHead>
+            <StatisticsText>Сгенерировано постов</StatisticsText>
+          </StatisticsItem>
 
-        <StatisticsItem>
-          <StatisticsItemHead>
-            <StatisticsItemImg $bgColor="#522943">
-              <img src={generated} alt="generated icon" />
-            </StatisticsItemImg>
-            {/* <p>{channelStat.posts_count.toLocaleString()}</p> */}
-          </StatisticsItemHead>
-          <StatisticsText>Сгенерировано постов</StatisticsText>
-        </StatisticsItem>
-
-        <StatisticsItem>
-          <StatisticsItemHead>
-            <StatisticsItemImg $bgColor="#5D443B">
-              <img src={mentions} alt="mentions icon" />
-            </StatisticsItemImg>
-            {/* <p>{channelStat.ci_index.toFixed(0)}</p> */}
-          </StatisticsItemHead>
-          <StatisticsText>Упоминаний всего</StatisticsText>
-        </StatisticsItem>
-      </StatisticsList>
+          <StatisticsItem>
+            <StatisticsItemHead>
+              <StatisticsItemImg $bgColor="#5D443B">
+                <img src={mentions} alt="mentions icon" />
+              </StatisticsItemImg>
+              {/* <p>{channelStat.ci_index.toFixed(0)}</p> */}
+            </StatisticsItemHead>
+            <StatisticsText>Упоминаний всего</StatisticsText>
+          </StatisticsItem>
+        </StatisticsList>
+      )}
     </StatisticsContainer>
   );
 };
@@ -206,5 +209,15 @@ const StatisticsText = styled.p`
   font-size: 14px;
   font-weight: 600;
 `
+const EmptyStat = styled.div`
+  box-sizing: border-box;
+  text-align: center;
+  color: #6A7080;
+  padding: 48px 0;
+  font-weight: 600;
+  background-color: #1C2438;
+  border-radius: 16px;
+  margin-top: 32px;
+`;
 
 export default Statistics
