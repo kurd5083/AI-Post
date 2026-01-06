@@ -12,6 +12,7 @@ import mentions from "@/assets/statistics/mentions.svg";
 import CustomSelectThree from "@/shared/CustomSelectThree";
 import { useUserChannels } from "@/lib/channels/useUserChannels";
 
+
 const Statistics = () => {
   const { isSwipe } = useSwipeAllowed(1600);
   const { userChannels } = useUserChannels();
@@ -28,20 +29,20 @@ const Statistics = () => {
   });
 
   const aggregatedStat = useMemo(() => {
-    if (!channelStat?.length) return null;
+  if (!channelStat?.length) return null;
 
-    return channelStat.reduce(
-      (acc, { data }) => {
-        const resp = data.response || {};
-        acc.participants_count += resp.participants_count || 0;
-        acc.posts_count += resp.posts_count || 0;
-        acc.generated_posts += resp.posts_count || 0;
-        acc.mentions_count += resp.mentions_count || 0;
-        return acc;
-      },
-      { participants_count: 0, posts_count: 0, generated_posts: 0, mentions_count: 0 }
-    );
-  }, [channelStat]);
+  return channelStat.reduce(
+    (acc, { data }) => {
+      const resp = data.response || {};
+      acc.participants_count += resp.participants_count || 0;
+      acc.posts_count += resp.posts_count || 0;
+      acc.generated_posts += resp.posts_count || 0;
+      acc.mentions_count += resp.mentions_count || 0;
+      return acc;
+    },
+    { participants_count: 0, posts_count: 0, generated_posts: 0, mentions_count: 0 }
+  );
+}, [channelStat]);
 
   return (
     <StatisticsContainer>
@@ -74,7 +75,7 @@ const Statistics = () => {
               <StatisticsItemImg $bgColor="#203442">
                 <img src={channels} alt="channels icon" />
               </StatisticsItemImg>
-              {/* <p>{channelStat.participants_count.toLocaleString()}</p> */}
+              <p>{userChannels?.length || 0}</p>
             </StatisticsItemHead>
             <StatisticsText>Подключено каналов</StatisticsText>
           </StatisticsItem>
@@ -84,7 +85,7 @@ const Statistics = () => {
               <StatisticsItemImg $bgColor="#20356E">
                 <img src={views} alt="views icon" />
               </StatisticsItemImg>
-              {/* <p>{channelStat.posts_count.toLocaleString()}</p> */}
+              <p>{aggregatedStat?.posts_count?.toLocaleString() || 0}</p>
             </StatisticsItemHead>
             <StatisticsText>Общие просмотры постов</StatisticsText>
           </StatisticsItem>
@@ -94,7 +95,7 @@ const Statistics = () => {
               <StatisticsItemImg $bgColor="#522943">
                 <img src={generated} alt="generated icon" />
               </StatisticsItemImg>
-              {/* <p>{channelStat.posts_count.toLocaleString()}</p> */}
+              <p>{aggregatedStat?.generated_posts?.toLocaleString() || 0}</p>
             </StatisticsItemHead>
             <StatisticsText>Сгенерировано постов</StatisticsText>
           </StatisticsItem>
@@ -104,7 +105,12 @@ const Statistics = () => {
               <StatisticsItemImg $bgColor="#5D443B">
                 <img src={mentions} alt="mentions icon" />
               </StatisticsItemImg>
-              {/* <p>{channelStat.ci_index.toFixed(0)}</p> */}
+              <p>
+                {channelStat?.reduce(
+                  (sum, c) => sum + (c.data.response.mentions_count || 0),
+                  0
+                )}
+              </p>
             </StatisticsItemHead>
             <StatisticsText>Упоминаний всего</StatisticsText>
           </StatisticsItem>

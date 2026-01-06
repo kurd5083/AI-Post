@@ -80,11 +80,11 @@ const FeedMentions = () => {
           onReachEnd={() => setFadeVisible(false)}
           onFromEdge={() => setFadeVisible(true)}
         >
-          {mentions.response.items.map((item, index) => (
+          {/* {mentions.response.items.map((item, index) => (
             <FeedMentionsItem key={index}>
               <MentionsCard item={item} />
             </FeedMentionsItem>
-          ))}
+          ))} */}
         </FeedMentionsList>
       )}
     </FeedMentionsContainer>
