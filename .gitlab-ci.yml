@@ -5,8 +5,8 @@ stages:
 build:
   stage: build
   image: node:18
-  tags:
-    - docker-vps40
+  #tags:
+  #  - docker-vps40
   cache:
     paths:
       - node_modules/
@@ -24,8 +24,8 @@ build:
 deploy:
   stage: deploy
   image: alpine:latest
-  tags:
-    - docker-vps40
+  # tags:
+  #  - docker-vps40
   dependencies:
     - build
   before_script:
