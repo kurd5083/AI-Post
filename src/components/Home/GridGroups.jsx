@@ -114,7 +114,7 @@ const GridItem = styled.div`
   background-color: #1C2438;
   border-radius: 16px;
   text-align: center;
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  transition: transform 0.15s ease, box-shadow 0.15s ease; 
 
   &:hover {
     transform: translateY(-4px);
