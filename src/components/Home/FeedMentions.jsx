@@ -26,15 +26,7 @@ const FeedMentions = () => {
     channelIds: selectedChannels,
   });
 
-  // const mentionsItems = useMemo(() => {
-  //   if (!mentions?.response?.items) return [];
-  //   return mentions.response.items.map(item => ({
-  //     ...item,
-  //     channel: mentions.response.channels?.find(c => c.id === item.channelId),
-  //   }));
-  // }, [mentions]);
-
-  // console.log(mentionsItems)
+  const allMentionItems = mentions?.reduce((acc, c) => acc.concat(c.data.response?.items || []), []) || [];
 
   return (
     <FeedMentionsContainer>
@@ -80,8 +72,8 @@ const FeedMentions = () => {
           onReachEnd={() => setFadeVisible(false)}
           onFromEdge={() => setFadeVisible(true)}
         >
-          {/* {mentions.response.items.map((item, index) => (
-            <FeedMentionsItem key={index}>
+          {/* {allMentionItems.map((item, index) => (
+            <FeedMentionsItem key={item.mentionId || index}>
               <MentionsCard item={item} />
             </FeedMentionsItem>
           ))} */}

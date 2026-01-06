@@ -34,13 +34,11 @@ const Statistics = () => {
   return channelStat.reduce(
     (acc, { data }) => {
       const resp = data.response || {};
-      acc.participants_count += resp.participants_count || 0;
-      acc.posts_count += resp.posts_count || 0;
       acc.generated_posts += resp.posts_count || 0;
       acc.mentions_count += resp.mentions_count || 0;
       return acc;
     },
-    { participants_count: 0, posts_count: 0, generated_posts: 0, mentions_count: 0 }
+    { generated_posts: 0, mentions_count: 0 }
   );
 }, [channelStat]);
 
@@ -85,7 +83,7 @@ const Statistics = () => {
               <StatisticsItemImg $bgColor="#20356E">
                 <img src={views} alt="views icon" />
               </StatisticsItemImg>
-              <p>{aggregatedStat?.posts_count?.toLocaleString() || 0}</p>
+              {/* <p>{aggregatedStat?.posts_count?.toLocaleString() || 0}</p> */}
             </StatisticsItemHead>
             <StatisticsText>Общие просмотры постов</StatisticsText>
           </StatisticsItem>
@@ -105,12 +103,7 @@ const Statistics = () => {
               <StatisticsItemImg $bgColor="#5D443B">
                 <img src={mentions} alt="mentions icon" />
               </StatisticsItemImg>
-              <p>
-                {channelStat?.reduce(
-                  (sum, c) => sum + (c.data.response.mentions_count || 0),
-                  0
-                )}
-              </p>
+              <p>{aggregatedStat?.mentions_count?.toLocaleString() || 0}</p>
             </StatisticsItemHead>
             <StatisticsText>Упоминаний всего</StatisticsText>
           </StatisticsItem>
