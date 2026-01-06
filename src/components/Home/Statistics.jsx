@@ -27,17 +27,21 @@ const Statistics = () => {
     channelIds: selectedChannels,
   });
 
-  // const channelStatItems = useMemo(() => {
-  //   if (!channelStat?.response) return [];
-  //   if (Array.isArray(channelStat.response)) {
-  //     return channelStat.response.map(stat => ({
-  //       ...stat,
-  //       channel: userChannels?.find(c => c.id === stat.id),
-  //     }));
-  //   }
-  //   return [{ ...channelStat.response }];
-  // }, [channelStat, userChannels]);
+  const aggregatedStat = useMemo(() => {
+    if (!channelStat?.length) return null;
 
+    return channelStat.reduce(
+      (acc, { data }) => {
+        const resp = data.response || {};
+        acc.participants_count += resp.participants_count || 0;
+        acc.posts_count += resp.posts_count || 0;
+        acc.generated_posts += resp.posts_count || 0;
+        acc.mentions_count += resp.mentions_count || 0;
+        return acc;
+      },
+      { participants_count: 0, posts_count: 0, generated_posts: 0, mentions_count: 0 }
+    );
+  }, [channelStat]);
 
   return (
     <StatisticsContainer>

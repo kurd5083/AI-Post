@@ -6,6 +6,8 @@ import { usePopupStore } from "@/store/popupStore";
 import { usePostsByChannel } from "@/lib/posts/usePostsByChannel";
 import ModernLoading from "@/components/ModernLoading";
 import CustomSelectSec from "@/shared/CustomSelectSec";
+import { Swiper, SwiperSlide } from "swiper/react";
+import "swiper/css";
 
 const itemsPerPageDefault = 9;
 const itemsPerPageSmall = 6;
@@ -142,35 +144,44 @@ const PublicationsPopup = () => {
 
   return (
     <>
-      <PublicationsHead>
-        <PublicationsFilter
-          $active={filter === "common"}
-          onClick={() => setFilter("common")}
-        >
-          Общие посты <span>{posts?.length || 0}</span>
-        </PublicationsFilter>
-        <PublicationsFilter
-          $active={filter === "premoderation"}
-          onClick={() => setFilter("premoderation")}
-        >
-          Премодерация <span>{posts?.filter(p => p.status === "PENDING_MODERATION").length || 0}</span>
-        </PublicationsFilter>
-
-        <CustomSelectSec
-          placeholder="Выбор даты"
-          value={dateFilter.period}
-          options={[
-            { value: "all", label: "Все даты" },
-            { value: "year", label: "За год" },
-            { value: "month", label: "За месяц" },
-            { value: "week", label: "За неделю" },
-          ]}
-          onChange={(option) =>
-            setDateFilter({ period: option.value, value: null })
-          }
-          width="250px"
-          fs="24px"
-        />
+      <PublicationsHead
+        spaceBetween={64}
+        slidesPerView="auto"
+        grabCursor
+      >
+        <SwiperSlide>
+          <PublicationsFilter
+            $active={filter === "common"}
+            onClick={() => setFilter("common")}
+          >
+            Общие посты <span>{posts?.length || 0}</span>
+          </PublicationsFilter>
+        </SwiperSlide>
+        <SwiperSlide>
+          <PublicationsFilter
+            $active={filter === "premoderation"}
+            onClick={() => setFilter("premoderation")}
+          >
+            Премодерация <span>{posts?.filter(p => p.status === "PENDING_MODERATION").length || 0}</span>
+          </PublicationsFilter>
+        </SwiperSlide>
+        <SwiperSlide>
+          <CustomSelectSec
+            placeholder="Выбор даты"
+            value={dateFilter.period}
+            options={[
+              { value: "all", label: "Все даты" },
+              { value: "year", label: "За год" },
+              { value: "month", label: "За месяц" },
+              { value: "week", label: "За неделю" },
+            ]}
+            onChange={(option) =>
+              setDateFilter({ period: option.value, value: null })
+            }
+            width="250px"
+            fs="24px"
+          />
+        </SwiperSlide>
 
         {dateFilter.period !== "all" && (
           <CustomSelectSec

@@ -127,7 +127,9 @@ const TapeList = ({ forceHorizontal = false, padding, newsData, loding }) => {
           )}
         </TapeContainer>
       ) : (
-        <EmptyState>Новостей нет</EmptyState>
+        <EmptyState
+          $padding={padding}
+        >Новостей нет</EmptyState>
       )}
     </>
   )
@@ -303,8 +305,9 @@ const EmptyState = styled.div`
   font-weight: 600;
   background-color: #1C2438;
   border-radius: 16px;
+  margin: ${({ $padding }) => $padding && "32px 56px 0"};
   margin-top: 32px;
-  
+
   @media (max-width: 1400px) {
     margin: 32px 32px 0;
   }
