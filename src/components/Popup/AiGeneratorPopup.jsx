@@ -88,7 +88,7 @@ const AiGeneratorPopup = () => {
       setPostProgress(postId, 0);
 
       const interval = setInterval(() => {
-        const current = usePostsStore.getState().postProgress[postId] ?? 0;
+        const current = usePostsStore.getState()?.postProgress?.[postId] ?? 0;
         setPostProgress(postId, Math.min(current + Math.floor(Math.random() * 10), 90));
       }, 500);
 

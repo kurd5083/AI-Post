@@ -13,6 +13,19 @@ const BtnBase = styled.button`
   font-size: 14px;
   margin-top: ${({ $margin }) => $margin ? $margin : "0"}px;
   width: ${({ $width }) => $width || "fit-content"};
-  border: ${({ $border, $bg }) => $border ? '2px solid #333E59' : `2px solid ${$bg}`} ;
-`
+  border: ${({ $border, $bg }) => $border ? '2px solid #333E59' : `2px solid ${$bg}`};
+  
+  /* ✨ Добавляем анимацию */
+  transition: all 0.2s ease;
+
+  &:hover {
+    background-color: ${({ $bg }) => $bg ? lighten(0.05, $bg) : "#242C52"};
+    transform: translateY(-2px);
+  }
+
+  &:active {
+    transform: translateY(1px);
+    opacity: 0.95;
+  }
+`;
 export default BtnBase
