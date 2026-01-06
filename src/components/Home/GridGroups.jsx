@@ -114,7 +114,15 @@ const GridItem = styled.div`
   background-color: #1C2438;
   border-radius: 16px;
   text-align: center;
-  
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+  }
+  &:hover svg {
+    transform: scale(1.08);
+  }
   @media (max-width: 768px) {
     padding: 16px 8px;
   }
@@ -128,7 +136,9 @@ const GridImg = styled.img`
   height: 40px;
   border-radius: 12px;
   object-fit: cover;
+  transition: transform 0.2s ease;
 `;
+
 const CellName = styled.span`
   max-width: 180px;
   white-space: nowrap;

@@ -219,8 +219,11 @@ const HeaderCell = styled.th`
 `;
 
 const TableItem = styled.tr`
-  transition: background .15s ease;
-  
+  transition: background 0.15s ease, transform 0.15s ease;
+  &:hover svg {
+    transform: scale(1.08);
+  }
+
   @media(max-width: 768px) {
 		&:last-child {
       td {
@@ -271,6 +274,7 @@ const TableItem = styled.tr`
 
   &:hover {
     background-color: #1C2438;
+    transform: translateY(-2px);
   }
 `;
 
@@ -311,6 +315,7 @@ const TableCellAva = styled.div`
     height: 40px;
     border-radius: 12px;
     object-fit: cover;
+    transition: transform 0.2s ease;
   }
 `;
 
