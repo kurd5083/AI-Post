@@ -52,7 +52,7 @@ const CreateCalendarEventPopup = () => {
       updateEvent(
         {
           id: event?.id,
-          payload: { title: event.title || "Без названия", description, scheduledAt },
+          payload: { description, scheduledAt },
         },
         {
           onSuccess: () => {
@@ -97,18 +97,22 @@ const CreateCalendarEventPopup = () => {
         onChange={(e) => setScheduledAt(new Date(e.target.value).toISOString())}
       />
 
-      <InputLabel>Выбрать пост</InputLabel>
-      <CustomSelectSec
-        options={(posts || []).map((post) => ({
-          value: post.id,
-          label: post.title || "Без названия",
-        }))}
-        value={selectedPostId}
-        onChange={(option) => setSelectedPostId(option?.value ?? null)}
-        width="100%"
-        fs="16px"
-        padding="24px"
-      />
+      {!isEdit && (
+        <>
+          <InputLabel>Выбрать пост</InputLabel>
+          <CustomSelectSec
+            options={(posts || []).map((post) => ({
+              value: post.id,
+              label: post.title || "Без названия",
+            }))}
+            value={selectedPostId}
+            onChange={(option) => setSelectedPostId(option?.value ?? null)}
+            width="100%"
+            fs="16px"
+            padding="24px"
+          />
+        </>
+      )}
 
       <PopupButtons>
         <BtnBase
