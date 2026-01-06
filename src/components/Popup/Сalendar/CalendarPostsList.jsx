@@ -7,7 +7,7 @@ import { useNotificationStore } from "@/store/notificationStore";
 
 const CalendarPostsList = ({ posts }) => {
   const { deleteMutation, isPending } = useDeleteCalendarEvent();
-  const { popup, changeContent } = usePopupStore();
+  const { changeContent } = usePopupStore();
   const { addNotification } = useNotificationStore();
 
   const formatTime = (dateStr) => {
@@ -48,35 +48,36 @@ const CalendarPostsList = ({ posts }) => {
               <MetaItem><strong>Запланировано:</strong> {new Date(post.scheduledAt).toLocaleString()}</MetaItem>
             </Meta>
           </Content>
-          <ButtonEdit
-            onClick={(e) => {
-              e.stopPropagation();
-              changeContent("create_calendar_event", "popup_window", {
-                event: post,
-                channelId: post.channelId,
-              });
-            }}
-          >
-            <img src={edit} alt="edit icon" width={22} height={16} />
-          </ButtonEdit>
-          <DeleteButton
-            onClick={(e) => {
-              e.stopPropagation(); 
-              changeContent("delete_confirm", "popup_window", {
-                itemName: post.title,
-                onDelete: () => handleDelete(post),
-              });
-            }}
-            disabled={isPending}
-          >
-            <img src={del} alt="del icon" width={14} height={16} />
-          </DeleteButton>
+          <Buttons>
+            <ButtonEdit
+              onClick={(e) => {
+                e.stopPropagation();
+                changeContent("create_calendar_event", "popup_window", {
+                  event: post,
+                  channelId: post.channelId,
+                });
+              }}
+            >
+              <img src={edit} alt="edit icon" width={22} height={16} />
+            </ButtonEdit>
+            <DeleteButton
+              onClick={(e) => {
+                e.stopPropagation(); 
+                changeContent("delete_confirm", "popup_window", {
+                  itemName: post.title,
+                  onDelete: () => handleDelete(post),
+                });
+              }}
+              disabled={isPending}
+            >
+              <img src={del} alt="del icon" width={14} height={16} />
+            </DeleteButton>
+          </Buttons>
         </PostItem>
       ))}
     </ListContainer>
   );
 };
-
 
 
 const ListContainer = styled.div`
@@ -94,6 +95,9 @@ const PostItem = styled.div`
   border-radius: 12px;
   border: 2px solid #2F3953;
   transition: all 0.2s;
+  @media (max-width: 768px) {
+    flex-direction: column;
+  }
 
   &:hover {
     background-color: #2a2b4f;
@@ -136,13 +140,15 @@ const MetaItem = styled.div`
 const BaseButton = styled.button`
   display: flex;
   align-items: center;
-  justify-content: center;
-  width: 48px;
-  height: 48px;
-  border-radius: 12px;
-  flex-shrink: 0;
-  transition: all 0.2s;
+  gap: 16px;
 `;
+const Buttons = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+`;
+
 const ButtonEdit = styled(BaseButton)`
 	background-color: #333E59;
 `;
