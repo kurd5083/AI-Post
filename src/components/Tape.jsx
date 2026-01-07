@@ -1,6 +1,5 @@
 import { useState } from "react";
 import styled from "styled-components";
-// import Checkbox from "@/shared/Checkbox";
 import fire from "@/assets/tape/fire.svg";
 import filter from "@/assets/tape/filter.svg";
 import TapeList from "@/components/TapeList";
@@ -9,6 +8,7 @@ import BlocksItems from "@/shared/BlocksItems";
 import CustomSelectSec from "@/shared/CustomSelectSec";
 import BtnBase from "@/shared/BtnBase";
 import { useNews } from "@/lib/news/useNews";
+import { useNotificationStore } from "@/store/notificationStore"; 
 
 const Tape = () => {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
@@ -19,11 +19,9 @@ const Tape = () => {
   const [stopWords, setStopWords] = useState([]);
   const [priorityWord, setPriorityWord] = useState("");
   const [priorityWords, setPriorityWords] = useState([]);
-  // const [topic, setTopic] = useState(filters.topic || "");
   const [language, setLanguage] = useState(filters.language || "");
-  // const [isProcessed, setIsProcessed] = useState(filters.isProcessed || false);
-  // const [isPublished, setIsPublished] = useState(filters.isPublished || false);
-  // const [search, setSearch] = useState(filters.search || "");
+
+  const { addNotification } = useNotificationStore();
 
   const handleFilterClick = () => {
     setIsFilterOpen(!isFilterOpen);
@@ -37,9 +35,30 @@ const Tape = () => {
       page: '1',
       limit: '10',
     });
+    addNotification("Фильтры применены", "success");
     setIsFilterOpen(false);
   };
+  const handleAddStopWord = () => {
+    if (!stopWord.trim()) return;
+    if (stopWords.includes(stopWord)) {
+      addNotification("Стоп-слово уже добавлено", "info");
+      return;
+    }
+    setStopWords(prev => [...prev, stopWord]);
+    addNotification(`Стоп-слово "${stopWord}" добавлено`, "success");
+    setStopWord("");
+  };
 
+  const handleAddPriorityWord = () => {
+    if (!priorityWord.trim()) return;
+    if (priorityWords.includes(priorityWord)) {
+      addNotification("Приоритетное слово уже добавлено", "info");
+      return;
+    }
+    setPriorityWords(prev => [...prev, priorityWord]);
+    addNotification(`Приоритетное слово "${priorityWord}" добавлено`, "success");
+    setPriorityWord("");
+  };
   return (
     <TapeContainer>
       <TapeHead>
@@ -55,15 +74,6 @@ const Tape = () => {
 
       {isFilterOpen && (
         <FilterWrapper>
-          {/* <FilterTitle>Тема</FilterTitle>
-          <CustomSelectSec
-            options={[{ value: "test", label: "test" }]}
-            value={topic}
-            onChange={(option) => setTopic(option.value)}
-            width="340px"
-            fs="16px"
-            padding="24px"
-          /> */}
           <FilterTitle>ЯЗЫК</FilterTitle>
           <CustomSelectSec
             options={[{ value: "ru", label: "Русский" }, { value: "en", label: "Английский" }]}
@@ -73,16 +83,8 @@ const Tape = () => {
             fs="16px"
             padding="24px"
           />
-          {/* <FilterKeyCheckbox>
-            <Checkbox checked={isProcessed} onChange={() => setIsProcessed(!isProcessed)}>
-              <CheckboxText>Обработано</CheckboxText>
-            </Checkbox>
-            <Checkbox checked={isPublished} onChange={() => setIsPublished(!isPublished)}>
-              <CheckboxText>Опубликовано</CheckboxText>
-            </Checkbox>
-          </FilterKeyCheckbox> */}
           <FilterKey>
-            <InputPlus
+             <InputPlus
               title="Стоп-слова"
               placeholder="Ключевое слово"
               bg="#2B243C"
@@ -91,11 +93,7 @@ const Tape = () => {
               padding="16px"
               value={stopWord}
               onChange={setStopWord}
-              onSubmit={() => {
-                if (!stopWord.trim()) return;
-                setStopWords((prev) => [...prev, stopWord]);
-                setStopWord("");
-              }}
+              onSubmit={handleAddStopWord} 
             />
             {stopWords.length === 0 ? (
               <EmptyText>Стоп-слова не добавлены</EmptyText>
@@ -105,13 +103,14 @@ const Tape = () => {
                 color="#EF6284"
                 onRemove={(id) => {
                   setStopWords(prev => prev.filter((_, index) => index !== id));
+                  addNotification("Стоп-слово удалено", "delete");
                 }}
               />
             )}
 
           </FilterKey>
           <FilterKey>
-            <InputPlus
+             <InputPlus
               title="Приоритетные слова"
               placeholder="Ключевое слово"
               bg="#2B243C"
@@ -120,31 +119,22 @@ const Tape = () => {
               padding="16px"
               value={priorityWord}
               onChange={setPriorityWord}
-              onSubmit={() => {
-                if (!priorityWord.trim()) return;
-                setPriorityWords((prev) => [...prev, priorityWord]);
-                setPriorityWord("");
-              }}
+              onSubmit={handleAddPriorityWord}
             />
             {priorityWords.length === 0 ? (
               <EmptyText>Приоритетные слова не добавлены</EmptyText>
             ) : (
-              <BlocksItems
+             <BlocksItems
                 items={priorityWords.map((word, index) => ({ id: index, value: word }))}
                 color="#EF6284"
                 onRemove={(id) => {
                   setPriorityWords(prev => prev.filter((_, index) => index !== id));
+                  addNotification("Приоритетное слово удалено", "delete");
                 }}
               />
             )}
             
           </FilterKey>
-          {/* <FilterInput
-            type="text"
-            placeholder="Поиск по заголовку и содержимому"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          /> */}
           <BtnBase
             $color="#D6DCEC"
             $bg="#336CFF"
@@ -314,38 +304,11 @@ const FilterTitle = styled.h3`
 const FilterKey = styled.div`
   margin-top: 40px;
 `
-// const FilterKeyCheckbox = styled.div`
-//   display: flex;
-//   flex-direction: column;
-//   margin-top: 40px;
-//   gap: 20px;
-// `
-// const CheckboxText = styled.p`
-//   display: flex;
-//   align-items: center;
-//   font-weight: 600;
-// `
 const EmptyText = styled.p`
   font-size: 16px;
   font-weight: 600;
   color: #6A7080;
   margin-top: 32px;
 `;
-// const FilterInput = styled.input`
-//   margin-top: 40px; 
-//   background-color: transparent;
-//   color: #D6DCEC;
-//   font-size: 16px;
-//   font-weight: 700;
-//   border: none;
-//   max-width: 340px;
-//   width: 100%;
-//   border-bottom: 2px solid rgb(46, 57, 84);
-//   padding-bottom: 16px;
-
-//   &::placeholder {
-//     color: #6A7080;
-//   }
-// `;
 
 export default Tape;

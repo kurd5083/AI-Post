@@ -1,9 +1,8 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect } from "react";
 import styled from "styled-components";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import { Navigation } from "swiper/modules";
-import { feedmentionsDatas } from "@/data/feedmentionsDatas";
 import arrow from "@/assets/arrow.svg";
 import MentionsCard from "@/components/MentionsCard";
 import TgIcon from "@/icons/TgIcon";
@@ -14,21 +13,21 @@ import { useMentions } from "@/lib/tgStat/useMentions";
 const FeedMentions = () => {
   const [fadeVisible, setFadeVisible] = useState(true);
   const { userChannels } = useUserChannels();
-  const [selectedChannels, setSelectedChannels] = useState([]);
+  const [selectedChannelId, setSelectedChannelId] = useState(null);
 
   useEffect(() => {
     if (userChannels?.length) {
-      setSelectedChannels(userChannels?.map(c => c.id));
+      setSelectedChannelId(userChannels[0].id);
     }
   }, [userChannels]);
 
   const { mentions, mentionsLoading } = useMentions({
-    channelIds: selectedChannels,
-    limit: 20
+    channelId: selectedChannelId,
+    limit: 8,
   });
 
-  const allMentionItems = mentions?.reduce((acc, c) => acc.concat(c.data.response?.items || []), []) || [];
-
+  const mentionItems = mentions?.response?.items || [];
+  console.log(mentionItems)
   return (
     <FeedMentionsContainer>
       <FeedMentionsHead>
@@ -43,8 +42,8 @@ const FeedMentions = () => {
               label: c.name,
               avatar: c.avatarUrl,
             }))}
-            value={selectedChannels}
-            onChange={setSelectedChannels}
+            value={selectedChannelId}
+            onChange={setSelectedChannelId}
           />
         </FeedMentionsTitle>
 
@@ -58,9 +57,11 @@ const FeedMentions = () => {
         </FeedMentionsButtons>
       </FeedMentionsHead>
 
-      {(!mentions || !selectedChannels?.length) ? (
-        <EmptyMentions>Здесь появятся упоминания ваших каналов</EmptyMentions>
-      ) : (
+       {!selectedChannelId || mentionsLoading ? (
+          <EmptyMentions>Загрузка упоминаний...</EmptyMentions>
+        ) : !mentionItems || mentionItems.length === 0 ? (
+          <EmptyMentions>Для выбранного канала нет упоминаний</EmptyMentions>
+        ) : (
         <FeedMentionsList
           $fadeVisible={fadeVisible}
           modules={[Navigation]}
@@ -73,11 +74,11 @@ const FeedMentions = () => {
           onReachEnd={() => setFadeVisible(false)}
           onFromEdge={() => setFadeVisible(true)}
         >
-          {/* {allMentionItems.map((item, index) => (
+          {mentionItems.map((item, index) => (
             <FeedMentionsItem key={item.mentionId || index}>
               <MentionsCard item={item} />
             </FeedMentionsItem>
-          ))} */}
+          ))}
         </FeedMentionsList>
       )}
     </FeedMentionsContainer>

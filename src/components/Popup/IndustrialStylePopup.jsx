@@ -85,17 +85,22 @@ const IndustrialStylePopup = () => {
   const { mutate: updateCreativity, isPending: isCreativityPending } = useUpdateChannelCreativity();
   const { mutate: updateCaption, isPending: isCaptionPending } = useUpdateChannelCaption();
 
-  const handleSave = () => {
-    if (!localPrompt?.trim()) {
-      addNotification("Промпт не может быть пустым", "info");
-      return;
-    }
-    updateGlobalPrompt({ channelId, value: localPrompt });
-    updateCreativity({ channelId, value: localCreativity });
-    updateCaption({ channelId, value: localCaption });
+  const handleSave = async () => {
+  if (!localPrompt?.trim()) {
+    addNotification("Промпт не может быть пустым", "info");
+    return;
+  }
+
+  try {
+    await updateGlobalPrompt({ channelId, value: localPrompt });
+    await updateCreativity({ channelId, value: localCreativity });
+    await updateCaption({ channelId, value: localCaption });
 
     addNotification("Настройки успешно сохранены", "success");
-  };
+  } catch (err) {
+    addNotification("Ошибка при сохранении настроек", "error");
+  }
+};
 
   const isSaving = isPromptPending || isCreativityPending || isCaptionPending;
 

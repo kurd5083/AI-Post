@@ -1,6 +1,7 @@
-import { useEffect, useState } from "react";
-import styled from "styled-components";
+import { useEffect, useState, useRef } from "react";
+import styled, { keyframes } from "styled-components";
 import EmojiPicker from "emoji-picker-react";
+
 import create from "@/assets/create.svg";
 import hide from "@/assets/hide.svg";
 import paper from "@/assets/ai-generator/paper.svg";
@@ -10,10 +11,12 @@ import italics from "@/assets/ai-generator/italics.svg";
 import underlined from "@/assets/ai-generator/underlined.svg";
 import crossed from "@/assets/ai-generator/crossed.svg";
 import link from "@/assets/ai-generator/link.svg";
+
 import BtnBase from "@/shared/BtnBase";
 import AiGeneratorIcon from "@/icons/AiGeneratorIcon";
-import useFadeOnScroll from "@/lib/useFadeOnScroll";
 import Preview from "@/components/Preview";
+import CustomSelectThree from "@/shared/CustomSelectThree";
+
 import { useCreatePost } from "@/lib/posts/useCreatePost";
 import { usePopupStore } from "@/store/popupStore";
 import { formatText } from "@/lib/formatText";
@@ -26,15 +29,15 @@ import { useSendPostToChannel } from "@/lib/posts/useSendPostToChannel";
 import { useUpdatePost } from "@/lib/posts/useUpdatePost";
 import { useDeletePostImage } from "@/lib/posts/useDeletePostImage";
 import { useNotificationStore } from "@/store/notificationStore";
+import { useUserChannels } from "@/lib/channels/useUserChannels";
+import { useAddPostImages } from "@/lib/posts/useAddPostImages";
 
 const AiGeneratorPopup = () => {
   const { addNotification } = useNotificationStore();
   const { openLightbox } = useLightboxStore();
   const { user } = useUser();
   const { popup, changeContent } = usePopupStore();
-  const channelId = popup?.data?.channelId;
-  const telegramId = user?.telegramId;
-
+  const { userChannels } = useUserChannels();
   const {
     posts,
     selectedPost,
@@ -44,12 +47,6 @@ const AiGeneratorPopup = () => {
     updatePost,
     addImages,
     removeImage,
-  } = usePostsStore();
-  const [collapsed, setCollapsed] = useState(false);
-  const [popupPostId, setPopupPostId] = useState(null);
-  const [emojiPostId, setEmojiPostId] = useState(null);
-
-  const {
     postProgress,
     imageProgress,
     setPostProgress,
@@ -58,13 +55,22 @@ const AiGeneratorPopup = () => {
     resetImageProgress
   } = usePostsStore();
 
-  const { fadeVisible, ref } = useFadeOnScroll(20);
-  const { mutate: createPostMutation } = useCreatePost();
+  const channelId = popup?.data?.channelId;
+  const telegramId = user?.telegramId;
+  const postIntervals = useRef({});
+  const imageIntervals = useRef({});
+
+  const [collapsed, setCollapsed] = useState(false);
+  const [popupPostId, setPopupPostId] = useState(null);
+  const [emojiPostId, setEmojiPostId] = useState(null);
+
+  const { mutate: createPostMutation, isPending: createPostPending } = useCreatePost();
   const { mutate: generateImage, isPending: imagePending } = useGenerateSimpleImage();
   const { mutate: generatePost, isPending: postPending } = useGeneratePost();
   const { mutate: sendPost, isPending: isSendPending } = useSendPostToChannel();
   const { mutate: updatePostMutation, isPending: updatePending } = useUpdatePost();
-  const { mutate: deleteImageFromServer, isLoading: deletingImage } = useDeletePostImage();
+  const { mutate: deleteImageFromServer } = useDeletePostImage();
+  const { mutate: addImagesToPost } = useAddPostImages();
 
   useEffect(() => {
     const handleResize = () => {
@@ -77,180 +83,153 @@ const AiGeneratorPopup = () => {
   }, []);
 
   const handleWriteWithAI = (postId) => {
+    const selectedChannelId = channelId || usePostsStore.getState().getPostChannel(postId);
+    if (!selectedChannelId) return addNotification("Выберите канал", "info");
+
     const post = posts.find(p => p.postId === postId);
-    if (!post) {
-      addNotification("Пост не найден", "error");
-      return;
-    }
+    if (!post) return addNotification("Пост не найден", "error");
 
-    const runGenerate = (finalChannelId, existingPostId) => {
-      const postId = existingPostId || postId;
-      setPostProgress(postId, 0);
+    setPostProgress(postId, 0);
 
-      const interval = setInterval(() => {
-        const current = usePostsStore.getState()?.postProgress?.[postId] ?? 0;
-        setPostProgress(postId, Math.min(current + Math.floor(Math.random() * 10), 90));
-      }, 500);
+    postIntervals.current[postId] = setInterval(() => {
+      const current = usePostsStore.getState()?.postProgress?.[postId] ?? 0;
+      setPostProgress(postId, Math.min(current + Math.floor(Math.random() * 10), 90));
+    }, 500);
 
-      generatePost(finalChannelId, {
-        onSuccess: (data) => {
-          clearInterval(interval);
-          setPostProgress(postId, 100);
+    generatePost({ channelId: selectedChannelId }, {
+      onSuccess: (data) => {
+        clearInterval(postIntervals.current[postId]);
+        setPostProgress(postId, 100);
 
-          updatePost(postId, {
-            serverId: data.post?.id,
-            title: data.post?.title || "",
-            text: data.post?.text || "",
-            summary: data.post?.summary || "",
-            images: data.images || [],
-          });
+        updatePost(postId, {
+          title: data.title || "",
+          text: data.summary || "",
+          summary: data.summary || "",
+          images: data.images || []
+        });
 
-          addNotification("Пост сгенерирован успешно", "success");
+        setTimeout(() => resetPostProgress(postId), 1000);
+        addNotification(data?.message || "Пост сгенерирован успешно", data?.error ? "error" : "success");
+      },
+      onError: (error) => {
+        clearInterval(postIntervals.current[postId]);
+        setPostProgress(postId, 0);
+        resetPostProgress(postId);
 
-          setTimeout(() => resetPostProgress(postId), 500);
-        },
-        onError: () => {
-          clearInterval(interval);
-          setPostProgress(postId, 0);
-          resetPostProgress(postId);
-          addNotification("Ошибка генерации поста с AI", "error");
-        },
-      });
-    };
-
-    if (!channelId) {
-      addNotification("Выберите канал для генерации поста", "info");
-      changeContent("select_channel", "popup_window", {
-        onSave: (selectedChannelId) => runGenerate(selectedChannelId, postId),
-      });
-      return;
-    }
-
-    runGenerate(channelId);
+        addNotification(error?.response?.data?.message || "Ошибка генерации поста", "error");
+      },
+    });
   };
 
-  const handleCreateAIImage = (postId) => {
+  const handleCreateAIImage = async (postId) => {
     const post = posts.find(p => p.postId === postId);
-    console.log(post)
-    if (!post) {
-      addNotification("Пост не найден", "error");
-      return;
-    }
-    if (!post.text) {
-      addNotification("Для генерации изображения нужен текст", "info");
-      return;
-    }
+    if (!post?.text) return addNotification("Для генерации изображения нужен текст", "info");
 
     setImageProgress(postId, 0);
 
-    const interval = setInterval(() => {
+    imageIntervals.current[postId] = setInterval(() => {
       const current = usePostsStore.getState().imageProgress[postId] ?? 0;
-      setImageProgress(postId, current + Math.floor(Math.random() * 10));
+      setImageProgress(postId, Math.min(current + Math.floor(Math.random() * 10), 95));
     }, 500);
 
     generateImage({ prompt: post.text }, {
-      onSuccess: (data) => {
-        clearInterval(interval);
-        setImageProgress(postId, 100);
-
-        if (!data?.imageUrls || !data.imageUrls.length) {
+      onSuccess: async (data) => {
+        clearInterval(imageIntervals.current[postId]);
+        if (!data?.imageUrls?.length) {
           addNotification("Не удалось получить изображение", "error");
-          resetImageProgress(postId);
+          clearInterval(imageIntervals.current[postId]);
           return;
         }
 
-        const imageUrl = data.imageUrls[0];
-        updatePost(postId, { images: [...(post.images || []), imageUrl] });
+        setImageProgress(postId, 100);
+        setTimeout(() => resetImageProgress(postId), 1000);
+        updatePost(postId, { images: [...(post.images || []), data.imageUrls[0]] });
         addNotification("Изображение успешно сгенерировано", "success");
-
-        setTimeout(() => resetImageProgress(postId), 500);
       },
       onError: () => {
-        clearInterval(interval);
+        clearInterval(imageIntervals.current[postId]);
         setImageProgress(postId, 0);
-        resetImageProgress(postId);
         addNotification("Ошибка генерации изображения", "error");
       },
     });
   };
 
-  const handleSaveTime = (newTime, postId) => {
-    updatePost(postId, { time: newTime });
-  };
-  const handleAddImages = (postId, files) => {
-    const readFiles = Array.from(files).map(file =>
-      new Promise(resolve => {
-        const reader = new FileReader();
-        reader.onload = e => resolve(e.target.result);
-        reader.readAsDataURL(file);
-      })
-    );
+  const handleSaveTime = (newTime, postId) => updatePost(postId, { time: newTime });
 
-    Promise.all(readFiles).then(images => {
-      addImages(postId, images);
-    });
+  const handleAddImages = (postId, files) => {
+    const post = posts.find(p => p.postId === postId);
+    if (!post) return;
+
+    const fileArray = Array.from(files);
+    addImages(postId, fileArray);
+
+    if (post.serverId) {
+      addImagesToPost({ postId: post.serverId, images: fileArray }, {
+        onSuccess: () => addNotification("Изображения успешно загружены на сервер", "success"),
+        onError: () => addNotification("Ошибка загрузки изображений на сервер", "error"),
+      });
+    }
   };
+
   const handleSavePost = (post) => {
+    console.log(post)
     if (!post.title || !post.text) {
       addNotification("Пост должен иметь заголовок и текст", "info");
       return;
     }
 
-    const saveWithChannel = (finalChannelId) => {
-      const [hoursStr, minutesStr] = post.time?.split(":") || ["00", "00"];
-      const hours = parseInt(hoursStr);
-      const minutes = parseInt(minutesStr);
+    const postChannelId = post.serverId
+      ? popup?.data?.channelId
+      : usePostsStore.getState().channelMap[post.postId] || (userChannels.length ? userChannels[0].id : null);
 
-      const isValidHour = !isNaN(hours) && hours >= 0 && hours <= 23;
-      const isValidMinute = !isNaN(minutes) && minutes >= 0 && minutes <= 59;
+    const [hoursStr, minutesStr] = post.time?.split(":") || ["00", "00"];
+    const hours = parseInt(hoursStr);
+    const minutes = parseInt(minutesStr);
 
-      const calendarScheduledAt = isValidHour && isValidMinute
-        ? new Date(
-            Date.UTC(
-              new Date().getFullYear(),
-              new Date().getMonth(),
-              new Date().getDate(),
-              hours,
-              minutes
-            )
-          ).toISOString()
-        : new Date().toISOString();
+    const isValidHour = !isNaN(hours) && hours >= 0 && hours <= 23;
+    const isValidMinute = !isNaN(minutes) && minutes >= 0 && minutes <= 59;
 
-      const payload = {
-        title: post.title,
-        text: post.text,
-        channelId: finalChannelId,
-        publishedAt: new Date().toISOString(),
-        calendarScheduledAt,
-        summary: post.summary,
-      };
+    const calendarScheduledAt = isValidHour && isValidMinute
+      ? new Date(Date.UTC(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), hours, minutes)).toISOString()
+      : new Date().toISOString();
 
-      if (!post.serverId) {
-        createPostMutation({ ...payload, images: post.images || [] }, {
-          onSuccess: () => {
-            removePost(post.postId);
-            addNotification("Пост успешно сохранен", "success");
-          },
-          onError: () => addNotification("Ошибка сохранения поста", "error"),
-        });
-      } else {
-        updatePostMutation({ postId: post.serverId, postData: payload }, {
-          onSuccess: () => {
-            removePost(post.postId);
-            addNotification("Пост успешно обновлен", "update");
-          },
-          onError: () => addNotification("Ошибка обновления поста", "error"),
-        });
-      }
+    const basePayload = {
+      title: post.title,
+      text: post.text,
+      channelId: postChannelId,
+      publishedAt: new Date().toISOString(),
+      calendarScheduledAt,
+      summary: post.summary,
     };
 
-    if (!channelId) {
-      addNotification("Выберите канал для сохранения поста", "info");
-      changeContent("select_channel", "popup_window", { onSave: saveWithChannel });
-      return;
+    if (!post.serverId) {
+      createPostMutation({ ...basePayload, ...post.images.filter(img => typeof img === "string") }, {
+        onSuccess: (createdPost) => {
+          const serverPostId = createdPost.id;
+          const localFiles = post.images.filter(img => img instanceof File);
+          if (localFiles.length > 0) {
+            addImagesToPost(
+              { postId: serverPostId, images: localFiles },
+              {
+                onSuccess: () => addNotification("Изображения успешно загружены на сервер", "success"),
+                onError: () => addNotification("Ошибка загрузки изображений на сервер", "error"),
+              }
+            );
+          }
+          removePost(post.postId);
+          addNotification("Пост успешно сохранен", "success");
+        },
+        onError: () => addNotification("Ошибка сохранения поста", "error"),
+      });
+    } else {
+      updatePostMutation({ postId: post.serverId, postData: basePayload }, {
+        onSuccess: () => {
+          removePost(post.postId);
+          addNotification("Пост успешно обновлен", "update");
+        },
+        onError: () => addNotification("Ошибка обновления поста", "error"),
+      });
     }
-
-    saveWithChannel(channelId);
   };
 
   const addLink = () => {
@@ -270,7 +249,6 @@ const AiGeneratorPopup = () => {
 
     const textNode = document.createTextNode(emoji);
     range.insertNode(textNode);
-
     range.setStartAfter(textNode);
     range.collapse(true);
 
@@ -279,62 +257,74 @@ const AiGeneratorPopup = () => {
 
     updatePost(postId, { text: el.innerHTML, summary: el.innerHTML });
   };
-  const handlePublishNow = (post) => {
-    if (!post.text) {
-      addNotification("Нельзя публиковать пустой пост", "info");
-      return;
-    }
 
-    const publishWithChannel = (finalChannelId) => {
-      const publish = (serverPostId) => {
-        sendPost(
-          { postId: serverPostId, channelId: finalChannelId, channelTelegramId: telegramId },
-          {
-            onSuccess: () => {
-              removePost(post.postId);
-              addNotification("Пост успешно опубликован", "success");
-            },
-            onError: () => addNotification("Ошибка публикации поста", "error"),
-          }
-        );
+  const handlePublishNow = (post) => {
+    if (!post.text) return addNotification("Нельзя публиковать пустой пост", "info");
+
+    const postChannelId = channelId || usePostsStore.getState().channelMap[post.postId];
+    if (!postChannelId) return addNotification("Выберите канал для публикации поста", "info");
+
+    const publish = (serverPostId) => {
+      sendPost(
+        { postId: serverPostId, channelId: postChannelId, channelTelegramId: telegramId },
+        {
+          onSuccess: () => {
+            removePost(post.postId);
+            addNotification("Пост успешно опубликован", "success");
+          },
+          onError: () => addNotification("Ошибка публикации поста", "error"),
+        }
+      );
+    };
+    if (!post.serverId) {
+      const urlImages = post.images.filter(img => typeof img === "string");
+      const localFiles = post.images.filter(img => img instanceof File);
+
+      const payload = {
+        title: post.title,
+        text: post.text,
+        images: urlImages,
+        channelId: postChannelId,
+        publishedAt: new Date().toISOString(),
+        summary: post.summary
       };
 
-      if (!post.serverId) {
-        const payload = {
-          title: post.title,
-          text: post.text,
-          images: post.images || [],
-          channelId: finalChannelId,
-          publishedAt: new Date().toISOString(),
-          summary: post.summary,
-        };
+      createPostMutation(payload, {
+        onSuccess: (createdPost) => {
+          const serverPostId = createdPost.id;
 
-        createPostMutation(payload, {
-          onSuccess: (data) => publish(data.id),
-          onError: () => addNotification("Ошибка публикации поста", "error"),
-        });
+          if (localFiles.length > 0) {
+            addImagesToPost(
+              { postId: serverPostId, images: localFiles },
+              {
+                onSuccess: () => publish(serverPostId),
+                onError: () => addNotification("Ошибка загрузки изображений на сервер", "error"),
+              }
+            );
+          } else {
+            publish(serverPostId);
+          }
+        },
+        onError: () => addNotification("Ошибка публикации поста", "error"),
+      });
 
-        return;
-      }
-
-      publish(post.serverId);
-    };
-
-    if (!channelId) {
-      addNotification("Выберите канал для публикации поста", "info");
-      changeContent("select_channel", "popup_window", { onSave: publishWithChannel });
       return;
     }
 
-    publishWithChannel(channelId);
+    publish(post.serverId);
   };
+
   const handleRemoveImage = (postId, index) => {
     removeImage(postId, index);
     addNotification("Изображение удалено", "delete");
     const post = posts.find(p => p.postId === postId);
-    if (post?.serverId) {
-      deleteImageFromServer({ postId: post.serverId, imageIndex: index });
-    }
+    if (post?.serverId) deleteImageFromServer({ postId: post.serverId, imageIndex: index });
+  };
+
+  const handleRemovePost = (postId) => {
+    if (postIntervals.current[postId]) { clearInterval(postIntervals.current[postId]); delete postIntervals.current[postId]; }
+    if (imageIntervals.current[postId]) { clearInterval(imageIntervals.current[postId]); delete imageIntervals.current[postId]; }
+    removePost(postId);
   };
 
   return (
@@ -344,21 +334,28 @@ const AiGeneratorPopup = () => {
           <AiGeneratorIcon width={16} height={16} color="#336CFF" />
           Создать пост
         </h2>
-        <BtnBase $padding="21px 24px" onClick={() => addPost()}>
-          + Добавить пост
-        </BtnBase>
+        <BtnBase $padding="21px 24px" onClick={() => addPost()}>+ Добавить пост</BtnBase>
       </GeneratorHead>
 
-      <GeneratorList $fadeVisible={fadeVisible} ref={ref}>
+      <GeneratorList>
         {posts.map(post => (
           <ListItem key={post.postId}>
             <ItemHead>
-              <HeadTitle
-                tape="text"
-                placeholder={post.placeholder}
-                value={post.title}
-                onChange={e => updatePost(post.postId, { title: e.target.value })}
-              />
+              <HeadBlock>
+                <HeadTitle
+                  tape="text"
+                  placeholder={post.placeholder}
+                  value={post.title}
+                  onChange={e => updatePost(post.postId, { title: e.target.value })}
+                />
+                {!channelId && (
+                  <CustomSelectThree
+                    options={userChannels?.map(c => ({ id: c.id, label: c.name, avatar: c.avatarUrl }))}
+                    value={usePostsStore.getState().channelMap[post.postId]}
+                    onChange={(id) => usePostsStore.getState().setPostChannel(post.postId, id)}
+                  />
+                )}
+              </HeadBlock>
               <p>{post.progress}</p>
             </ItemHead>
 
@@ -372,95 +369,52 @@ const AiGeneratorPopup = () => {
               />
               <BodyRight>
                 <ImagesContainer>
-                  {(post.images || []).map((img, index) => (
-                    <ImagePreview key={index}>
-                      <img
-                        src={img}
-                        alt={`preview-${index}`}
-                        onClick={() => openLightbox({
-                          images: post.images.map(img => img),
-                          initialIndex: 0
-                        })}
-                      />
-                      <RemoveImageButton onClick={() => handleRemoveImage(post.postId, index, post.serverId)}>
-                        ×
-                      </RemoveImageButton>
-                    </ImagePreview>
-                  ))}
+                  {(post.images || []).map((img, index) => {
+                    const src = img instanceof File ? URL.createObjectURL(img) : img;
+                    return (
+                      <ImagePreview key={index}>
+                        <img
+                          src={src}
+                          alt={`preview-${index}`}
+                          onClick={() =>
+                            openLightbox({ images: post.images.map(i => i instanceof File ? URL.createObjectURL(i) : i), initialIndex: index })
+                          }
+                        />
+                        <RemoveImageButton onClick={() => handleRemoveImage(post.postId, index, post.serverId)}>×</RemoveImageButton>
+                      </ImagePreview>
+                    );
+                  })}
                 </ImagesContainer>
-                {/* <ItemTime>Время публикации: {post.time}</ItemTime> */}
               </BodyRight>
             </ItemBody>
+
             <ItemActions>
               <ActionsLeft>
                 <ItemAI>
-                  <BtnBase
-                    $padding="0"
-                    $color="#336CFF"
-                    $bg="transporent"
-                    onClick={() => handleWriteWithAI(post.postId)}
-                    disabled={postPending}
-                  >
+                  <BtnBase $padding="0" $color="#336CFF" $bg="transporent" onClick={() => handleWriteWithAI(post.postId)} disabled={postPending}>
                     <AiGeneratorIcon color="#336CFF" />
-                    {postProgress[post.postId] != null && postProgress[post.postId] < 100
-                      ? `Генерация с AI... ${postProgress[post.postId]}%`
-                      : "Написать с AI"}
+                    {postProgress[post.postId] != null && postProgress[post.postId] < 100 ? `Генерация с AI... ${postProgress[post.postId]}%` : "Написать с AI"}
                   </BtnBase>
-                  <BtnBase
-                    $padding="0"
-                    $color="#FF7F48"
-                    $bg="transporent"
-                    onClick={() => handleCreateAIImage(post.postId)}
-                    disabled={imagePending}
-                  >
+
+                  <BtnBase $padding="0" $color="#FF7F48" $bg="transporent" onClick={() => handleCreateAIImage(post.postId)} disabled={imagePending}>
                     <img src={create} alt="create icon" />
-                    {imageProgress[post.postId] != null && imageProgress[post.postId] < 100
-                      ? `Генерация фото с AI... ${imageProgress[post.postId]}%`
-                      : "Создать фото с AI"}
+                    {imageProgress[post.postId] != null && imageProgress[post.postId] < 100 ? `Генерация фото с AI... ${imageProgress[post.postId]}%` : "Создать фото с AI"}
                   </BtnBase>
                 </ItemAI>
+
                 <ItemActionsAdd>
-                  <input
-                    type="file"
-                    accept="image/*"
-                    multiple
-                    style={{ display: "none" }}
-                    id={`file-input-${post.postId}`}
-                    onChange={e => {
-                      if (e.target.files?.length) {
-                        handleAddImages(post.postId, e.target.files);
-                      }
-                      e.target.value = "";
-                    }}
-                  />
-                  <img
-                    src={paper}
-                    alt="paper icon"
-                    style={{ cursor: "pointer" }}
-                    onClick={() => document.getElementById(`file-input-${post.postId}`).click()}
-                  />
+                  <input type="file" accept="image/*" multiple style={{ display: "none" }} id={`file-input-${post.postId}`} onChange={e => { if (e.target.files?.length) handleAddImages(post.postId, e.target.files); }} />
+                  <img src={paper} alt="paper icon" style={{ cursor: "pointer" }} onClick={() => document.getElementById(`file-input-${post.postId}`).click()} />
+
                   <div style={{ position: "relative" }}>
-                    <img
-                      src={smiley}
-                      onClick={() =>
-                        setEmojiPostId(prev =>
-                          prev === post.postId ? null : post.postId
-                        )
-                      }
-                    />
+                    <img src={smiley} onClick={() => setEmojiPostId(prev => prev === post.postId ? null : post.postId)} />
                     {emojiPostId === post.postId && (
                       <div style={{ position: "absolute", zIndex: 100 }}>
-                        <EmojiPicker
-                          onEmojiClick={emojiData => {
-                            insertEmojiAtCursor(emojiData.emoji, post.postId);
-                            setEmojiPostId(null);
-                          }}
-                          theme="dark"
-                          locale="ru"
-                        />
+                        <EmojiPicker onEmojiClick={emojiData => { insertEmojiAtCursor(emojiData.emoji, post.postId); setEmojiPostId(null); }} theme="dark" locale="ru" />
                       </div>
                     )}
                   </div>
+
                   <img src={fat} alt="fat icon" onClick={() => formatText("bold")} />
                   <img src={italics} alt="italics icon" onClick={() => formatText("italic")} />
                   <img src={underlined} alt="underlined icon" onClick={() => formatText("underline")} />
@@ -468,63 +422,40 @@ const AiGeneratorPopup = () => {
                   <img src={link} alt="link icon" onClick={() => addLink(post.postId)} />
                 </ItemActionsAdd>
               </ActionsLeft>
+
               <ButtonsAll>
-                <HideButton onClick={() => setSelectedPost(post)}>
-                  <img src={hide} alt="hide icon" width={24} height={17} />
-                </HideButton>
+                <HideButton onClick={() => setSelectedPost(post)}><img src={hide} alt="hide icon" width={24} height={17} /></HideButton>
+
                 <ButtonsMain>
                   <ButtonsMainTop>
-                    <BtnBase $padding="21px 24px" $color="#EF6284" $bg="#241E2D" onClick={() => removePost(post.postId)}>
-                      Отменить
-                    </BtnBase>
-                    <BtnBase
-                      $padding="21px 24px"
-                      $border
-                      $bg="transporent"
-                      $color="#6A7080"
-                      onClick={() => {
-                        setPopupPostId(post.postId);
-                        changeContent("change_time_popup", "popup_window", {
-                          onSave: (newTime) => handleSaveTime(newTime, post.postId),
-                          initialTime: post.time || "00:00"
-                        });
-                      }}
-                    >
-                      Изменить время
-                    </BtnBase>
-                    <BtnBase
-                      $padding="21px 24px"
-                      $color="#336CFF"
-                      $bg="#161F37"
-                      onClick={() => handleSavePost(post)}
-                      disabled={updatePending || postPending}
-                    >
-                      Сохранить
-                    </BtnBase>
+                    <BtnBase $padding="21px" $color="#EF6284" $bg="#241E2D" onClick={() => handleRemovePost(post.postId)}>Отменить</BtnBase>
+                    <BtnBase $padding="21px" $border $bg="transporent" $color="#6A7080" onClick={() => { setPopupPostId(post.postId); changeContent("change_time_popup", "popup_window", { onSave: (newTime) => handleSaveTime(newTime, post.postId), initialTime: post.time || "00:00" }); }}>Изменить время</BtnBase>
+                    <BtnBase $padding="21px" $color="#336CFF" $bg="#161F37" onClick={() => handleSavePost(post)} disabled={updatePending || postPending}>{createPostPending ? "Сохраняем..." : "Сохранить"}</BtnBase>
                   </ButtonsMainTop>
-                  <BtnBase
-                    $padding="21px 24px"
-                    $border
-                    $width="100%"
-                    $bg="transporent"
-                    $color="#6A7080"
-                    onClick={() => handlePublishNow(post)}
-                    disabled={isSendPending}
-                  >
-                    {isSendPending ? "Публикация..." : "Опубликовать сейчас"}
-                  </BtnBase>
+                  <BtnBase $padding="21px" $border $width="100%" $bg="transporent" $color="#6A7080" onClick={() => handlePublishNow(post)} disabled={isSendPending}>{isSendPending ? "Публикация..." : "Опубликовать сейчас"}</BtnBase>
                 </ButtonsMain>
               </ButtonsAll>
             </ItemActions>
           </ListItem>
         ))}
       </GeneratorList>
+
       <PreviewContainer>
-        <Preview collapsed={collapsed} onChange={() => setCollapsed(!collapsed)} testResult={selectedPost} telegramId={telegramId} />
+        <Preview collapsed={collapsed} onChange={() => setCollapsed(!collapsed)} testResult={selectedPost} />
       </PreviewContainer>
     </GeneratorContainer>
   );
 };
+
+const fadeIn = keyframes`
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+`;
+
+const scaleUp = keyframes`
+  from { transform: scale(0.95); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+`;
 
 const GeneratorContainer = styled.section`
   display: grid;
@@ -579,40 +510,16 @@ const GeneratorList = styled.div`
   gap: 16px;
   grid-column:  1 / span 3;
   grid-row: 2;
-  overflow-y: auto;
-  scrollbar-width: none;
-  /* max-height: calc(100dvh - 280px); */
-  padding-bottom: 160px;
-  min-height: 500px;
-  &::after {
-    content: '';
-    position: fixed;
-    bottom: 0;
-    margin-left: -24px;
-    height: 135px;
-    width: 100%;
-    background: linear-gradient(to top, #131826, transparent);
-    backdrop-filter: blur(8px);
-    mask-image: linear-gradient(to top, black 50%, transparent);
-    transition: opacity 0.2s;
-    opacity: ${({ $fadeVisible }) => $fadeVisible ? 1 : 0};
-    pointer-events: none;
-		z-index: 1;
-    @media(max-width: 1400px) {
-      display: none;
-    }
-  }
   
   @media(max-width: 2000px) {
-    gap: 200px;
-    /* max-height: calc(100dvh - 490px); */
+    gap: 220px;
   } 
   @media(max-width: 1400px) {
     grid-column: 1 /span 5;
     grid-row: 3;
   }
-  @media(max-width: 768px) {
-    /* max-height: calc(100dvh - 550px); */
+  @media(max-width: 480px) {
+    gap: 290px;
   } 
 `;
 const ListItem = styled.div`
@@ -620,18 +527,21 @@ const ListItem = styled.div`
   padding: 32px;
   border-radius: 24px;
   border: 2px solid #252D43;
+  animation: ${fadeIn} 0.3s ease forwards;
 `
 const ItemHead = styled.div`
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
   gap: 20px;
-  
-  h3 {
-    display: flex;
-    align-items: center;
-  }
+
 `
+const HeadBlock = styled.div`
+  display: flex;
+  flex-direction: column-reverse;
+  gap: 12px;
+`
+
 const HeadTitle = styled.input`
   font-size: 24px;
   font-weight: 700;
@@ -689,12 +599,19 @@ const ImagePreview = styled.div`
   position: relative;
   width: 48px;
   height: 48px;
+  animation: ${scaleUp} 0.3s ease forwards;
 
   img {
     width: 100%;
     height: 100%;
     object-fit: cover;
     border-radius: 8px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+    &:hover {
+      transform: scale(1.1);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+    }
   }
 `;
 const RemoveImageButton = styled.button`
@@ -750,7 +667,7 @@ const ItemActionsAdd = styled.div`
   flex-wrap: wrap;
   gap: 16px 32px;
   @media(max-width: 480px) {
-    gap: 16px;
+    gap: 24px;
   }
   img {
     cursor: pointer;
@@ -760,10 +677,17 @@ const ButtonsAll = styled.div`
   display: flex;
   gap: 8px;
   align-items: flex-end;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+
   @media(max-width: 2000px) {
+    flex-direction: column;
     position: absolute;
-    bottom: -160px;
+    bottom: -210px;
     right: 0;
+  } 
+  @media(max-width: 480px) {
+    bottom: -280px;
   } 
 `;
 const ButtonsMain = styled.div`
@@ -774,6 +698,15 @@ const ButtonsMain = styled.div`
 const ButtonsMainTop = styled.div`
   display: flex;
   gap: 8px;
+  button {
+    flex-shrink: 0;
+  }
+  @media(max-width: 480px) {
+    flex-wrap: wrap;
+    button {
+      flex: auto;
+    }
+  } 
 `;
 const BaseButton = styled.button`
   display: flex;
@@ -790,7 +723,7 @@ const HideButton = styled(BaseButton)`
 `;
 const PreviewContainer = styled.div`
   grid-column:  4 / span 2;
-  grid-row: 1 / span 2;
+  grid-row: 1 / span 3;
   @media(max-width: 1400px) {
     grid-column: 1 /span 5;
     grid-row: 2;

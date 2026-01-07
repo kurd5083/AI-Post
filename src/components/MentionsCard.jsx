@@ -4,23 +4,25 @@ import TimeIcons from "@/icons/TimeIcons";
 import timeAgo from "@/lib/timeAgo";
 
 const MentionsCard = ({ item, bg }) => {
+  const post = item.postDetails;
 	return (
 		<MentionsCardItem $bg={bg}>
 			<MentionsCardItemHead>
 				<MentionsCardItemName>
 					<MentionsCardItemImg src={item.ava} alt={item.username} />
-					<p>{item.username}</p>
+					<p>{item.mentionType === "channel" ? `Канал ${item.channelId}` : item.mentionType}</p>
 				</MentionsCardItemName>
 				<MentionsCardItemTime>
           <TimeIcons/>
-          {timeAgo(item.createdAt)}
+          {timeAgo(post?.date * 1000)}
 				</MentionsCardItemTime>
 			</MentionsCardItemHead>
-			  <MentionsCardText>{item.title}</MentionsCardText>
-        <MentionsCardSubtext>{item.summary}</MentionsCardSubtext>
-			<MentionsCardOpen>
-				<img src={arrow} alt="arrow icon" />
-			</MentionsCardOpen>
+			<MentionsCardText
+        dangerouslySetInnerHTML={{ __html: post?.text }}
+      />
+			<MentionsCardOpen onClick={() => window.open(item.postLink, "_blank")}>
+        <img src={arrow} alt="arrow icon" />
+      </MentionsCardOpen>
 		</MentionsCardItem>
 	)
 }
@@ -92,27 +94,13 @@ const MentionsCardItemTime = styled.p`
 const MentionsCardText = styled.p`
   box-sizing: border-box;
   margin-top: 26px;
-  font-size: 24px;
-  line-height: 24px;
-  font-weight: 700;
+  font-size: 18px;
+  font-weight: 600;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
   padding-right: 40px;
-`
-const MentionsCardSubtext = styled.p`
-  box-sizing: border-box;
-  margin-top: 16px;
-  font-size: 14px;
-  line-height: 14px;
-  font-weight: 600;
-  color: #6A7080;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  padding-right: 40px;
-  max-width: 260px;
 `
 
 export default MentionsCard

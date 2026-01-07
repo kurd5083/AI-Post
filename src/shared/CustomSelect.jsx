@@ -35,7 +35,7 @@ const CustomSelect = ({ options, value, onChange, placeholder = "Выберит�
 
       {open && (
         <SelectList>
-          {options.map((opt) => (
+          {options?.map((opt) => (
             <SelectItem
               key={opt.value}
               onClick={() => handleSelect(opt)}

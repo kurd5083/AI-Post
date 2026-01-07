@@ -1,11 +1,12 @@
 import { useQuery } from "@tanstack/react-query";
 import { getChannelStat } from "@/api/tgStat/getChannelStat";
 
-export const useChannelStat = ({channelIds}) => {
+export const useChannelStat = ({ channelId }) => {
   const { data: channelStat, isLoading: channelStatLoading } = useQuery({
-    queryKey: ["channel-stat", channelIds],
-    queryFn: () => getChannelStat(channelIds),
-    enabled: channelIds && channelIds.length > 0,
+    queryKey: ["channel-stat", channelId],
+    queryFn: () => getChannelStat(channelId),
+    enabled: !!channelId,
+    keepPreviousData: true,
   });
 
   return { channelStat, channelStatLoading };

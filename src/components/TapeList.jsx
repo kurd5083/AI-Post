@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import { Link } from "react-router";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
@@ -76,14 +76,17 @@ const TapeList = ({ forceHorizontal = false, padding, newsData, pending }) => {
             prevEl: ".TapePrev",
           }}
         >
-          {newsData.map((news) => (
-            <TapeItem key={news.id} $forceHorizontal={forceHorizontal}>
+          {newsData.map((news, index) => (
+            <TapeItem
+              key={news.id}
+              $forceHorizontal={forceHorizontal}
+              style={{ animationDelay: `${index * 0.1}s` }}
+            >
               <TapeItemContent $forceHorizontal={forceHorizontal}>
                 <TapeItemHead>
                   <img src={dzen_icon} alt="ava icon" />
                   <p>{news.sourceName}</p>
                 </TapeItemHead>
-
                 <Link to={`/news/${news.id}`}>
                   <TapeItemText>{news.title}</TapeItemText>
                 </Link>
@@ -96,18 +99,12 @@ const TapeList = ({ forceHorizontal = false, padding, newsData, pending }) => {
                 </TapeTime>
               </TapeItemContent>
               <TapePostImg
-                src={
-                  news.images?.[0]
-                    ? `http://77.37.65.40:3000/${news.images[0]}`
-                    : news_stub
-                }
+                src={news.images?.[0] ? `http://77.37.65.40:3000/${news.images[0]}` : news_stub}
                 alt="post img"
                 $forceHorizontal={forceHorizontal}
                 onClick={() =>
                   openLightbox({
-                    images: news.images?.length
-                      ? news.images.map(img => `http://77.37.65.40:3000/${img}`)
-                      : [news_stub],
+                    images: news.images?.length ? news.images.map(img => `http://77.37.65.40:3000/${img}`) : [news_stub],
                     initialIndex: 0,
                   })
                 }
@@ -134,7 +131,16 @@ const TapeList = ({ forceHorizontal = false, padding, newsData, pending }) => {
     </>
   )
 }
-
+const fadeInUp = keyframes`
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+`;
 const TapeContainer = styled(Swiper)`
   position: relative;
   box-sizing: border-box;
@@ -187,15 +193,10 @@ const TapeItem = styled(SwiperSlide)`
   border: 2px solid #1F273B;
   border-radius: 24px;
   max-width: ${({ $forceHorizontal }) => $forceHorizontal && '345px'};
-	padding: ${({ $forceHorizontal }) => $forceHorizontal ? '8px 8px 8px 24px' : '8px 8px 8px 33px'};
-
-  @media(max-width: 1600px) {
-    padding: 8px 8px 8px 24px;
-  }
-	@media(max-width: 1400px) {
-    max-width: 345px;
-  }
-
+  padding: ${({ $forceHorizontal }) => $forceHorizontal ? '8px 8px 8px 24px' : '8px 8px 8px 33px'};
+  
+  animation: ${fadeInUp} 0.5s ease forwards;
+  
   &:hover {
     background-color: #181F30;
     border: 2px solid #181F30;
@@ -203,7 +204,14 @@ const TapeItem = styled(SwiperSlide)`
   &:last-child {
     margin-bottom: 0 !important;
   }
-`
+
+  @media(max-width: 1600px) {
+    padding: 8px 8px 8px 24px;
+  }
+  @media(max-width: 1400px) {
+    max-width: 345px;
+  }
+`;
 const TapeItemContent = styled.div`
   display: flex;
   flex-direction: column;

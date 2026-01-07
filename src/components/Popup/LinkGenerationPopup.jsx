@@ -11,7 +11,7 @@ const LinkGenerationPopup = () => {
   const { popup, goBack } = usePopupStore();
   const channelId = popup?.data?.channelId;
 
-  const createInviteLink = useCreateChannelInviteLink(channelId);
+  const { mutate: createInviteLink, isPending: linkPending } = useCreateChannelInviteLink(channelId);
   const { addNotification } = useNotificationStore();
 
   const [createsJoinRequest, setCreatesJoinRequest] = useState(false);
@@ -50,7 +50,7 @@ const LinkGenerationPopup = () => {
       customExpireDate = `${yyyy}-${mm}-${dd}T${hh}:${min}:${ss}Z`;
     }
 
-    createInviteLink.mutate(
+    createInviteLink(
       {
         name: name || null,
         memberLimit: createsJoinRequest ? null : memberLimit ? Number(memberLimit) : null,
@@ -151,9 +151,9 @@ const LinkGenerationPopup = () => {
           $color="#D6DCEC"
           $bg="#336CFF"
           onClick={handleCreate}
-          disabled={createInviteLink.isLoading}
+          disabled={linkPending}
         >
-          {createInviteLink.isLoading ? "Создаем..." : "Создать ссылку"}
+          {linkPending ? "Создаем..." : "Создать ссылку"}
         </BtnBase>
         <BtnBase
           onClick={goBack}

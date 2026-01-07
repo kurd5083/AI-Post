@@ -14,27 +14,38 @@ const TableGroups = () => {
   const { openPopup } = usePopupStore();
   const { isSmall } = useResolution();
   const { selectedId } = useChannelsStore();
-  const { channels, channelsLoading } = useChannelsGroupedByFolders();
+  const { channels, channelsPending } = useChannelsGroupedByFolders();
   const { mutate: deleteChannel } = useDeleteChannel();
 
-  let currentChannels = [];
-  let isEmpty = null;
-
-  if (selectedId === null) {
-    currentChannels = channels?.channelsWithoutFolder || [];
-    isEmpty = currentChannels.length === 0;
-  } else {
-    const selectedFolder = channels?.folders?.find(folder => folder.id == selectedId);
-    currentChannels = selectedFolder?.channels || [];
-    isEmpty = currentChannels.length === 0;
-  }
-  if (channelsLoading) {
-    return <ModernLoading text="Загрузка каналов..." />;
-  }
-  if (isEmpty) {
+  if (channelsPending) {
     return (
       <NoChannelsContainer>
-        <NoChannels>Каналы отсутствуют</NoChannels>
+        <NoChannels>Загрузка каналов...</NoChannels>
+      </NoChannelsContainer>
+    );
+  }
+
+  const selectedFolder =
+    selectedId === null
+      ? null
+      : channels?.folders?.find(folder => folder.id === selectedId);
+
+  const currentChannels =
+    selectedId === null
+      ? channels?.channelsWithoutFolder || []
+      : selectedFolder?.channels || [];
+
+  const emptyMessage =
+    selectedId === null
+      ? "Каналы отсутствуют"
+      : selectedFolder
+        ? `В папке "${selectedFolder.name}" нет каналов`
+        : "Папка не найдена";
+
+  if (!currentChannels.length) {
+    return (
+      <NoChannelsContainer>
+        <NoChannels>{emptyMessage}</NoChannels>
       </NoChannelsContainer>
     );
   }
@@ -65,7 +76,7 @@ const TableGroups = () => {
                   {channel?.avatarUrl ? (
                     <img src={channel.avatarUrl} alt="Group" />
                   ) : (
-                    <AvaPlug width="40px" height="40px"/>
+                    <AvaPlug width="40px" height="40px" />
                   )}
                 </TableCellAva>
                 <CellName>{channel.name}</CellName>

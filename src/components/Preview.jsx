@@ -1,40 +1,61 @@
 import styled from "styled-components";
+import { useEffect, useState } from "react";
 import eye_blue from "@/assets/eye-blue.svg";
 import PreviewBG from "@/assets/ai-generator/PreviewBG.png";
 import arrow from "@/assets/arrow.svg";
 import TgIcon from "@/icons/TgIcon";
 import { useSendTestPost } from "@/lib/posts/useSendTestPost";
-import { usePopupStore } from "@/store/popupStore";
 import { useLightboxStore } from "@/store/lightboxStore";
+import { useNotificationStore } from "@/store/notificationStore";
 
 const Preview = ({ collapsed, onChange, testResult }) => {
   const { openLightbox } = useLightboxStore();
-  const { popup, changeContent } = usePopupStore();
-  const { mutate: sendTestPost, isLoading: sendPending } = useSendTestPost();
+  const { mutate: sendTestPost, isPending: sendPending } = useSendTestPost();
+  const { addNotification } = useNotificationStore();
 
   const { title, summary, url, images } = testResult || {};
-  const channelId = popup?.data?.channelId;
+  console.log(images)
+  const [imagesUrls, setImagesUrls] = useState([]);
+  const [localFiles, setLocalFiles] = useState([]);
 
-  const handleSend = () => {
-    if (!testResult) return;
-
-    const payload = {
-      title: title || summary || "Без названия",
-      summary: summary || "",
-      images: images || [],
-      channelId: channelId,
-    };
-
-    if (!channelId) {
-      changeContent("select_channel", "popup_window", {
-        onSave: (selectedChannelId) => {
-          sendTestPost({ ...payload, channelId: selectedChannelId });
-        },
-      });
+   useEffect(() => {
+    if (!images || !images.length) {
+      setImagesUrls([]);
+      setLocalFiles([]);
       return;
     }
 
-    sendTestPost(payload);
+    const urls = images.filter(img => typeof img === "string"); 
+    const files = images.filter(img => img instanceof File || img instanceof Blob); 
+
+    setLocalFiles(files); 
+
+    const objectUrls = files.map(file => URL.createObjectURL(file));
+    setImagesUrls([...urls, ...objectUrls]);
+
+    return () => {
+      objectUrls.forEach(url => URL.revokeObjectURL(url));
+    };
+  }, [images]);
+
+   const handleSend = () => {
+    if (!testResult || (!title && !summary && imagesUrls.length === 0 && localFiles.length === 0)) {
+      addNotification("Нет данных для отправки поста", "info");
+      return;
+    }
+
+    sendTestPost(
+      {
+        title: title || "Без названия",
+        summary: summary || "",
+        images: localFiles, 
+        imagesUrls: imagesUrls, 
+      },
+      {
+        onSuccess: () => addNotification("Пост отправлен в Telegram!", "success"),
+        onError: () => addNotification("Ошибка отправки поста в Telegram", "error"),
+      }
+    );
   };
 
   return (
@@ -53,16 +74,24 @@ const Preview = ({ collapsed, onChange, testResult }) => {
             <PreviewInfo>
               <PreviewInfoBG src={PreviewBG} alt="bg" />
               <PreviewInfoContainer>
-                {images?.length > 0 && (
+                {imagesUrls.length > 0 && (
                   <ImagesContainer>
-                    {images.map((img, index) => (
-                      <img
-                        key={index}
-                        src={img}
-                        alt={`image-${index}`}
-                        onClick={() => openLightbox({ images, initialIndex: index })}
-                      />
-                    ))}
+                    {imagesUrls.slice(0, 3).map((imgUrl, index) => {
+                      const isLast = index === 2 && imagesUrls.length > 3;
+                      const remaining = imagesUrls.length - 3;
+
+                      return (
+                        <ImageWrapper
+                          key={index}
+                          onClick={() =>
+                            openLightbox({ images: imagesUrls, initialIndex: index })
+                          }
+                        >
+                          <img src={imgUrl} alt={`image-${index}`} />
+                          {isLast && <Overlay>+{remaining}</Overlay>}
+                        </ImageWrapper>
+                      );
+                    })}
                   </ImagesContainer>
                 )}
 
@@ -99,9 +128,8 @@ const Preview = ({ collapsed, onChange, testResult }) => {
   );
 };
 
-const GeneratorPreview = styled.div`
-  width: 100%;
-`;
+// Styled-components остаются без изменений
+const GeneratorPreview = styled.div`width: 100%;`;
 const PreviewContent = styled.div`
   background-color: #181E30;
   border-radius: 24px;
@@ -160,31 +188,51 @@ const PreviewInfoBG = styled.img`
 `;
 const PreviewInfoContainer = styled.div`
   position: relative;
-  width: calc(100% - 104px);
+  width: calc(100% - 50px);
   display: flex;
   flex-direction: column;
   gap: 4px;
   z-index: 1;
   @media(max-width: 1600px) {
-    width: calc(100% - 28px);
+    width: calc(100% - 24px);
   } 
 `;
 const ImagesContainer = styled.div`
-  background-color: #131C22;
-  padding: 8px;
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
   gap: 8px;
   margin-bottom: 4px;
   border-radius: 16px;
+  grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+  
+  @media (max-width: 768px) {
+    grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
+  }
+`;
+const ImageWrapper = styled.div`
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  border-radius: 12px;
+  overflow: hidden;
+  cursor: pointer;
 
   img {
     width: 100%;
-    max-width: 250px;
+    height: 100%;
     object-fit: cover;
-    border-radius: 12px;
-    cursor: pointer;
+    display: block;
   }
+`;
+const Overlay = styled.div`
+  position: absolute;
+  inset: 0;
+  background-color: rgba(19, 28, 34, 0.7);
+  color: #fff;
+  font-size: 24px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;
 const PreviewInfoText = styled.p`
   box-sizing: border-box;
@@ -199,4 +247,5 @@ const EmptyText = styled.p`
   height: 100px;
   font-size: 14px;
 `;
+
 export default Preview;

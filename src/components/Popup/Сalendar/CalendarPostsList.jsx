@@ -139,14 +139,17 @@ const MetaItem = styled.div`
 `;
 const BaseButton = styled.button`
   display: flex;
+  justify-content: center;
   align-items: center;
-  gap: 16px;
+  width: 48px;
+  height: 48px;
+  border-radius: 8px;
 `;
 const Buttons = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-
+  gap: 10px;
 `;
 
 const ButtonEdit = styled(BaseButton)`

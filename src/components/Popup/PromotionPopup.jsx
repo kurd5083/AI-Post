@@ -226,7 +226,7 @@ const PromotionPopup = () => {
                 $color="#EF6284"
                 $bg="#241F31"
                 onClick={handlePromotePosts}
-                disabled={!manualPosts.length || creatingOrdersPending}
+                disabled={creatingOrdersPending}
               >
                 {creatingOrdersPending ? "Продвигаем..." : "Начать продвижение"}
               </BtnBase>

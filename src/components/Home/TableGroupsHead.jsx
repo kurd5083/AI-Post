@@ -164,7 +164,7 @@ const baseFolderStyles = css`
 
   &:hover {
     color: #fff;
-    border-bottom-color: #336CFF;
+    border-bottom-color: #FFFFFF;
     transform: translateY(-2px);
   }
 

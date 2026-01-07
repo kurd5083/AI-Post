@@ -16,18 +16,7 @@ const LinkGenerationMyPopup = () => {
   const { addNotification } = useNotificationStore();
 
   const { links, linksLoading } = useGetChannelInviteLinks(channelId);
-  const { mutate: removeLink, isLoading: removeLoading } = useRemoveInviteLink();
-
-  const handleRemove = (linkId) => {
-    removeLink(linkId, {
-      onSuccess: () => {
-        addNotification("Ссылка успешно удалена", "delete");
-      },
-      onError: () => {
-        addNotification("Ошибка при удалении ссылки", "error");
-      },
-    });
-  };
+  const { mutate: removeLink, isPending: removePending } = useRemoveInviteLink();
 
   const handleCopy = (link) => {
     if (!link?.inviteLink) {
@@ -97,14 +86,14 @@ const LinkGenerationMyPopup = () => {
                       <img src={hide} alt="hide icon" width={24} height={17} />
                     </HideButton>
                     <DeleteButton
-                      disabled={removeLoading}
+                      disabled={removePending}
                       onClick={(e) => {
                         e.stopPropagation();
-                        if (removeLoading) return;
+                        if (removePending) return;
 
                         changeContent("delete_confirm", "popup_window", {
                           itemName: link.inviteLink,
-                          onDelete: () => handleRemove(link.id),
+                          onDelete: () => removeLink(link.id),
                         });
                       }}
                     >

@@ -12,29 +12,33 @@ import AvaPlug from '@/shared/AvaPlug';
 const GridGroups = () => {
   const { openPopup } = usePopupStore();
   const { selectedId } = useChannelsStore();
-  const { channels, channelsLoading } = useChannelsGroupedByFolders();
+  const { channels, channelsPending } = useChannelsGroupedByFolders();
   const { mutate: deleteChannel } = useDeleteChannel();
-
-  if (channelsLoading) {
-    return <ModernLoading text="Загрузка каналов..." />;
-  }
   
-  let currentChannels = [];
-  let isEmpty = null;
-
-  if (selectedId === null) {
-    currentChannels = channels?.channelsWithoutFolder || [];
-    isEmpty = currentChannels.length === 0;
-  } else {
-    const selectedFolder = channels?.folders?.find(folder => folder.id == selectedId);
-    currentChannels = selectedFolder?.channels || [];
-    isEmpty = currentChannels.length === 0;
-  }
-
-  if (isEmpty) {
+ if (channelsPending) {
     return (
       <GridContainer>
-        <NoChannels>Каналы отсутствуют</NoChannels>
+        <NoChannels>Загрузка каналов...</NoChannels>
+      </GridContainer>
+    );
+  }
+
+  const currentChannels =
+    selectedId === null
+      ? channels?.channelsWithoutFolder || []
+      : channels?.folders?.find(f => f.id === selectedId)?.channels || [];
+
+  const emptyMessage =
+    selectedId === null
+      ? "Каналов без папки нет"
+      : channels?.folders?.find(f => f.id === selectedId)
+      ? `В папке "${channels.folders.find(f => f.id === selectedId).name}" нет каналов`
+      : "Папка не найдена";
+
+  if (!currentChannels.length) {
+    return (
+      <GridContainer>
+        <NoChannels>{emptyMessage}</NoChannels>
       </GridContainer>
     );
   }
@@ -47,14 +51,14 @@ const GridGroups = () => {
           {channel?.avatarUrl ? (
             <GridImg src={channel.avatarUrl} alt="Group" />
           ) : (
-            <AvaPlug width="40px" height="40px"/>
+            <AvaPlug width="40px" height="40px" />
           )}
           <CellName>{channel.name}</CellName>
           <p>
             {channel?.workMode === "PREMODERATION" && "Предмодерация"}
             {channel?.workMode === "AUTOPOSTING" && "Автопостинг"}
           </p>
-          
+
           <GridStatus onClick={() => openPopup("premoderation", "popup", { channelId: channel.id, filter: "premoderation" })}>Премодерация</GridStatus>
           <ButtonsWrap>
             <ButtonDir onClick={() => openPopup("move_channel", "popup_window", { channelId: channel.id })} title="Перейти">

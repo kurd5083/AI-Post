@@ -1,11 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
 import { getMentions } from "@/api/tgStat/getMentions";
 
-export const useMentions = ({channelIds, limit}) => {
+export const useMentions = ({ channelId, limit }) => {
   const { data: mentions, isLoading: mentionsLoading } = useQuery({
-    queryKey: ["mentions", channelIds],
-    queryFn: () => getMentions(channelIds, limit),
-    enabled: channelIds && channelIds.length > 0,
+    queryKey: ["mentions", channelId, limit],
+    queryFn: () => getMentions(channelId, limit),
+    enabled: !!channelId,
   });
 
   return { mentions, mentionsLoading };

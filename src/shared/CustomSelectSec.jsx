@@ -52,7 +52,7 @@ const CustomSelect = ({
 
       {open && (
         <SelectList>
-          {options.map((opt) => (
+          {options?.map((opt) => (
             <SelectItem
               key={opt.value}
               onClick={() => handleSelect(opt)}

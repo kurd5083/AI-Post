@@ -1,15 +1,28 @@
 import styled from "styled-components";
-import link_generation  from "@/assets/popup/link-generation.svg";
+import link_generation from "@/assets/popup/link-generation.svg";
 import { usePopupStore } from "@/store/popupStore"
 import BtnBase from "@/shared/BtnBase";
+import { useGetChannelInviteLinks } from "@/lib/channels/invite-link/useGetChannelInviteLinks";
 
 const LinkGenerationPrevPopup = () => {
-  const { changeContent } = usePopupStore()
+  const { popup, changeContent } = usePopupStore()
+  const channelId = popup?.data?.channelId;
+  const { links } = useGetChannelInviteLinks(channelId);
   return (
     <LinkGenerationContainer>
-      <img src={link_generation} alt="link generation icon" width={123} height={113}/>
-      <LinkGenerationTitle>Пригласительных ссылок пока нет</LinkGenerationTitle>
-      <LinkGenerationText>Создайте первую ссылку для приглашения пользователей в канал</LinkGenerationText>
+      <img src={link_generation} alt="link generation icon" width={123} height={113} />
+      <LinkGenerationTitle>
+        {links?.length > 0
+          ? "Пригласительные ссылки"
+          : "Пригласительных ссылок пока нет"}
+      </LinkGenerationTitle>
+
+      <LinkGenerationText>
+        {links?.length > 0
+          ? `Создайте ссылку по кнопке ниже. Отслеживать ссылки можно по кнопке "Мои ссылки"`
+          : "Создайте первую ссылку для приглашения пользователей в канал"}
+      </LinkGenerationText>
+
       <Buttons>
         <BtnBase onClick={() => changeContent("link_generation")} $color="#FC5B5B" $bg="#29212F">+ Создать ссылку</BtnBase>
         <BtnBase onClick={() => changeContent("my_link_generation")} $color="#D6DCEC" $bg="#1C212F" $padding="21px 52px">Мои ссылки</BtnBase>

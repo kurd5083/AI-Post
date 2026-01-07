@@ -47,35 +47,37 @@ const PublicationsPopup = () => {
     if (!posts) return [];
     const now = new Date();
     let result = [...posts];
-    
-    result.sort((a, b) => new Date(b.publishedAt) - new Date(a.publishedAt));
+
+    // сортировка по дате
+    result.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
     switch (dateFilter.period) {
       case "year":
         if (dateFilter.value) {
           result = result.filter(
-            (p) => new Date(p.publishedAt).getFullYear() === dateFilter.value
+            (p) => new Date(p.createdAt).getUTCFullYear() === dateFilter.value
           );
         }
         break;
+
       case "month":
         if (dateFilter.value) {
+          const { year, month } = dateFilter.value; // month 0-11
           result = result.filter((p) => {
-            const postDate = new Date(p.publishedAt);
-            return (
-              postDate.getFullYear() === dateFilter.value.year &&
-              postDate.getMonth() === dateFilter.value.month
-            );
+            const d = new Date(p.createdAt);
+            return d.getUTCFullYear() === year && d.getUTCMonth() === month;
           });
         }
         break;
+
       case "week":
         if (dateFilter.value) {
           const threshold = new Date();
-          threshold.setDate(now.getDate() - dateFilter.value);
-          result = result.filter((p) => new Date(p.publishedAt) >= threshold);
+          threshold.setUTCDate(threshold.getUTCDate() - dateFilter.value);
+          result = result.filter((p) => new Date(p.createdAt) >= threshold);
         }
         break;
+
       default:
         break;
     }
@@ -149,23 +151,23 @@ const PublicationsPopup = () => {
         slidesPerView="auto"
         grabCursor
       >
-        <SwiperSlide>
+        <SwiperSlideHead>
           <PublicationsFilter
             $active={filter === "common"}
             onClick={() => setFilter("common")}
           >
             Общие посты <span>{posts?.length || 0}</span>
           </PublicationsFilter>
-        </SwiperSlide>
-        <SwiperSlide>
+        </SwiperSlideHead>
+        <SwiperSlideHead>
           <PublicationsFilter
             $active={filter === "premoderation"}
             onClick={() => setFilter("premoderation")}
           >
             Премодерация <span>{posts?.filter(p => p.status === "PENDING_MODERATION").length || 0}</span>
           </PublicationsFilter>
-        </SwiperSlide>
-        <SwiperSlide>
+        </SwiperSlideHead>
+        <SwiperSlideHead>
           <CustomSelectSec
             placeholder="Выбор даты"
             value={dateFilter.period}
@@ -181,19 +183,20 @@ const PublicationsPopup = () => {
             width="250px"
             fs="24px"
           />
-        </SwiperSlide>
-
+        </SwiperSlideHead>
         {dateFilter.period !== "all" && (
-          <CustomSelectSec
-            placeholder="Уточнить"
-            value={dateFilter.value}
-            options={dateValueOptions}
-            onChange={(option) =>
-              setDateFilter((prev) => ({ ...prev, value: option.value }))
-            }
-            width="220px"
-            fs="24px"
-          />
+          <SwiperSlideHead>
+            <CustomSelectSec
+              placeholder="Уточнить"
+              value={dateFilter.value}
+              options={dateValueOptions}
+              onChange={(option) =>
+                setDateFilter((prev) => ({ ...prev, value: option.value }))
+              }
+              width="320px"
+              fs="24px"
+            />
+          </SwiperSlideHead>
         )}
       </PublicationsHead>
 
@@ -264,11 +267,12 @@ const PublicationsPopup = () => {
   );
 };
 
-const PublicationsHead = styled.div`
+const PublicationsHead = styled(Swiper)`
   display: flex;
-  gap: 64px;
-  scrollbar-width: none;
   padding: 0 56px;
+  min-height: max-content;
+  margin: 0;
+  overflow: visible;
 
   @media (max-width: 1600px) {
     padding: 0 32px;
@@ -276,6 +280,9 @@ const PublicationsHead = styled.div`
   @media (max-width: 768px) {
     padding: 0 24px;
   }
+`;
+const SwiperSlideHead = styled(SwiperSlide)`
+  width: fit-content;
 `;
 
 const PublicationsFilter = styled.p`

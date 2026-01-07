@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect } from "react";
 import styled from "styled-components";
 import rating from "@/assets/statistics/rating.svg";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -12,36 +12,24 @@ import mentions from "@/assets/statistics/mentions.svg";
 import CustomSelectThree from "@/shared/CustomSelectThree";
 import { useUserChannels } from "@/lib/channels/useUserChannels";
 
-
 const Statistics = () => {
-  const { isSwipe } = useSwipeAllowed(1600);
+  const { isSwipe } = useSwipeAllowed(1800);
   const { userChannels } = useUserChannels();
-  const [selectedChannels, setSelectedChannels] = useState([]);
+
+  const [selectedChannelId, setSelectedChannelId] = useState(null);
 
   useEffect(() => {
     if (userChannels?.length) {
-      setSelectedChannels(userChannels?.map(c => c.id));
+      setSelectedChannelId(userChannels[0].id);
     }
   }, [userChannels]);
 
   const { channelStat, channelStatLoading } = useChannelStat({
-    channelIds: selectedChannels,
+    channelId: selectedChannelId,
   });
 
-  const aggregatedStat = useMemo(() => {
-  if (!channelStat?.length) return null;
-
-  return channelStat.reduce(
-    (acc, { data }) => {
-      const resp = data.response || {};
-      acc.generated_posts += resp.posts_count || 0;
-      acc.mentions_count += resp.mentions_count || 0;
-      return acc;
-    },
-    { generated_posts: 0, mentions_count: 0 }
-  );
-}, [channelStat]);
-
+  const stat = channelStat?.response;
+  console.log(channelStat)
   return (
     <StatisticsContainer>
       <StatisticsTitle>
@@ -50,20 +38,22 @@ const Statistics = () => {
           Статистика
         </TitleLeft>
         <CustomSelectThree
-          options={userChannels?.map((c) => ({
+          options={userChannels?.map(c => ({
             id: c.id,
             label: c.name,
             avatar: c.avatarUrl,
           }))}
-          value={selectedChannels}
-          onChange={setSelectedChannels}
+          value={selectedChannelId}
+          onChange={setSelectedChannelId}
         />
       </StatisticsTitle>
-      {(!channelStat || !selectedChannels?.length) ? (
-        <EmptyStat>Здесь появится статистика по вашим каналам</EmptyStat>
+      {!selectedChannelId || channelStatLoading ? (
+        <EmptyStat>Загрузка статистики...</EmptyStat>
+      ) : !stat ? (
+        <EmptyStat>Для выбранного канала нет статистики</EmptyStat>
       ) : (
         <StatisticsList
-          key={isSwipe}
+          key={selectedChannelId}
           spaceBetween={16}
           slidesPerView={isSwipe ? "auto" : 4}
           allowTouchMove={isSwipe}
@@ -93,7 +83,7 @@ const Statistics = () => {
               <StatisticsItemImg $bgColor="#522943">
                 <img src={generated} alt="generated icon" />
               </StatisticsItemImg>
-              <p>{aggregatedStat?.generated_posts?.toLocaleString() || 0}</p>
+              <p>{stat.posts_count?.toLocaleString() || 0}</p>
             </StatisticsItemHead>
             <StatisticsText>Сгенерировано постов</StatisticsText>
           </StatisticsItem>
@@ -103,7 +93,7 @@ const Statistics = () => {
               <StatisticsItemImg $bgColor="#5D443B">
                 <img src={mentions} alt="mentions icon" />
               </StatisticsItemImg>
-              <p>{aggregatedStat?.mentions_count?.toLocaleString() || 0}</p>
+               <p>{stat.mentions_count?.toLocaleString() || 0}</p>
             </StatisticsItemHead>
             <StatisticsText>Упоминаний всего</StatisticsText>
           </StatisticsItem>
@@ -173,14 +163,12 @@ const StatisticsItem = styled(SwiperSlide)`
     margin-right: 0 !important;
   }
 
-  @media (max-width: 1600px) {
-    padding: 20px 24px 24px;
+  @media (max-width: 1800px) {
     flex: none;
     width: max-content;
   }
    @media (max-width: 1600px) {
-    padding: 32px;
-  
+    padding: 20px 24px 24px;
   }
 `
 const StatisticsItemHead = styled.div`
