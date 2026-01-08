@@ -17,11 +17,11 @@ const AcceptInvite = () => {
       accept( code, {
           onSuccess: (data) => {
             addNotification(data.message || "Приглашение успешно принято", "success");
-            // navigate("/");
+            navigate("/");
           },
           onError: (err) => {
-            addNotification(err?.response?.data?.message || "Ошибка при принятии приглашения", "error");
-            // navigate("/");
+            addNotification(err.message || "Ошибка при принятии приглашения", "error");
+            navigate("/");
           },
         }
       );
