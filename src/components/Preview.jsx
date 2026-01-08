@@ -7,7 +7,7 @@ import TgIcon from "@/icons/TgIcon";
 import { useSendTestPost } from "@/lib/posts/useSendTestPost";
 import { useLightboxStore } from "@/store/lightboxStore";
 import { useNotificationStore } from "@/store/notificationStore";
-
+import normalizeUrl from "@/lib/normalizeUrl";
 const Preview = ({ collapsed, onChange, testResult }) => {
   const { openLightbox } = useLightboxStore();
   const { mutate: sendTestPost, isPending: sendPending } = useSendTestPost();
@@ -25,7 +25,7 @@ const Preview = ({ collapsed, onChange, testResult }) => {
       return;
     }
 
-    const urls = images.filter(img => typeof img === "string"); 
+    const urls = images.filter(img => typeof img === "string").map(img => normalizeUrl(img));
     const files = images.filter(img => img instanceof File || img instanceof Blob); 
 
     setLocalFiles(files); 
@@ -242,6 +242,9 @@ const PreviewInfoText = styled.p`
   font-size: 12px;
   line-height: 16px;
   font-weight: 600;
+  scrollbar-width: none;
+  max-height: 300px;
+  overflow-y: auto;
 `;
 const EmptyText = styled.p`
   height: 100px;

@@ -14,7 +14,6 @@ const SelectChannelsPopup = () => {
 	const { userChannels } = useUserChannels();
 	const [selectedChannelId, setSelectedChannelId] = useState(null);
 
-
 	const handleSave = () => {
 		if (!selectedChannelId) {
 			alert("Выберите канал");

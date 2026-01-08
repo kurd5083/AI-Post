@@ -3,11 +3,17 @@ import styled from "styled-components";
 import BtnBase from "@/shared/BtnBase";
 import CloseIcon from "@/icons/CloseIcon";
 import { usePopupStore } from "@/store/popupStore";
+import { usePostsStore } from "@/store/postsStore";
 
-const ChangeTimePopup = ({ initialTime = "00:00", onSave }) => {
-  const { goBack } = usePopupStore();
-  const [hours, setHours] = useState(initialTime.split(":")[0]);
-  const [minutes, setMinutes] = useState(initialTime.split(":")[1]);
+const ChangeTimePopup = () => {
+  const { popup, goBack } = usePopupStore();
+  const { setPostTime, getPostTime } = usePostsStore();
+
+  const postId = popup?.data?.postId;
+  const initial = getPostTime(postId); 
+
+  const [hours, setHours] = useState(initial.split(":")[0]);
+  const [minutes, setMinutes] = useState(initial.split(":")[1]);
 
   const handleHoursChange = (e) => {
     let value = e.target.value;
@@ -28,10 +34,8 @@ const ChangeTimePopup = ({ initialTime = "00:00", onSave }) => {
   };
 
   const handleSave = () => {
-    if (!hours || !minutes) return;
-    if (onSave) {
-      onSave(`${hours.padStart(2, "0")}:${minutes.padStart(2, "0")}`);
-    }
+    const time = `${hours}:${minutes}`;
+    setPostTime(postId, time);
     goBack();
   };
   return (

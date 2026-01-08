@@ -110,6 +110,7 @@ const SelectList = styled.ul`
   border-radius: 24px;
   z-index: 20;
   max-height: 200px;
+  min-width: 140px;
   overflow-y: auto;
   scrollbar-width: none;
   &::-webkit-scrollbar {

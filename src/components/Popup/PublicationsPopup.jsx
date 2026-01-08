@@ -4,6 +4,8 @@ import CardPablish from "@/components/CardPablish";
 import CardPablishPremoderation from "@/components/CardPablishPremoderation";
 import { usePopupStore } from "@/store/popupStore";
 import { usePostsByChannel } from "@/lib/posts/usePostsByChannel";
+import { useUserChannels } from "@/lib/channels/useUserChannels";
+
 import ModernLoading from "@/components/ModernLoading";
 import CustomSelectSec from "@/shared/CustomSelectSec";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -15,6 +17,8 @@ const itemsPerPageMob = 4;
 
 const PublicationsPopup = () => {
   const { popup } = usePopupStore();
+  const { userChannels } = useUserChannels();
+
   const initialFilter = popup?.data?.filter || "common";
 
   const [currentPage, setCurrentPage] = useState(1);
@@ -28,6 +32,8 @@ const PublicationsPopup = () => {
 
   const channelId = popup?.data?.channelId;
   const { posts, loadingPosts } = usePostsByChannel(channelId);
+
+  const selectedChannel = userChannels.find(c => c.id === channelId);
 
   useEffect(() => {
     const handleResize = () => {
@@ -48,7 +54,6 @@ const PublicationsPopup = () => {
     const now = new Date();
     let result = [...posts];
 
-    // сортировка по дате
     result.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
     switch (dateFilter.period) {
@@ -62,7 +67,7 @@ const PublicationsPopup = () => {
 
       case "month":
         if (dateFilter.value) {
-          const { year, month } = dateFilter.value; // month 0-11
+          const { year, month } = dateFilter.value;
           result = result.filter((p) => {
             const d = new Date(p.createdAt);
             return d.getUTCFullYear() === year && d.getUTCMonth() === month;
@@ -71,12 +76,13 @@ const PublicationsPopup = () => {
         break;
 
       case "week":
-        if (dateFilter.value) {
-          const threshold = new Date();
-          threshold.setUTCDate(threshold.getUTCDate() - dateFilter.value);
-          result = result.filter((p) => new Date(p.createdAt) >= threshold);
-        }
-        break;
+  if (dateFilter.value) {
+    const now = new Date();
+    const threshold = new Date(now.getTime() - dateFilter.value * 24 * 60 * 60 * 1000);
+
+    result = result.filter((p) => new Date(p.createdAt) >= threshold);
+  }
+  break;
 
       default:
         break;
@@ -84,6 +90,7 @@ const PublicationsPopup = () => {
 
     if (filter === "premoderation") {
       result = result.filter((p) => p.status === "PENDING_MODERATION");
+      console.log(result)
     }
 
     return result;
@@ -143,7 +150,7 @@ const PublicationsPopup = () => {
 
     return Array.from({ length: max }, (_, i) => start + i);
   };
-
+  console.log(currentItems)
   return (
     <>
       <PublicationsHead
@@ -206,9 +213,9 @@ const PublicationsPopup = () => {
             {currentItems.length > 0 ? (
               currentItems.map((item) =>
                 filter === "premoderation" ? (
-                  <CardPablishPremoderation key={item.id} item={item} channelId={channelId} />
+                  <CardPablishPremoderation key={item.id} item={item} channelId={channelId} selectedChannel={selectedChannel}/>
                 ) : (
-                  <CardPablish key={item.id} item={item} bg />
+                  <CardPablish key={item.id} item={item} bg selectedChannel={selectedChannel}/>
                 )
               )
             ) : (
@@ -309,7 +316,7 @@ const PublicationsList = styled.div`
   display: grid;
   margin-top: 50px;
   gap: 16px 24px;
-  padding: 0 56px;
+  padding: 0 56px ;
   grid-template-columns: repeat(3, 1fr);
 
   @media (max-width: 1600px) {
@@ -345,6 +352,7 @@ const PaginationWrapper = styled.div`
   align-items: flex-end;
   gap: 24px;
   padding-top: 40px;
+  padding-bottom: 30px;
 `;
 
 const PageBtn = styled.button`

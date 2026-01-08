@@ -3,17 +3,20 @@ import BtnBase from "@/shared/BtnBase";
 import { useLightboxStore } from "@/store/lightboxStore";
 import { usePostsStore } from "@/store/postsStore";
 import { usePopupStore } from "@/store/popupStore";
+import normalizeUrl from "@/lib/normalizeUrl";
+import AvaPlug from "@/shared/AvaPlug";
 
 const MAX_VISIBLE_IMAGES = 3;
 
-const CardPablish = ({ item, bg }) => {
+const CardPablish = ({ item, bg, selectedChannel }) => {
+  console.log(selectedChannel)
   const { openLightbox } = useLightboxStore();
   const { addPost } = usePostsStore();
   const { changeContent } = usePopupStore();
 
   const handleEdit = () => {
     addPost({
-      postId: item.id,   
+      postId: item.id,
       title: item.title,
       text: item.text || "",
       summary: item.summary || "",
@@ -24,13 +27,17 @@ const CardPablish = ({ item, bg }) => {
     });
     changeContent('create_post', 'popup')
   };
-  
+
   return (
     <CardPablishItem $bg={bg}>
       <CardPablishItemHead>
         <CardPablishItemName>
-          <CardPablishItemImg src={item.ava} alt={item.username} />
-          <p>{item.username}</p>
+          {selectedChannel.avatarUrl ? (
+                      <CardPablishItemImg src={selectedChannel.avatarUrl} alt={selectedChannel.name} />
+                    ) : (
+                      <AvaPlug width="32px" height="32px"/>
+                    )}
+          <p>{selectedChannel.name}</p>
         </CardPablishItemName>
         <CardPablishItemTime>
           <p>{new Date(item.createdAt).toLocaleDateString("ru-RU")}</p>
@@ -47,13 +54,20 @@ const CardPablish = ({ item, bg }) => {
           const isLastVisible = index === MAX_VISIBLE_IMAGES - 1;
           const extraCount = item.images.length - MAX_VISIBLE_IMAGES;
 
+          const src = elem instanceof File || elem instanceof Blob ? URL.createObjectURL(elem) : normalizeUrl(elem);
+
           return (
-            <ImageItemWrapper key={index} onClick={() => openLightbox({
-              images: item.images,
-              initialIndex: index
-            })}>
+            <ImageItemWrapper
+              key={index}
+              onClick={() =>
+                openLightbox({
+                  images: item.images.map(i => i instanceof File || i instanceof Blob ? URL.createObjectURL(i) : normalizeUrl(i)),
+                  initialIndex: index
+                })
+              }
+            >
               <ImageItem
-                src={elem}
+                src={src}
                 alt={`картинка ${index}`}
               />
               {isLastVisible && extraCount > 0 && (
@@ -127,6 +141,7 @@ const CardPablishItemHead = styled.div`
 `
 const CardPablishItemName = styled.div`
   display: flex;
+  align-items: center;
   gap: 16px;
     
   p {
@@ -157,7 +172,7 @@ const CardPablishImages = styled.div`
   display: flex;
   align-items: center;
   gap: 8px;
-  margin-top: 4px;
+  margin-top: 12px;
   flex-grow: 1;
 `
 const ImageItemWrapper = styled.div`

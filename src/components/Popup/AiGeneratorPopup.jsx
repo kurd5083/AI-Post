@@ -22,8 +22,6 @@ import { usePopupStore } from "@/store/popupStore";
 import { formatText } from "@/lib/formatText";
 import { useLightboxStore } from "@/store/lightboxStore";
 import { useUser } from "@/lib/useUser";
-import { useGenerateSimpleImage } from "@/lib/channels/image-generation/useGenerateSimpleImage";
-import { useGeneratePost } from "@/lib/posts/useGeneratePost";
 import { usePostsStore } from "@/store/postsStore";
 import { useSendPostToChannel } from "@/lib/posts/useSendPostToChannel";
 import { useUpdatePost } from "@/lib/posts/useUpdatePost";
@@ -31,6 +29,7 @@ import { useDeletePostImage } from "@/lib/posts/useDeletePostImage";
 import { useNotificationStore } from "@/store/notificationStore";
 import { useUserChannels } from "@/lib/channels/useUserChannels";
 import { useAddPostImages } from "@/lib/posts/useAddPostImages";
+import normalizeUrl from "@/lib/normalizeUrl";
 
 const AiGeneratorPopup = () => {
   const { addNotification } = useNotificationStore();
@@ -49,24 +48,23 @@ const AiGeneratorPopup = () => {
     removeImage,
     postProgress,
     imageProgress,
-    setPostProgress,
-    setImageProgress,
-    resetPostProgress,
-    resetImageProgress
+    getPostChannel,
+    generatePostWithAI,
+    generateImageWithAI
   } = usePostsStore();
-
   const channelId = popup?.data?.channelId;
   const telegramId = user?.telegramId;
+
+  const lastPostText = useRef("");
+  const caretRanges = useRef({});
+  const textRefs = useRef({});
   const postIntervals = useRef({});
   const imageIntervals = useRef({});
 
   const [collapsed, setCollapsed] = useState(false);
-  const [popupPostId, setPopupPostId] = useState(null);
   const [emojiPostId, setEmojiPostId] = useState(null);
 
   const { mutate: createPostMutation, isPending: createPostPending } = useCreatePost();
-  const { mutate: generateImage, isPending: imagePending } = useGenerateSimpleImage();
-  const { mutate: generatePost, isPending: postPending } = useGeneratePost();
   const { mutate: sendPost, isPending: isSendPending } = useSendPostToChannel();
   const { mutate: updatePostMutation, isPending: updatePending } = useUpdatePost();
   const { mutate: deleteImageFromServer } = useDeletePostImage();
@@ -82,79 +80,6 @@ const AiGeneratorPopup = () => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  const handleWriteWithAI = (postId) => {
-    const selectedChannelId = channelId || usePostsStore.getState().getPostChannel(postId);
-    if (!selectedChannelId) return addNotification("Выберите канал", "info");
-
-    const post = posts.find(p => p.postId === postId);
-    if (!post) return addNotification("Пост не найден", "error");
-
-    setPostProgress(postId, 0);
-
-    postIntervals.current[postId] = setInterval(() => {
-      const current = usePostsStore.getState()?.postProgress?.[postId] ?? 0;
-      setPostProgress(postId, Math.min(current + Math.floor(Math.random() * 10), 90));
-    }, 500);
-
-    generatePost({ channelId: selectedChannelId }, {
-      onSuccess: (data) => {
-        clearInterval(postIntervals.current[postId]);
-        setPostProgress(postId, 100);
-
-        updatePost(postId, {
-          title: data.title || "",
-          text: data.summary || "",
-          summary: data.summary || "",
-          images: data.images || []
-        });
-
-        setTimeout(() => resetPostProgress(postId), 1000);
-        addNotification(data?.message || "Пост сгенерирован успешно", data?.error ? "error" : "success");
-      },
-      onError: (error) => {
-        clearInterval(postIntervals.current[postId]);
-        setPostProgress(postId, 0);
-        resetPostProgress(postId);
-
-        addNotification(error?.response?.data?.message || "Ошибка генерации поста", "error");
-      },
-    });
-  };
-
-  const handleCreateAIImage = async (postId) => {
-    const post = posts.find(p => p.postId === postId);
-    if (!post?.text) return addNotification("Для генерации изображения нужен текст", "info");
-
-    setImageProgress(postId, 0);
-
-    imageIntervals.current[postId] = setInterval(() => {
-      const current = usePostsStore.getState().imageProgress[postId] ?? 0;
-      setImageProgress(postId, Math.min(current + Math.floor(Math.random() * 10), 95));
-    }, 500);
-
-    generateImage({ prompt: post.text }, {
-      onSuccess: async (data) => {
-        clearInterval(imageIntervals.current[postId]);
-        if (!data?.imageUrls?.length) {
-          addNotification("Не удалось получить изображение", "error");
-          clearInterval(imageIntervals.current[postId]);
-          return;
-        }
-
-        setImageProgress(postId, 100);
-        setTimeout(() => resetImageProgress(postId), 1000);
-        updatePost(postId, { images: [...(post.images || []), data.imageUrls[0]] });
-        addNotification("Изображение успешно сгенерировано", "success");
-      },
-      onError: () => {
-        clearInterval(imageIntervals.current[postId]);
-        setImageProgress(postId, 0);
-        addNotification("Ошибка генерации изображения", "error");
-      },
-    });
-  };
-
-  const handleSaveTime = (newTime, postId) => updatePost(postId, { time: newTime });
 
   const handleAddImages = (postId, files) => {
     const post = posts.find(p => p.postId === postId);
@@ -238,26 +163,35 @@ const AiGeneratorPopup = () => {
   };
 
   const insertEmojiAtCursor = (emoji, postId) => {
-    const el = document.getElementById(`text-${postId}`);
+    const el = textRefs.current[postId];
+    if (!el) return;
+
     el.focus();
 
-    const selection = window.getSelection();
-    if (!selection || selection.rangeCount === 0) return;
+    let selection = document.getSelection();
+    let range = caretRanges.current[postId] || (selection?.rangeCount ? selection.getRangeAt(0) : null);
 
-    const range = selection.getRangeAt(0);
+    if (!range || !el.contains(range.startContainer)) {
+      const endRange = document.createRange();
+      endRange.selectNodeContents(el);
+      endRange.collapse(false);
+      range = endRange;
+    }
+
     range.deleteContents();
-
-    const textNode = document.createTextNode(emoji);
-    range.insertNode(textNode);
-    range.setStartAfter(textNode);
+    const node = document.createTextNode(emoji);
+    range.insertNode(node);
+    range.setStartAfter(node);
     range.collapse(true);
 
+    selection = document.getSelection();
     selection.removeAllRanges();
     selection.addRange(range);
 
+    caretRanges.current[postId] = range.cloneRange();
+
     updatePost(postId, { text: el.innerHTML, summary: el.innerHTML });
   };
-
   const handlePublishNow = (post) => {
     if (!post.text) return addNotification("Нельзя публиковать пустой пост", "info");
 
@@ -356,28 +290,55 @@ const AiGeneratorPopup = () => {
                   />
                 )}
               </HeadBlock>
-              <p>{post.progress}</p>
+              <HeadProgress>{post.progress}</HeadProgress>
             </ItemHead>
 
             <ItemBody>
               <ItemText
                 contentEditable
                 suppressContentEditableWarning
-                id={`text-${post.postId}`}
-                ref={el => el && el.innerHTML !== post.summary && (el.innerHTML = post.summary)}
-                onInput={e => updatePost(post.postId, { text: e.currentTarget.innerHTML, summary: e.currentTarget.innerHTML })}
+                ref={el => {
+                  if (!el) return;
+                  textRefs.current[post.postId] = el;
+
+                  if (el.innerHTML !== post.text) {
+                    el.innerHTML = post.text;
+                  }
+                }}
+                onInput={e => {
+                  const el = e.currentTarget;
+                  const html = el.innerHTML;
+
+                  lastPostText.current = html;
+
+                  const sel = document.getSelection();
+                  if (sel?.rangeCount) caretRanges.current[post.postId] = sel.getRangeAt(0).cloneRange();
+
+                  updatePost(post.postId, { text: html, summary: html });
+                }}
+                onClick={() => {
+                  const sel = document.getSelection();
+                  if (sel?.rangeCount) caretRanges.current[post.postId] = sel.getRangeAt(0).cloneRange();
+                }}
+                onKeyUp={() => {
+                  const sel = document.getSelection();
+                  if (sel?.rangeCount) caretRanges.current[post.postId] = sel.getRangeAt(0).cloneRange();
+                }}
               />
               <BodyRight>
                 <ImagesContainer>
                   {(post.images || []).map((img, index) => {
-                    const src = img instanceof File ? URL.createObjectURL(img) : img;
+                    const src = normalizeUrl(img);
                     return (
                       <ImagePreview key={index}>
                         <img
                           src={src}
                           alt={`preview-${index}`}
                           onClick={() =>
-                            openLightbox({ images: post.images.map(i => i instanceof File ? URL.createObjectURL(i) : i), initialIndex: index })
+                            openLightbox({
+                              images: post.images.map(i => i instanceof File ? URL.createObjectURL(i) : normalizeUrl(i)),
+                              initialIndex: index
+                            })
                           }
                         />
                         <RemoveImageButton onClick={() => handleRemoveImage(post.postId, index, post.serverId)}>×</RemoveImageButton>
@@ -385,18 +346,19 @@ const AiGeneratorPopup = () => {
                     );
                   })}
                 </ImagesContainer>
+                {post.time && <ItemTime key={post.time}>Выбранное время: {post.time}</ItemTime>}
               </BodyRight>
             </ItemBody>
 
             <ItemActions>
               <ActionsLeft>
                 <ItemAI>
-                  <BtnBase $padding="0" $color="#336CFF" $bg="transporent" onClick={() => handleWriteWithAI(post.postId)} disabled={postPending}>
+                  <BtnBase $padding="0" $color="#336CFF" $bg="transporent" onClick={() => generatePostWithAI(post.postId, channelId || getPostChannel(post.postId))}>
                     <AiGeneratorIcon color="#336CFF" />
                     {postProgress[post.postId] != null && postProgress[post.postId] < 100 ? `Генерация с AI... ${postProgress[post.postId]}%` : "Написать с AI"}
                   </BtnBase>
 
-                  <BtnBase $padding="0" $color="#FF7F48" $bg="transporent" onClick={() => handleCreateAIImage(post.postId)} disabled={imagePending}>
+                  <BtnBase $padding="0" $color="#FF7F48" $bg="transporent" onClick={() => generateImageWithAI(post.postId, post.text)}>
                     <img src={create} alt="create icon" />
                     {imageProgress[post.postId] != null && imageProgress[post.postId] < 100 ? `Генерация фото с AI... ${imageProgress[post.postId]}%` : "Создать фото с AI"}
                   </BtnBase>
@@ -429,8 +391,8 @@ const AiGeneratorPopup = () => {
                 <ButtonsMain>
                   <ButtonsMainTop>
                     <BtnBase $padding="21px" $color="#EF6284" $bg="#241E2D" onClick={() => handleRemovePost(post.postId)}>Отменить</BtnBase>
-                    <BtnBase $padding="21px" $border $bg="transporent" $color="#6A7080" onClick={() => { setPopupPostId(post.postId); changeContent("change_time_popup", "popup_window", { onSave: (newTime) => handleSaveTime(newTime, post.postId), initialTime: post.time || "00:00" }); }}>Изменить время</BtnBase>
-                    <BtnBase $padding="21px" $color="#336CFF" $bg="#161F37" onClick={() => handleSavePost(post)} disabled={updatePending || postPending}>{createPostPending ? "Сохраняем..." : "Сохранить"}</BtnBase>
+                    <BtnBase $padding="21px" $border $bg="transporent" $color="#6A7080" onClick={() => changeContent("change_time_popup", "popup_window", { postId: post.postId })}>Изменить время</BtnBase>
+                    <BtnBase $padding="21px" $color="#336CFF" $bg="#161F37" onClick={() => handleSavePost(post)} disabled={updatePending || createPostPending}>{createPostPending ? "Сохраняем..." : "Сохранить"}</BtnBase>
                   </ButtonsMainTop>
                   <BtnBase $padding="21px" $border $width="100%" $bg="transporent" $color="#6A7080" onClick={() => handlePublishNow(post)} disabled={isSendPending}>{isSendPending ? "Публикация..." : "Опубликовать сейчас"}</BtnBase>
                 </ButtonsMain>
@@ -460,7 +422,7 @@ const scaleUp = keyframes`
 const GeneratorContainer = styled.section`
   display: grid;
   grid-template-columns: repeat(5, 1fr);
-  grid-template-rows: min-content;
+  grid-template-rows: 124px auto;
   align-items: start;
   gap: 16px;
   padding: 0 56px;
@@ -471,6 +433,7 @@ const GeneratorContainer = styled.section`
   }
   @media(max-width: 768px) {
     padding: 0 24px;
+    grid-template-rows: 93px auto;
   }
   @media(max-width: 480px) {
     margin-top: 0px;
@@ -485,7 +448,7 @@ const GeneratorHead = styled.div`
   border-radius: 24px;
   grid-column: 1 /span 3;
   grid-row: 1;
-  @media(max-width: 1400px) {
+  @media(max-width: 1800px) {
     grid-column: 1 /span 5;
   }
   @media(max-width: 768px) {
@@ -510,11 +473,16 @@ const GeneratorList = styled.div`
   gap: 16px;
   grid-column:  1 / span 3;
   grid-row: 2;
+  overflow-y: auto;
+  scrollbar-width: none;
+  max-height: calc(100dvh - 285px);
+  min-height: 650px;
+  height: 100%;
   
   @media(max-width: 2000px) {
     gap: 220px;
   } 
-  @media(max-width: 1400px) {
+  @media(max-width: 1800px) {
     grid-column: 1 /span 5;
     grid-row: 3;
   }
@@ -528,6 +496,9 @@ const ListItem = styled.div`
   border-radius: 24px;
   border: 2px solid #252D43;
   animation: ${fadeIn} 0.3s ease forwards;
+  @media(max-width: 480px) {
+    padding: 16px;
+  } 
 `
 const ItemHead = styled.div`
   display: flex;
@@ -540,6 +511,13 @@ const HeadBlock = styled.div`
   display: flex;
   flex-direction: column-reverse;
   gap: 12px;
+  min-width: 40%;
+  width: 100%;
+`
+const HeadProgress = styled.p`
+  flex-shrink: 0;
+  font-size: 14px;
+  font-weight: 600;
 `
 
 const HeadTitle = styled.input`
@@ -571,6 +549,7 @@ const ItemText = styled.div`
   scrollbar-width: none;
   white-space: pre-wrap;
   word-break: break-word;
+  min-width: 40%;
 
   &[contenteditable="true"]:empty:before {
     content: "Текст публикации...";
@@ -607,6 +586,7 @@ const ImagePreview = styled.div`
     object-fit: cover;
     border-radius: 8px;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
+    cursor: pointer;
 
     &:hover {
       transform: scale(1.1);
@@ -638,6 +618,7 @@ const ItemActions = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
+  gap: 20px;
 `
 const ActionsLeft = styled.div`
   display: flex;
@@ -645,7 +626,6 @@ const ActionsLeft = styled.div`
   gap: 50px;
   margin-bottom: 20px;
 `
-
 const ItemAI = styled.div`
   display: flex;
   align-items: center;
@@ -698,9 +678,7 @@ const ButtonsMain = styled.div`
 const ButtonsMainTop = styled.div`
   display: flex;
   gap: 8px;
-  button {
-    flex-shrink: 0;
-  }
+
   @media(max-width: 480px) {
     flex-wrap: wrap;
     button {
@@ -723,8 +701,8 @@ const HideButton = styled(BaseButton)`
 `;
 const PreviewContainer = styled.div`
   grid-column:  4 / span 2;
-  grid-row: 1 / span 3;
-  @media(max-width: 1400px) {
+  grid-row: 1 / span 2;
+  @media(max-width: 1800px) {
     grid-column: 1 /span 5;
     grid-row: 2;
   }

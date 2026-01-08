@@ -58,3 +58,7 @@ button {
 mark {
   background-color: transparent;
 }
+
+.picker-wrapper {
+  width: 100%;
+}

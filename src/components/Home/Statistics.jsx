@@ -209,6 +209,12 @@ const EmptyStat = styled.div`
   background-color: #1C2438;
   border-radius: 16px;
   margin-top: 32px;
+  @media (max-width: 1400px) {
+    margin: 32px 32px 0;
+  }
+  @media (max-width: 768px) {
+    margin: 32px 24px;
+  }
 `;
 
 export default Statistics

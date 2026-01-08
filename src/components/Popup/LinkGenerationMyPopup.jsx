@@ -105,7 +105,7 @@ const LinkGenerationMyPopup = () => {
             </tbody>
           </Table>
         ) : (
-          <p>В канале пока нет ссылок</p>
+          <EmptyLink>В канале пока нет ссылок</EmptyLink>
         )
       ) : (
         <ModernLoading text="Загрузка ссылок..." />
@@ -118,16 +118,16 @@ const TableWrapper = styled.div`
   display: flex;
   height: 100%;
   flex-direction: column;
-  padding: 0 56px;
+  padding: 0 56px 30px;
   width: 100%;
   overflow: auto;
   scrollbar-width: none;
   
   @media(max-width: 1600px) {
-    padding: 0 32px;
+    padding: 0 32px 30px;
   }
   @media(max-width: 768px) {
-    padding: 0 24px;
+    padding: 0 24px 30px;
   }
 `;
 const Table = styled.table`
@@ -235,5 +235,14 @@ const DeleteButton = styled(BaseButton)`
     border: none;
     background-color: rgba(239, 98, 132, 0.08);
   }
+`
+const EmptyLink= styled.p`
+  box-sizing: border-box;
+  text-align: center;
+  color: #6A7080;
+  padding: 48px 0;
+  font-weight: 600;
+  background-color: #1C2438;
+  border-radius: 16px;
 `
 export default LinkGenerationMyPopup

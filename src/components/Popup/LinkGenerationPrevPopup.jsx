@@ -36,13 +36,13 @@ const LinkGenerationContainer = styled.div`
   flex-direction: column;
   align-items: center;
   margin-top: 165px;
-  padding: 0 56px;
+  padding: 0 56px 30px;
 
   @media(max-width: 1600px) {
-    padding: 0 32px;
+    padding: 0 32px 30px;
   }
   @media(max-width: 768px) {
-    padding: 0 24px;
+    padding: 0 24px 30px;
   }
   
   @media(max-width: 480px) {

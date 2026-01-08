@@ -15,6 +15,7 @@ import { useLightboxStore } from "@/store/lightboxStore";
 import { useCopyNewsToChannel } from "@/lib/news/useCopyNewsToChannel";
 import timeAgo from "@/lib/timeAgo";
 import { useNotificationStore } from "@/store/notificationStore";
+import { getPostsByChannel } from "@/api/posts/getPostsByChannel";
 
 const TapeList = ({ forceHorizontal = false, padding, newsData, pending }) => {
   const { popup, changeContent, openPopup } = usePopupStore();
@@ -29,7 +30,14 @@ const TapeList = ({ forceHorizontal = false, padding, newsData, pending }) => {
   const { mutate: copyToChannel, isLoading: copyingLoading } = useCopyNewsToChannel();
 
   const handleClick = (id) => {
-    const copyNews = (channelId) => {
+    const copyNews = async (channelId) => {
+      const postsInChannel = await getPostsByChannel(channelId);
+      const exists = postsInChannel.some((post) => {
+        post.id == id
+      });
+      if (exists) {
+        return addNotification("Эта новость уже сохранена в канале", "info");
+      }
       copyToChannel({
         id,
         data: {
@@ -53,7 +61,6 @@ const TapeList = ({ forceHorizontal = false, padding, newsData, pending }) => {
       });
     }
   };
-
 
   return (
     <>
@@ -247,6 +254,7 @@ const TapeItemText = styled.div`
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
+  word-wrap: break-word;
 `
 const TapeItemAction = styled.span`
   color: #336CFF;

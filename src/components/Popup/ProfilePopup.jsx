@@ -70,6 +70,7 @@ const ProfileHead = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 20px;
   padding: 0 56px;
 
   @media(max-width: 1600px) {
@@ -123,7 +124,7 @@ const ProfileBalance = styled.div`
   flex-direction: column;
   gap: 32px;
   margin-top: 48px;
-  padding: 0 56px;
+  padding: 0 56px ;
 
   @media(max-width: 1600px) {
     padding: 0 32px;
@@ -156,8 +157,11 @@ const ProfileInfos = styled.div`
   flex-wrap: wrap;
   gap: 48px 64px;
   margin-top: 50px;
-  padding: 0 56px;
+  padding: 0 56px 30px;
 
+  @media(max-width: 1600px) {
+    padding: 0 32px 30px;
+  }
   @media(max-width: 1600px) {
     padding: 0 32px;
   }
@@ -199,13 +203,13 @@ const ButtonAccMobile = styled.div`
   padding: 0 56px;
 
   @media(max-width: 1600px) {
-    padding: 0 32px;
+    padding: 0 32px 30px;
   }
   @media(max-width: 1400px) {
     display: block;
   }
   @media(max-width: 768px) {
-    padding: 0 24px;
+    padding: 0 24px 30px;
   }
 `
 export default ProfilePopup

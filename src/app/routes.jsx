@@ -11,6 +11,7 @@ import Media from '@/pages/Media';
 import Help from '@/pages/Help';
 import News from '@/pages/News';
 import Auth from '@/pages/Auth';
+import AcceptInvite from '@/pages/AcceptInvite';
 
 export const router = createBrowserRouter([
     {
@@ -80,4 +81,11 @@ export const router = createBrowserRouter([
         path: '/auth',
         element: <Auth />,
     },
+    {
+        path: '/invite-member',
+        element: <MainLayout />,
+        children: [
+            { index: true, element: <AcceptInvite /> }
+        ],
+    }
 ]);

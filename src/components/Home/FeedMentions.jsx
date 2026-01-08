@@ -203,6 +203,12 @@ const EmptyMentions = styled.div`
   background-color: #1C2438;
   border-radius: 16px;
   margin-top: 24px;
+  @media (max-width: 1400px) {
+    margin: 24px 32px 0;
+  }
+  @media (max-width: 768px) {
+    margin: 24px 24px;
+  }
 `;
 
 export default FeedMentions

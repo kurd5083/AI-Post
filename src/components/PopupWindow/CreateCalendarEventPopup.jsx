@@ -8,7 +8,11 @@ import { useUpdateCalendarEvent } from "@/lib/calendar/useUpdateCalendarEvent";
 import { usePostsByChannel } from "@/lib/posts/usePostsByChannel";
 import { usePopupStore } from "@/store/popupStore";
 import { useNotificationStore } from "@/store/notificationStore";
-
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import { registerLocale } from "react-datepicker";
+import ru from "date-fns/locale/ru";
+registerLocale("ru", ru);
 
 const CreateCalendarEventPopup = () => {
   const { goBack, popup } = usePopupStore();
@@ -91,10 +95,16 @@ const CreateCalendarEventPopup = () => {
       <PopupInput value={description} onChange={(e) => setDescription(e.target.value)} />
 
       <InputLabel>Дата и время</InputLabel>
-      <PopupInput
-        type="datetime-local"
-        value={scheduledAt.slice(0, 16)}
-        onChange={(e) => setScheduledAt(new Date(e.target.value).toISOString())}
+      <StyledDatePicker 
+        selected={scheduledAt ? new Date(scheduledAt) : null}
+        onChange={(date) => setScheduledAt(date.toISOString())}
+        locale="ru"
+        showTimeSelect
+        timeIntervals={5}
+        dateFormat="yyyy-MM-dd HH:mm"
+        wrapperClassName="picker-wrapper"
+        calendarClassName="dark-calendar"
+        className="picker-input"
       />
 
       {!isEdit && (
@@ -176,6 +186,20 @@ const PopupInput = styled.input`
   border-bottom: 2px solid #2e3954;
   &::placeholder {
     color: #d6dcec;
+  }
+`;
+const StyledDatePicker = styled(DatePicker)`
+  background-color: transparent;
+  width: 100%;
+  color: #d6dcec;
+  font-size: 16px;
+  font-weight: 700;
+  padding-bottom: 24px;
+  border: none;
+  border-bottom: 2px solid #2e3954;
+
+  &:focus {
+    outline: none;
   }
 `;
 const PopupButtons = styled.div`

@@ -14,6 +14,7 @@ import GridIcon from "@/icons/GridIcon";
 import ListIcon from "@/icons/ListIcon";
 import DirIcon from "@/icons/DirIcon";
 import { useTelegramBotInfo } from "@/lib/useTelegramBotInfo";
+import { useNotificationStore } from "@/store/notificationStore";
 
 const TableGroups = () => {
   const { openPopup } = usePopupStore();
@@ -24,6 +25,7 @@ const TableGroups = () => {
   const { channels } = useChannelsGroupedByFolders();
   const { mutate: deleteFolder } = useDeleteFolder();
   const { botInfo } = useTelegramBotInfo();
+  const { addNotification } = useNotificationStore();
 
   return (
     <TableGroupsContainer>
@@ -59,7 +61,10 @@ const TableGroups = () => {
                       e.stopPropagation();
                       openPopup("delete_confirm", "popup_window", {
                         itemName: folder.name,
-                        onDelete: () => deleteFolder(folder.id),
+                        onDelete: () => deleteFolder(folder.id, {
+                          onSuccess: () => addNotification(`Папка "${folder.name}" удалена`, "delete"),
+                          onError: () => addNotification(`Не удалось удалить папку "${folder.name}"`, "error"),
+                        }),
                       });
                     }}
                   />

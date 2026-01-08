@@ -28,8 +28,7 @@ const PromotionPopup = () => {
   const [maxViews, setMaxViews] = useState("");
 
   const [postLink, setPostLink] = useState("");
-  const [postMinViews, setPostMinViews] = useState("");
-  const [postMaxViews, setPostMaxViews] = useState("");
+  const [postQuantity, setPostQuantity] = useState("");
   const [manualPosts, setManualPosts] = useState([]);
 
   useEffect(() => {
@@ -42,36 +41,30 @@ const PromotionPopup = () => {
   }, [promotionConfig]);
 
   const handleAddPost = () => {
-    if (!postLink) {
-      return addNotification("Введите ссылку на пост", "error");
-    }
-    if (!postMinViews || !postMaxViews) {
-      return addNotification("Укажите минимальное и максимальное количество просмотров", "error");
-    }
-    if (manualPosts.length >= 10) {
-      return addNotification("Максимум 10 постов можно добавить", "error");
-    }
+    const quantityNumber = Number(postQuantity);
+
+    if (!postLink) return addNotification("Введите ссылку на пост", "error");
+    if (!postQuantity) return addNotification("Укажите количество просмотров", "error");
+    if (quantityNumber < 10 || quantityNumber > 300000)
+      return addNotification("Количество просмотров должно быть от 10 до 300 000", "error");
+    if (manualPosts.length >= 10) return addNotification("Максимум 10 постов можно добавить", "error");
 
     setManualPosts(prev => [
       ...prev,
-      { link: postLink, minViews: postMinViews, maxViews: postMaxViews }
+      { link: postLink, quantity: quantityNumber }
     ]);
 
     setPostLink("");
-    setPostMinViews("");
-    setPostMaxViews("");
+    setPostQuantity("");
   };
 
   const handlePromotePosts = () => {
-    if (!manualPosts.length) {
-      return addNotification("Сначала добавьте хотя бы один пост для продвижения", "error");
-    }
+    if (!manualPosts.length) return addNotification("Сначала добавьте хотя бы один пост для продвижения", "error");
 
     const orders = manualPosts.map(post => ({
       link: post.link,
       username: popup?.data?.channelUsername || "",
-      min: Number(post.minViews),
-      max: Number(post.maxViews),
+      quantity: Number(post.quantity),
     }));
 
     createPromotionOrders(orders);
@@ -159,23 +152,12 @@ const PromotionPopup = () => {
                     />
                   </CounterContainer>
                   <CounterContainer>
-                    <CounterTitle>Мин. просмотры:</CounterTitle>
+                    <CounterTitle>Количество просмотров:</CounterTitle>
                     <Counter
-                      value={post.minViews}
+                      value={post.quantity}
                       onChange={(value) => {
                         const newPosts = [...manualPosts];
-                        newPosts[index].minViews = value;
-                        setManualPosts(newPosts);
-                      }}
-                    />
-                  </CounterContainer>
-                  <CounterContainer>
-                    <CounterTitle>Макс. просмотры:</CounterTitle>
-                    <Counter
-                      value={post.maxViews}
-                      onChange={(value) => {
-                        const newPosts = [...manualPosts];
-                        newPosts[index].maxViews = value;
+                        newPosts[index].quantity = value;
                         setManualPosts(newPosts);
                       }}
                     />
@@ -201,13 +183,8 @@ const PromotionPopup = () => {
                   />
                 </CounterContainer>
                 <CounterContainer>
-                  <CounterTitle>Мин. просмотры:</CounterTitle>
-                  <Counter value={postMinViews} onChange={setPostMinViews} />
-                </CounterContainer>
-
-                <CounterContainer>
-                  <CounterTitle>Макс. просмотры:</CounterTitle>
-                  <Counter value={postMaxViews} onChange={setPostMaxViews} />
+                  <CounterTitle>Количество просмотров:</CounterTitle>
+                  <Counter value={postQuantity} onChange={setPostQuantity} />
                 </CounterContainer>
 
                 <BtnBase
@@ -215,7 +192,7 @@ const PromotionPopup = () => {
                   $color="#fff"
                   $bg="#336CFF"
                   onClick={handleAddPost}
-                  disabled={!postLink || !postMinViews || !postMaxViews}
+                  disabled={!postLink || !postQuantity}
                 >
                   + Добавить ссылку на пост
                 </BtnBase>
@@ -238,9 +215,7 @@ const PromotionPopup = () => {
       <BtnBase
         $margin="64"
         onClick={handleSave}
-        disabled={
-          createConfigPending || updatePromotionPending
-        }
+        disabled={createConfigPending || updatePromotionPending}
       >
         {createConfigPending || updatePromotionPending
           ? "Сохраняем..."
@@ -251,9 +226,9 @@ const PromotionPopup = () => {
 };
 
 const PromotionContainer = styled.div`
-  padding: 0 56px;
-  @media(max-width: 1600px) { padding: 0 32px; }
-  @media(max-width: 768px) { padding: 0 24px; }
+  padding: 0 56px 30px;
+  @media(max-width: 1600px) { padding: 0 32px 30px; }
+  @media(max-width: 768px) { padding: 0 24px 30px; }
 `;
 const PromotionHead = styled.div` display: flex; gap: 32px; `;
 const PromotionHeadText = styled.p`

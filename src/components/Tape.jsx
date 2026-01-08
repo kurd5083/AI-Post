@@ -19,7 +19,7 @@ const Tape = () => {
   const [stopWords, setStopWords] = useState([]);
   const [priorityWord, setPriorityWord] = useState("");
   const [priorityWords, setPriorityWords] = useState([]);
-  const [language, setLanguage] = useState(filters.language || "");
+  const [language, setLanguage] = useState(filters.language || "ru");
 
   const { addNotification } = useNotificationStore();
 

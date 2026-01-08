@@ -1,26 +1,36 @@
+import { useState } from "react";
 import styled from "styled-components";
 import BtnBase from "@/shared/BtnBase";
 import { usePopupStore } from "@/store/popupStore"
 import { useChannelMembers } from "@/lib/channels/my-team/useChannelMembers";
 import del from "@/assets/del.svg";
 import ModernLoading from "@/components/ModernLoading";
+import AvaPlug from "@/shared/AvaPlug";
+import { useRemoveChannelMember } from "@/lib/channels/my-team/useRemoveChannelMember";
 
 const MyTeamPopup = () => {
   const { popup, changeContent } = usePopupStore();
-  const channelName = popup?.data?.channelName;
-  const { members, membersLoading } = useChannelMembers(channelName);
+  const channelId = popup?.data?.channelId;
+  const { members, membersLoading } = useChannelMembers(channelId);
+  const [errorAvatars, setErrorAvatars] = useState([]);
+
+  const { mutate: removeMember, isPending: removingPending } = useRemoveChannelMember();
+
+  const handleRemove = (telegramId) => {
+    removeMember({ channelId, memberTelegramId: telegramId });
+  };
 
   return (
     <MyTeamContainer>
       <BtnBase
         $color="#5ABAFF"
         $bg="#1B283C"
-        onClick={() => changeContent("my_team_add")}
+        onClick={() => changeContent("my_team_add", 'popup', { channelId })}
       >
         Пригласить в команду
       </BtnBase>
       <TableWrapper>
-        {!membersLoading && channelName ? (
+        {!membersLoading && channelId ? (
           members?.team?.length > 0 ? (
             <Table>
               <colgroup>
@@ -38,39 +48,80 @@ const MyTeamPopup = () => {
                 </tr>
               </thead>
               <tbody>
-                {members?.team?.map((member, index) => (
-                  <TableItem key={index}>
-                    <TableCell>
-                      <TableCellName>
-                        <img src={member.user.avatarUrl} alt="avatar" />
-                        <NameBlock>
-                          <p>
-                            {member.user.firstName} {member.user.lastName.charAt()}.
-                          </p>
-                          {/* {member.username && (
-                          <span>@{member.username}</span>
-                        )} */}
-                        </NameBlock>
-                      </TableCellName>
-                    </TableCell>
-                    <TableCell>{member.role}</TableCell>
-                    <TableCell>
-                      {/* {new Date(member.createdAt).toLocaleDateString()} */}
-                    </TableCell>
-                    <TableCell>
-                      <ButtonDel title="Удалить">
-                        <img src={del} alt="del icon" width={14} height={16} />
-                      </ButtonDel>
-                    </TableCell>
-                  </TableItem>
-                ))}
+                {members?.team?.map((member) => {
+                  console.log(errorAvatars)
+                  const isError = errorAvatars.includes(member.user.telegramId);
+
+                  return (
+                    <TableItem key={member.user.telegramId}>
+                      <TableCell>
+                        <TableCellName>
+                          {member.user.avatarUrl && !isError ? (
+                            <img
+                              src={member.user.avatarUrl}
+                              alt="avatar"
+                              onError={() =>
+                                setErrorAvatars((prev) => [
+                                  ...prev,
+                                  member.user.telegramId,
+                                ])
+                              }
+                            />
+                          ) : (
+                            <AvaPlug width="48px" height="48px" />
+                          )}
+
+                          <NameBlock>
+                            <p>
+                              {member.user.firstName}{" "}
+                              {member.user.lastName
+                                ? member.user.lastName.charAt(0) + "."
+                                : ""}
+                            </p>
+                            {member.username && <span>@{member.username}</span>}
+                          </NameBlock>
+                        </TableCellName>
+                      </TableCell>
+
+                      <TableCell>
+                        {member.role === "OWNER"
+                          ? "Владелец"
+                          : member.role === "MEMBER"
+                            ? "Участник"
+                            : member.role}
+                      </TableCell>
+
+                      <TableCell>
+                        {/* {new Date(member.createdAt).toLocaleDateString()} */}
+                      </TableCell>
+
+                      <TableCell>
+                        {member.role !== "OWNER" && (
+                          <ButtonDel
+                            title="Удалить"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              changeContent("delete_confirm", "popup_window", {
+                                itemName: member.user.firstName,
+                                onDelete: () => handleRemove(member.user.telegramId),
+                              });
+                            }}
+                            disabled={removingPending}
+                          >
+                            <img src={del} alt="del icon" width={14} height={16} />
+                          </ButtonDel>
+                        )}
+                      </TableCell>
+                    </TableItem>
+                  );
+                })}
               </tbody>
             </Table>
           ) : (
-            <p>В команде пока нет участников</p>
+            <EmptyTeam>В команде пока нет участников</EmptyTeam>
           )
         ) : (
-          <ModernLoading text="Загрузка команды..."/>
+          <ModernLoading text="Загрузка команды..." />
         )}
       </TableWrapper>
     </MyTeamContainer>
@@ -81,13 +132,13 @@ const MyTeamContainer = styled.div`
   display: flex;
   height: 100%;
   flex-direction: column;
-  padding: 0 56px;
+  padding: 0 56px 30px;
 
   @media(max-width: 1600px) {
-    padding: 0 32px;
+    padding: 0 32px 30px;
   }
   @media(max-width: 768px) {
-    padding: 0 24px;
+    padding: 0 24px 30px;
   }
 `;
 const TableWrapper = styled.div`
@@ -170,9 +221,9 @@ const TableCell = styled.td`
 const TableCellName = styled.div`
   display: flex;
   align-items: center;
+  gap: 24px;
   
   img {
-    margin: 0 24px 0 0;
     width: 48px;
     height: 48px;
     border-radius: 16px;
@@ -214,5 +265,13 @@ const ButtonDel = styled.button`
     background-color: rgba(239, 98, 132, 0.08);
   }
 `;
-
+const EmptyTeam = styled.p`
+  box-sizing: border-box;
+  text-align: center;
+  color: #6A7080;
+  padding: 48px 0;
+  font-weight: 600;
+  background-color: #1C2438;
+  border-radius: 16px;
+`
 export default MyTeamPopup;

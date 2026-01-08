@@ -6,7 +6,7 @@ import { usePopupStore } from "@/store/popupStore"
 import { useNotificationStore } from "@/store/notificationStore";
 
 const CalendarPostsList = ({ posts }) => {
-  const { deleteMutation, isPending } = useDeleteCalendarEvent();
+  const { mutate: deleteMutation, isPending: deletePending } = useDeleteCalendarEvent();
   const { changeContent } = usePopupStore();
   const { addNotification } = useNotificationStore();
 
@@ -23,14 +23,7 @@ const CalendarPostsList = ({ posts }) => {
       return;
     }
 
-    deleteMutation.mutate(post.id, {
-      onSuccess: () => {
-        addNotification(`Пост "${post.title}" успешно удален`, "delete");
-      },
-      onError: () => {
-        addNotification(`Ошибка при удалении поста "${post.title}"`, "error");
-      },
-    });
+    deleteMutation(post.id);
   };
 
   return (
@@ -43,8 +36,6 @@ const CalendarPostsList = ({ posts }) => {
             <Description>{post.description}</Description>
             <Meta>
               <MetaItem><strong>Канал:</strong> {post.channelId}</MetaItem>
-              <MetaItem><strong>Статус</strong> {post.status}</MetaItem>
-              <MetaItem><strong>Тип события:</strong> {post.eventType}</MetaItem>
               <MetaItem><strong>Запланировано:</strong> {new Date(post.scheduledAt).toLocaleString()}</MetaItem>
             </Meta>
           </Content>
@@ -68,7 +59,7 @@ const CalendarPostsList = ({ posts }) => {
                   onDelete: () => handleDelete(post),
                 });
               }}
-              disabled={isPending}
+              disabled={deletePending}
             >
               <img src={del} alt="del icon" width={14} height={16} />
             </DeleteButton>

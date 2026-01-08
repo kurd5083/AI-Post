@@ -4,10 +4,12 @@ import { useLightboxStore } from "@/store/lightboxStore";
 import { useApprovePost } from "@/lib/posts/usePostsModeration";
 import { useRejectPost } from "@/lib/posts/useRejectPost";
 import { useNotificationStore } from "@/store/notificationStore";
+import normalizeUrl from "@/lib/normalizeUrl";
+import AvaPlug from "@/shared/AvaPlug";
 
 const MAX_VISIBLE_IMAGES = 3;
 
-const CardPablishPremoderation = ({ item, bg, channelId }) => {
+const CardPablishPremoderation = ({ item, bg, channelId, selectedChannel }) => {
   const { openLightbox } = useLightboxStore();
   const { addNotification } = useNotificationStore();
 
@@ -46,8 +48,12 @@ const CardPablishPremoderation = ({ item, bg, channelId }) => {
     <CardPablishItem $bg={bg}>
       <CardPablishItemHead>
         <CardPablishItemName>
-          <CardPablishItemImg src={item.ava} alt={item.username} />
-          <p>{item.username}</p>
+          {selectedChannel.avatarUrl ? (
+            <CardPablishItemImg src={selectedChannel.avatarUrl} alt={selectedChannel.name} />
+          ) : (
+            <AvaPlug width="32px" height="32px"/>
+          )}
+          <p>{selectedChannel.name}</p>
         </CardPablishItemName>
         <CardPablishItemTime>
           <p>{new Date(item.createdAt).toLocaleDateString("ru-RU")}</p>
@@ -65,12 +71,21 @@ const CardPablishPremoderation = ({ item, bg, channelId }) => {
           const isLastVisible = index === MAX_VISIBLE_IMAGES - 1;
           const extraCount = item.images.length - MAX_VISIBLE_IMAGES;
 
+          const src = elem instanceof File || elem instanceof Blob ? URL.createObjectURL(elem) : normalizeUrl(elem);
+
           return (
             <ImageItemWrapper
               key={index}
-              onClick={() => openLightbox({ images: item.images, initialIndex: index })}
+              onClick={() =>
+                openLightbox({
+                  images: item.images.map(img =>
+                    img instanceof File || img instanceof Blob ? URL.createObjectURL(img) : normalizeUrl(img)
+                  ),
+                  initialIndex: index
+                })
+              }
             >
-              <ImageItem src={elem} alt={`картинка ${index}`} />
+              <ImageItem src={src} alt={`картинка ${index}`} />
               {isLastVisible && extraCount > 0 && <Overlay>+{extraCount}</Overlay>}
             </ImageItemWrapper>
           );
@@ -109,7 +124,6 @@ const CardPablishPremoderation = ({ item, bg, channelId }) => {
   );
 };
 
-// ----------------- Styled Components -----------------
 const CardPablishItem = styled.div`
   display: flex;
   flex-direction: column;
@@ -133,6 +147,7 @@ const CardPablishItemHead = styled.div`
 
 const CardPablishItemName = styled.div`
   display: flex;
+  align-items: center;
   gap: 16px;
 
   p {
@@ -165,7 +180,7 @@ const CardPablishItemTime = styled.div`
 const CardPablishImages = styled.div`
   display: flex;
   gap: 8px;
-  margin-top: 4px;
+  margin-top: 12px;
   flex-grow: 1;
 `;
 

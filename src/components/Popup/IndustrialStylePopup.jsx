@@ -10,8 +10,8 @@ import { useUpdateChannelGlobalPrompt } from "@/lib/channels/global-prompt/useUp
 import { useUpdateChannelCreativity } from "@/lib/channels/creativity/useUpdateChannelCreativity";
 import { useUpdateChannelCaption } from "@/lib/channels/caption/useUpdateChannelCaption";
 import Preview from "@/components/Preview";
-import { useTestDrivePrompt } from "@/lib/posts/useTestDrivePrompt";
 import { useNotificationStore } from "@/store/notificationStore";
+import { useTestDriveStore } from "@/store/useTestDriveStore";
 
 const IndustrialStylePopup = () => {
   const { popup, changeContent } = usePopupStore();
@@ -19,88 +19,52 @@ const IndustrialStylePopup = () => {
   const telegramId = popup?.data?.telegramId;
 
   const [collapsed, setCollapsed] = useState(false);
-  const [result, setResult] = useState(null);
   const [localPrompt, setLocalPrompt] = useState("");
   const [localCaption, setLocalCaption] = useState("");
   const [localCreativity, setLocalCreativity] = useState(0);
-  const [testProgress, setTestProgress] = useState(0);
+
   const { addNotification } = useNotificationStore();
 
   const { globalPrompt } = useChannelGlobalPrompt(channelId);
   const { creativity } = useGetChannelCreativity(channelId);
   const { caption } = useGetChannelCaption(channelId);
 
-  const { mutateAsync: testDrive, isPending: testPending } = useTestDrivePrompt();
-
+  const testResult = useTestDriveStore(state => state.results[channelId]);
+  const testProgress = useTestDriveStore(state => state.progress[channelId] ?? 0);
+  // const testPending = useTestDriveStore(state => state.testPending[channelId] ?? false);
+  const runTestDrive = useTestDriveStore(state => state.runTestDrive);
+  
   useEffect(() => {
     if (globalPrompt !== undefined) setLocalPrompt(globalPrompt.globalPromt);
     if (caption !== undefined) setLocalCaption(caption.caption);
     if (creativity !== undefined) setLocalCreativity(creativity.creativity);
   }, [globalPrompt, caption, creativity]);
 
-  const handlePromptChange = (e) => {
-    if (e.target.value.length <= MAX_PROMPT_LENGTH) {
-      setLocalPrompt(e.target.value);
-    }
-  };
-  const handleTest = async () => {
-    if (!localPrompt?.trim()) {
-      addNotification("Введите промпт для тестирования", "info");
-      return;
-    }
-
-    setTestProgress(0);
-
-    const interval = setInterval(() => {
-      setTestProgress(prev => {
-        if (prev >= 90) {
-          clearInterval(interval);
-          return prev;
-        }
-        return prev + Math.floor(Math.random() * 10);
-      });
-    }, 500);
-
-    try {
-      const data = await testDrive({
-        promtManage: localPrompt,
-        channelId,
-      });
-      addNotification("Тест успешно выполнен", "success");
-
-      clearInterval(interval);
-      setTestProgress(100);
-      setResult(data);
-
-      setTimeout(() => setTestProgress(0), 500);
-    } catch (err) {
-      addNotification("Ошибка при тестировании промпта", "error");
-
-      clearInterval(interval);
-      setTestProgress(0);
-    }
-  };
+    const handlePromptChange = (e) => {
+      if (e.target.value.length <= MAX_PROMPT_LENGTH) setLocalPrompt(e.target.value);
+    };
+  const handleTest = () => runTestDrive(channelId, localPrompt);
 
   const { mutate: updateGlobalPrompt, isPending: isPromptPending } = useUpdateChannelGlobalPrompt();
   const { mutate: updateCreativity, isPending: isCreativityPending } = useUpdateChannelCreativity();
   const { mutate: updateCaption, isPending: isCaptionPending } = useUpdateChannelCaption();
 
   const handleSave = async () => {
-  if (!localPrompt?.trim()) {
-    addNotification("Промпт не может быть пустым", "info");
-    return;
-  }
+    if (!localPrompt?.trim()) {
+      addNotification("Промпт не может быть пустым", "info");
+      return;
+    }
 
-  try {
-    await updateGlobalPrompt({ channelId, value: localPrompt });
-    await updateCreativity({ channelId, value: localCreativity });
-    await updateCaption({ channelId, value: localCaption });
+    try {
+      await updateGlobalPrompt({ channelId, value: localPrompt });
+      await updateCreativity({ channelId, value: localCreativity });
+      await updateCaption({ channelId, value: localCaption });
 
-    addNotification("Настройки успешно сохранены", "success");
-  } catch (err) {
-    addNotification("Ошибка при сохранении настроек", "error");
-  }
-};
+      addNotification("Настройки успешно сохранены", "success");
+    } catch {
+      addNotification("Ошибка при сохранении настроек", "error");
+    }
+  };
 
   const isSaving = isPromptPending || isCreativityPending || isCaptionPending;
 
@@ -139,7 +103,7 @@ const IndustrialStylePopup = () => {
           <IndustrialStyleDesc>Подпись будет добавлена в <mark>конец каждого поста.</mark> Например: ссылка или призыв подписаться.</IndustrialStyleDesc>
         </IndustrialStyleLeft>
         <IndustrialStyleRight>
-          <Preview collapsed={collapsed} onChange={() => setCollapsed(!collapsed)} testResult={result} telegramId={telegramId} />
+          <Preview collapsed={collapsed} onChange={() => setCollapsed(!collapsed)} testResult={testResult} telegramId={telegramId} />
         </IndustrialStyleRight>
       </IndustrialStyleContent>
       <IndustrialStyleTitle>Креативность</IndustrialStyleTitle>
@@ -164,13 +128,13 @@ const IndustrialStylePopup = () => {
 }
 
 const IndustrialStyleContainer = styled.div`
-  padding: 0 56px;
+  padding: 0 56px 30px;
 
   @media(max-width: 1600px) {
-    padding: 0 32px;
+    padding: 0 32px 30px;
   }
   @media(max-width: 768px) {
-    padding: 0 24px;
+    padding: 0 24px 30px;
   }
 `
 const IndustrialStyleContent = styled.div`

@@ -121,7 +121,6 @@ const SettingsPopup = () => {
                   if (!channel || !user) return;
                   changeContent(item.key, 'popup', {
                     channelId: channel.id,
-                    channelName: channel.name,
                     workMode: channel.workMode,
                     premoderationMinutes: channel.premoderationMinutes,
                     canPublishWithoutApproval: channel.canPublishWithoutApproval,
@@ -183,12 +182,12 @@ const SettingsPopup = () => {
   )
 }
 const SettingsContainer = styled.div`
-  padding: 0 56px;
+  padding: 0 56px 30px;
   @media(max-width: 1600px) {
-    padding: 0 32px;
+    padding: 0 32px 30px;
   }
   @media(max-width: 768px) {
-    padding: 0 24px;
+    padding: 0 24px 30px;
   }
 `
 const PopupNav = styled.nav`

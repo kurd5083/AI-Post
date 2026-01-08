@@ -1,14 +1,21 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { deleteCalendarEvent } from '@/api/calendar/deleteCalendarEvent';
+import { useNotificationStore } from '@/store/notificationStore';
 
 export const useDeleteCalendarEvent = () => {
   const queryClient = useQueryClient();
+  const { addNotification } = useNotificationStore();
 
   return useMutation({
     mutationFn: (id) => deleteCalendarEvent(id),
 
-    onSuccess: () => {
+    onSuccess: (_, id) => {
       queryClient.invalidateQueries({ queryKey: ['calendar-events'] });
+      addNotification('Пост успешно удален', 'delete');
+    },
+
+    onError: (_, id) => {
+      addNotification('Ошибка при удалении поста', 'error');
     },
   });
 };

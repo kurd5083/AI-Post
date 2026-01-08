@@ -8,6 +8,7 @@ import { usePopupStore } from "@/store/popupStore"
 import ModernLoading from "@/components/ModernLoading";
 import { useNotificationStore } from "@/store/notificationStore";
 import { useLightboxStore } from "@/store/lightboxStore";
+import normalizeUrl from "@/lib/normalizeUrl";
 
 const ImageGenerationPopup = () => {
   const { popup } = usePopupStore();
@@ -55,10 +56,10 @@ const ImageGenerationPopup = () => {
                 </div>
               </Checkbox>
               <ImageGenerationImg
-                src={[`http://77.37.65.40:3000${item.imageUrl}`]} alt="icon style"
+                src={normalizeUrl(item.imageUrl)} alt="icon style"
                 onClick={() =>
                   openLightbox({
-                    images: `http://77.37.65.40:3000${item.imageUrl}`,
+                    images: [normalizeUrl(item.imageUrl)],
                     initialIndex: 0,
                   })
                 }
@@ -77,13 +78,13 @@ const ImageGenerationContent = styled.div`
   display: flex;
   flex-direction: column;
   gap: 32px;
-  padding: 0 56px;
+  padding: 0 56px 30px;
     
   @media(max-width: 1600px) {
-    padding: 0 32px;
+    padding: 0 32px 30px;
   }
   @media(max-width: 768px) {
-    padding: 0 24px;
+    padding: 0 24px 30px;
   }
 `
 const ImageGenerationContentTitle = styled.h3`

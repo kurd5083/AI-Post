@@ -111,7 +111,7 @@ const PopupListContainer = styled.section`
     position: absolute;
     top: 0;
     left: 0;
-    padding: 120px 0 30px;
+    padding-top: 120px;
     background-color: #121726ad;
     backdrop-filter: blur(30px);
     width: 100%;
