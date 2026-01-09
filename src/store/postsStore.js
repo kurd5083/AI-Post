@@ -111,7 +111,7 @@ export const usePostsStore = create((set, get) => ({
 
   getPostTime: (postId) => {
     const post = get().posts.find((p) => p.postId === postId);
-    return post?.time || "00:00"; // просто строка "HH:MM"
+    return post?.time || "00:00";
   },
 
   generatePostWithAI: async (postId, channelId) => {

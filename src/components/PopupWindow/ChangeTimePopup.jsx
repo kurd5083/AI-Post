@@ -90,14 +90,14 @@ const ChangeTimePopup = () => {
       <TimeWrapper>
         <TimeInputField
           type="text"
-          value={hoursState}        // ← заменили hours → hoursState
+          value={hoursState}      
           onChange={handleHoursChange}
           placeholder="00"
         />
         <Colon>:</Colon>
         <TimeInputField
           type="text"
-          value={minutesState}      // ← заменили minutes → minutesState
+          value={minutesState}
           onChange={handleMinutesChange}
           placeholder="00"
         />

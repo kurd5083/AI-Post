@@ -21,7 +21,19 @@ const CardPablish = ({ item, bg, selectedChannel }) => {
       text: item.text || "",
       summary: item.summary || "",
       images: item.images || [],
-      time: "",
+      time: item.calendarScheduledAt
+        ? {
+          date: item.calendarScheduledAt,
+          time: new Date(item.calendarScheduledAt).toLocaleTimeString("ru-RU", {
+            hour: "2-digit",
+            minute: "2-digit",
+            timeZone: "UTC",
+          }),
+        }
+        : {
+          date: new Date().toISOString(),
+          time: "00:00",
+        },
       serverId: item.id,
       placeholder: "Новый пост",
     });
@@ -33,10 +45,10 @@ const CardPablish = ({ item, bg, selectedChannel }) => {
       <CardPablishItemHead>
         <CardPablishItemName>
           {selectedChannel.avatarUrl ? (
-                      <CardPablishItemImg src={selectedChannel.avatarUrl} alt={selectedChannel.name} />
-                    ) : (
-                      <AvaPlug width="32px" height="32px"/>
-                    )}
+            <CardPablishItemImg src={selectedChannel.avatarUrl} alt={selectedChannel.name} />
+          ) : (
+            <AvaPlug width="32px" height="32px" />
+          )}
           <p>{selectedChannel.name}</p>
         </CardPablishItemName>
         <CardPablishItemTime>

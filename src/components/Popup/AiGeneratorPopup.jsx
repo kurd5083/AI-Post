@@ -106,15 +106,18 @@ const AiGeneratorPopup = () => {
     const postChannelId = post.serverId
       ? popup?.data?.channelId
       : usePostsStore.getState().channelMap[post.postId] || (userChannels.length ? userChannels[0].id : null);
+  const [hoursStr, minutesStr] = post.time?.time?.split(":") || ["00", "00"];
+const hours = parseInt(hoursStr);
+const minutes = parseInt(minutesStr);
+const baseDate = post.time?.date ? new Date(post.time.date) : new Date();
 
-    const [hoursStr, minutesStr] = post.time?.time?.split(":") || ["00", "00"];
-    const hours = parseInt(hoursStr);
-    const minutes = parseInt(minutesStr);
-    const baseDate = post.time?.date ? new Date(post.time.date) : new Date();
-    baseDate.setHours(hours);
-    baseDate.setMinutes(minutes);
-    const calendarScheduledAt = baseDate.toISOString();
+baseDate.setUTCHours(hours);
+baseDate.setUTCMinutes(minutes);
+baseDate.setUTCSeconds(0);
+baseDate.setUTCMilliseconds(0);
 
+const calendarScheduledAt = baseDate.toISOString();
+console.log(calendarScheduledAt, "tesese");
     const basePayload = {
       title: post.title,
       text: post.text,
@@ -343,6 +346,7 @@ const AiGeneratorPopup = () => {
                     );
                   })}
                 </ImagesContainer>
+                {console.log(post)}
                 {post.time && (
                   <ItemTime>
                     Выбрано: {(() => {
@@ -353,7 +357,9 @@ const AiGeneratorPopup = () => {
                         year: "numeric",
                         hour: "2-digit",
                         minute: "2-digit",
+                        timeZone: "UTC",
                       });
+
                     })()}
                   </ItemTime>
                 )}

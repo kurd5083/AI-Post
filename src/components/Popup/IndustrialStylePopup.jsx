@@ -87,7 +87,7 @@ const IndustrialStylePopup = () => {
               disabled={!localPrompt?.trim() || testProgress > 0}
               onClick={handleTest}
             >
-              {testProgress > 0 && testProgress < 100 ? `Тестируем... ${testProgress}%` : "Тест"}
+              {testProgress > 0 && testProgress < 100 ? `Генерация с AI... ${testProgress}%` : "Тест"}
             </button>
           </IndustrialStyleInfo>
           <IndustrialStyleDesc>Введите промпт — это задание для генерации поста. <mark>Чем точнее формулировка, тем лучше результат.</mark></IndustrialStyleDesc>

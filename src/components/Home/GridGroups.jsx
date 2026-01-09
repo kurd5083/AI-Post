@@ -6,13 +6,13 @@ import { useChannelsStore } from "@/store/channelsStore";
 import { useDeleteChannel } from "@/lib/channels/useDeleteChannel";
 import { useChannelsGroupedByFolders } from "@/lib/useChannelsGroupedByFolders";
 import DirIcon from '@/icons/DirIcon';
-import ModernLoading from "@/components/ModernLoading";
 import СhannelPlug from '@/shared/СhannelPlug';
 
 const GridGroups = () => {
   const { openPopup } = usePopupStore();
   const { selectedId } = useChannelsStore();
   const { channels, channelsPending } = useChannelsGroupedByFolders();
+  console.log(channels)
   const { mutate: deleteChannel } = useDeleteChannel();
   
  if (channelsPending) {
