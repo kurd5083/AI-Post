@@ -8,7 +8,7 @@ import { useChannelsGroupedByFolders } from "@/lib/useChannelsGroupedByFolders";
 import { useDeleteChannel } from "@/lib/channels/useDeleteChannel";
 import useResolution from "@/lib/useResolution";
 import DirIcon from '@/icons/DirIcon';
-import AvaPlug from '@/shared/AvaPlug';
+import СhannelPlug from '@/shared/СhannelPlug';
 
 const TableGroups = () => {
   const { openPopup } = usePopupStore();
@@ -76,7 +76,7 @@ const TableGroups = () => {
                   {channel?.avatarUrl ? (
                     <img src={channel.avatarUrl} alt="Group" />
                   ) : (
-                    <AvaPlug width="40px" height="40px" />
+                    <СhannelPlug width="40px" height="40px" text={channel.name}/>
                   )}
                 </TableCellAva>
                 <CellName>{channel.name}</CellName>
@@ -357,6 +357,9 @@ const BaseButton = styled.button`
   flex-shrink: 0;
   transition: all 0.2s;
 	margin-right: 8px;
+  &:hover {
+    transform: scale(1.1);       
+  }
 	@media (max-width: 480px) {
     margin-right: 4px !important;
 		width: 40px;

@@ -98,8 +98,7 @@ const Preview = ({ collapsed, onChange, testResult }) => {
                 <PreviewInfoText>
                   {title || summary || url ? (
                     <>
-                      {title && <strong>{title}</strong>}
-                      <br />
+                      {title && <strong>{title}<br /><br /></strong>}
                       {summary}
                       <br />
                       {url && (
@@ -191,6 +190,7 @@ const PreviewInfoContainer = styled.div`
   width: calc(100% - 50px);
   display: flex;
   flex-direction: column;
+  align-items: center;
   gap: 4px;
   z-index: 1;
   @media(max-width: 1600px) {
@@ -212,6 +212,8 @@ const ImageWrapper = styled.div`
   position: relative;
   width: 100%;
   aspect-ratio: 1 / 1;
+  max-width: 400px;
+  max-height: 400px;
   border-radius: 12px;
   overflow: hidden;
   cursor: pointer;

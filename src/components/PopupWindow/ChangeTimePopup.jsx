@@ -4,16 +4,22 @@ import BtnBase from "@/shared/BtnBase";
 import CloseIcon from "@/icons/CloseIcon";
 import { usePopupStore } from "@/store/popupStore";
 import { usePostsStore } from "@/store/postsStore";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import { useNotificationStore } from "@/store/notificationStore";
 
 const ChangeTimePopup = () => {
   const { popup, goBack } = usePopupStore();
   const { setPostTime, getPostTime } = usePostsStore();
+  const { addNotification } = useNotificationStore();
 
   const postId = popup?.data?.postId;
-  const initial = getPostTime(postId); 
+  const initial = getPostTime(postId);
+  const [initHours, initMinutes] = initial.time ? initial.time.split(":") : ["00", "00"];
 
-  const [hours, setHours] = useState(initial.split(":")[0]);
-  const [minutes, setMinutes] = useState(initial.split(":")[1]);
+  const [date, setDate] = useState(initial.date ? new Date(initial.date) : new Date());
+  const [hoursState, setHours] = useState(initHours);
+  const [minutesState, setMinutes] = useState(initMinutes);
 
   const handleHoursChange = (e) => {
     let value = e.target.value;
@@ -34,103 +40,95 @@ const ChangeTimePopup = () => {
   };
 
   const handleSave = () => {
-    const time = `${hours}:${minutes}`;
-    setPostTime(postId, time);
+    const fixedHours = hoursState.padStart(2, "0");
+    const fixedMinutes = minutesState.padStart(2, "0");
+
+    const resultDateTime = new Date(date);
+    resultDateTime.setHours(parseInt(fixedHours, 10));
+    resultDateTime.setMinutes(parseInt(fixedMinutes, 10));
+    resultDateTime.setSeconds(0);
+    resultDateTime.setMilliseconds(0);
+
+    const offset = resultDateTime.getTimezoneOffset();
+    resultDateTime.setMinutes(resultDateTime.getMinutes() - offset);
+
+    setPostTime(postId, {
+      date: resultDateTime.toISOString(),
+      time: `${hoursState.padStart(2, "0")}:${minutesState.padStart(2, "0")}`
+    });
+
     goBack();
   };
+
   return (
-    <PopupContainer onClick={() => goBack()}>
-      <PopupContent onClick={(e) => e.stopPropagation()}>
-        <ChangeTimeHead>
-          <HeadTitle>Изменить время</HeadTitle>
-          <CloseButton onClick={() => goBack()}>
-            <CloseIcon color="#336CFF" />
-          </CloseButton>
-        </ChangeTimeHead>
-        <ChangeTimeSubtitle>Выберите время в которое будет удобнее опубликовать пост</ChangeTimeSubtitle>
-        <TimeWrapper>
-          <TimeInputField
-            type="text"
-            value={hours}
-            onChange={handleHoursChange}
-            placeholder="00"
-          />
-          <Colon>:</Colon>
-          <TimeInputField
-            type="text"
-            value={minutes}
-            onChange={handleMinutesChange}
-            placeholder="00"
-          />
-        </TimeWrapper>
-        <ChangeTimeButtons>
-          <BtnBase $color="#D6DCEC" $bg="#336CFF" onClick={handleSave}>
-            Сохранить
-          </BtnBase>
-          <BtnBase $color="#D6DCEC" $bg="#242A3A" onClick={() => goBack()}>
-            Отменить
-          </BtnBase>
-        </ChangeTimeButtons>
-      </PopupContent>
-    </PopupContainer>
+    <>
+      <ChangeTimeHead>
+        <HeadTitle>Изменить дату и время</HeadTitle>
+        <CloseButton onClick={() => goBack()}>
+          <CloseIcon color="#336CFF" />
+        </CloseButton>
+      </ChangeTimeHead>
+
+      <ChangeTimeSubtitle>Выберите дату публикации</ChangeTimeSubtitle>
+
+      <DatePickerWrapper>
+        <StyledDatePicker
+          selected={date}
+          onChange={(d) => setDate(d)}
+          dateFormat="dd.MM.yyyy"
+          locale="ru"
+          wrapperClassName="picker-wrapper"
+        />
+      </DatePickerWrapper>
+      <FieldDescription>
+        Выберите дату, когда пост должен быть опубликован.
+        Убедитесь, что выбранная дата не находится в прошлом.
+      </FieldDescription>
+
+      <ChangeTimeSubtitle>Выберите время</ChangeTimeSubtitle>
+
+      <TimeWrapper>
+        <TimeInputField
+          type="text"
+          value={hoursState}        // ← заменили hours → hoursState
+          onChange={handleHoursChange}
+          placeholder="00"
+        />
+        <Colon>:</Colon>
+        <TimeInputField
+          type="text"
+          value={minutesState}      // ← заменили minutes → minutesState
+          onChange={handleMinutesChange}
+          placeholder="00"
+        />
+      </TimeWrapper>
+      <FieldDescription>
+        Укажите время публикации в 24-часовом формате. Например, 14:30 для 2:30 дня.
+      </FieldDescription>
+
+      <ChangeTimeButtons>
+        <BtnBase $color="#D6DCEC" $bg="#336CFF" onClick={handleSave}>
+          Сохранить
+        </BtnBase>
+        <BtnBase $color="#D6DCEC" $bg="#242A3A" onClick={() => goBack()}>
+          Отменить
+        </BtnBase>
+      </ChangeTimeButtons>
+    </>
   );
 };
-const PopupContainer = styled.section`
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
-    box-sizing: border-box;
-    position: absolute;
-    top: 0px;
-    left: 0;
-    padding: 120px 56px 30px;
-    background-color: #121726ad;
-    backdrop-filter: blur(30px);
-    width: 100%;
-    overflow-y: auto;
-    scrollbar-width: none;
-    max-height: 100dvh;
-    height: 100%;
-    z-index: 10;
-    @media(max-width: 1600px) {
-      padding: 120px 32px 30px;   
-    }
-    @media(max-width: 480px) {
-      padding: 120px 24px 30px;   
-    }
-`
-const PopupContent = styled.div`
-    margin-top: 50px;
-    box-sizing: border-box;
-    max-width: 520px;
-    width: 100%;
-    background: #1c243860;
-    border-radius: 32px;
-    padding: 48px;
-    @media(max-width: 480px) {
-        margin-top: 30px;
-        padding: 32px 24px;   
-    }
-`
+
 const ChangeTimeHead = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 20px;
-  img {
-    cursor: pointer;
-  }
 `;
+
 const HeadTitle = styled.h2`
   font-size: 32px;
-  line-height: 32px;
   font-weight: 700;
-  @media(max-width: 480px) {
-    font-size: 24px;
-    line-height: 24px;
-  }
 `;
+
 const CloseButton = styled.button`
   width: 32px;
   height: 32px;
@@ -138,44 +136,76 @@ const CloseButton = styled.button`
   align-items: center;
   justify-content: center;
 `;
+
 const ChangeTimeSubtitle = styled.p`
   color: #6a7080;
   font-size: 14px;
-  line-height: 20px;
   font-weight: 700;
   margin-top: 24px;
 `;
+const FieldDescription = styled.span`
+  font-size: 12px;
+  color: #6a7080;
+  margin-top: 4px;
+  line-height: 1.4;
+`;
+const DatePickerWrapper = styled.div`
+  margin-top: 16px;
+`;
+const StyledDatePicker = styled(DatePicker)`
+  width: 100%;
+  font-size: 20px;
+  padding: 12px;
+  background: transparent;
+  border: 1px solid #6a7080;
+  color: #d6dcec;
+  border-radius: 8px;
+  cursor: pointer;
+
+  &:focus {
+    outline: none;
+    border-color: #336cff;
+  }
+`;
 const TimeWrapper = styled.div`
+  box-sizing: border-box;
   display: flex;
+  justify-content: center;
   align-items: center;
-  justify-content: space-between;
-  margin-top: 48px;
-  padding: 0 30px;
-  @media(max-width: 480px) {
-    padding: 0 20px;
+  gap: 8px;
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #6a7080;
+  border-radius: 8px;
+  background: transparent;
+  color: #d6dcec;
+  cursor: text;
+  margin-top: 16px;
+  &:focus-within {
+    border-color: #336cff;
   }
 `;
 const TimeInputField = styled.input`
-  font-size: 64px;
-  line-height: 64px;
+  width: 50px;
+  font-size: 20px;
   font-weight: 700;
-  max-width: 100px;
-  background-color: transparent;
-  border: none;
-  color: #D6DCEC;
   text-align: center;
+  border: none;
+  background: transparent;
+  color: #d6dcec;
+
 
   &:focus {
     outline: none;
   }
 `;
+
 const Colon = styled.span`
-  color: #6A7080;
-  font-size: 64px;
-  line-height: 64px;
+  font-size: 20px;
   font-weight: 700;
-  margin-top: -8px;
+  color: #6a7080;
 `;
+
 const ChangeTimeButtons = styled.div`
   display: flex;
   gap: 8px;

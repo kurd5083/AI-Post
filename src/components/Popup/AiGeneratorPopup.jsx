@@ -98,7 +98,7 @@ const AiGeneratorPopup = () => {
 
   const handleSavePost = (post) => {
     console.log(post)
-    if (!post.title || !post.text) {
+    if (!post.title || !post.summary) {
       addNotification("Пост должен иметь заголовок и текст", "info");
       return;
     }
@@ -107,16 +107,13 @@ const AiGeneratorPopup = () => {
       ? popup?.data?.channelId
       : usePostsStore.getState().channelMap[post.postId] || (userChannels.length ? userChannels[0].id : null);
 
-    const [hoursStr, minutesStr] = post.time?.split(":") || ["00", "00"];
+    const [hoursStr, minutesStr] = post.time?.time?.split(":") || ["00", "00"];
     const hours = parseInt(hoursStr);
     const minutes = parseInt(minutesStr);
-
-    const isValidHour = !isNaN(hours) && hours >= 0 && hours <= 23;
-    const isValidMinute = !isNaN(minutes) && minutes >= 0 && minutes <= 59;
-
-    const calendarScheduledAt = isValidHour && isValidMinute
-      ? new Date(Date.UTC(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), hours, minutes)).toISOString()
-      : new Date().toISOString();
+    const baseDate = post.time?.date ? new Date(post.time.date) : new Date();
+    baseDate.setHours(hours);
+    baseDate.setMinutes(minutes);
+    const calendarScheduledAt = baseDate.toISOString();
 
     const basePayload = {
       title: post.title,
@@ -193,7 +190,7 @@ const AiGeneratorPopup = () => {
     updatePost(postId, { text: el.innerHTML, summary: el.innerHTML });
   };
   const handlePublishNow = (post) => {
-    if (!post.text) return addNotification("Нельзя публиковать пустой пост", "info");
+    if (!post.summary) return addNotification("Нельзя публиковать пустой пост", "info");
 
     const postChannelId = channelId || usePostsStore.getState().channelMap[post.postId];
     if (!postChannelId) return addNotification("Выберите канал для публикации поста", "info");
@@ -301,8 +298,8 @@ const AiGeneratorPopup = () => {
                   if (!el) return;
                   textRefs.current[post.postId] = el;
 
-                  if (el.innerHTML !== post.text) {
-                    el.innerHTML = post.text;
+                  if (el.innerHTML !== post.summary) {
+                    el.innerHTML = post.summary;
                   }
                 }}
                 onInput={e => {
@@ -346,7 +343,20 @@ const AiGeneratorPopup = () => {
                     );
                   })}
                 </ImagesContainer>
-                {post.time && <ItemTime key={post.time}>Выбранное время: {post.time}</ItemTime>}
+                {post.time && (
+                  <ItemTime>
+                    Выбрано: {(() => {
+                      const d = new Date(post.time.date || new Date());
+                      return d.toLocaleString("ru-RU", {
+                        day: "2-digit",
+                        month: "2-digit",
+                        year: "numeric",
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      });
+                    })()}
+                  </ItemTime>
+                )}
               </BodyRight>
             </ItemBody>
 
@@ -358,7 +368,7 @@ const AiGeneratorPopup = () => {
                     {postProgress[post.postId] != null && postProgress[post.postId] < 100 ? `Генерация с AI... ${postProgress[post.postId]}%` : "Написать с AI"}
                   </BtnBase>
 
-                  <BtnBase $padding="0" $color="#FF7F48" $bg="transporent" onClick={() => generateImageWithAI(post.postId, post.text)}>
+                  <BtnBase $padding="0" $color="#FF7F48" $bg="transporent" onClick={() => generateImageWithAI(post.postId, post.summary)}>
                     <img src={create} alt="create icon" />
                     {imageProgress[post.postId] != null && imageProgress[post.postId] < 100 ? `Генерация фото с AI... ${imageProgress[post.postId]}%` : "Создать фото с AI"}
                   </BtnBase>
@@ -476,7 +486,7 @@ const GeneratorList = styled.div`
   overflow-y: auto;
   scrollbar-width: none;
   max-height: calc(100dvh - 285px);
-  min-height: 650px;
+  min-height: 600px;
   height: 100%;
   
   @media(max-width: 2000px) {
@@ -527,6 +537,13 @@ const HeadTitle = styled.input`
   background: transparent;
   border: none;
   flex: 1;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+
+  &:focus {
+    outline: none;
+  }
 `
 const ItemBody = styled.div`
   display: flex;
@@ -613,6 +630,7 @@ const ItemTime = styled.p`
   font-size: 14px;
   color: #6a7080;
   text-align: right;
+  flex-grow: 0;
 `;
 const ItemActions = styled.div`
   display: flex;

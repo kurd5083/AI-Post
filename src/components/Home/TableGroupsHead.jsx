@@ -1,3 +1,4 @@
+import { useEffect, useRef } from "react";
 import styled, { css } from "styled-components";
 import refresh from "@/assets/table-groups/refresh.svg";
 import del from "@/assets/del.svg";
@@ -26,7 +27,21 @@ const TableGroups = () => {
   const { mutate: deleteFolder } = useDeleteFolder();
   const { botInfo } = useTelegramBotInfo();
   const { addNotification } = useNotificationStore();
+  const didAutoSelect = useRef(false);
 
+  useEffect(() => {
+    if (!channels || didAutoSelect.current) return;
+
+    if (selectedId === null && channels.totalChannelsWithoutFolder === 0) {
+      const folderWithChannels = channels.folders?.find(f => f.channels.length > 0);
+
+      if (folderWithChannels) {
+        setId(folderWithChannels.id);
+        didAutoSelect.current = true;
+      }
+    }
+  }, [channels, selectedId, setId]);
+  
   return (
     <TableGroupsContainer>
       <TableGroupsHead>

@@ -104,11 +104,14 @@ export const usePostsStore = create((set, get) => ({
 
   setPostTime: (postId, time) =>
     set((state) => ({
-      posts: state.posts.map((p) => (p.postId === postId ? { ...p, time } : p)),
+      posts: state.posts.map((p) =>
+        p.postId === postId ? { ...p, time } : p
+      ),
     })),
+
   getPostTime: (postId) => {
     const post = get().posts.find((p) => p.postId === postId);
-    return post?.time;
+    return post?.time || "00:00"; // просто строка "HH:MM"
   },
 
   generatePostWithAI: async (postId, channelId) => {

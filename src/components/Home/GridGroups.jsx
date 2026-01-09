@@ -7,7 +7,7 @@ import { useDeleteChannel } from "@/lib/channels/useDeleteChannel";
 import { useChannelsGroupedByFolders } from "@/lib/useChannelsGroupedByFolders";
 import DirIcon from '@/icons/DirIcon';
 import ModernLoading from "@/components/ModernLoading";
-import AvaPlug from '@/shared/AvaPlug';
+import СhannelPlug from '@/shared/СhannelPlug';
 
 const GridGroups = () => {
   const { openPopup } = usePopupStore();
@@ -51,7 +51,7 @@ const GridGroups = () => {
           {channel?.avatarUrl ? (
             <GridImg src={channel.avatarUrl} alt="Group" />
           ) : (
-            <AvaPlug width="40px" height="40px" />
+            <СhannelPlug width="40px" height="40px" text={channel.name}/>
           )}
           <CellName>{channel.name}</CellName>
           <p>
@@ -184,7 +184,9 @@ const BaseButton = styled.button`
   flex-shrink: 0;
   transition: all 0.2s;
   margin-right: 8px;
-  
+  &:hover {
+    transform: scale(1.1);       
+  }
   @media (max-width: 480px) {
     margin-right: 4px !important;
     width: 40px;
