@@ -1,16 +1,16 @@
 import styled from "styled-components";
-import Statistics from "@/components/Home/Statistics"
+import Statistics from "@/components/Home/Statistics";
 import BtnBase from "@/shared/BtnBase";
-import { usePopupStore } from "@/store/popupStore"
+import { usePopupStore } from "@/store/popupStore";
 import { useUser } from "@/lib/useUser";
 import { useUserBalance } from "@/lib/useUserBalance";
-import { useLogout } from "@/lib/useLogout";
+import { useAuthStore } from "@/store/authStore";
 
 const ProfilePopup = () => {
   const { changeContent } = usePopupStore();
   const { user } = useUser();
   const { balance } = useUserBalance();
-  const { mutate: logout, isPending } = useLogout();
+  const logout = useAuthStore(state => state.logout); // <-- берем метод logout из Zustand
 
   return (
     <div>
@@ -26,21 +26,21 @@ const ProfilePopup = () => {
             $padding="17px 24px"
             $bg="#37273F"
             $color="#EF6284"
-            onClick={() => logout()}
-            disabled={isPending}
+            onClick={logout} // <-- вызываем logout из стора
           >
-            {isPending ? "Выходим..." : "Выйти из аккаунта"}
+            Выйти из аккаунта
           </BtnBase>
         </ButtonAcc>
       </ProfileHead>
+
       <Statistics />
+
       <ProfileBalance>
         <h2>Ваш баланс:</h2>
-        <p>{balance?.balanceRubles}
-          {/* <mark>,48</mark> */}
-          руб.</p>
+        <p>{balance?.balanceRubles} руб.</p>
         <BtnBase $padding="21px 24px" onClick={() => changeContent("replenish")}>+ Пополнить кошелек</BtnBase>
       </ProfileBalance>
+
       <ProfileInfos>
         <ProfileInfo>
           <h2>4</h2>
@@ -51,20 +51,20 @@ const ProfilePopup = () => {
           <p>Создано постов за все время</p>
         </ProfileInfo>
       </ProfileInfos>
+
       <ButtonAccMobile>
         <BtnBase
           $padding="17px 24px"
           $bg="#37273F"
           $color="#EF6284"
-          onClick={() => logout()}
-          disabled={isPending}
+          onClick={logout} 
         >
-          {isPending ? "Выходим..." : "Выйти из аккаунта"}
+          Выйти из аккаунта
         </BtnBase>
       </ButtonAccMobile>
     </div>
-  )
-}
+  );
+};
 
 const ProfileHead = styled.div`
   display: flex;
