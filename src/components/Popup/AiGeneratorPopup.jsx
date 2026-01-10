@@ -106,18 +106,18 @@ const AiGeneratorPopup = () => {
     const postChannelId = post.serverId
       ? popup?.data?.channelId
       : usePostsStore.getState().channelMap[post.postId] || (userChannels.length ? userChannels[0].id : null);
-  const [hoursStr, minutesStr] = post.time?.time?.split(":") || ["00", "00"];
-const hours = parseInt(hoursStr);
-const minutes = parseInt(minutesStr);
-const baseDate = post.time?.date ? new Date(post.time.date) : new Date();
+    const [hoursStr, minutesStr] = post.time?.time?.split(":") || ["00", "00"];
+    const hours = parseInt(hoursStr);
+    const minutes = parseInt(minutesStr);
+    const baseDate = post.time?.date ? new Date(post.time.date) : new Date();
 
-baseDate.setUTCHours(hours);
-baseDate.setUTCMinutes(minutes);
-baseDate.setUTCSeconds(0);
-baseDate.setUTCMilliseconds(0);
+    baseDate.setUTCHours(hours);
+    baseDate.setUTCMinutes(minutes);
+    baseDate.setUTCSeconds(0);
+    baseDate.setUTCMilliseconds(0);
 
-const calendarScheduledAt = baseDate.toISOString();
-console.log(calendarScheduledAt, "tesese");
+    const calendarScheduledAt = baseDate.toISOString();
+    console.log(calendarScheduledAt, "tesese");
     const basePayload = {
       title: post.title,
       text: post.text,
@@ -382,36 +382,31 @@ console.log(calendarScheduledAt, "tesese");
 
                 <ItemActionsAdd>
                   <input type="file" accept="image/*" multiple style={{ display: "none" }} id={`file-input-${post.postId}`} onChange={e => { if (e.target.files?.length) handleAddImages(post.postId, e.target.files); }} />
-                  <img src={paper} alt="paper icon" style={{ cursor: "pointer" }} onClick={() => document.getElementById(`file-input-${post.postId}`).click()} />
-
+                  <img src={paper} alt="paper icon" title="Добавить изображение" onClick={() => document.getElementById(`file-input-${post.postId}`).click()} />
                   <div style={{ position: "relative" }}>
-                    <img src={smiley} onClick={() => setEmojiPostId(prev => prev === post.postId ? null : post.postId)} />
+                    <img src={smiley} title="Добавить эмодзи" onClick={() => setEmojiPostId(prev => prev === post.postId ? null : post.postId)} />
                     {emojiPostId === post.postId && (
                       <div style={{ position: "absolute", zIndex: 100 }}>
                         <EmojiPicker onEmojiClick={emojiData => { insertEmojiAtCursor(emojiData.emoji, post.postId); setEmojiPostId(null); }} theme="dark" locale="ru" />
                       </div>
                     )}
                   </div>
-
-                  <img src={fat} alt="fat icon" onClick={() => formatText("bold")} />
-                  <img src={italics} alt="italics icon" onClick={() => formatText("italic")} />
-                  <img src={underlined} alt="underlined icon" onClick={() => formatText("underline")} />
-                  <img src={crossed} alt="crossed icon" onClick={() => formatText("strikeThrough")} />
-                  <img src={link} alt="link icon" onClick={() => addLink(post.postId)} />
+                  <img src={fat} alt="fat icon" title="Жирный" onClick={() => formatText("bold")} />
+                  <img src={italics} alt="italics icon" title="Курсив" onClick={() => formatText("italic")} />
+                  <img src={underlined} alt="underlined icon" title="Подчёркнутый" onClick={() => formatText("underline")} />
+                  <img src={crossed} alt="crossed icon" title="Зачёркнутый" onClick={() => formatText("strikeThrough")} />
+                  <img src={link} alt="link icon" title="Добавить ссылку" onClick={() => addLink(post.postId)} />
+                  <img src={hide} alt="hide icon" title="Посмотреть лайв превью" width={24} height={17} onClick={() => setSelectedPost(post)} />
                 </ItemActionsAdd>
               </ActionsLeft>
 
               <ButtonsAll>
-                <HideButton onClick={() => setSelectedPost(post)}><img src={hide} alt="hide icon" width={24} height={17} /></HideButton>
-
-                <ButtonsMain>
-                  <ButtonsMainTop>
-                    <BtnBase $padding="21px" $color="#EF6284" $bg="#241E2D" onClick={() => handleRemovePost(post.postId)}>Отменить</BtnBase>
-                    <BtnBase $padding="21px" $border $bg="transporent" $color="#6A7080" onClick={() => changeContent("change_time_popup", "popup_window", { postId: post.postId })}>Изменить время</BtnBase>
-                    <BtnBase $padding="21px" $color="#336CFF" $bg="#161F37" onClick={() => handleSavePost(post)} disabled={updatePending || createPostPending}>{createPostPending ? "Сохраняем..." : "Сохранить"}</BtnBase>
-                  </ButtonsMainTop>
-                  <BtnBase $padding="21px" $border $width="100%" $bg="transporent" $color="#6A7080" onClick={() => handlePublishNow(post)} disabled={isSendPending}>{isSendPending ? "Публикация..." : "Опубликовать сейчас"}</BtnBase>
-                </ButtonsMain>
+                <ButtonsMainTop>
+                  <BtnBase $padding="21px 19px" $color="#EF6284" $bg="#241E2D" onClick={() => handleRemovePost(post.postId)}>Отменить</BtnBase>
+                  <BtnBase $padding="21px 20px" $border $bg="transporent" $color="#6A7080" onClick={() => changeContent("change_time_popup", "popup_window", { postId: post.postId })}>Изменить время</BtnBase>
+                  <BtnBase $padding="21px 20px" $color="#336CFF" $bg="#161F37" onClick={() => handleSavePost(post)} disabled={updatePending || createPostPending}>{createPostPending ? "Сохраняем..." : "Сохранить"}</BtnBase>
+                </ButtonsMainTop>
+                <BtnBase $padding="21px 18px" $border $width="100%" $bg="transporent" $color="#6A7080" onClick={() => handlePublishNow(post)} disabled={isSendPending}>{isSendPending ? "Публикация..." : "Опубликовать сейчас"}</BtnBase>
               </ButtonsAll>
             </ItemActions>
           </ListItem>
@@ -679,6 +674,8 @@ const ItemActionsAdd = styled.div`
 `
 const ButtonsAll = styled.div`
   display: flex;
+  flex-direction: column;
+
   gap: 8px;
   align-items: flex-end;
   justify-content: flex-end;
@@ -687,17 +684,12 @@ const ButtonsAll = styled.div`
   @media(max-width: 2000px) {
     flex-direction: column;
     position: absolute;
-    bottom: -210px;
+    bottom: -150px;
     right: 0;
   } 
   @media(max-width: 480px) {
-    bottom: -280px;
+    bottom: -220px;
   } 
-`;
-const ButtonsMain = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
 `;
 const ButtonsMainTop = styled.div`
   display: flex;
@@ -719,9 +711,6 @@ const BaseButton = styled.button`
   border-radius: 12px;
   flex-shrink: 0;
   transition: all 0.2s;
-`;
-const HideButton = styled(BaseButton)`
-  border: 2px solid #2D3241;
 `;
 const PreviewContainer = styled.div`
   grid-column:  4 / span 2;

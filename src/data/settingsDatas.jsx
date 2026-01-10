@@ -66,16 +66,16 @@ export const settingsDatas = {
         {
             label: "Продвижение",
             items: [
-                {
-                    key: "activate_promotion",
-                    name: "Активировать продвижение",
-                    status: true,
-                    right: 'switch',
-                    extra: {
-                        background: "#445838",
-                        image: activate_promotion
-                    }, 
-                },
+                // {
+                //     key: "activate_promotion",
+                //     name: "Активировать продвижение",
+                //     status: true,
+                //     right: 'switch',
+                //     extra: {
+                //         background: "#445838",
+                //         image: activate_promotion
+                //     }, 
+                // },
                 {
                     key: "promotion",
                     name: "Продвижение",

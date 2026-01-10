@@ -7,15 +7,19 @@ import { useDeleteChannel } from "@/lib/channels/useDeleteChannel";
 import { useChannelsGroupedByFolders } from "@/lib/useChannelsGroupedByFolders";
 import DirIcon from '@/icons/DirIcon';
 import СhannelPlug from '@/shared/СhannelPlug';
+import { useUpdateUserAvatar } from '@/lib/channels/useUpdateUserAvatar';
+import edit from "@/assets/templates/edit.svg";
+import { useUploadMedia } from '@/lib/mediaLibrary/useUploadMedia';
 
 const GridGroups = () => {
   const { openPopup } = usePopupStore();
   const { selectedId } = useChannelsStore();
   const { channels, channelsPending } = useChannelsGroupedByFolders();
-  console.log(channels)
   const { mutate: deleteChannel } = useDeleteChannel();
-  
- if (channelsPending) {
+  const { mutate: updateAvatar } = useUpdateUserAvatar();
+  const { mutate: upload, isPending } = useUploadMedia();
+  if (channelsPending) {
+
     return (
       <GridContainer>
         <NoChannels>Загрузка каналов...</NoChannels>
@@ -32,8 +36,8 @@ const GridGroups = () => {
     selectedId === null
       ? "Каналов без папки нет"
       : channels?.folders?.find(f => f.id === selectedId)
-      ? `В папке "${channels.folders.find(f => f.id === selectedId).name}" нет каналов`
-      : "Папка не найдена";
+        ? `В папке "${channels.folders.find(f => f.id === selectedId).name}" нет каналов`
+        : "Папка не найдена";
 
   if (!currentChannels.length) {
     return (
@@ -47,12 +51,45 @@ const GridGroups = () => {
     <GridContainer>
       {currentChannels.map((channel, index) => (
         <GridItem key={channel.id}>
+          {console.log(channel, 'channel')}
+
+          <input
+            type="file"
+            accept="image/*"
+            style={{ display: "none" }}
+            id={`img-upload-${channel.id}`}
+            onChange={(e) => {
+              const files = e.target.files;
+              if (!files?.length) return;
+
+              upload([...files], {
+                onSuccess: (response) => {
+                  const uploaded = response?.[0];
+
+                  if (!uploaded?.url) {
+                    console.warn("Не получили url");
+                    return;
+                  }
+                  console.log(uploaded, 'uploaded asd')
+                  updateAvatar({
+                    id: channel.id,
+                    avatarUrl: uploaded.url,
+                  });
+                },
+              });
+            }}
+          />
           <GridItemNum>#{index + 1}</GridItemNum>
-          {channel?.avatarUrl ? (
-            <GridImg src={channel.avatarUrl} alt="Group" />
-          ) : (
-            <СhannelPlug width="40px" height="40px" text={channel.name}/>
-          )}
+          <AvatarWrap
+            onClick={() => document.getElementById(`img-upload-${channel.id}`).click()}
+          >
+            {channel?.avatarUrl ? (
+              <GridImg src={channel.avatarUrl} alt="Group" />
+            ) : (
+              <СhannelPlug width="40px" height="40px" text={channel.name} />
+            )}
+            <EditOverlay><img src={edit} alt='edit icon' /></EditOverlay>
+          </AvatarWrap>
           <CellName>{channel.name}</CellName>
           <p>
             {channel?.workMode === "PREMODERATION" && "Предмодерация"}
@@ -135,6 +172,22 @@ const GridItemNum = styled.p`
   font-size: 14px;
   font-weight: 600;
 `;
+const AvatarWrap = styled.div`
+  position: relative;
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  cursor: pointer;
+  overflow: hidden;
+
+  &:hover img {
+    filter: brightness(80%);
+  }
+  
+  &:hover div {
+    opacity: 1;
+  }
+`;
 const GridImg = styled.img`
   width: 40px;
   height: 40px;
@@ -142,7 +195,19 @@ const GridImg = styled.img`
   object-fit: cover;
   transition: transform 0.2s ease;
 `;
-
+const EditOverlay = styled.div`
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.5);
+  font-weight: 600;
+`;
 const CellName = styled.span`
   max-width: 180px;
   white-space: nowrap;
@@ -168,6 +233,7 @@ const GridStatus = styled.button`
   &:hover {
     background-color: #336CFF;
     color: #fff;
+    border: 2px solid #336CFF;;
   }
 `;
 const ButtonsWrap = styled.div`
@@ -194,11 +260,11 @@ const BaseButton = styled.button`
   }
 `;
 const ButtonDir = styled(BaseButton)`
-  border: 2px solid #336CFF;
+  border: 2px solid #2F3953;
 
-  &:hover {
+  /* &:hover {
     background-color: #336CFF;
-  }
+  } */
 `;
 const ButtonSetting = styled(BaseButton)`
   border: 2px solid #2F3953;

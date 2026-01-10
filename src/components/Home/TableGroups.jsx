@@ -338,9 +338,11 @@ const TableCellStatus = styled.button`
   font-size: 14px;
   font-weight: 700;
   background: transparent;
+
   &:hover {
     background-color: #336CFF;
     color: #fff;
+    border: 2px solid #336CFF;;
   }
 `;
 const ButtonsWrap = styled.div`
@@ -367,11 +369,7 @@ const BaseButton = styled.button`
   }
 `;
 const ButtonDir = styled(BaseButton)`
-  border: 2px solid #336CFF;
-  
-  &:hover {
-    background-color: #336CFF;
-  }
+  border: 2px solid #2F3953;
 `;
 
 const ButtonList = styled(BaseButton)`

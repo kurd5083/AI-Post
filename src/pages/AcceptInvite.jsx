@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { useNotificationStore } from "@/store/notificationStore";
 import { useAcceptInvite } from "@/lib/channels/my-team/useAcceptInvite";
+import ModernLoading from "@/components/ModernLoading";
 
 const AcceptInvite = () => {
   const [searchParams] = useSearchParams();
@@ -30,7 +31,7 @@ const AcceptInvite = () => {
 
   return (
     <div>
-      {isLoading ? "Обрабатываем приглашение..." : "Приглашение"}
+      <ModernLoading text={isLoading ? "Обрабатываем приглашение..." : "Приглашение"}/>
     </div>
   );
 };

@@ -68,7 +68,7 @@ const PromotionPopup = () => {
     }));
 
     createPromotionOrders(orders);
-    addNotification("Посты успешно продвинуты", "update");
+    addNotification("заказ создан", "success");
   };
 
   const handleSave = () => {
@@ -105,6 +105,7 @@ const PromotionPopup = () => {
       <PromotionHead>
         <PromotionHeadText $active={true}>Просмотр</PromotionHeadText>
         <PromotionHeadText onClick={() => changeContent("boosts")}>Бусты</PromotionHeadText>
+        <PromotionHeadText onClick={() => changeContent("my_orders")}>Мои заказы</PromotionHeadText>
       </PromotionHead>
       {promotionLoading ? (
         <ModernLoading text="Загрузка публикаций..." />

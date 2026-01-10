@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAuthTelegram } from "@/lib/useAuthTelegram";
+import ModernLoading from "@/components/ModernLoading";
 
 const Auth = () => {
   const navigate = useNavigate();
@@ -24,7 +25,7 @@ const Auth = () => {
     });
   }, [search, navigate, telegramAuth]);
 
-  return <div>Авторизация через Telegram...</div>;
+  return <ModernLoading text="Авторизация через Telegram..."/>;
 };
 
 export default Auth;

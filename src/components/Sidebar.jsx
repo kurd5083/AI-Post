@@ -12,7 +12,7 @@ import TgIcon from "@/icons/TgIcon";
 const Sidebar = () => {
   const { openPopup, closePopup } = usePopupStore()
   const { user } = useUser();
-
+  console.log(user, 'user 1')
   const { botLinkData } = useTelegramBotLink();
   const {
     activePage,

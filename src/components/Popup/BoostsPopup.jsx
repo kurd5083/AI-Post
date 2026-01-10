@@ -5,23 +5,39 @@ import BtnBase from "@/shared/BtnBase";
 import Counter from "@/shared/Counter";
 import { useCreateBoostOrder } from "@/lib/channels/useCreateBoostOrder";
 import CheckboxText from "@/shared/CheckboxText";
+import { useNotificationStore } from "@/store/notificationStore";
 
 const BoostsPopup = () => {
   const { changeContent, popup } = usePopupStore();
   const channelId = popup?.data?.channelId;
   const { mutate: createBoostOrder, isPending: boostOrderPending } = useCreateBoostOrder();
+  const { addNotification } = useNotificationStore();
 
   const [quantity, setQuantity] = useState(null);
   const [boostDays, setBoostDays] = useState(null);
 
   const handleStartBoost = () => {
-    if (!quantity || !boostDays) return;
+    if (!quantity) {
+      addNotification("Укажите количество бустов", "info");
+      return;
+    }
+    if (!boostDays) {
+      addNotification("Укажите срок действия буста", "info");
+      return;
+    }
 
-    createBoostOrder({
-      channelId,
-      quantity,
-      boostDays,
-    });
+    createBoostOrder(
+      { channelId, quantity, boostDays },
+      {
+        onSuccess: () => {
+          addNotification("Буст успешно создан!", "success");
+        },
+        onError: (err) => {
+          console.error(err);
+          addNotification("Ошибка при создании буста", "error");
+        },
+      }
+    );
   };
 
   return (
@@ -29,6 +45,7 @@ const BoostsPopup = () => {
       <BoostsHead>
         <BoostsHeadText onClick={() => changeContent("promotion")}>Просмотр</BoostsHeadText>
         <BoostsHeadText $active={true}>Бусты</BoostsHeadText>
+        <BoostsHeadText onClick={() => changeContent("my_orders")}>Мои заказы</BoostsHeadText>
       </BoostsHead>
 
       <BoostsBlock>

@@ -1,23 +1,81 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import styled from "styled-components";
 import BtnBase from "@/shared/BtnBase";
-import { usePopupStore } from "@/store/popupStore"
-import { useChannelMembers } from "@/lib/channels/my-team/useChannelMembers";
-import del from "@/assets/del.svg";
 import ModernLoading from "@/components/ModernLoading";
 import AvaPlug from "@/shared/AvaPlug";
+import CustomSelect from "@/shared/CustomSelect";
+import del from "@/assets/del.svg";
+
+import { usePopupStore } from "@/store/popupStore";
+import { useNotificationStore } from "@/store/notificationStore";
+
+import { useChannelMembers } from "@/lib/channels/my-team/useChannelMembers";
+import { useChannelRoles } from "@/lib/channels/my-team/useChannelRoles";
 import { useRemoveChannelMember } from "@/lib/channels/my-team/useRemoveChannelMember";
+import { useUpdateChannelMemberRole } from "@/lib/channels/my-team/useUpdateChannelMemberRole";
 
 const MyTeamPopup = () => {
   const { popup, changeContent } = usePopupStore();
+  const { addNotification } = useNotificationStore();
+
   const channelId = popup?.data?.channelId;
+  const telegramId = popup?.data?.telegramId;
+
   const { members, membersLoading } = useChannelMembers(channelId);
+  const { channelRoles } = useChannelRoles();
+  const { mutate: removeMember, isPending: removingPending } = useRemoveChannelMember();
+  const { mutate: mutateRole, isPending: updatingRole } = useUpdateChannelMemberRole();
+
   const [errorAvatars, setErrorAvatars] = useState([]);
 
-  const { mutate: removeMember, isPending: removingPending } = useRemoveChannelMember();
+  const self = useMemo(
+    () => members?.team?.find((m) => m.user.telegramId === telegramId),
+    [members, telegramId]
+  );
+  const myRole = self?.role;
 
-  const handleRemove = (telegramId) => {
-    removeMember({ channelId, memberTelegramId: telegramId });
+  const roleOptions = useMemo(
+    () => channelRoles?.map((r) => ({ value: r.role, label: r.name })) || [],
+    [channelRoles]
+  );
+
+  const canEditRoles = (targetRole) => {
+    if (!myRole) return false;
+    if (myRole === "OWNER") return true;
+    if (myRole === "ADMIN") return ["MEMBER", "EDITOR"].includes(targetRole);
+    return false;
+  };
+
+  const canRemove = (targetRole) => {
+    if (!myRole) return false;
+    if (myRole === "OWNER") return targetRole !== "OWNER";
+    if (myRole === "ADMIN") return ["MEMBER", "EDITOR"].includes(targetRole);
+    return false;
+  };
+  const handleRemove = (memberTelegramId) => {
+    removeMember(
+      { channelId, memberTelegramId },
+      {
+        onSuccess: (data) => addNotification(data?.message, "success"),
+        onError: (err) =>
+          addNotification(err?.response?.data?.message || "Ошибка при удалении участника", "error"),
+      }
+    );
+  };
+
+  const handleChangeRole = (member, newRole) => {
+    mutateRole(
+      { channelId, memberTelegramId: member.user.telegramId, role: newRole },
+      {
+        onSuccess: (data) =>
+          addNotification(data.message || "Роль успешно изменена", "success"),
+        onError: (error) =>
+          addNotification(
+            error?.response?.data?.message || "Ошибка при изменении роли",
+            "error"
+          ),
+      }
+    );
   };
 
   return (
@@ -70,7 +128,6 @@ const MyTeamPopup = () => {
                           ) : (
                             <AvaPlug width="48px" height="48px" />
                           )}
-
                           <NameBlock>
                             <p>
                               {member.user.firstName}{" "}
@@ -82,21 +139,26 @@ const MyTeamPopup = () => {
                           </NameBlock>
                         </TableCellName>
                       </TableCell>
-
                       <TableCell>
-                        {member.role === "OWNER"
-                          ? "Владелец"
-                          : member.role === "MEMBER"
-                            ? "Участник"
-                            : member.role}
+                        {canEditRoles(member.role) && member.role !== "OWNER" ? (
+                          <CustomSelect
+                            options={roleOptions}
+                            value={member.role}
+                            onChange={(opt) => handleChangeRole(member, opt.value)}
+                            placeholder="Выберите роль"
+                            padding={false}
+                            border={false}
+                            disabled={updatingRole}
+                          />
+                        ) : (
+                          channelRoles?.find(r => r.role === member.role)?.name || member.role
+                        )}
                       </TableCell>
-
                       <TableCell>
                         {/* {new Date(member.createdAt).toLocaleDateString()} */}
                       </TableCell>
-
                       <TableCell>
-                        {member.role !== "OWNER" && (
+                        {canRemove(member.role) && (
                           <ButtonDel
                             title="Удалить"
                             onClick={(e) => {
@@ -178,7 +240,7 @@ const Table = styled.table`
   }
 `;
 const HeaderCell = styled.th`
-  text-align: center;
+  text-align: left;
   font-weight: 700;
   color: #6A7080;
   font-size: 12px;
@@ -204,7 +266,7 @@ const TableItem = styled.tr`
   }
 `;
 const TableCell = styled.td`
-  text-align: center;
+  text-align: left;
   font-size: 16px;
   font-weight: 700;
   padding: 30px 0;

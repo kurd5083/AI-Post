@@ -16,6 +16,7 @@ import { useNotificationStore } from "@/store/notificationStore";
 const SettingsPopup = () => {
   const { changeContent, popup } = usePopupStore();
   const { user } = useUser();
+
   const channelId = popup?.data?.channelId;
   const { channel } = useChannelById(channelId);
   const { posts } = usePostsByChannel(channelId);

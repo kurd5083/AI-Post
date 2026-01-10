@@ -28,7 +28,7 @@ export const CalendarFooter = ({ events, channelId, selectedDate }) => {
         <BtnBase
           onClick={(e) => {
             e.stopPropagation();
-            changeContent("create_calendar_event", "popup_window", {
+            changeContent("add_post", "popup", {
               selectedDate,
               channelId
             });

@@ -28,6 +28,8 @@ import UploadMediaPopup from "@/components/Popup/UploadMediaPopup";
 import CompilationUploadPopup from "@/components/Popup/CompilationUploadPopup";
 import AdvancedPopup from "@/components/Popup/AdvancedPopup";
 import AiGeneratorPopup from "@/components/Popup/AiGeneratorPopup";
+import MyOrdersPopup from "@/components/Popup/MyOrdersPopup";
+import AddPostPopup from "@/components/Popup/AddPostPopup";
 
 const Popup = () => {
     const { popup } = usePopupStore()
@@ -98,6 +100,10 @@ const Popup = () => {
                 <AiGeneratorPopup/>
             ) : popup.content == 'premoderation' ? (
                 <PublicationsPopup/>
+            ) : popup.content == 'my_orders' ? (
+                <MyOrdersPopup/>
+            ) : popup.content == 'add_post' ? (
+                <AddPostPopup/>
             ) : (
                 null
             )}

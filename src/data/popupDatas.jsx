@@ -42,14 +42,14 @@ export const popupDatas = [
             image: publications
         }
     },
-    {
-        key: "activate_promotion",
-        name: "Активировать продвижение",
-        extra: {
-            background: "#445838",
-            image: activate_promotion
-        }
-    },
+    // {
+    //     key: "activate_promotion",
+    //     name: "Активировать продвижение",
+    //     extra: {
+    //         background: "#445838",
+    //         image: activate_promotion
+    //     }
+    // },
     {
         key: "promotion",
         name: "Продвижение",
@@ -148,7 +148,7 @@ export const popupDatas = [
     },
     {
         key: "schedule_interval",
-        name: "Расписание",
+        name: "Интервал",
         extra: {
             background: "#5F6046",
             image: schedule
@@ -239,5 +239,21 @@ export const popupDatas = [
             image: publications
         }
     },
-   
+    {
+        key: "my_orders",
+        name: "Мои заказы",
+        extra: {
+            background: "#552F43",
+            image: promotion
+        }
+    },
+    {
+        key: "add_post",
+        name: "Добавить пост",
+        extra: {
+            background: "#552F43",
+            image: promotion
+        }
+    },
+    
 ]

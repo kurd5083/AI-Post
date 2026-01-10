@@ -6,11 +6,11 @@ import BlocksItems from "@/shared/BlocksItems";
 import preview_img from "@/assets/popup/preview-img.png";
 import upload_media from "@/assets/upload-media.svg";
 import { usePopupStore } from "@/store/popupStore";
-import { useUploadMediaLibrary } from '@/lib/mediaLibrary/useUploadMediaLibrary';
+import { useUploadMedia } from '@/lib/mediaLibrary/useUploadMedia';
 
 const UploadMediaPopup = () => {
   const { closePopup } = usePopupStore();
-	const { mutate: uploadMedia, isLoading: uploadMediaLoading } = useUploadMediaLibrary();
+	const { mutate: uploadMedia, isLoading: uploadMediaLoading } = useUploadMedia();
   const fileInputRef = useRef(null);
   const [selectedFile, setSelectedFile] = useState(null);
   const [preview, setPreview] = useState(preview_img);

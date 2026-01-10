@@ -30,7 +30,23 @@ const LinkGenerationMyPopup = () => {
 
     setTimeout(() => setCopied(false), 2000);
   };
-  
+  const formatDateTime = (iso) => {
+    const d = new Date(iso);
+    if (isNaN(d.getTime())) return { date: "-", time: "-" };
+
+    const dd = String(d.getDate()).padStart(2, "0");
+    const mm = String(d.getMonth() + 1).padStart(2, "0");
+    const yy = String(d.getFullYear()).slice(-2);
+
+    const hh = String(d.getHours()).padStart(2, "0");
+    const min = String(d.getMinutes()).padStart(2, "0");
+
+    return {
+      date: `${dd}.${mm}.${yy}`,
+      time: `${hh}:${min}`,
+    };
+  };
+
   return (
     <TableWrapper>
       {!linksLoading ? (
@@ -57,51 +73,55 @@ const LinkGenerationMyPopup = () => {
               </tr>
             </thead>
             <tbody>
-              {links.map((link) => (
-                <tr key={link.id}>
-                  <TableCell>
-                    <CellDate>
-                      <p>12.12.21</p>
-                      <span>16:40</span>
-                    </CellDate>
-                  </TableCell>
-                  <TableCell>
-                    <CellInviteLink>
-                      <span>{link.inviteLink}</span>
-                      <p onClick={() => handleCopy(link)}>
-                        {copied === link.id ? "Скопировано!" : "Скопировать"}
-                      </p>
-                    </CellInviteLink>
-                  </TableCell>
-                  <TableCell>+ {link.netJoins}</TableCell>
-                  <TableCell>- {link.leavesCount}</TableCell>
-                  <TableCell>= {link.joinsCount}</TableCell>
-                  <TableCell>
-                    <CellStatus>
-                      Активно
-                    </CellStatus>
-                  </TableCell>
-                  <TableCellActions>
-                    <HideButton>
-                      <img src={hide} alt="hide icon" width={24} height={17} />
-                    </HideButton>
-                    <DeleteButton
-                      disabled={removePending}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        if (removePending) return;
+              {links.map((link) => {
+                const { date, time } = formatDateTime(link.createdAt);
 
-                        changeContent("delete_confirm", "popup_window", {
-                          itemName: link.inviteLink,
-                          onDelete: () => removeLink(link.id),
-                        });
-                      }}
-                    >
-                      <img src={del} alt="del icon" width={14} height={16} />
-                    </DeleteButton>
-                  </TableCellActions>
-                </tr>
-              ))}
+                return (
+                  <tr key={link.id}>
+                    <TableCell>
+                      <CellDate>
+                        <p>{date}</p>
+                        <span>{time}</span>
+                      </CellDate>
+                    </TableCell>
+                    <TableCell>
+                      <CellInviteLink>
+                        <span>{link.inviteLink}</span>
+                        <p onClick={() => handleCopy(link)}>
+                          {copied === link.id ? "Скопировано!" : "Скопировать"}
+                        </p>
+                      </CellInviteLink>
+                    </TableCell>
+                    <TableCell>+ {link.netJoins}</TableCell>
+                    <TableCell>- {link.leavesCount}</TableCell>
+                    <TableCell>= {link.joinsCount}</TableCell>
+                    <TableCell>
+                      <CellStatus>
+                        Активно
+                      </CellStatus>
+                    </TableCell>
+                    <TableCellActions>
+                      <HideButton>
+                        <img src={hide} alt="hide icon" width={24} height={17} />
+                      </HideButton>
+                      <DeleteButton
+                        disabled={removePending}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          if (removePending) return;
+
+                          changeContent("delete_confirm", "popup_window", {
+                            itemName: link.inviteLink,
+                            onDelete: () => removeLink(link.id),
+                          });
+                        }}
+                      >
+                        <img src={del} alt="del icon" width={14} height={16} />
+                      </DeleteButton>
+                    </TableCellActions>
+                  </tr>
+                );
+              })}
             </tbody>
           </Table>
         ) : (
@@ -236,7 +256,7 @@ const DeleteButton = styled(BaseButton)`
     background-color: rgba(239, 98, 132, 0.08);
   }
 `
-const EmptyLink= styled.p`
+const EmptyLink = styled.p`
   box-sizing: border-box;
   text-align: center;
   color: #6A7080;
