@@ -5,15 +5,11 @@ import arrow_close from "@/assets/arrow-close.svg";
 import { usePopupStore } from "@/store/popupStore";
 import { useSidebarStore } from "@/store/sidebarStore";
 import { useUser } from "@/lib/useUser";
-import { useTelegramBotLink } from "@/lib/useTelegramBotLink";
 import BtnBase from "@/shared/BtnBase";
-import TgIcon from "@/icons/TgIcon";
 
 const Sidebar = () => {
   const { openPopup, closePopup } = usePopupStore()
   const { user } = useUser();
-  console.log(user, 'user 1')
-  const { botLinkData } = useTelegramBotLink();
   const {
     activePage,
     setActivePage,
@@ -22,7 +18,6 @@ const Sidebar = () => {
     showSidebar
   } = useSidebarStore();
 
-  const isAuthorized = !!localStorage.getItem("accessToken");
 
   return (
     <SidebarContainer $isSidebarVisible={isSidebarVisible}>
@@ -69,7 +64,6 @@ const Sidebar = () => {
         ))}
       </SidebarNavContainer>
       <SidebarFooter $isSidebarVisible={isSidebarVisible}>
-        {isAuthorized ? (
           <SidebarFooterTop onClick={() => {
             openPopup("profile")
             setActivePage(6);
@@ -79,23 +73,6 @@ const Sidebar = () => {
             </SidebarAvaContainer>
             {isSidebarVisible && <p>{user?.firstName} {user?.lastName}</p>}
           </SidebarFooterTop>
-        ) : (
-          <SidebarFooterBtn>
-            <BtnBase
-              $padding="6px 12px"
-              $bg="#54a9eb"
-              $color="#fff"
-              $radius="20px"
-              onClick={() => {
-              if (!botLinkData) return;
-                window.location.href = botLinkData.botLink;
-              }}
-            >
-              <TgIcon width="22" height="20" />
-              Войти через бот
-            </BtnBase>
-          </SidebarFooterBtn>
-        )}
         <SidebarFooterBtn>
           <BtnBase
             $padding="12px 24px"
