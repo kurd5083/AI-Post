@@ -10,7 +10,7 @@ const ProfilePopup = () => {
   const { changeContent } = usePopupStore();
   const { user } = useUser();
   const { balance } = useUserBalance();
-  const logout = useAuthStore(state => state.logout); // <-- берем метод logout из Zustand
+  const logout = useAuthStore(state => state.logout);
 
   return (
     <div>
@@ -26,7 +26,7 @@ const ProfilePopup = () => {
             $padding="17px 24px"
             $bg="#37273F"
             $color="#EF6284"
-            onClick={logout} // <-- вызываем logout из стора
+            onClick={logout}
           >
             Выйти из аккаунта
           </BtnBase>
