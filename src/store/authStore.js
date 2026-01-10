@@ -1,15 +1,35 @@
-import { create } from 'zustand';
+import { create } from "zustand";
 
-export const useAuthStore = create((set, get) => ({
-  token: null,
-  user: null,
+export const useAuthStore = create((set, get) => {
+  const token = localStorage.getItem("accessToken");
+  const refreshToken = localStorage.getItem("refreshToken");
+  const user = JSON.parse(localStorage.getItem("user") || "null");
 
-  get isAuthenticated() {
-    return !!get().token;
-  },
+  return {
+    token,
+    refreshToken,
+    user,
+    get isAuthenticated() {
+      return !!get().token;
+    },
 
-  login: (token, user = null) => set({ token, user }),
-  logout: () => set({ token: null, user: null }),
-  
-  setUser: (user) => set({ user }),
-}));
+    login: (t, r, u) => {
+      localStorage.setItem("accessToken", t);
+      localStorage.setItem("refreshToken", r);
+      if (u) localStorage.setItem("user", JSON.stringify(u));
+      set({ token: t, refreshToken: r, user: u });
+    },
+
+    logout: () => {
+      localStorage.removeItem("accessToken");
+      localStorage.removeItem("refreshToken");
+      localStorage.removeItem("user");
+      set({ token: null, refreshToken: null, user: null });
+    },
+
+    setUser: (u) => {
+      localStorage.setItem("user", JSON.stringify(u));
+      set({ user: u });
+    },
+  };
+});

@@ -18,7 +18,6 @@ const Sidebar = () => {
     showSidebar
   } = useSidebarStore();
 
-
   return (
     <SidebarContainer $isSidebarVisible={isSidebarVisible}>
       <SidebarHead $isSidebarVisible={isSidebarVisible}>

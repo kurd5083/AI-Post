@@ -19,6 +19,7 @@ import BtnBase from "@/shared/BtnBase";
 import TgIcon from "@/icons/TgIcon";
 import { useTelegramBotLink } from "@/lib/useTelegramBotLink";
 
+
 const MainLayout = () => {
   const { popup, closePopup } = usePopupStore();
   const { isOpen } = useLightboxStore();

@@ -6,62 +6,34 @@ import { usePopupStore } from "@/store/popupStore"
 import { useMenuStore } from "@/store/menuStore";
 import { useUser } from "@/lib/useUser";
 import { useUserBalance } from "@/lib/useUserBalance";
-import { useTelegramBotLink } from "@/lib/useTelegramBotLink";
-import BtnBase from "@/shared/BtnBase";
-import useResolution from "@/lib/useResolution";
 import { useSidebarStore } from "@/store/sidebarStore";
-import TgIcon from "@/icons/TgIcon";
 
 const Header = () => {
 	const { setActivePage } = useSidebarStore();
 	const { openPopup } = usePopupStore();
 	const { menu, openMenu, closeMenu } = useMenuStore();
-
-	const { isSmall } = useResolution(1400);
-
 	const { user } = useUser();
 	const { balance } = useUserBalance();
-	const { botLinkData } = useTelegramBotLink();
-	const isAuthorized = !!localStorage.getItem("accessToken");
 
 	return (
 		<HeaderContainer>
-			{isAuthorized ? (
-				<HeaderContent>
-					<HeaderAvaContainer onClick={() => {
-						openPopup("profile")
-						setActivePage(6);
-					}}>
-						<HeaderAva src={user?.avatarUrl} alt={user?.username} />
-					</HeaderAvaContainer>
-					<HeaderBalanceImg src={money} alt="money icon" />
-					<HeaderBalanceContainer>
-						<h3>{user?.firstName} {user?.lastName}</h3>
-						<HeaderBalanceContent>
-							<HeaderSubtext>Баланс:</HeaderSubtext>
-							<HeaderBalance>{balance?.balanceRubles} <mark>₽</mark></HeaderBalance>
-						</HeaderBalanceContent>
-					</HeaderBalanceContainer>
-					<HeaderBtnAdd onClick={() => openPopup("replenish")}>+ Пополнить</HeaderBtnAdd>
-				</HeaderContent>
-			) : (
-				isSmall && (
-				<BtnBase
-					$padding="6px 12px"
-					$bg="#54a9eb"
-					$color="#fff"
-					$radius="20px"
-					onClick={() => {
-					if (!botLinkData) return;
-						window.location.href = botLinkData.botLink;
-					}}
-				>
-					<TgIcon width="22" height="20" />
-					Войти через бот
-				</BtnBase>
-				)
-			)}
-
+			<HeaderContent>
+				<HeaderAvaContainer onClick={() => {
+					openPopup("profile")
+					setActivePage(6);
+				}}>
+					<HeaderAva src={user?.avatarUrl} alt={user?.username} />
+				</HeaderAvaContainer>
+				<HeaderBalanceImg src={money} alt="money icon" />
+				<HeaderBalanceContainer>
+					<h3>{user?.firstName} {user?.lastName}</h3>
+					<HeaderBalanceContent>
+						<HeaderSubtext>Баланс:</HeaderSubtext>
+						<HeaderBalance>{balance?.balanceRubles} <mark>₽</mark></HeaderBalance>
+					</HeaderBalanceContent>
+				</HeaderBalanceContainer>
+				<HeaderBtnAdd onClick={() => openPopup("replenish")}>+ Пополнить</HeaderBtnAdd>
+			</HeaderContent>
 			<HeaderBtns>
 				<HeaderBtnBell onClick={() => openPopup("notifications")}><img src={bell} alt="bell icon" width={20} height={24} /></HeaderBtnBell>
 				<HeaderBtnBurger onClick={() => menu ? closeMenu() : openMenu()}><img src={burger} alt="burger icon" width={16} height={11} /></HeaderBtnBurger>
@@ -181,23 +153,6 @@ const HeaderBtns = styled.div`
 	}
 `
 const HeaderBtnBell = styled.button`
-	@media(max-width: 768px) {
-		display: none;
-	}
-`
-const HeaderBtnSet = styled.button`
-  display: flex;
-  align-items: center;
-  gap: 16px;  
-  color: #6A7080;
-  padding: 14px 24px;
-  border-radius: 12px;
-  font-size: 14px;
-  font-weight: 700;
-  border: 2px solid #1F273B;
-	@media(max-width: 991px) {
-		padding: 14px;
-	}
 	@media(max-width: 768px) {
 		display: none;
 	}

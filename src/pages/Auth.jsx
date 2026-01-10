@@ -21,7 +21,7 @@ const Auth = () => {
     };
 
     telegramAuth(data, {
-        onSuccess: () => navigate("/"),
+      onSuccess: () => navigate("/"),
     });
   }, [search, navigate, telegramAuth]);
 
