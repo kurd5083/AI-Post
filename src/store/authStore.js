@@ -1,36 +1,38 @@
-import { create } from 'zustand';
+import { create } from "zustand";
+import { usePopupStore } from "@/store/popupStore";
 
-export const useAuthStore = create((set, get) => {
-    const token = localStorage.getItem("accessToken");
-    const refreshToken = localStorage.getItem("refreshToken");
-    const user = JSON.parse(localStorage.getItem("user") || "null");
+export const useAuthStore = create((set, get) => ({
+  token: null,
+  refreshToken: null,
+  user: null,
 
-    return {
-        token,
-        refreshToken,
-        user,
-        get isAuthenticated() {
-            return !!get().token;
-        },
+  init() {
+    const t = localStorage.getItem("accessToken");
+    const r = localStorage.getItem("refreshToken");
+    const u = JSON.parse(localStorage.getItem("user") || "null");
 
-        login: (t, r, u) => {
-            localStorage.setItem("accessToken", t);
-            localStorage.setItem("refreshToken", r);
-            if (u) localStorage.setItem("user", JSON.stringify(u));
-            set({ token: t, refreshToken: r, user: u });
-        },
+    set({ token: t, refreshToken: r, user: u });
+  },
 
-        logout: () => {
-            localStorage.removeItem("accessToken");
-            localStorage.removeItem("refreshToken");
-            localStorage.removeItem("user");
+  get isAuthenticated() {
+    return !!get().token;
+  },
 
-            set({ token: null, refreshToken: null, user: null });
+  login(t, r, u) {
+    localStorage.setItem("accessToken", t);
+    localStorage.setItem("refreshToken", r);
+    if (u) localStorage.setItem("user", JSON.stringify(u));
+    set({ token: t, refreshToken: r, user: u });
+  },
 
-            const popupStore = usePopupStore.getState();
-            if (popupStore.popup) {
-                popupStore.changeContent(null);
-            }
-        }
-    };
-});
+  logout() {
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("refreshToken");
+    localStorage.removeItem("user");
+
+    set({ token: null, refreshToken: null, user: null });
+
+    const popupStore = usePopupStore.getState();
+    if (popupStore.popup) popupStore.changeContent(null);
+  }
+}));

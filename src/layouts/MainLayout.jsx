@@ -24,16 +24,13 @@ const MainLayout = () => {
   const { popup, closePopup } = usePopupStore();
   const { isOpen } = useLightboxStore();
   const { isAuthenticated, token } = useAuthStore();
-  const [ready, setReady] = useState(false);
   const { botLinkData } = useTelegramBotLink();
   const location = useLocation();
 
   useEffect(() => {
     closePopup();
-    setReady(true);
-  }, [location.pathname, token]);
+  }, [location.pathname, token, isAuthenticated]);
 
-  if (!ready) return null;
 
   return (
     <MainContainer>
