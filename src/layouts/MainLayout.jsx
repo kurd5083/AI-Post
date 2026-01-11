@@ -23,14 +23,19 @@ import { useTelegramBotLink } from "@/lib/useTelegramBotLink";
 const MainLayout = () => {
   const { popup, closePopup } = usePopupStore();
   const { isOpen } = useLightboxStore();
-  const { isAuthenticated, token } = useAuthStore();
+  const isAuthenticated = useAuthStore(s => s.isAuthenticated);
+  const token = useAuthStore(s => s.token);
+  const init = useAuthStore(state => state.init);
   const { botLinkData } = useTelegramBotLink();
   const location = useLocation();
 
   useEffect(() => {
+    init();
+  }, []);
+
+  useEffect(() => {
     closePopup();
   }, [location.pathname, token, isAuthenticated]);
-
 
   return (
     <MainContainer>
