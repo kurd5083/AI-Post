@@ -176,7 +176,6 @@ const Table = styled.table`
   & colgroup col:nth-child(7) {
     width: 105px;
   }
-
 `;
 const HeaderCell = styled.th`
   text-align: left;

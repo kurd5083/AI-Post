@@ -30,7 +30,9 @@ const MainLayout = () => {
   const location = useLocation();
 
   useEffect(() => {
-    init();
+    const handler = () => init();
+    window.addEventListener('pageshow', handler);
+    return () => window.removeEventListener('pageshow', handler);
   }, []);
 
   useEffect(() => {

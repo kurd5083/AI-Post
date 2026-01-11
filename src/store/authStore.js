@@ -44,8 +44,5 @@ export const useAuthStore = create((set, get) => ({
       user: null,
       isAuthenticated: false
     });
-
-    // const popupStore = usePopupStore.getState();
-    // if (popupStore.popup) popupStore.closePopup();
   }
 }));

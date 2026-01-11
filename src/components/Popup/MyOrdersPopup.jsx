@@ -78,7 +78,7 @@ const MyOrdersPopup = () => {
       {myOrdersPending ? (
         <ModernLoading text="Загрузка заказов..." />
       ) : (
-        <>
+        <TableWrapper>
           {myOrders?.data?.length > 0 ? (
             <Table>
               <colgroup>
@@ -134,19 +134,38 @@ const MyOrdersPopup = () => {
           ) : (
             <EmptyBlock>Заказов пока нет</EmptyBlock>
           )}
-        </>
+        </TableWrapper>
       )}
     </OrdersContainer>
   );
 };
-
-const OrdersContainer = styled.div`
-  padding: 0 56px 30px;
-  @media(max-width: 1600px) { padding: 0 32px 30px; }
-  @media(max-width: 768px) { padding: 0 24px 30px; }
+const TableWrapper = styled.div`
+  box-sizing: border-box;
+  padding: 0 56px;
+  overflow: auto;
+  scrollbar-width: none;
+  
+  @media(max-width: 1600px) {
+    padding: 0 32px;
+  }
+  @media(max-width: 768px) {
+    padding: 0 24px;
+  }
 `;
-
-const OrdersHead = styled.div` display: flex; gap: 32px; `;
+const OrdersContainer = styled.div`
+  
+`;
+const OrdersHead = styled.div` 
+  display: flex; 
+  gap: 32px; 
+  padding: 0 56px;
+  @media(max-width: 1600px) { 
+    padding: 0 32px; 
+  }
+  @media(max-width: 768px) { 
+    padding: 0 24px; 
+  }
+`;
 const OrdersHeadText = styled.p`
   display: flex;
   gap: 32px;
@@ -159,19 +178,43 @@ const OrdersHeadText = styled.p`
   cursor: pointer;
   @media(max-width: 480px) { padding-right: 0; }
 `;
-
 const Filters = styled.div`
   display: flex;
   gap: 16px;
-  margin: 24px 0 16px;
+  margin: 40px 0 16px;
+  padding: 0 56px;
+  @media(max-width: 1600px) { 
+    padding: 0 32px; 
+  }
+  @media(max-width: 768px) { 
+    padding: 0 24px; 
+  }
 `;
-
 const Table = styled.table`
   width: 100%;
   border-spacing: 0;
   margin-top: 16px;
   table-layout: fixed;
   border-collapse: separate;
+
+  & colgroup col:first-child {
+    width: 130px;
+  }
+  & colgroup col:nth-child(2) {
+    width: 290px;
+  }
+  & colgroup col:nth-child(3) {
+    width: 160px;
+  }
+  & colgroup col:nth-child(4) {
+    width: 180px;
+  }
+  & colgroup col:nth-child(5) {
+    width: 160px;
+  }
+  & colgroup col:nth-child(6) {
+    width: 160px;
+  }
 `;
 const HeaderCell = styled.th`
   font-weight: 700;
@@ -189,7 +232,13 @@ const TableCell = styled.td`
   font-weight: 700;
   border-bottom: 2px solid #2E3954;
   color: #6A7080;
-  padding: 15px 0;
+  padding: 15px;
+  &:first-child {
+    padding-left: 0;
+  }
+  &:last-child {
+    padding-right: 0;
+  }
 `;
 const CellDate = styled.div`
   display: flex;
