@@ -12,13 +12,15 @@ import del from "@/assets/del.svg";
 import ModernLoading from "@/components/ModernLoading";
 import { useNotificationStore } from "@/store/notificationStore";
 
+const MAX_POSTS = 10;
+
 const PromotionPopup = () => {
   const { popup, changeContent } = usePopupStore();
   const channelId = popup?.data?.channelId;
   const { promotionConfig, promotionLoading } = useGetChannelPromotionConfig(channelId);
   const { addNotification } = useNotificationStore();
 
-  const { mutate: createConfigСhannel, isPending: createConfigPending } = useCreateConfigСhannel();
+  const { mutate: createConfigChannel, isPending: createConfigPending } = useCreateConfigСhannel();
   const { mutate: updatePromotionConfig, isPending: updatePromotionPending } = useUpdatePromotionConfig();
   const { mutate: createPromotionOrders, isPending: creatingOrdersPending } = useCreatePromotionOrders();
 
@@ -31,47 +33,19 @@ const PromotionPopup = () => {
   const [postQuantity, setPostQuantity] = useState("");
   const [manualPosts, setManualPosts] = useState([]);
 
+  const [pendingAutoViews, setPendingAutoViews] = useState(false);
+  const [pendingAutoViewsLink, setPendingAutoViewsLink] = useState(false);
+
   useEffect(() => {
     if (promotionConfig) {
       setAutoViews(promotionConfig.isEnabled || false);
       setAutoViewsLink(promotionConfig.viewsOnNewPostEnabled || false);
-      setMinViews(promotionConfig.minViews);
-      setMaxViews(promotionConfig.maxViews);
+      setMinViews(promotionConfig.minViews || "");
+      setMaxViews(promotionConfig.maxViews || "");
     }
   }, [promotionConfig]);
 
-  const handleAddPost = () => {
-    const quantityNumber = Number(postQuantity);
-
-    if (!postLink) return addNotification("Введите ссылку на пост", "error");
-    if (!postQuantity) return addNotification("Укажите количество просмотров", "error");
-    if (quantityNumber < 10 || quantityNumber > 300000)
-      return addNotification("Количество просмотров должно быть от 10 до 300 000", "error");
-    if (manualPosts.length >= 10) return addNotification("Максимум 10 постов можно добавить", "error");
-
-    setManualPosts(prev => [
-      ...prev,
-      { link: postLink, quantity: quantityNumber }
-    ]);
-
-    setPostLink("");
-    setPostQuantity("");
-  };
-
-  const handlePromotePosts = () => {
-    if (!manualPosts.length) return addNotification("Сначала добавьте хотя бы один пост для продвижения", "error");
-
-    const orders = manualPosts.map(post => ({
-      link: post.link,
-      username: popup?.data?.channelUsername || "",
-      quantity: Number(post.quantity),
-    }));
-
-    createPromotionOrders(orders);
-    addNotification("заказ создан", "success");
-  };
-
-  const handleSave = () => {
+  const handleSaveConfig = () => {
     if (autoViews) {
       if (!minViews || !maxViews) {
         return addNotification("Укажите минимальное и максимальное количество просмотров для автозакупки", "error");
@@ -91,13 +65,88 @@ const PromotionPopup = () => {
       maxViews,
     };
 
-    if (promotionConfig?.id) {
-      updatePromotionConfig({ channelId, payload });
-      addNotification("Настройки продвижения успешно обновлены", "update");
-    } else {
-      createConfigСhannel({ channelId, ...payload });
-      addNotification("Настройки продвижения успешно созданы", "update");
-    }
+    const mutateFn = promotionConfig?.id ? updatePromotionConfig : createConfigChannel;
+
+    mutateFn(
+      promotionConfig?.id ? { channelId, payload } : { channelId, ...payload },
+      {
+        onSuccess: () => {
+          addNotification(
+            promotionConfig?.id ? "Настройки продвижения успешно обновлены" : "Настройки продвижения успешно созданы",
+            "update"
+          );
+        },
+        onError: (err) => {
+          addNotification(err?.message || "Недостаточно прав для изменения настроек", "error");
+        }
+      }
+    );
+  };
+
+  const handleAddPost = () => {
+    const quantityNumber = Number(postQuantity);
+
+    if (!postLink) return addNotification("Введите ссылку на пост", "error");
+    if (!postQuantity) return addNotification("Укажите количество просмотров", "error");
+    if (quantityNumber < 10 || quantityNumber > 300000)
+      return addNotification("Количество просмотров должно быть от 10 до 300 000", "error");
+    if (manualPosts.length >= MAX_POSTS) return addNotification(`Максимум ${MAX_POSTS} постов можно добавить`, "error");
+
+    setManualPosts(prev => [
+      ...prev,
+      { link: postLink, quantity: quantityNumber }
+    ]);
+
+    setPostLink("");
+    setPostQuantity("");
+  };
+
+  const handlePromotePosts = () => {
+    if (!manualPosts.length) return addNotification("Сначала добавьте хотя бы один пост для продвижения", "error");
+
+    const orders = manualPosts.map(post => ({
+      link: post.link,
+      username: popup?.data?.channelUsername || "",
+      quantity: Number(post.quantity),
+    }));
+    console.log(orders)
+    createPromotionOrders(
+      {
+        channelId: channelId,
+        orders: orders
+      },
+      {
+        onSuccess: () => {
+          addNotification("Заказы успешно созданы", "success");
+          setManualPosts([]);
+        },
+        onError: (err) => addNotification(err?.message || "Недостаточно прав для создания заказов", "error")
+      }
+    );
+  };
+
+  const toggleAutoViews = () => {
+    setPendingAutoViews(true);
+    updatePromotionConfig(
+      { channelId, payload: { isEnabled: !autoViews } },
+      {
+        onSuccess: () => setAutoViews(!autoViews),
+        onError: (err) => addNotification(err?.message || "Недостаточно прав для изменения автозакупки", "error"),
+        onSettled: () => setPendingAutoViews(false)
+      }
+    );
+  };
+
+  const toggleAutoViewsLink = () => {
+    setPendingAutoViewsLink(true);
+    updatePromotionConfig(
+      { channelId, payload: { viewsOnNewPostEnabled: !autoViewsLink } },
+      {
+        onSuccess: () => setAutoViewsLink(!autoViewsLink),
+        onError: (err) => addNotification(err?.message || "Недостаточно прав для изменения просмотров по ссылке", "error"),
+        onSettled: () => setPendingAutoViewsLink(false)
+      }
+    );
   };
 
   return (
@@ -107,38 +156,52 @@ const PromotionPopup = () => {
         <PromotionHeadText onClick={() => changeContent("boosts")}>Бусты</PromotionHeadText>
         <PromotionHeadText onClick={() => changeContent("my_orders")}>Мои заказы</PromotionHeadText>
       </PromotionHead>
+
       {promotionLoading ? (
         <ModernLoading text="Загрузка публикаций..." />
       ) : (
         <>
           <PromotionViews>
-            <ToggleSwitch bg="#EF6283" checked={autoViews} onChange={() => setAutoViews(!autoViews)} />
+            <ToggleSwitch
+              bg="#EF6283"
+              checked={autoViews}
+              onChange={toggleAutoViews}
+              disabled={pendingAutoViews || createConfigPending || updatePromotionPending}
+            />
             <PostTitle>
               Просмотры на новый пост<br /> и автозакупка после публикации
             </PostTitle>
           </PromotionViews>
+
           <PromotionViews>
-            <ToggleSwitch bg="#EF6283" checked={autoViewsLink} onChange={() => setAutoViewsLink(!autoViewsLink)} />
+            <ToggleSwitch
+              bg="#EF6283"
+              checked={autoViewsLink}
+              onChange={toggleAutoViewsLink}
+              disabled={pendingAutoViewsLink || createConfigPending || updatePromotionPending}
+            />
             <PostTitle>
               Просмотры на пост по ссылке
             </PostTitle>
           </PromotionViews>
- 
+
           {autoViews && (
             <ViewsPost>
               <PostTitle>Просмотры на пост</PostTitle>
               <PostContainer>
-                <Counter placeholder="Мин." value={minViews} onChange={setMinViews} />
-                <Counter placeholder="Макс." value={maxViews} onChange={setMaxViews} />
+                <Counter placeholder="Мин." value={minViews} onChange={setMinViews} disabled={updatePromotionPending || createConfigPending} />
+                <Counter placeholder="Макс." value={maxViews} onChange={setMaxViews} disabled={updatePromotionPending || createConfigPending} />
               </PostContainer>
             </ViewsPost>
           )}
+
           {autoViewsLink && (
             <PromotePost>
               <PostTitle>Продвинуть пост</PostTitle>
               <PromoteText>
                 Введите ссылку на пост и количество просмотров для ручного продвижения
               </PromoteText>
+
               {manualPosts.map((post, index) => (
                 <PostContainer key={index}>
                   <CounterContainer>
@@ -150,6 +213,7 @@ const PromotionPopup = () => {
                         newPosts[index].link = e.target.value;
                         setManualPosts(newPosts);
                       }}
+                      disabled={creatingOrdersPending}
                     />
                   </CounterContainer>
                   <CounterContainer>
@@ -161,12 +225,15 @@ const PromotionPopup = () => {
                         newPosts[index].quantity = value;
                         setManualPosts(newPosts);
                       }}
+                      disabled={creatingOrdersPending}
                     />
                   </CounterContainer>
+
                   {manualPosts.length > 1 && (
                     <ButtonDel
                       onClick={() => setManualPosts(prev => prev.filter((_, i) => i !== index))}
                       title="Удалить"
+                      disabled={creatingOrdersPending}
                     >
                       <img src={del} alt="del icon" width={14} height={16} />
                     </ButtonDel>
@@ -181,11 +248,12 @@ const PromotionPopup = () => {
                     placeholder="https://"
                     value={postLink}
                     onChange={(e) => setPostLink(e.target.value)}
+                    disabled={creatingOrdersPending}
                   />
                 </CounterContainer>
                 <CounterContainer>
                   <CounterTitle>Количество просмотров:</CounterTitle>
-                  <Counter value={postQuantity} onChange={setPostQuantity} />
+                  <Counter value={postQuantity} onChange={setPostQuantity} disabled={creatingOrdersPending} />
                 </CounterContainer>
 
                 <BtnBase
@@ -193,11 +261,12 @@ const PromotionPopup = () => {
                   $color="#fff"
                   $bg="#336CFF"
                   onClick={handleAddPost}
-                  disabled={!postLink || !postQuantity}
+                  disabled={!postLink || !postQuantity || creatingOrdersPending}
                 >
                   + Добавить ссылку на пост
                 </BtnBase>
               </PostContainer>
+
               <BtnBase
                 $margin="8"
                 $padding="21px 24px"
@@ -215,16 +284,15 @@ const PromotionPopup = () => {
 
       <BtnBase
         $margin="64"
-        onClick={handleSave}
+        onClick={handleSaveConfig}
         disabled={createConfigPending || updatePromotionPending}
       >
-        {createConfigPending || updatePromotionPending
-          ? "Сохраняем..."
-          : "Сохранить"}
+        {createConfigPending || updatePromotionPending ? "Сохраняем..." : "Сохранить"}
       </BtnBase>
     </PromotionContainer>
   );
 };
+
 
 const PromotionContainer = styled.div`
   padding: 0 56px 30px;
@@ -278,7 +346,6 @@ const CounterContainer = styled.div`
   flex-direction: column;
   gap: 16px;
 `;
-
 const ButtonDel = styled.button`
   display: flex;
   align-items: center;
@@ -289,20 +356,8 @@ const ButtonDel = styled.button`
   flex-shrink: 0;
   transition: all 0.2s;
   margin-right: 8px;
-  
-  @media (max-width: 480px) {
-    margin-right: 4px !important;
-    width: 40px;
-    height: 40px;
-  }
   border: 2px solid #2F3953;
-
-  margin-right: 0;
-  
-  &:hover {
-    border: none;
-    background-color: rgba(239, 98, 132, 0.08);
-  }
+  &:hover { border: none; background-color: rgba(239, 98, 132, 0.08); }
 `;
 const CounterTitle = styled.p`
   font-weight: 700;
@@ -319,8 +374,8 @@ const PostInput = styled.input`
   font-size: 14px;
   font-weight: 700;
   background-color: transparent;
-  @media(max-width: 480px) { font-size: 16px; }
   &::placeholder { color: #D6DCEC; }
+  @media(max-width: 480px) { font-size: 16px; }
 `;
 
 export default PromotionPopup;

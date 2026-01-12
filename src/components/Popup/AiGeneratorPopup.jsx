@@ -91,7 +91,7 @@ const AiGeneratorPopup = () => {
     if (post.serverId) {
       addImagesToPost({ postId: post.serverId, images: fileArray }, {
         onSuccess: () => addNotification("Изображения успешно загружены на сервер", "success"),
-        onError: () => addNotification("Ошибка загрузки изображений на сервер", "error"),
+        onError: (err) => addNotification(err.message || "Ошибка загрузки изображений на сервер", "error"),
       });
     }
   };
@@ -137,14 +137,14 @@ const AiGeneratorPopup = () => {
               { postId: serverPostId, images: localFiles },
               {
                 onSuccess: () => addNotification("Изображения успешно загружены на сервер", "success"),
-                onError: () => addNotification("Ошибка загрузки изображений на сервер", "error"),
+                onError: (err) => addNotification(err.message || "Ошибка загрузки изображений на сервер", "error"),
               }
             );
           }
           removePost(post.postId);
           addNotification("Пост успешно сохранен", "success");
         },
-        onError: () => addNotification("Ошибка сохранения поста", "error"),
+        onError: (err) => addNotification(err.message || "Ошибка сохранения поста", "error"),
       });
     } else {
       updatePostMutation({ postId: post.serverId, postData: basePayload }, {
@@ -152,7 +152,7 @@ const AiGeneratorPopup = () => {
           removePost(post.postId);
           addNotification("Пост успешно обновлен", "update");
         },
-        onError: () => addNotification("Ошибка обновления поста", "error"),
+        onError: (err) => addNotification(err.message || "Ошибка обновления поста", "error"),
       });
     }
   };
@@ -246,7 +246,7 @@ const AiGeneratorPopup = () => {
             removePost(post.postId);
             addNotification("Пост успешно опубликован", "success");
           },
-          onError: () => addNotification("Ошибка публикации поста", "error"),
+          onError: (err) => addNotification(err.message || "Ошибка публикации поста", "error"),
         }
       );
     };
@@ -273,14 +273,14 @@ const AiGeneratorPopup = () => {
               { postId: serverPostId, images: localFiles },
               {
                 onSuccess: () => publish(serverPostId),
-                onError: () => addNotification("Ошибка загрузки изображений на сервер", "error"),
+                onError: (err) => addNotification(err.message || "Ошибка загрузки изображений на сервер", "error"),
               }
             );
           } else {
             publish(serverPostId);
           }
         },
-        onError: () => addNotification("Ошибка публикации поста", "error"),
+        onError: (err) => addNotification(err.message || "Ошибка публикации поста", "error"),
       });
 
       return;

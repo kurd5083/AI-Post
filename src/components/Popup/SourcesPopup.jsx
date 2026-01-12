@@ -8,7 +8,6 @@ import { useChannelById } from "@/lib/channels/useChannelById";
 import { useAddChannelSource } from "@/lib/channels/sources/useAddChannelSource";
 import { useDeleteChannelSource } from "@/lib/channels/sources/useDeleteChannelSource";
 import { useNotificationStore } from "@/store/notificationStore";
-import { v4 as uuidv4 } from "uuid";
 
 const SourcesPopup = () => {
   const { popup, changeContent } = usePopupStore()
@@ -31,13 +30,9 @@ const SourcesPopup = () => {
   const parseUrlDomain = (input) => {
     try {
       const trimmed = input.trim();
-
       if (!/^https?:\/\//i.test(trimmed)) return null;
-
       const urlObj = new URL(trimmed);
-
       if (!urlObj.hostname.includes(".")) return null;
-
       return urlObj.hostname;
     } catch (err) {
       return null;
@@ -51,19 +46,34 @@ const SourcesPopup = () => {
       return addNotification("Введите корректный URL источника (например https://t.me/username)", "info");
     }
 
-    const tempId = `temp-${uuidv4()}`;
-    setLocalSources(prev => [...prev, { id: tempId, name: domain }]);
-    addSource({ channelId, url });
-    addNotification("Источник успешно добавлен", "success");
-    setUrl("");
+    addSource(
+      { channelId, url },
+      {
+        onSuccess: (newSource) => {
+          setLocalSources(prev => [...prev, newSource]);
+          addNotification("Источник успешно добавлен", "success");
+          setUrl("");
+        },
+        onError: (err) => {
+          addNotification(err?.message || "Недостаточно прав для добавления источника", "error");
+        }
+      }
+    );
   };
 
   const handleRemoveSource = (id) => {
-    setLocalSources(prev => prev.filter((s) => s.id !== id));
-    if (!String(id).startsWith("temp-")) {
-      deleteSource({ channelId, sourceId: id });
-      addNotification("Источник успешно удалён", "error");
-    }
+    deleteSource(
+      { channelId, sourceId: id },
+      {
+        onSuccess: () => {
+          setLocalSources(prev => prev.filter((s) => s.id !== id));
+          addNotification("Источник успешно удалён", "delete");
+        },
+        onError: (err) => {
+          addNotification(err?.message || "Недостаточно прав для удаления источника", "error");
+        }
+      }
+    );
   };
 
   return (
@@ -108,13 +118,8 @@ const SourcesPopup = () => {
 
 const SourcesContainer = styled.div`
   padding: 0 56px 30px;
-
-  @media(max-width: 1600px) {
-    padding: 0 32px 30px;
-  }
-  @media(max-width: 768px) {
-    padding: 0 24px 30px;
-  }
+  @media(max-width: 1600px) { padding: 0 32px 30px; }
+  @media(max-width: 768px) { padding: 0 24px 30px; }
 `
 const SourcesText = styled.p`
   color: #6A7080;
@@ -122,17 +127,10 @@ const SourcesText = styled.p`
   font-size: 14px;
   line-height: 24px;
   max-width: 400px;
-
-  mark {
-    color: #D6DCEC;
-  }
-  &:nth-of-type(2) {
-    margin-top: 48px;
-  }
+  mark { color: #D6DCEC; }
+  &:nth-of-type(2) { margin-top: 48px; }
 `
-const SourcesKey = styled.div`
-  margin-top: 40px;
-`
+const SourcesKey = styled.div` margin-top: 40px; `
 const SourcesKeyTitle = styled.h2`
   font-weight: 700;
   font-size: 24px;
@@ -150,4 +148,4 @@ const SourcesButtons = styled.div`
   align-items: flex-start;
 `
 
-export default SourcesPopup
+export default SourcesPopup;

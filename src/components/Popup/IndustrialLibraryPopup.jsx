@@ -3,7 +3,7 @@ import styled from "styled-components";
 import Checkbox from "@/shared/Checkbox";
 import BtnBase from "@/shared/BtnBase";
 import { usePromptLibrary } from "@/lib/channels/usePromptLibrary";
-import { usePopupStore } from "@/store/popupStore"
+import { usePopupStore } from "@/store/popupStore";
 import { useUpdateChannelGlobalPrompt } from "@/lib/channels/global-prompt/useUpdateChannelGlobalPrompt";
 import { useChannelGlobalPrompt } from "@/lib/channels/global-prompt/useChannelGlobalPrompt";
 import ModernLoading from "@/components/ModernLoading";
@@ -17,7 +17,8 @@ const IndustrialLibraryPopup = () => {
   const [localPrompt, setLocalPrompt] = useState("");
   const { globalPrompt } = useChannelGlobalPrompt(channelId);
   const { addNotification } = useNotificationStore();
-  
+
+  // Синхронизация локального выбора с сервером
   useEffect(() => {
     if (!globalPrompt || !promptLibrary) return;
 
@@ -36,10 +37,13 @@ const IndustrialLibraryPopup = () => {
 
   const { mutate: updateGlobalPrompt, isPending } = useUpdateChannelGlobalPrompt();
 
+  // Выбор промпта локально
   const handleSelectPrompt = (item, index) => {
     setSelectedIndex(index);
     setLocalPrompt(item.prompt);
   };
+
+  // Сохранение промпта на сервере
   const handleSave = () => {
     if (!localPrompt?.trim()) {
       addNotification("Выберите промпт", "info");
@@ -47,17 +51,14 @@ const IndustrialLibraryPopup = () => {
     }
 
     updateGlobalPrompt(
-      {
-        channelId,
-        value: localPrompt,
-      },
+      { channelId, value: localPrompt },
       {
         onSuccess: () => {
           addNotification("Промпт успешно сохранён", "success");
           goBack();
         },
-        onError: () => {
-          addNotification("Ошибка при сохранении промпта", "error");
+        onError: (err) => {
+          addNotification(err?.message || "Недостаточно прав для сохранения промпта", "error");
         },
       }
     );
@@ -82,6 +83,7 @@ const IndustrialLibraryPopup = () => {
           </IndustrialLibraryContentItem>
         ))
       )}
+
       <BtnBase
         $color="#336CFF"
         $bg="#1B243E"
@@ -92,43 +94,35 @@ const IndustrialLibraryPopup = () => {
         {isPending ? "Сохраняем..." : "Сохранить"}
       </BtnBase>
     </IndustrialStyleContainer>
-  )
-}
+  );
+};
+
 const IndustrialStyleContainer = styled.div`
   padding: 0 56px 30px;
 
-  @media(max-width: 1600px) {
-    padding: 0 32px 30px;
-  }
-  @media(max-width: 768px) {
-    padding: 0 24px 30px;
-  }
-`
+  @media(max-width: 1600px) { padding: 0 32px 30px; }
+  @media(max-width: 768px) { padding: 0 24px 30px; }
+`;
+
 const IndustrialLibraryContentItem = styled.div`
   display: flex;
   padding: 24px 0;
   border-bottom: 2px solid #2E3954;
 
-  &:first-child {
-    padding-top: 0;
-  }
-    
-  &:last-of-type  {
-    padding-bottom: 0;
-    border-bottom: 0;
-  }
+  &:first-child { padding-top: 0; }
+  &:last-of-type { padding-bottom: 0; border-bottom: 0; }
 
   h4 {
     font-size: 24px;
     font-weight: 700;
     margin-bottom: 16px;
   }
-    
+
   p {
     font-size: 14px;
     font-weight: 600;
     color: #6A7080;
   }
-`
+`;
 
-export default IndustrialLibraryPopup
+export default IndustrialLibraryPopup;

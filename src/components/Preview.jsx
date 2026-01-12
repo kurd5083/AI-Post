@@ -47,6 +47,7 @@ const Preview = ({ collapsed, onChange, testResult }) => {
       {
         title: title || "Без названия",
         summary: summary || "",
+        url: url,
         images: localFiles,
         imagesUrls: imagesUrls,
       },

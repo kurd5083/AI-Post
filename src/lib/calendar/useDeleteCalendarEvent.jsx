@@ -14,8 +14,8 @@ export const useDeleteCalendarEvent = () => {
       addNotification('Событие успешно удалено', 'delete');
     },
 
-    onError: (_, id) => {
-      addNotification('Ошибка при удалении события', 'error');
+    onError: (err) => {
+      addNotification(err.message || 'Ошибка при удалении события', 'error');
     },
   });
 };

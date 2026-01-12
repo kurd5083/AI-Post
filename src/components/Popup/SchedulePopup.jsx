@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 import CustomSelect from "@/shared/CustomSelect";
 import Checkbox from "@/shared/Checkbox";
@@ -21,12 +21,12 @@ const DAYS = [
   { label: "Воскресенье", value: "SUNDAY" },
 ];
 
-const SchedulePopup = ({channelId}) => {
+const SchedulePopup = ({ channelId }) => {
   const { addNotification } = useNotificationStore();
 
   const { channelSchedule } = useChannelSchedule(channelId);
+  console.log(channelSchedule, 'channelSchedule')
   const scheduleId = channelSchedule?.id;
-
   const createSchedule = useCreateChannelSchedule(channelId);
   const updateSchedule = useUpdateChannelSchedule(scheduleId, channelId);
 
@@ -82,19 +82,24 @@ const SchedulePopup = ({channelId}) => {
     };
 
     if (scheduleId) {
+      // Обновление
       updateSchedule.mutate(payload, {
         onSuccess: () => addNotification("Расписание обновлено", "update"),
+        onError: (err) =>
+          addNotification(err?.message || "Ошибка при обновлении расписания", "error"),
       });
     } else {
+      // Создание
       createSchedule.mutate(payload, {
         onSuccess: () => addNotification("Расписание создано", "success"),
+        onError: (err) =>
+          addNotification(err?.message || "Ошибка при создании расписания", "error"),
       });
     }
   };
 
   return (
     <ScheduleContainer>
-
       <ScheduleTitle>Часовой пояс</ScheduleTitle>
 
       <CustomSelect
@@ -160,14 +165,17 @@ const SchedulePopup = ({channelId}) => {
 };
 
 const ScheduleContainer = styled.div`
-  display: flex; 
-  flex-direction: column; 
-  /* padding: 0 56px 30px;
-  @media (max-width: 1600px) { padding: 0 32px 30px; }
-  @media (max-width: 768px) { padding: 0 24px 30px; } */
+  display: flex;
+  flex-direction: column;
 `;
-const ScheduleTitle = styled.h2` font-size: 24px; font-weight: 700; margin-bottom: 32px; `;
-const ScheduleKey = styled.div` margin-top: 40px; `;
+const ScheduleTitle = styled.h2`
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 32px;
+`;
+const ScheduleKey = styled.div`
+  margin-top: 40px;
+`;
 const ScheduleKeyTitle = styled.h2`
   text-transform: uppercase;
   font-weight: 700;
@@ -175,7 +183,11 @@ const ScheduleKeyTitle = styled.h2`
   color: #6a7080;
   margin-bottom: 26px;
 `;
-const ScheduleInputContainer = styled.div` display: flex; align-items: center; gap: 24px; `;
+const ScheduleInputContainer = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 24px;
+`;
 const ScheduleBtn = styled.button`
   display: flex;
   align-items: center;
@@ -203,6 +215,10 @@ const ScheduleDays = styled.div`
     align-items: center;
   }
 `;
-const ScheduleDaysBlock = styled.div` display: flex; flex-direction: column; gap: 24px; `;
+const ScheduleDaysBlock = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+`;
 
 export default SchedulePopup;

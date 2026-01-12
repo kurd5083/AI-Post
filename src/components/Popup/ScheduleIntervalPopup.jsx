@@ -30,22 +30,30 @@ const ScheduleIntervalPopup = ({ channelInterval, updateInterval, intervalPendin
   }, [channelInterval]);
 
   const handleSave = () => {
-    if (finalMinutes <= 0) return addNotification("Выберите корректный интервал", "info");
-    if (activeStartHour === null || activeEndHour === null)
-      return addNotification("Установите активное время публикаций", "info");
+  if (finalMinutes <= 0) 
+    return addNotification("Выберите корректный интервал", "info");
 
-    updateInterval(
-      {
-        intervalMinutes: finalMinutes,
-        avoidNight,
-        activeStartHour,
-        activeEndHour,
+  if (activeStartHour === null || activeEndHour === null)
+    return addNotification("Установите активное время публикаций", "info");
+
+  updateInterval(
+    {
+      intervalMinutes: finalMinutes,
+      avoidNight,
+      activeStartHour,
+      activeEndHour,
+    },
+    {
+      onSuccess: () => {
+        addNotification("Настройки сохранены", "success");
       },
-      {
-        onSuccess: () => addNotification("Настройки сохранены", "success"),
-      }
-    );
-  };
+      onError: (err) => {
+        addNotification(err.message || "Ошибка при сохранении интервала", "error");
+      },
+    }
+  );
+};
+
 
   const hours = Math.floor(finalMinutes / 60);
   const minutes = finalMinutes % 60;

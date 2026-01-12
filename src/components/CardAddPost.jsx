@@ -44,7 +44,7 @@ const CardAddPost = ({ item, bg, selectedChannel }) => {
             addNotification("Событие успешно создано", "success");
             goBack();
           },
-          onError: () => addNotification("Ошибка при создании события", "error"),
+          onError: (err) => addNotification(err.message || "Ошибка при создании события", "error"),
         }
       );
   };

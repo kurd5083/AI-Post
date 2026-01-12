@@ -40,7 +40,7 @@ const AdvancedPopup = () => {
       { channelId, field: serverField, value: nextValue },
       {
         onSuccess: () => setLocalSwitches(prev => ({ ...prev, [fieldKey]: nextValue })),
-        onError: (err) => addNotification(err?.message || "Нет прав для изменения", "info"),
+        onError: (err) => addNotification(err?.message || "Нет прав для изменения", "error"),
       }
     );
   };
@@ -72,7 +72,6 @@ const AdvancedPopup = () => {
   );
 };
 
-// Маппинг ключей чекбоксов на поля сервера
 const mapField = (key) => {
   switch (key) {
     case "forced_posting": return "forcePosting";
@@ -83,7 +82,6 @@ const mapField = (key) => {
   }
 };
 
-// Стили
 const AdvancedContainer = styled.div`
   display: flex;
   flex-direction: column;

@@ -12,6 +12,7 @@ import { useUpdateChannelCaption } from "@/lib/channels/caption/useUpdateChannel
 import Preview from "@/components/Preview";
 import { useNotificationStore } from "@/store/notificationStore";
 import { useTestDriveStore } from "@/store/useTestDriveStore";
+import ModernLoading from "@/components/ModernLoading";
 
 const IndustrialStylePopup = () => {
   const { popup, changeContent } = usePopupStore();
@@ -25,47 +26,77 @@ const IndustrialStylePopup = () => {
 
   const { addNotification } = useNotificationStore();
 
-  const { globalPrompt } = useChannelGlobalPrompt(channelId);
-  const { creativity } = useGetChannelCreativity(channelId);
-  const { caption } = useGetChannelCaption(channelId);
+  const { globalPrompt, promptPending  } = useChannelGlobalPrompt(channelId);
+  const { creativity, creativityPending} = useGetChannelCreativity(channelId);
+  const { caption, captionPending} = useGetChannelCaption(channelId);
+
+  const isPending = promptPending || creativityPending || captionPending;
 
   const testResult = useTestDriveStore(state => state.results[channelId]);
   const testProgress = useTestDriveStore(state => state.progress[channelId] ?? 0);
   const runTestDrive = useTestDriveStore(state => state.runTestDrive);
   
   useEffect(() => {
-    if (globalPrompt !== undefined) setLocalPrompt(globalPrompt.globalPromt);
-    if (caption !== undefined) setLocalCaption(caption.caption);
-    if (creativity !== undefined) setLocalCreativity(creativity.creativity);
-  }, [globalPrompt, caption, creativity]);
+    if (!isPending) {
+      setLocalPrompt(globalPrompt?.globalPromt ?? "");
+      setLocalCaption(caption?.caption ?? "");
+      setLocalCreativity(creativity?.creativity ?? 0);
+    }
+  }, [isPending, globalPrompt, caption, creativity]);
 
-    const handlePromptChange = (e) => {
-      if (e.target.value.length <= MAX_PROMPT_LENGTH) setLocalPrompt(e.target.value);
-    };
+  const handlePromptChange = (e) => {
+    setLocalPrompt(e.target.value);
+  };
+
   const handleTest = () => runTestDrive(channelId, localPrompt);
+
   const { mutate: updateGlobalPrompt, isPending: isPromptPending } = useUpdateChannelGlobalPrompt();
   const { mutate: updateCreativity, isPending: isCreativityPending } = useUpdateChannelCreativity();
   const { mutate: updateCaption, isPending: isCaptionPending } = useUpdateChannelCaption();
-
-  const handleSave = async () => {
+  
+  const handleSave = () => {
     if (!localPrompt?.trim()) {
       addNotification("Промпт не может быть пустым", "info");
       return;
     }
 
-    try {
-      await updateGlobalPrompt({ channelId, value: localPrompt });
-      await updateCreativity({ channelId, value: localCreativity });
-      await updateCaption({ channelId, value: localCaption });
-
-      addNotification("Настройки успешно сохранены", "success");
-    } catch {
-      addNotification("Ошибка при сохранении настроек", "error");
-    }
+    updateGlobalPrompt(
+      { channelId, value: localPrompt },
+      {
+        onSuccess: () => {
+          updateCreativity(
+            { channelId, value: localCreativity },
+            {
+              onSuccess: () => {
+                updateCaption(
+                  { channelId, value: localCaption },
+                  {
+                    onSuccess: () =>
+                      addNotification("Настройки успешно сохранены", "success"),
+                    onError: (err) =>
+                      addNotification(err.message + '1'  || "Ошибка при сохранении подписи", "error"),
+                  }
+                );
+              },
+              onError: (err) =>
+                addNotification(err.message + '2'  || "Ошибка при сохранении креативности", "error"),
+            }
+          );
+        },
+        onError: (err) =>
+          addNotification(err.message + '3', "Ошибка при сохранении промпта", "error"),
+      }
+    );
   };
 
   const isSaving = isPromptPending || isCreativityPending || isCaptionPending;
-
+  if (isPending) {
+    return (
+      <IndustrialStyleContainer>
+        <ModernLoading text="Загрузка стиль промптов..." />
+      </IndustrialStyleContainer>
+    );
+  }
   return (
     <IndustrialStyleContainer>
       <IndustrialStyleContent>
@@ -77,7 +108,7 @@ const IndustrialStylePopup = () => {
               <textarea
                 placeholder="Введите промпт..."
                 value={localPrompt}
-                onChange={handlePromptChange}
+                onChange={(e) => handlePromptChange(e)}
               ></textarea>
             </div>
         
@@ -88,7 +119,7 @@ const IndustrialStylePopup = () => {
               {testProgress > 0 && testProgress < 100 ? `Генерация с AI... ${testProgress}%` : "Тест"}
             </button>
           </IndustrialStyleInfo>
-          <IndustrialStyleDesc>Введите промпт — это задание для генерации поста. <mark>Чем точнее формулировка, тем лучше результат.</mark></IndustrialStyleDesc>
+          <IndustrialStyleDesc>Введите промпт — это задание для генерации поста. <mark>Чем точнее формулировка, тем лучше результат.</mark></IndustrialStyleDesc>
           <IndustrialStyleTitle>Подпись</IndustrialStyleTitle>
           <IndustrialStyleInputContainer>
             <IndustrialStyleInput
@@ -98,7 +129,7 @@ const IndustrialStylePopup = () => {
               onChange={(e) => setLocalCaption(e.target.value)}
             />
           </IndustrialStyleInputContainer>
-          <IndustrialStyleDesc>Подпись будет добавлена в <mark>конец каждого поста.</mark> Например: ссылка или призыв подписаться.</IndustrialStyleDesc>
+          <IndustrialStyleDesc>Подпись будет добавлена в <mark>конец каждого поста.</mark> Например: ссылка или призыв подписаться.</IndustrialStyleDesc>
         </IndustrialStyleLeft>
         <IndustrialStyleRight>
           <Preview collapsed={collapsed} onChange={() => setCollapsed(!collapsed)} testResult={testResult} telegramId={telegramId} />
@@ -207,9 +238,6 @@ const IndustrialStyleInfo = styled.div`
     @media (max-width: 480px) {
 			padding: 24px;
 		}
-    &::placeholder {
-      color: #6A7080;
-    }
   }
   textarea {
     background-color: #1C2336;
@@ -239,19 +267,7 @@ const IndustrialStyleInfo = styled.div`
       left: 24px;
 		}
   }
-  p {
-    position: absolute;
-    bottom: 44px;
-    right: 32px;
-    font-size: 12px;
-    font-weight: 700;
-    @media (max-width: 480px) {
-			bottom: 36px;
-      right: 24px;
-		}
-  }
 `
-
 const IndustrialStyleInput = styled.input`
   background-color: transparent;
   max-width: 280px;
@@ -283,4 +299,4 @@ const IndustrialStyleButton = styled.div`
   }
 `
 
-export default IndustrialStylePopup
+export default IndustrialStylePopup;

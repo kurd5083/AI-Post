@@ -33,8 +33,7 @@ const BoostsPopup = () => {
           addNotification("Буст успешно создан!", "success");
         },
         onError: (err) => {
-          console.error(err);
-          addNotification("Ошибка при создании буста", "error");
+          addNotification(err.message || "Ошибка при создании буста", "error");
         },
       }
     );

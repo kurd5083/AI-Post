@@ -1,10 +1,10 @@
 import apiClient from "@/api/apiClient";
 
-export const sendTestPost = async ({ title, summary, images, imagesUrls }) => {
+export const sendTestPost = async ({ title, summary, images, imagesUrls, url }) => {
   const formData = new FormData();
   formData.append("title", title);
   formData.append("summary", summary);
-
+  formData.append("url", url);
   images.forEach((image) => {
     formData.append("images", image);
   });

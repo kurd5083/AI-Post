@@ -20,6 +20,9 @@ const LinkGenerationPopup = () => {
   const [expirePeriod, setExpirePeriod] = useState(null);
 
   const handleCreate = () => {
+    if (!name.trim()) {
+    return addNotification("Название ссылки обязательно для заполнения", "info");
+    }
     if (name.length > 100) {
       return addNotification("Название ссылки не должно превышать 100 символов", "info");
     }
@@ -66,7 +69,7 @@ const LinkGenerationPopup = () => {
           setMemberLimit(null);
           setExpirePeriod(null);
         },
-        onError: () => {
+        onError: (err) => {
           addNotification("Ошибка при создании ссылки", "error");
         }
       }

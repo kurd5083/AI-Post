@@ -171,7 +171,7 @@ export const usePostsStore = create((set, get) => ({
     } catch (err) {
       clearInterval(interval);
       get().setImageProgress(postId, 0);
-      notify("Ошибка генерации изображения", "error");
+      notify(err.message || "Ошибка генерации изображения", "error");
     }
   },
 }));

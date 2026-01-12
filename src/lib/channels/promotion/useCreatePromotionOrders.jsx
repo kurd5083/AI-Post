@@ -5,7 +5,7 @@ export const useCreatePromotionOrders = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (data) => createPromotionOrders(data),
+    mutationFn: ({channelId, orders}) => createPromotionOrders(channelId, orders),
     onSuccess: (data) => {
       queryClient.invalidateQueries(["promotion-orders"]);
     },

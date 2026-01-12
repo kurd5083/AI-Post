@@ -23,8 +23,8 @@ const CardPablishPremoderation = ({ item, bg, channelId, selectedChannel }) => {
         onSuccess: () => {
           addNotification("Пост одобрен", "success");
         },
-        onError: () => {
-          addNotification("Ошибка при одобрении поста", "error");
+        onError: (err) => {
+          addNotification(err?.message || "Ошибка при одобрении поста", "error");
         },
       }
     );
@@ -37,8 +37,8 @@ const CardPablishPremoderation = ({ item, bg, channelId, selectedChannel }) => {
         onSuccess: () => {
           addNotification("Пост отклонён", "delete");
         },
-        onError: () => {
-          addNotification("Ошибка при отклонении поста", "error");
+        onError: (err) => {
+          addNotification(err?.message || "Ошибка при отклонении поста", "error");
         },
       }
     );
@@ -51,7 +51,7 @@ const CardPablishPremoderation = ({ item, bg, channelId, selectedChannel }) => {
           {selectedChannel.avatarUrl ? (
             <CardPablishItemImg src={selectedChannel.avatarUrl} alt={selectedChannel.name} />
           ) : (
-            <AvaPlug width="32px" height="32px"/>
+            <AvaPlug width="32px" height="32px" />
           )}
           <p>{selectedChannel.name}</p>
         </CardPablishItemName>

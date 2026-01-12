@@ -17,6 +17,7 @@ const ScheduleContainer = () => {
   const { addNotification } = useNotificationStore();
 
   const { scheduleStatus } = useChannelScheduleStatus(channelId);
+  console.log(scheduleStatus, 'scheduleStatus')
   const { channelInterval } = useChannelInterval(channelId);
 
   const [localScheduleEnabled, setLocalScheduleEnabled] = useState(false);
@@ -37,7 +38,7 @@ const ScheduleContainer = () => {
   const toggleSchedule = () => {
   const nextSchedule = !localScheduleEnabled;
 
-  // Если включаем расписание и активен интервал — выключаем интервал на сервере
+
   const disableIntervalIfNeeded = localIntervalEnabled && nextSchedule;
 
   toggleScheduleApi(undefined, {
@@ -48,13 +49,12 @@ const ScheduleContainer = () => {
         setLocalIntervalEnabled(false);
       }
     },
-    onError: (err) => addNotification(err.message, "info"),
+    onError: (err) => addNotification(err.message, "error"),
   });
 
-  // Если нужно выключить интервал при включении расписания
   if (disableIntervalIfNeeded) {
     updateInterval({ isEnabled: false }, {
-      onError: (err) => addNotification(err.message, "info"),
+      onError: (err) => addNotification(err.message, "error"),
     });
   }
 };
@@ -72,12 +72,12 @@ const toggleInterval = () => {
         setLocalScheduleEnabled(false);
       }
     },
-    onError: (err) => addNotification(err.message, "info"),
+    onError: (err) => addNotification(err.message, "error"),
   });
 
   if (disableScheduleIfNeeded) {
     toggleScheduleApi(undefined, {
-      onError: (err) => addNotification(err.message, "info"),
+      onError: (err) => addNotification(err.message, "error"),
     });
   }
 };

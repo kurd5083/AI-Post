@@ -2,7 +2,7 @@ import { useState } from "react";
 import styled from "styled-components";
 import arrow from "@/assets/arrow.svg";
 import BtnBase from "@/shared/BtnBase";
-import { usePopupStore } from "@/store/popupStore"
+import { usePopupStore } from "@/store/popupStore";
 import { useAvailableCategories } from "@/lib/channels/categories/useAvailableCategories";
 import ModernLoading from "@/components/ModernLoading";
 import Checkbox from "@/shared/Checkbox";
@@ -12,12 +12,11 @@ import { useNotificationStore } from "@/store/notificationStore";
 const CompilationPopup = () => {
   const [selectedCategory, setSelectedCategory] = useState(null);
 
-  const { popup, changeContent, goBack } = usePopupStore()
+  const { popup, changeContent, goBack } = usePopupStore();
   const channelId = popup?.data?.channelId;
   const { addNotification } = useNotificationStore();
 
   const { mutate: applyCategory, isPending: categoryPending } = useApplyCategory();
-
   const { categories, categoriesLoading } = useAvailableCategories();
 
   const handleSave = () => {
@@ -27,17 +26,14 @@ const CompilationPopup = () => {
     }
 
     applyCategory(
-      {
-        channelId,
-        category: selectedCategory,
-      },
+      { channelId, category: selectedCategory },
       {
         onSuccess: () => {
           addNotification(`Категория "${selectedCategory}" успешно применена`, "success");
           goBack();
         },
-        onError: () => {
-          addNotification("Ошибка при сохранении категории", "error");
+        onError: (err) => {
+          addNotification(err?.message || "Недостаточно прав для применения категории", "error");
         },
       }
     );
@@ -47,39 +43,43 @@ const CompilationPopup = () => {
     <CompilationContainer>
       {categoriesLoading ? (
         <ModernLoading text="Загрузка категорий..." />
-      ) : (
-        categories?.length > 0 ? (
-          <CompilationList>
-            {categories.map((item) => (
-              <CompilationItem key={item.id}>
-                <Checkbox
-                  checked={selectedCategory === item.name}
-                  onChange={() => setSelectedCategory(item.name)}
+      ) : categories?.length > 0 ? (
+        <CompilationList>
+          {categories.map((item) => (
+            <CompilationItem key={item.id}>
+              <Checkbox
+                checked={selectedCategory === item.name}
+                onChange={() => setSelectedCategory(item.name)}
+              >
+                <CompilationText>{item.name}</CompilationText>
+              </Checkbox>
+              <CompilationSubtext>
+                {item.description || "Описание категории"}
+              </CompilationSubtext>
+              <CompilationFooter>
+                <p>{item.sources?.length ?? 0} источника</p>
+                <CompilationOpen
+                  onClick={() =>
+                    changeContent(
+                      "compilation_upload",
+                      "popup",
+                      {
+                        channelId,
+                        name: item.name,
+                        text: "Здесь вы можете просмотреть источники категорий",
+                        id: item.id,
+                      }
+                    )
+                  }
                 >
-                  <CompilationText>{item.name}</CompilationText>
-                </Checkbox>
-                <CompilationSubtext>
-                  {item.description || "Описание категории"}
-                </CompilationSubtext>
-                <CompilationFooter>
-                  <p>{item.sources.length ?? 0} источника</p>
-
-                  <CompilationOpen
-                    onClick={() =>
-                      changeContent(
-                        "compilation_upload", 'popup', { channelId: channelId, name: item.name, text: "Здесь вы можете просмотреть источники категорий", id: item.id}
-                      )
-                    }
-                  >
-                    <img src={arrow} alt="arrow icon" />
-                  </CompilationOpen>
-                </CompilationFooter>
-              </CompilationItem>
-            ))}
-          </CompilationList>
-        ) : (
-          <p>Категории не найдены</p>
-        )
+                  <img src={arrow} alt="arrow icon" />
+                </CompilationOpen>
+              </CompilationFooter>
+            </CompilationItem>
+          ))}
+        </CompilationList>
+      ) : (
+        <p>Категории не найдены</p>
       )}
 
       <BtnBase
@@ -90,8 +90,8 @@ const CompilationPopup = () => {
         {categoryPending ? "Сохраняем..." : "Сохранить"}
       </BtnBase>
     </CompilationContainer>
-  )
-}
+  );
+};
 
 const CompilationContainer = styled.div`
   box-sizing: border-box;
@@ -99,19 +99,17 @@ const CompilationContainer = styled.div`
   flex-direction: column;
   padding: 0 56px 30px;
 
-  @media(max-width: 1600px) {
-    padding: 0 32px 30px;
-  }
-  @media(max-width: 768px) {
-    padding: 0 24px 30px;
-  }
+  @media(max-width: 1600px) { padding: 0 32px 30px; }
+  @media(max-width: 768px) { padding: 0 24px 30px; }
 `;
+
 const CompilationList = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
   grid-template-rows: max-content;
   gap: 16px;
 `;
+
 const CompilationFooter = styled.div`
   display: flex;
   align-items: center;
@@ -122,7 +120,8 @@ const CompilationFooter = styled.div`
     font-weight: 700;
     color: #336CFF;
   }
-`
+`;
+
 const CompilationOpen = styled.button`
   display: flex;
   align-items: center;
@@ -132,26 +131,21 @@ const CompilationOpen = styled.button`
   height: 32px;
   border-radius: 32px;
   border: 2px solid #1C2438;
-`
+`;
+
 const CompilationItem = styled.div`
-  position: relative; 
+  position: relative;
   box-sizing: border-box;
   padding: 24px;
   border-radius: 24px;
-  background-color:#181E30;
+  background-color: #181E30;
 
   &:hover {
     background-color: #1C2438;
-    
-    ${CompilationOpen} {
-      background-color: #336CFF;
-
-      svg path {
-        stroke: #D6DCEC; 
-      }
-    }
+    ${CompilationOpen} { background-color: #336CFF; }
   }
-`
+`;
+
 const CompilationText = styled.p`
   font-size: 24px;
   line-height: 24px;
@@ -159,7 +153,8 @@ const CompilationText = styled.p`
   padding-right: 40px;
   display: flex;
   align-items: center;
-`
+`;
+
 const CompilationSubtext = styled.p`
   margin-top: 16px;
   font-size: 14px;
@@ -168,6 +163,6 @@ const CompilationSubtext = styled.p`
   color: #6A7080;
   padding-bottom: 24px;
   border-bottom: 2px solid #2E3954;
-`
+`;
 
-export default CompilationPopup
+export default CompilationPopup;
