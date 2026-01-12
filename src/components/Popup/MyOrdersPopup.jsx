@@ -7,7 +7,7 @@ import { usePromotionOrders } from "@/lib/channels/promotion/useGetPromotionOrde
 import CustomSelect from "@/shared/CustomSelect";
 
 const MyOrdersPopup = () => {
-  const [copied, setCopied] = useState(false);
+  const [copied, setCopied] = useState({});
   const { popup, changeContent } = usePopupStore();
   const channelId = popup?.data?.channelId;
   const { addNotification } = useNotificationStore();
@@ -29,15 +29,16 @@ const MyOrdersPopup = () => {
     }
   }, [filterType, filterSuccess, channelId]);
 
-  const handleCopy = (link) => {
+  const handleCopy = (link, orderId) => {
     if (!link) {
       addNotification("Ссылка недоступна для копирования", "error");
       return;
     }
     navigator.clipboard.writeText(link);
-    setCopied(link);
+    setCopied(prev => ({ ...prev, [orderId]: true }));
     addNotification("Ссылка скопирована в буфер обмена", "success");
-    setTimeout(() => setCopied(false), 2000);
+
+    setTimeout(() => setCopied(prev => ({ ...prev, [orderId]: false })), 2000);
   };
 
   const typeOptions = [
@@ -111,8 +112,8 @@ const MyOrdersPopup = () => {
                     <TableCell>
                       <CellOrdersLink>
                         <span>{order.link}</span>
-                        <p onClick={() => handleCopy(order.link)}>
-                          {copied === order.link ? "Скопировано!" : "Скопировать"}
+                        <p onClick={() => handleCopy(order.link, order.id)}>
+                          {copied[order.id] ? "Скопировано!" : "Скопировать"}
                         </p>
                       </CellOrdersLink>
                     </TableCell>
@@ -222,7 +223,14 @@ const HeaderCell = styled.th`
   font-size: 12px;
   text-align: left;
   text-transform: uppercase;
-  padding: 20px 0;
+  padding: 20px 15px;
+  &:first-child {
+    padding-left: 0;
+  }
+  &:last-child {
+    padding-right: 0;
+  }
+
 `;
 const TableItem = styled.tr`
   &:last-child td { border-bottom: none; }

@@ -43,7 +43,7 @@ const MobileMenu = () => {
                       <MenuText>{item.text}</MenuText>
                     </Link>
                   ) : (
-                    <p onClick={() => openPopup(item.popup)}>
+                    <p onClick={() => openPopup(item.popup, "popup")}>
                       {item.icon(activePage === item.id)}
                       {item.text}
                     </p>

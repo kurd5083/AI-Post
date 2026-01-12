@@ -4,24 +4,17 @@ import TimeInput from "@/shared/TimeInput";
 import Checkbox from "@/shared/Checkbox";
 import BtnBase from "@/shared/BtnBase";
 import PlusIcon from "@/icons/PlusIcon";
-import { useChannelInterval } from "@/lib/channels/useChannelInterval";
 import { usePopupStore } from "@/store/popupStore";
-import { useUpdateChannelInterval } from "@/lib/channels/useUpdateChannelInterval";
 import { useNotificationStore } from "@/store/notificationStore";
 
-const SchedulePopup = () => {
-  const { popup, changeContent, goBack } = usePopupStore();
-  const channelId = popup?.data?.channelId;
+const ScheduleIntervalPopup = ({ channelInterval, updateInterval, intervalPending }) => {
+  const { goBack } = usePopupStore();
   const { addNotification } = useNotificationStore();
-
-  const { channelInterval } = useChannelInterval(channelId);
-  const { mutate: saveInterval, isLoading } = useUpdateChannelInterval(channelId);
 
   const [intervalMinutes, setIntervalMinutes] = useState(0);
   const [finalMinutes, setFinalMinutes] = useState(0);
   const [activeStartHour, setActiveStartHour] = useState(0);
   const [activeEndHour, setActiveEndHour] = useState(0);
-  const [isEnabled, setIsEnabled] = useState(false);
   const [avoidNight, setAvoidNight] = useState(false);
   const [showResultInterval, setShowResultInterval] = useState(false);
   const [showResultActiveTime, setShowResultActiveTime] = useState(false);
@@ -32,7 +25,6 @@ const SchedulePopup = () => {
       setFinalMinutes(channelInterval.intervalMinutes);
       setActiveStartHour(channelInterval.activeStartHour);
       setActiveEndHour(channelInterval.activeEndHour);
-      setIsEnabled(channelInterval.isEnabled);
       setAvoidNight(channelInterval.avoidNight);
     }
   }, [channelInterval]);
@@ -42,10 +34,9 @@ const SchedulePopup = () => {
     if (activeStartHour === null || activeEndHour === null)
       return addNotification("Установите активное время публикаций", "info");
 
-    saveInterval(
+    updateInterval(
       {
         intervalMinutes: finalMinutes,
-        isEnabled,
         avoidNight,
         activeStartHour,
         activeEndHour,
@@ -61,12 +52,6 @@ const SchedulePopup = () => {
 
   return (
     <ScheduleContainer>
-      <ScheduleHead>
-        <ScheduleHeadText onClick={() => changeContent("schedule")}>Расписание</ScheduleHeadText>
-        <ScheduleHeadText $active={true}>Интервал</ScheduleHeadText>
-      </ScheduleHead>
-
-      <ScheduleContent>
         <ScheduleTitle>Интервал публикаций</ScheduleTitle>
         <ScheduleDesc>
           Установите периодичность, с которой система будет отправлять посты.<br />
@@ -117,11 +102,6 @@ const SchedulePopup = () => {
         <ScheduleKey>
           <ScheduleKeyTitle>Дополнительно</ScheduleKeyTitle>
           <ScheduleKeyItem>
-            <Checkbox checked={isEnabled} onChange={() => setIsEnabled(!isEnabled)}>
-              <h4>Активировать интервальную публикацию</h4>
-            </Checkbox>
-          </ScheduleKeyItem>
-          <ScheduleKeyItem>
             <Checkbox checked={avoidNight} onChange={() => setAvoidNight(!avoidNight)}>
               <h4>Не публиковать в ночное время</h4>
             </Checkbox>
@@ -129,51 +109,16 @@ const SchedulePopup = () => {
         </ScheduleKey>
 
         <ScheduleButtons>
-          <BtnBase $color="#D6DCEC" $bg="#336CFF" onClick={handleSave} disabled={isLoading}>
-            {isLoading ? "Сохраняем..." : "Сохранить"}
+          <BtnBase $color="#D6DCEC" $bg="#336CFF" onClick={handleSave} disabled={intervalPending}>
+            {intervalPending ? "Сохраняем..." : "Сохранить"}
           </BtnBase>
           <BtnBase onClick={goBack} $color="#D6DCEC" $bg="#242A3A">Отменить</BtnBase>
         </ScheduleButtons>
-      </ScheduleContent>
     </ScheduleContainer>
   );
 };
 
 const ScheduleContainer = styled.div`
-  padding: 0 56px 30px;
-
-  @media(max-width: 1600px) {
-    padding: 0 32px 30px;
-  }
-  @media(max-width: 768px) {
-    padding: 0 24px 30px;
-  }
-`
-const ScheduleHead = styled.div`
-  display: flex;
-  gap: 32px;
-  margin-bottom: 48px;
-
-  @media(max-width: 480px) {
-    margin-bottom: 40px;
-  }
-`
-const ScheduleHeadText = styled.p`
-  display: flex;
-  gap: 32px;
-  color: ${({ $active }) => $active ? '#D6DCEC' : '#6A7080'};
-  padding-bottom: 32px;
-  border-bottom: 2px solid ${({ $active }) => $active ? '#D6DCEC' : '#2E3954'};
-  font-weight: 700;
-  font-size: 24px;
-  padding-right: 40px;
-  cursor: pointer;
-
-  @media(max-width: 480px) {
-    padding-right: 0;
-  }
-`
-const ScheduleContent = styled.div`
   display: flex;
   flex-direction: column;
 `
@@ -255,4 +200,4 @@ const ScheduleButtons = styled.div`
   margin-top: 64px;
 `
 
-export default SchedulePopup
+export default ScheduleIntervalPopup

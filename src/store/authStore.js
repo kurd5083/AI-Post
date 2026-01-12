@@ -1,5 +1,4 @@
 import { create } from "zustand";
-import { usePopupStore } from "@/store/popupStore";
 
 export const useAuthStore = create((set, get) => ({
   token: null,

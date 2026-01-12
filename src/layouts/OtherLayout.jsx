@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { Outlet } from "react-router";
 import styled from "styled-components";
@@ -22,17 +22,22 @@ import { useTelegramBotLink } from "@/lib/useTelegramBotLink";
 const OtherLayout = () => {
   const { popup, closePopup } = usePopupStore();
   const { isOpen } = useLightboxStore();
-  const { isAuthenticated, token } = useAuthStore();
-  const [ready, setReady] = useState(false);
+  const isAuthenticated = useAuthStore(s => s.isAuthenticated);
+  const token = useAuthStore(s => s.token);
+  const init = useAuthStore(state => state.init);
   const { botLinkData } = useTelegramBotLink();
   const location = useLocation();
 
   useEffect(() => {
-    closePopup();
-    setReady(true);
-  }, [location.pathname, token]);
+    const handler = () => init();
+    window.addEventListener('pageshow', handler);
+    return () => window.removeEventListener('pageshow', handler);
+  }, []);
 
-  if (!ready) return null;
+  useEffect(() => {
+    closePopup();
+  }, [location.pathname, token, isAuthenticated]);
+
 
   return (
     <OtherContainer>
@@ -51,7 +56,7 @@ const OtherLayout = () => {
               $radius="12px"
               $fs="16px"
               onClick={() => {
-                if (!botLinkData) return;
+              if (!botLinkData) return;
                 window.location.href = botLinkData.botLink;
               }}
             >
@@ -74,6 +79,7 @@ const OtherLayout = () => {
     </OtherContainer>
   )
 }
+
 const OtherContainer = styled.section`
   position: relative;
   display: flex;

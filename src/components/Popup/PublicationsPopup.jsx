@@ -76,21 +76,19 @@ const PublicationsPopup = () => {
         break;
 
       case "week":
-  if (dateFilter.value) {
-    const now = new Date();
-    const threshold = new Date(now.getTime() - dateFilter.value * 24 * 60 * 60 * 1000);
+        if (dateFilter.value) {
+          const now = new Date();
+          const threshold = new Date(now.getTime() - dateFilter.value * 24 * 60 * 60 * 1000);
 
-    result = result.filter((p) => new Date(p.createdAt) >= threshold);
-  }
-  break;
-
+          result = result.filter((p) => new Date(p.createdAt) >= threshold);
+        }
+        break;
       default:
         break;
     }
 
     if (filter === "premoderation") {
       result = result.filter((p) => p.status === "PENDING_MODERATION");
-      console.log(result)
     }
 
     return result;
@@ -150,7 +148,6 @@ const PublicationsPopup = () => {
 
     return Array.from({ length: max }, (_, i) => start + i);
   };
-  console.log(currentItems)
   return (
     <>
       <PublicationsHead
@@ -213,9 +210,9 @@ const PublicationsPopup = () => {
             {currentItems.length > 0 ? (
               currentItems.map((item) =>
                 filter === "premoderation" ? (
-                  <CardPablishPremoderation key={item.id} item={item} channelId={channelId} selectedChannel={selectedChannel}/>
+                  <CardPablishPremoderation key={item.id} item={item} channelId={channelId} selectedChannel={selectedChannel} />
                 ) : (
-                  <CardPablish key={item.id} item={item} bg selectedChannel={selectedChannel}/>
+                  <CardPablish key={item.id} item={item} bg selectedChannel={selectedChannel} />
                 )
               )
             ) : (

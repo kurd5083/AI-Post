@@ -14,9 +14,9 @@ const ChangeTimePopup = () => {
   const { addNotification } = useNotificationStore();
 
   const postId = popup?.data?.postId;
-  const initial = getPostTime(postId);
-  const [initHours, initMinutes] = initial.time ? initial.time.split(":") : ["00", "00"];
 
+  const initial = getPostTime(postId) || {};
+  const [initHours, initMinutes] = initial.time ? initial.time.split(":") : ["", ""];
   const [date, setDate] = useState(initial.date ? new Date(initial.date) : new Date());
   const [hoursState, setHours] = useState(initHours);
   const [minutesState, setMinutes] = useState(initMinutes);
@@ -49,6 +49,11 @@ const ChangeTimePopup = () => {
     resultDateTime.setSeconds(0);
     resultDateTime.setMilliseconds(0);
 
+    const now = new Date();
+    if (resultDateTime < now) {
+      return addNotification("Нельзя выбрать дату и время в прошлом", "info");
+    }
+
     const offset = resultDateTime.getTimezoneOffset();
     resultDateTime.setMinutes(resultDateTime.getMinutes() - offset);
 
@@ -78,6 +83,7 @@ const ChangeTimePopup = () => {
           dateFormat="dd.MM.yyyy"
           locale="ru"
           wrapperClassName="picker-wrapper"
+          minDate={new Date()}
         />
       </DatePickerWrapper>
       <FieldDescription>

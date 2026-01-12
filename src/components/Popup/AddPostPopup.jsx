@@ -137,7 +137,6 @@ const AddPostPopup = () => {
 
 		return Array.from({ length: max }, (_, i) => start + i);
 	};
-	console.log(currentItems)
 	return (
 		<>
 			<PublicationsHead

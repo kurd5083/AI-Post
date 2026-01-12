@@ -3,14 +3,15 @@ import styled, { keyframes } from "styled-components";
 import EmojiPicker from "emoji-picker-react";
 
 import create from "@/assets/create.svg";
-import hide from "@/assets/hide.svg";
-import paper from "@/assets/ai-generator/paper.svg";
-import smiley from "@/assets/ai-generator/smiley.svg";
-import fat from "@/assets/ai-generator/fat.svg";
-import italics from "@/assets/ai-generator/italics.svg";
-import underlined from "@/assets/ai-generator/underlined.svg";
-import crossed from "@/assets/ai-generator/crossed.svg";
-import link from "@/assets/ai-generator/link.svg";
+
+import PaperIcon from "@/icons/PaperIcon";
+import SmileyIcon from "@/icons/SmileyIcon";
+import FatIcon from "@/icons/FatIcon";
+import ItalicIcon from "@/icons/ItalicIcon";
+import UnderlinedIcon from "@/icons/UnderlinedIcon";
+import CrossedIcon from "@/icons/CrossedIcon";
+import LinkIcon from "@/icons/LinkIcon";
+import EyeIcon from "@/icons/EyeIcon";
 
 import BtnBase from "@/shared/BtnBase";
 import AiGeneratorIcon from "@/icons/AiGeneratorIcon";
@@ -55,7 +56,6 @@ const AiGeneratorPopup = () => {
   const channelId = popup?.data?.channelId;
   const telegramId = user?.telegramId;
 
-  const lastPostText = useRef("");
   const caretRanges = useRef({});
   const textRefs = useRef({});
   const postIntervals = useRef({});
@@ -97,7 +97,6 @@ const AiGeneratorPopup = () => {
   };
 
   const handleSavePost = (post) => {
-    console.log(post)
     if (!post.title || !post.summary) {
       addNotification("Пост должен иметь заголовок и текст", "info");
       return;
@@ -117,7 +116,7 @@ const AiGeneratorPopup = () => {
     baseDate.setUTCMilliseconds(0);
 
     const calendarScheduledAt = baseDate.toISOString();
-    console.log(calendarScheduledAt, "tesese");
+
     const basePayload = {
       title: post.title,
       text: post.text,
@@ -125,6 +124,7 @@ const AiGeneratorPopup = () => {
       publishedAt: new Date().toISOString(),
       calendarScheduledAt,
       summary: post.summary,
+      url: post.url,
     };
 
     if (!post.serverId) {
@@ -156,12 +156,52 @@ const AiGeneratorPopup = () => {
       });
     }
   };
+  const insertLinkAtCursor = (postId, url) => {
+    const el = textRefs.current[postId];
+    if (!el || !url) return;
 
-  const addLink = () => {
-    const url = prompt("Введите ссылку");
-    if (url) document.execCommand("createLink", false, url);
+    el.focus();
+
+    let selection = document.getSelection();
+    let range = caretRanges.current[postId] ||
+      (selection?.rangeCount ? selection.getRangeAt(0) : null);
+
+    if (!range || !el.contains(range.startContainer)) {
+      range = document.createRange();
+      range.selectNodeContents(el);
+      range.collapse(false);
+    }
+
+    const br1 = document.createElement("br");
+    const br2 = document.createElement("br");
+    const icon = document.createElement("span");
+    icon.textContent = "🔗";
+
+    const link = document.createElement("a");
+    link.href = url;
+    link.target = "_blank";
+    link.rel = "noopener noreferrer";
+    link.textContent = "Источник";
+
+    const fragment = document.createDocumentFragment();
+    fragment.appendChild(br1);
+    fragment.appendChild(br2);
+    fragment.appendChild(icon);
+    fragment.appendChild(link);
+
+    range.insertNode(fragment);
+
+    range.setStartAfter(link);
+    range.collapse(true);
+    selection.removeAllRanges();
+    selection.addRange(range);
+
+    caretRanges.current[postId] = range.cloneRange();
+
+    updatePost(postId, {
+      text: el.innerText
+    });
   };
-
   const insertEmojiAtCursor = (emoji, postId) => {
     const el = textRefs.current[postId];
     if (!el) return;
@@ -190,7 +230,7 @@ const AiGeneratorPopup = () => {
 
     caretRanges.current[postId] = range.cloneRange();
 
-    updatePost(postId, { text: el.innerHTML, summary: el.innerHTML });
+    updatePost(postId, { summary: el.innerHTML, summary: el.innerHTML });
   };
   const handlePublishNow = (post) => {
     if (!post.summary) return addNotification("Нельзя публиковать пустой пост", "info");
@@ -220,7 +260,8 @@ const AiGeneratorPopup = () => {
         images: urlImages,
         channelId: postChannelId,
         publishedAt: new Date().toISOString(),
-        summary: post.summary
+        summary: post.summary,
+        url: post.url,
       };
 
       createPostMutation(payload, {
@@ -294,37 +335,51 @@ const AiGeneratorPopup = () => {
             </ItemHead>
 
             <ItemBody>
-              <ItemText
-                contentEditable
-                suppressContentEditableWarning
-                ref={el => {
-                  if (!el) return;
-                  textRefs.current[post.postId] = el;
+              <div style={{ display: "flex", flexDirection: "column", width: "100%" }}>
+                <ItemText
+                  contentEditable
+                  suppressContentEditableWarning
+                  ref={el => {
+                    if (!el) return;
+                    textRefs.current[post.postId] = el;
 
-                  if (el.innerHTML !== post.summary) {
-                    el.innerHTML = post.summary;
-                  }
-                }}
-                onInput={e => {
-                  const el = e.currentTarget;
-                  const html = el.innerHTML;
+                    if (post.summary && el.innerHTML !== post.summary) {
+                      el.innerHTML = post.summary;
+                    }
+                  }}
+                  onInput={e => {
+                    const el = e.currentTarget;
+                    const summaryHtml = el.innerHTML;
+                    const plainText = el.innerText;
+                    const sel = document.getSelection();
+                    if (sel?.rangeCount) {
+                      caretRanges.current[post.postId] = sel.getRangeAt(0).cloneRange();
+                    }
+                    updatePost(post.postId, {
+                      summary: summaryHtml,
+                      text: plainText
+                    });
+                  }}
 
-                  lastPostText.current = html;
+                  onClick={() => {
+                    const sel = document.getSelection();
+                    if (sel?.rangeCount) caretRanges.current[post.postId] = sel.getRangeAt(0).cloneRange();
+                  }}
+                  onKeyUp={() => {
+                    const sel = document.getSelection();
+                    if (sel?.rangeCount) caretRanges.current[post.postId] = sel.getRangeAt(0).cloneRange();
+                  }}
+                />
 
-                  const sel = document.getSelection();
-                  if (sel?.rangeCount) caretRanges.current[post.postId] = sel.getRangeAt(0).cloneRange();
-
-                  updatePost(post.postId, { text: html, summary: html });
-                }}
-                onClick={() => {
-                  const sel = document.getSelection();
-                  if (sel?.rangeCount) caretRanges.current[post.postId] = sel.getRangeAt(0).cloneRange();
-                }}
-                onKeyUp={() => {
-                  const sel = document.getSelection();
-                  if (sel?.rangeCount) caretRanges.current[post.postId] = sel.getRangeAt(0).cloneRange();
-                }}
-              />
+                {post.url && (
+                  <UrlText>
+                    🔗
+                    <a href={post.url} target="_blank" rel="noopener noreferrer">
+                      Источник
+                    </a>
+                  </UrlText>
+                )}
+              </div>
               <BodyRight>
                 <ImagesContainer>
                   {(post.images || []).map((img, index) => {
@@ -346,11 +401,10 @@ const AiGeneratorPopup = () => {
                     );
                   })}
                 </ImagesContainer>
-                {console.log(post)}
-                {post.time && (
+                {post.time && post.time.date && (
                   <ItemTime>
                     Выбрано: {(() => {
-                      const d = new Date(post.time.date || new Date());
+                      const d = new Date(post.time.date);
                       return d.toLocaleString("ru-RU", {
                         day: "2-digit",
                         month: "2-digit",
@@ -359,13 +413,11 @@ const AiGeneratorPopup = () => {
                         minute: "2-digit",
                         timeZone: "UTC",
                       });
-
                     })()}
                   </ItemTime>
                 )}
               </BodyRight>
             </ItemBody>
-
             <ItemActions>
               <ActionsLeft>
                 <ItemAI>
@@ -382,29 +434,74 @@ const AiGeneratorPopup = () => {
 
                 <ItemActionsAdd>
                   <input type="file" accept="image/*" multiple style={{ display: "none" }} id={`file-input-${post.postId}`} onChange={e => { if (e.target.files?.length) handleAddImages(post.postId, e.target.files); }} />
-                  <img src={paper} alt="paper icon" title="Добавить изображение" onClick={() => document.getElementById(`file-input-${post.postId}`).click()} />
-                  <div style={{ position: "relative" }}>
-                    <img src={smiley} title="Добавить эмодзи" onClick={() => setEmojiPostId(prev => prev === post.postId ? null : post.postId)} />
+                  <PaperIcon
+                    color="#6A7080"
+                    hoverColor="#FFFFFF"
+                    onClick={() => document.getElementById(`file-input-${post.postId}`).click()}
+                  />
+                  <div>
+                    <SmileyIcon
+                      color="#6A7080"
+                      hoverColor="#FFFFFF"
+                      onClick={() => setEmojiPostId(prev => prev === post.postId ? null : post.postId)}
+                    />
                     {emojiPostId === post.postId && (
-                      <div style={{ position: "absolute", zIndex: 100 }}>
+                      <div style={{ position: "absolute", zIndex: 1000 }}>
                         <EmojiPicker onEmojiClick={emojiData => { insertEmojiAtCursor(emojiData.emoji, post.postId); setEmojiPostId(null); }} theme="dark" locale="ru" />
                       </div>
                     )}
                   </div>
-                  <img src={fat} alt="fat icon" title="Жирный" onClick={() => formatText("bold")} />
-                  <img src={italics} alt="italics icon" title="Курсив" onClick={() => formatText("italic")} />
-                  <img src={underlined} alt="underlined icon" title="Подчёркнутый" onClick={() => formatText("underline")} />
-                  <img src={crossed} alt="crossed icon" title="Зачёркнутый" onClick={() => formatText("strikeThrough")} />
-                  <img src={link} alt="link icon" title="Добавить ссылку" onClick={() => addLink(post.postId)} />
-                  <img src={hide} alt="hide icon" title="Посмотреть лайв превью" width={24} height={17} onClick={() => setSelectedPost(post)} />
+                  <FatIcon
+                    color="#6A7080"
+                    hoverColor="#FFFFFF"
+                    onClick={() => formatText("bold")}
+                  />
+                  <ItalicIcon
+                    color="#6A7080"
+                    hoverColor="#FFFFFF"
+                    onClick={() => formatText("italic")}
+                  />
+                  <UnderlinedIcon
+                    color="#6A7080"
+                    hoverColor="#FFFFFF"
+                    onClick={() => formatText("underline")}
+                  />
+                  <CrossedIcon
+                    color="#6A7080"
+                    hoverColor="#FFFFFF"
+                    onClick={() => formatText("strikeThrough")}
+                  />
+                  <LinkIcon
+                    color="#6A7080"
+                    hoverColor="#FFFFFF"
+                    onClick={() =>
+                      changeContent("enter_link", "popup_window", {
+                        onSave: (url) => {
+                          const cleanUrl = url?.trim() || null;
+                          if (!cleanUrl) return;
+
+                          updatePost(post.postId, {
+                            url: cleanUrl,
+                          });
+
+                          insertLinkAtCursor(post.postId, cleanUrl);
+                        },
+                      })
+                    }
+                  />
+                  <ActionsAddBlock onClick={() => setSelectedPost(post)}>
+                    <EyeIcon />
+                    <span>Лайв превью</span>
+                  </ActionsAddBlock>
+
                 </ItemActionsAdd>
               </ActionsLeft>
 
               <ButtonsAll>
                 <ButtonsMainTop>
-                  <BtnBase $padding="21px 19px" $color="#EF6284" $bg="#241E2D" onClick={() => handleRemovePost(post.postId)}>Отменить</BtnBase>
-                  <BtnBase $padding="21px 20px" $border $bg="transporent" $color="#6A7080" onClick={() => changeContent("change_time_popup", "popup_window", { postId: post.postId })}>Изменить время</BtnBase>
-                  <BtnBase $padding="21px 20px" $color="#336CFF" $bg="#161F37" onClick={() => handleSavePost(post)} disabled={updatePending || createPostPending}>{createPostPending ? "Сохраняем..." : "Сохранить"}</BtnBase>
+                  <BtnBase $padding="21px 22px" $color="#EF6284" $bg="#241E2D" onClick={() => handleRemovePost(post.postId)}>Отменить</BtnBase>
+                  <BtnBase $padding="21px 22px" $border $bg="transporent" $color="#6A7080" onClick={() => changeContent("change_time", "popup_window", { postId: post.postId })}>Изменить время</BtnBase>
+                  <BtnBase $padding="21px 21.5px" $color="#336CFF" $bg="#161F37" onClick={() => handleSavePost(post)} disabled={updatePending || createPostPending}>{createPostPending ? "Сохраняем..." : "Сохранить"}</BtnBase>
                 </ButtonsMainTop>
                 <BtnBase $padding="21px 18px" $border $width="100%" $bg="transporent" $color="#6A7080" onClick={() => handlePublishNow(post)} disabled={isSendPending}>{isSendPending ? "Публикация..." : "Опубликовать сейчас"}</BtnBase>
               </ButtonsAll>
@@ -491,14 +588,14 @@ const GeneratorList = styled.div`
   height: 100%;
   
   @media(max-width: 2000px) {
-    gap: 220px;
+    gap: 160px;
   } 
   @media(max-width: 1800px) {
     grid-column: 1 /span 5;
     grid-row: 3;
   }
   @media(max-width: 480px) {
-    gap: 290px;
+    gap: 240px;
   } 
 `;
 const ListItem = styled.div`
@@ -522,8 +619,7 @@ const HeadBlock = styled.div`
   display: flex;
   flex-direction: column-reverse;
   gap: 12px;
-  min-width: 40%;
-  width: 100%;
+  width: calc(100% - 100px);
 `
 const HeadProgress = styled.p`
   flex-shrink: 0;
@@ -548,6 +644,7 @@ const HeadTitle = styled.input`
 `
 const ItemBody = styled.div`
   display: flex;
+  flex-direction: column;
   gap: 20px;
   justify-content: space-between;
   align-items: flex-start;
@@ -574,7 +671,16 @@ const ItemText = styled.div`
     color: #6A7080;
     opacity: 0.6;
   }
+  a {
+    color: #0048ff;
+    text-decoration: underline;
+    font-weight: 600;
+    cursor: pointer;
+  }
 
+  a:hover {
+    text-decoration: none;
+  }
   @media (max-width: 1400px) {
     min-height: 120px;
   }
@@ -588,7 +694,6 @@ const BodyRight = styled.div`
 const ImagesContainer = styled.div`
   display: flex;
   flex-wrap: wrap;
-  justify-content: flex-end;
   gap: 8px;
 `;
 
@@ -629,8 +734,8 @@ const RemoveImageButton = styled.button`
 `;
 const ItemTime = styled.p`
   font-size: 14px;
+  font-weight: 600;
   color: #6a7080;
-  text-align: right;
   flex-grow: 0;
 `;
 const ItemActions = styled.div`
@@ -650,7 +755,6 @@ const ItemAI = styled.div`
   align-items: center;
   flex-wrap: wrap;  
   gap: 24px 40px;
-  margin-top: 32px;
   p {
     display: flex;
     align-items: center;  
@@ -664,7 +768,7 @@ const ItemActionsAdd = styled.div`
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  gap: 16px 32px;
+  gap: 16px 24px;
   @media(max-width: 480px) {
     gap: 24px;
   }
@@ -672,10 +776,26 @@ const ItemActionsAdd = styled.div`
     cursor: pointer;
   }
 `
+const ActionsAddBlock = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #6a7080;
+  transition: color 0.2s;
+  cursor: pointer;
+
+  &:hover {
+    color: #ffffff;
+  }
+
+  span {
+    user-select: none;
+  }
+`;
+
 const ButtonsAll = styled.div`
   display: flex;
   flex-direction: column;
-
   gap: 8px;
   align-items: flex-end;
   justify-content: flex-end;
@@ -702,16 +822,6 @@ const ButtonsMainTop = styled.div`
     }
   } 
 `;
-const BaseButton = styled.button`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 56px;
-  height: 56px;
-  border-radius: 12px;
-  flex-shrink: 0;
-  transition: all 0.2s;
-`;
 const PreviewContainer = styled.div`
   grid-column:  4 / span 2;
   grid-row: 1 / span 2;
@@ -720,5 +830,18 @@ const PreviewContainer = styled.div`
     grid-row: 2;
   }
 `;
+const UrlText = styled.div`
+  font-size: 14px;
+  color: #0048ff;
+  margin-top: 14px;
 
+  a {
+    text-decoration: underline;
+    font-weight: 700;
+    cursor: pointer;
+  }
+  a:hover {
+    text-decoration: none;
+  }
+`;
 export default AiGeneratorPopup;

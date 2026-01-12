@@ -19,7 +19,7 @@ const Header = () => {
 		<HeaderContainer>
 			<HeaderContent>
 				<HeaderAvaContainer onClick={() => {
-					openPopup("profile")
+					openPopup("profile", "popup")
 					setActivePage(6);
 				}}>
 					<HeaderAva src={user?.avatarUrl} alt={user?.username} />
@@ -32,10 +32,10 @@ const Header = () => {
 						<HeaderBalance>{balance?.balanceRubles} <mark>₽</mark></HeaderBalance>
 					</HeaderBalanceContent>
 				</HeaderBalanceContainer>
-				<HeaderBtnAdd onClick={() => openPopup("replenish")}>+ Пополнить</HeaderBtnAdd>
+				<HeaderBtnAdd onClick={() => openPopup("replenish", "popup")}>+ Пополнить</HeaderBtnAdd>
 			</HeaderContent>
 			<HeaderBtns>
-				<HeaderBtnBell onClick={() => openPopup("notifications")}><img src={bell} alt="bell icon" width={20} height={24} /></HeaderBtnBell>
+				<HeaderBtnBell onClick={() => openPopup("notifications", "popup")}><img src={bell} alt="bell icon" width={20} height={24} /></HeaderBtnBell>
 				<HeaderBtnBurger onClick={() => menu ? closeMenu() : openMenu()}><img src={burger} alt="burger icon" width={16} height={11} /></HeaderBtnBurger>
 			</HeaderBtns>
 		</HeaderContainer>

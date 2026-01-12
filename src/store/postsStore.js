@@ -14,8 +14,9 @@ const createEmptyPost = (index = 1) => ({
   progress: `0 / ${MAX_CHARS}`,
   text: "",
   summary: "",
-  time: "00:00",
+  time: null,
   images: [],
+  url: ""
 });
 
 export const usePostsStore = create((set, get) => ({
@@ -142,7 +143,7 @@ export const usePostsStore = create((set, get) => ({
       clearInterval(interval);
       get().setPostProgress(postId, 0);
       get().resetPostProgress(postId);
-      notify(err?.response?.data?.message || "Ошибка генерации поста", "error");
+      notify(err?.message || "Ошибка генерации поста", "error");
     }
   },
 

@@ -17,8 +17,7 @@ import BoostsPopup from "@/components/Popup/BoostsPopup";
 import FilteringPopup from "@/components/Popup/FilteringPopup";
 import SourcesPopup from "@/components/Popup/SourcesPopup";
 import CompilationPopup from "@/components/Popup/CompilationPopup";
-import SchedulePopup from "@/components/Popup/SchedulePopup";
-import ScheduleIntervalPopup from "@/components/Popup/ScheduleIntervalPopup";
+import ScheduleContainer from "@/components/Popup/ScheduleContainer";
 import IndustrialStylePopup from "@/components/Popup/IndustrialStylePopup";
 import CalendarPopup from "@/components/Popup/CalendarPopup";
 import NotificationsPopup from "@/components/Popup/NotificationsPopup";
@@ -77,9 +76,7 @@ const Popup = () => {
             ) : popup.content == 'compilation' ? (
                 <CompilationPopup/>
             ) : popup.content == 'schedule' ? (
-                <SchedulePopup/>
-            ) : popup.content == 'schedule_interval' ? (
-                <ScheduleIntervalPopup/>
+                <ScheduleContainer/>
             ) : popup.content == 'post_style' ? (
                 <IndustrialStylePopup/>
             ) : popup.content == 'calendar' ? (

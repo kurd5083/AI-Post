@@ -7,7 +7,6 @@ export const useApprovePost = () => {
   return useMutation({
     mutationFn: ({ postId, channelId }) => postsModeration(postId, channelId),
     onSuccess: (data, variables) => {
-      console.log(`Пост ${variables.postId} успешно одобрен`);
       queryClient.invalidateQueries(["posts"]);
     },
   });

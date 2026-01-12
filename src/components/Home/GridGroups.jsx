@@ -51,8 +51,6 @@ const GridGroups = () => {
     <GridContainer>
       {currentChannels.map((channel, index) => (
         <GridItem key={channel.id}>
-          {console.log(channel, 'channel')}
-
           <input
             type="file"
             accept="image/*"
@@ -67,10 +65,8 @@ const GridGroups = () => {
                   const uploaded = response?.[0];
 
                   if (!uploaded?.url) {
-                    console.warn("Не получили url");
                     return;
                   }
-                  console.log(uploaded, 'uploaded asd')
                   updateAvatar({
                     id: channel.id,
                     avatarUrl: uploaded.url,

@@ -29,7 +29,6 @@ const Statistics = () => {
   });
 
   const stat = channelStat?.response;
-  console.log(channelStat)
   return (
     <StatisticsContainer>
       <StatisticsTitle>

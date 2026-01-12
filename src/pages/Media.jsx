@@ -37,7 +37,7 @@ const Media = () => {
           $padding="16px 45px" 
           $bg="#336CFF"
           $color="#FFFFFF"
-          onClick={() => openPopup("upload_media")}
+          onClick={() => openPopup("upload_media", "popup")}
         >
           + Загрузить медиа
         </BtnBase>

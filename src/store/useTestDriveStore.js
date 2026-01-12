@@ -3,9 +3,9 @@ import { testDrivePrompt } from "@/api/posts/testDrive";
 import { useNotificationStore } from "@/store/notificationStore";
 
 export const useTestDriveStore = create((set, get) => ({
-  results: {},      // { [channelId]: data }
-  progress: {},     // { [channelId]: number }
-  testPending: {},  // { [channelId]: boolean }
+  results: {},
+  progress: {},
+  testPending: {},
 
   runTestDrive: async (channelId, prompt) => {
     const notify = useNotificationStore.getState().addNotification;
@@ -33,7 +33,7 @@ export const useTestDriveStore = create((set, get) => ({
     } catch (err) {
       clearInterval(interval);
       get().setProgress(channelId, 0);
-      notify(err?.response?.data?.message || "Ошибка при тестировании промпта", "error");
+      notify(err?.message || "Ошибка при тестировании промпта", "error");
     } finally {
       set(state => ({
         testPending: { ...state.testPending, [channelId]: false }

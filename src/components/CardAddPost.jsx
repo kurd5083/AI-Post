@@ -11,64 +11,34 @@ import { registerLocale } from "react-datepicker";
 import ru from "date-fns/locale/ru";
 registerLocale("ru", ru);
 import { useCreateCalendarEvent } from "@/lib/calendar/useCreateCalendarEvent";
-import { useUpdateCalendarEvent } from "@/lib/calendar/useUpdateCalendarEvent";
 import { useNotificationStore } from "@/store/notificationStore";
 
 const MAX_VISIBLE_IMAGES = 3;
 
 const CardAddPost = ({ item, bg, selectedChannel }) => {
   const { addNotification } = useNotificationStore();
-  const { popup, changeContent } = usePopupStore();
+  const { popup, goBack } = usePopupStore();
   const { openLightbox } = useLightboxStore();
 
-  const [selectedPostId, setSelectedPostId] = useState(null);
   const [scheduledAt, setScheduledAt] = useState('');
 
   const channelId = popup?.data?.channelId;
   const selectedDate = popup?.data?.selectedDate;
-  const event = popup?.data?.event;
-  const isEdit = Boolean(event);
-  console.log(selectedDate)
-  const { mutate: createEvent, isPending: creating } = useCreateCalendarEvent();
-  const { mutate: updateEvent, isPending: updating } = useUpdateCalendarEvent();
-   useEffect(() => {
-      if (isEdit) {
-        // setDescription(event.description || "");
-        setSelectedPostId(event.postId || null);
-        setScheduledAt(event.scheduledAt);
-      } else if (selectedDate) {
-        setScheduledAt(new Date(selectedDate).toISOString());
-      }
-    }, [event, selectedDate, isEdit]);
-     const handleSave = (postId) => {
-      console.log(postId)
-    // if (!description.trim()) {
-    //   addNotification("Описание не может быть пустым", "info");
-    //   return;
-    // }
 
+  const { mutate: createEvent, isPending: creatingPending } = useCreateCalendarEvent();
+
+  useEffect(() => {
+    setScheduledAt(new Date(selectedDate).toISOString());
+  }, [selectedDate]);
+
+  const handleSave = (postId) => {
     if (!scheduledAt) {
       addNotification("Выберите дату и время", "info");
       return;
     }
-
-    if (isEdit) {
-      updateEvent(
-        {
-          id: event?.id,
-          payload: { description: '', scheduledAt },
-        },
-        {
-          onSuccess: () => {
-            addNotification("Событие успешно обновлено", "update");
-            goBack();
-          },
-          onError: () => addNotification("Ошибка при обновлении события", "error"),
-        }
-      );
-    } else {
+    const scheduledAtValue = scheduledAt;
       createEvent(
-        { channelId, description: '', scheduledAt, postId: postId },
+        { channelId, description: '', scheduledAt: scheduledAtValue, postId },
         {
           onSuccess: () => {
             addNotification("Событие успешно создано", "success");
@@ -77,10 +47,8 @@ const CardAddPost = ({ item, bg, selectedChannel }) => {
           onError: () => addNotification("Ошибка при создании события", "error"),
         }
       );
-    }
   };
 
-  const isPending = creating || updating;
   return (
     <CardAddItem $bg={bg}>
       <CardAddItemHead>
@@ -136,17 +104,25 @@ const CardAddPost = ({ item, bg, selectedChannel }) => {
       <CardAddSubtext
         dangerouslySetInnerHTML={{ __html: item.summary }}
       />
-      <StyledDatePicker 
-        selected={scheduledAt ? new Date(scheduledAt) : null}
-        onChange={(date) => setScheduledAt(date.toISOString())}
-        locale="ru"
-        showTimeSelect
-        timeIntervals={5}
-        dateFormat="yyyy-MM-dd HH:mm"
-        wrapperClassName="picker-wrapper"
-        calendarClassName="dark-calendar"
-        className="picker-input"
-      />
+      <StyledDatePicker
+  selected={scheduledAt ? new Date(scheduledAt) : null}
+  onChange={(date) => {
+    const now = new Date();
+    if (date < now) {
+      addNotification("Нельзя выбрать дату и время в прошлом", "error");
+      return;
+    }
+    setScheduledAt(date.toISOString());
+  }}
+  locale="ru"
+  showTimeSelect
+  timeIntervals={5}
+  dateFormat="yyyy-MM-dd HH:mm"
+  wrapperClassName="picker-wrapper"
+  calendarClassName="dark-calendar"
+  className="picker-input"
+  minDate={new Date()}
+/>
       <CardAddButtons>
         <BtnBase
           $padding="16px 24px"
@@ -155,15 +131,10 @@ const CardAddPost = ({ item, bg, selectedChannel }) => {
           $color="#D6DCEC"
           $border={true}
           onClick={() => handleSave(item.id)}
+          disabled={creatingPending}
         >
-          
-          {isPending
-                    ? "Сохранение..."
-                    : isEdit
-                      ? "Обновить"
-                      : "Выбрать пост"}
+          {creatingPending ? "Сохранение..." : "Выбрать пост"}
         </BtnBase>
-
       </CardAddButtons>
     </CardAddItem>
   )

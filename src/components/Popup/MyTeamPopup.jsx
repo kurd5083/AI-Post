@@ -58,7 +58,7 @@ const MyTeamPopup = () => {
       {
         onSuccess: (data) => addNotification(data?.message, "success"),
         onError: (err) =>
-          addNotification(err?.response?.data?.message || "Ошибка при удалении участника", "error"),
+          addNotification(err?.message || "Ошибка при удалении участника", "error"),
       }
     );
   };
@@ -107,7 +107,6 @@ const MyTeamPopup = () => {
               </thead>
               <tbody>
                 {members?.team?.map((member) => {
-                  console.log(errorAvatars)
                   const isError = errorAvatars.includes(member.user.telegramId);
 
                   return (
@@ -135,7 +134,11 @@ const MyTeamPopup = () => {
                                 ? member.user.lastName.charAt(0) + "."
                                 : ""}
                             </p>
-                            {member.username && <span>@{member.username}</span>}
+                            <span>{new Date(member.createdAt).toLocaleDateString("ru-RU", {
+                              day: "2-digit",
+                              month: "2-digit",
+                              year: "numeric"
+                            })}</span>
                           </NameBlock>
                         </TableCellName>
                       </TableCell>
@@ -149,13 +152,18 @@ const MyTeamPopup = () => {
                             padding={false}
                             border={false}
                             disabled={updatingRole}
+                            width="fit-content"
                           />
                         ) : (
                           channelRoles?.find(r => r.role === member.role)?.name || member.role
                         )}
                       </TableCell>
                       <TableCell>
-                        {/* {new Date(member.createdAt).toLocaleDateString()} */}
+                        <p>{new Date(member.createdAt).toLocaleDateString("ru-RU", {
+                          day: "2-digit",
+                          month: "2-digit",
+                          year: "numeric",
+                        })}</p>
                       </TableCell>
                       <TableCell>
                         {canRemove(member.role) && (
@@ -215,19 +223,19 @@ const Table = styled.table`
   border-spacing: 0;
 
   & colgroup col:first-child {
-    width: 25%;
+    width: 30%;
     @media (max-width: 768px) {
       width: calc(50% - 24px);
     }
   }
   & colgroup col:nth-child(2) {
-    width: 25%;
+    width: 30%;
     @media (max-width: 768px) {
       width: calc(50% - 24px);
     }
   }
   & colgroup col:nth-child(3) {
-    width: calc(50% - 48px);
+    width: calc(40% - 48px);
     @media (max-width: 768px) {
       display: none;
     }
@@ -284,7 +292,9 @@ const TableCellName = styled.div`
   display: flex;
   align-items: center;
   gap: 24px;
-  
+   @media (max-width: 480px) {
+      gap: 10px;
+    }
   img {
     width: 48px;
     height: 48px;

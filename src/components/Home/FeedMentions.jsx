@@ -27,7 +27,6 @@ const FeedMentions = () => {
   });
 
   const mentionItems = mentions?.response?.items || [];
-  console.log(mentionItems)
   return (
     <FeedMentionsContainer>
       <FeedMentionsHead>

@@ -2,47 +2,34 @@ import { useState } from "react";
 import styled from "styled-components";
 import { usePopupStore } from "@/store/popupStore";
 import BtnBase from "@/shared/BtnBase";
-import CustomSelect from "@/shared/CustomSelectSec";
 import CloseIcon from "@/icons/CloseIcon";
-import { useUserChannels } from "@/lib/channels/useUserChannels";
-import { useNotificationStore } from "@/store/notificationStore";
 
-const SelectChannelsPopup = () => {
+const EnterLinkPopup = () => {
 	const { popup, goBack, closePopup } = usePopupStore();
 	const onSave = popup?.data?.onSave;
 	const loading = popup?.data?.loading;
-  const { addNotification } = useNotificationStore();
-
-	const { userChannels } = useUserChannels();
-	const [selectedChannelId, setSelectedChannelId] = useState(null);
+ 	const [link, setLink] = useState(""); // Состояние для ссылки
 
 	const handleSave = () => {
-		if (!selectedChannelId) {
-			addNotification("Выберите канал", "info");
-			return;
-		}
-		onSave(selectedChannelId);
-
+		if (!link) return; // Не сохраняем пустую ссылку
+		onSave(link);      // Передаем ссылку обратно в popup
 		popup && popup?.previousPage.length > 0 ? goBack() : closePopup();
 	};
 
 	return (
 		<div>
 			<SelectChannelsHead>
-				<HeadTitle>Выбрать канал</HeadTitle>
+				<HeadTitle>Введите ссылку</HeadTitle>
 				<CloseButton onClick={() => popup && popup?.previousPage.length > 0 ? goBack() : closePopup()}>
 					<CloseIcon color="#336CFF" />
 				</CloseButton>
 			</SelectChannelsHead>
-			<SelectChannelsSubtitle>Укажите канал, в котором будет опубликована новость</SelectChannelsSubtitle>
-			<CustomSelect
-				value={selectedChannelId}
-				onChange={(option) => setSelectedChannelId(option.value)}
-				width="100%"
-				options={userChannels?.map((channel) => ({
-					value: channel.id,
-					label: channel.name,
-				}))}
+			<SelectChannelsSubtitle>Ссылка должна начинаться с https:// или http://</SelectChannelsSubtitle>
+			<InputField
+				type="url"
+				placeholder="Введите ссылку сюда"
+				value={link}
+				onChange={(e) => setLink(e.target.value)}
 			/>
 			<SelectChannelsButtons>
 				<BtnBase onClick={handleSave} $color="#D6DCEC" $bg="#336CFF">{loading ? "Сохраняем..." : "Сохранить"}</BtnBase>
@@ -85,6 +72,19 @@ const SelectChannelsSubtitle = styled.p`
   margin-top: 24px;
 	margin-bottom: 40px;
 `;
+const InputField = styled.input`
+  background-color: transparent;
+  width: 100%;
+  color: #d6dcec;
+  font-size: 16px;
+  font-weight: 700;
+  padding-bottom: 24px;
+  border: none;
+  border-bottom: 2px solid #2e3954;
+  &::placeholder {
+    color: #d6dcec;
+  }
+`;
 const SelectChannelsButtons = styled.div`
   display: flex;
   gap: 8px;
@@ -95,4 +95,4 @@ const SelectChannelsButtons = styled.div`
   }
 `;
 
-export default SelectChannelsPopup;
+export default EnterLinkPopup;

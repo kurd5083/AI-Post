@@ -226,6 +226,7 @@ const CardPablishText = styled.p`
 const CardPablishSubtext = styled.p`
   margin-top: 16px;
   font-size: 14px;
+  line-height: 14px;
   font-weight: 600;
   color: #6A7080;
   display: -webkit-box;

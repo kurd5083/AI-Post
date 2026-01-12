@@ -7,7 +7,6 @@ export const useCreateBoostOrder = () => {
   return useMutation({
     mutationFn: (data) => createBoostOrder(data),
     onSuccess: (data) => {
-      console.log("Буст заказан:", data);
       queryClient.invalidateQueries(["boost-orders"]);
     },
     onError: (error) => {

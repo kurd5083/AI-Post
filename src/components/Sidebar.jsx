@@ -51,7 +51,7 @@ const Sidebar = () => {
                       {isSidebarVisible && item.text}
                     </Link>
                   ) : (
-                    <p onClick={() => openPopup(item.popup)}>
+                    <p onClick={() => openPopup(item.popup, "popup")}>
                       {item.icon(activePage === item.id)}
                       {isSidebarVisible && item.text}
                     </p>
@@ -64,7 +64,7 @@ const Sidebar = () => {
       </SidebarNavContainer>
       <SidebarFooter $isSidebarVisible={isSidebarVisible}>
           <SidebarFooterTop onClick={() => {
-            openPopup("profile")
+            openPopup("profile", "popup")
             setActivePage(6);
           }}>
             <SidebarAvaContainer>
@@ -77,7 +77,7 @@ const Sidebar = () => {
             $padding="12px 24px"
             $bg="#151F37"
             $color="#336CFF"
-            onClick={() => openPopup("replenish")}
+            onClick={() => openPopup("replenish", "popup")}
           >
             + {isSidebarVisible && 'Пополнить'}
           </BtnBase>

@@ -6,7 +6,6 @@ import TimeInput from "@/shared/TimeInput";
 import BtnBase from "@/shared/BtnBase";
 import BlocksItems from "@/shared/BlocksItems";
 import PlusIcon from "@/icons/PlusIcon";
-import { usePopupStore } from "@/store/popupStore";
 import { useCreateChannelSchedule } from "@/lib/channels/schedule/useCreateChannelSchedule";
 import { useChannelSchedule } from "@/lib/channels/schedule/useChannelSchedule";
 import { useUpdateChannelSchedule } from "@/lib/channels/schedule/useUpdateChannelSchedule";
@@ -22,9 +21,7 @@ const DAYS = [
   { label: "Воскресенье", value: "SUNDAY" },
 ];
 
-const SchedulePopup = () => {
-  const { popup, changeContent } = usePopupStore();
-  const channelId = popup?.data?.channelId;
+const SchedulePopup = ({channelId}) => {
   const { addNotification } = useNotificationStore();
 
   const { channelSchedule } = useChannelSchedule(channelId);
@@ -97,100 +94,78 @@ const SchedulePopup = () => {
 
   return (
     <ScheduleContainer>
-      <ScheduleHead>
-        <ScheduleHeadText $active>Расписание</ScheduleHeadText>
-        <ScheduleHeadText onClick={() => changeContent("schedule_interval")}>
-          Интервал
-        </ScheduleHeadText>
-      </ScheduleHead>
 
-      <ScheduleContent>
-        <ScheduleTitle>Часовой пояс</ScheduleTitle>
+      <ScheduleTitle>Часовой пояс</ScheduleTitle>
 
-        <CustomSelect
-          options={[
-            { value: "UTC", label: "UTC" },
-            { value: "Europe/Moscow", label: "Европа/Москва" },
-          ]}
-          value={timezone}
-          onChange={(option) => setTimezone(option.value)}
-        />
+      <CustomSelect
+        options={[
+          { value: "UTC", label: "UTC" },
+          { value: "Europe/Moscow", label: "Европа/Москва" },
+        ]}
+        value={timezone}
+        onChange={(option) => setTimezone(option.value)}
+      />
 
-        <ScheduleKey>
-          <ScheduleKeyTitle>Выберите время публикаций</ScheduleKeyTitle>
+      <ScheduleKey>
+        <ScheduleKeyTitle>Выберите время публикаций</ScheduleKeyTitle>
 
-          <ScheduleInputContainer>
-            <TimeInput
-              hours={currentTime.hours}
-              minutes={currentTime.minutes}
-              onChange={(h, m) => setCurrentTime({ hours: h, minutes: m })}
-            />
-            <ScheduleBtn onClick={handleAddTime}>
-              <PlusIcon color="#FFF980" />
-            </ScheduleBtn>
-          </ScheduleInputContainer>
+        <ScheduleInputContainer>
+          <TimeInput
+            hours={currentTime.hours}
+            minutes={currentTime.minutes}
+            onChange={(h, m) => setCurrentTime({ hours: h, minutes: m })}
+          />
+          <ScheduleBtn onClick={handleAddTime}>
+            <PlusIcon color="#FFF980" />
+          </ScheduleBtn>
+        </ScheduleInputContainer>
 
-          {publicationTimes.length === 0 ? (
-            <EmptyText>Время публикаций не добавлены</EmptyText>
-          ) : (
-            <BlocksItems
-              items={publicationTimes.map((t, index) => ({ value: t, id: index }))}
-              color="#FFF980"
-              onRemove={(id) => setPublicationTimes(publicationTimes.filter((_, i) => i !== id))}
-            />
-          )}
-        </ScheduleKey>
+        {publicationTimes.length === 0 ? (
+          <EmptyText>Время публикаций не добавлены</EmptyText>
+        ) : (
+          <BlocksItems
+            items={publicationTimes.map((t, index) => ({ value: t, id: index }))}
+            color="#FFF980"
+            onRemove={(id) => setPublicationTimes(publicationTimes.filter((_, i) => i !== id))}
+          />
+        )}
+      </ScheduleKey>
 
-        <ScheduleKey>
-          <ScheduleKeyTitle>Выберите дни недели</ScheduleKeyTitle>
-          <ScheduleDays>
-            {DAYS.map((day) => (
-              <ScheduleDaysBlock key={day.value}>
-                <Checkbox
-                  color="#FFF980"
-                  checked={selectedDays.includes(day.value)}
-                  onChange={() => toggleDay(day.value)}
-                >
-                  <h4>{day.label}</h4>
-                </Checkbox>
-              </ScheduleDaysBlock>
-            ))}
-          </ScheduleDays>
-        </ScheduleKey>
+      <ScheduleKey>
+        <ScheduleKeyTitle>Выберите дни недели</ScheduleKeyTitle>
+        <ScheduleDays>
+          {DAYS.map((day) => (
+            <ScheduleDaysBlock key={day.value}>
+              <Checkbox
+                color="#FFF980"
+                checked={selectedDays.includes(day.value)}
+                onChange={() => toggleDay(day.value)}
+              >
+                <h4>{day.label}</h4>
+              </Checkbox>
+            </ScheduleDaysBlock>
+          ))}
+        </ScheduleDays>
+      </ScheduleKey>
 
-        <BtnBase
-          $margin="64"
-          onClick={handleSave}
-          disabled={createSchedule.isPending || updateSchedule.isPending}
-        >
-          {createSchedule.isPending || updateSchedule.isPending ? "Сохраняем..." : "Сохранить"}
-        </BtnBase>
-      </ScheduleContent>
+      <BtnBase
+        $margin="64"
+        onClick={handleSave}
+        disabled={createSchedule.isPending || updateSchedule.isPending}
+      >
+        {createSchedule.isPending || updateSchedule.isPending ? "Сохраняем..." : "Сохранить"}
+      </BtnBase>
     </ScheduleContainer>
   );
 };
 
 const ScheduleContainer = styled.div`
-  padding: 0 56px 30px;
+  display: flex; 
+  flex-direction: column; 
+  /* padding: 0 56px 30px;
   @media (max-width: 1600px) { padding: 0 32px 30px; }
-  @media (max-width: 768px) { padding: 0 24px 30px; }
+  @media (max-width: 768px) { padding: 0 24px 30px; } */
 `;
-const ScheduleHead = styled.div`
-  display: flex;
-  gap: 32px;
-  margin-bottom: 48px;
-  @media (max-width: 480px) { margin-bottom: 40px; }
-`;
-const ScheduleHeadText = styled.p`
-  color: ${({ $active }) => ($active ? "#D6DCEC" : "#6A7080")};
-  padding-bottom: 32px;
-  border-bottom: 2px solid ${({ $active }) => ($active ? "#D6DCEC" : "#2E3954")};
-  font-weight: 700;
-  font-size: 24px;
-  padding-right: 40px;
-  cursor: pointer;
-`;
-const ScheduleContent = styled.div` display: flex; flex-direction: column; `;
 const ScheduleTitle = styled.h2` font-size: 24px; font-weight: 700; margin-bottom: 32px; `;
 const ScheduleKey = styled.div` margin-top: 40px; `;
 const ScheduleKeyTitle = styled.h2`

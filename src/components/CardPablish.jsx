@@ -9,7 +9,6 @@ import AvaPlug from "@/shared/AvaPlug";
 const MAX_VISIBLE_IMAGES = 3;
 
 const CardPablish = ({ item, bg, selectedChannel }) => {
-  console.log(selectedChannel)
   const { openLightbox } = useLightboxStore();
   const { addPost } = usePostsStore();
   const { changeContent } = usePopupStore();
@@ -36,6 +35,7 @@ const CardPablish = ({ item, bg, selectedChannel }) => {
         },
       serverId: item.id,
       placeholder: "Новый пост",
+      url: item.url
     });
     changeContent('create_post', 'popup')
   };

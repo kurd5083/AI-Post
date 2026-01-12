@@ -11,7 +11,6 @@ const MyTeamAddPopup = () => {
   const [copied, setCopied] = useState(false);
 
   const { inviteData, inviteLoading } = useInviteLink(channelId);
-  console.log(inviteData, 'inviteData')
   const inviteUrl = inviteData?.inviteUrl ?? "";
 
   const handleCopy = () => {

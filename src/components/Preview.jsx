@@ -13,13 +13,11 @@ const Preview = ({ collapsed, onChange, testResult }) => {
   const { openLightbox } = useLightboxStore();
   const { mutate: sendTestPost, isPending: sendPending } = useSendTestPost();
   const { addNotification } = useNotificationStore();
-
   const { title, summary, url, images } = testResult || {};
-  console.log(images)
   const [imagesUrls, setImagesUrls] = useState([]);
   const [localFiles, setLocalFiles] = useState([]);
 
-   useEffect(() => {
+  useEffect(() => {
     if (!images || !images.length) {
       setImagesUrls([]);
       setLocalFiles([]);
@@ -27,9 +25,9 @@ const Preview = ({ collapsed, onChange, testResult }) => {
     }
 
     const urls = images.filter(img => typeof img === "string").map(img => normalizeUrl(img));
-    const files = images.filter(img => img instanceof File || img instanceof Blob); 
+    const files = images.filter(img => img instanceof File || img instanceof Blob);
 
-    setLocalFiles(files); 
+    setLocalFiles(files);
 
     const objectUrls = files.map(file => URL.createObjectURL(file));
     setImagesUrls([...urls, ...objectUrls]);
@@ -39,7 +37,7 @@ const Preview = ({ collapsed, onChange, testResult }) => {
     };
   }, [images]);
 
-   const handleSend = () => {
+  const handleSend = () => {
     if (!testResult || (!title && !summary && imagesUrls.length === 0 && localFiles.length === 0)) {
       addNotification("Нет данных для отправки поста", "info");
       return;
@@ -49,8 +47,8 @@ const Preview = ({ collapsed, onChange, testResult }) => {
       {
         title: title || "Без названия",
         summary: summary || "",
-        images: localFiles, 
-        imagesUrls: imagesUrls, 
+        images: localFiles,
+        imagesUrls: imagesUrls,
       },
       {
         onSuccess: () => addNotification("Пост отправлен в Telegram!", "success"),
@@ -95,17 +93,25 @@ const Preview = ({ collapsed, onChange, testResult }) => {
                     })}
                   </ImagesContainer>
                 )}
-
-                <PreviewInfoText>
+                <PreviewInfoContent>
                   {title || summary || url ? (
                     <>
-                      {title && <strong>{title}<br /><br /></strong>}
-                      {summary}
-                      <br />
-                      {url && (
-                        <a href={url} target="_blank" rel="noopener noreferrer">
-                          Источник: {url}
-                        </a>
+                      {title && 
+                        <PreviewInfoTitle>{title}<br /><br /></PreviewInfoTitle>
+                      }
+                      {summary && (
+                        <>
+                        <PreviewInfoText
+                          dangerouslySetInnerHTML={{ __html: summary }}
+                        />
+                        </>
+                      )}
+                       {url && (
+                        <>
+                        <br /><br />
+                        <PreviewInfoLinkIcon>🔗 </PreviewInfoLinkIcon>
+                        <PreviewInfoLink href={url} target="_blank" rel="noopener noreferrer">Источник</PreviewInfoLink>
+                        </>
                       )}
                     </>
                   ) : (
@@ -113,7 +119,7 @@ const Preview = ({ collapsed, onChange, testResult }) => {
                       Превью недоступно. Выберите пост или дождитесь загрузки данных.
                     </EmptyText>
                   )}
-                </PreviewInfoText>
+                </PreviewInfoContent>
               </PreviewInfoContainer>
             </PreviewInfo>
 
@@ -128,7 +134,6 @@ const Preview = ({ collapsed, onChange, testResult }) => {
   );
 };
 
-// Styled-components остаются без изменений
 const GeneratorPreview = styled.div`width: 100%;`;
 const PreviewContent = styled.div`
   background-color: #181E30;
@@ -237,7 +242,7 @@ const Overlay = styled.div`
   align-items: center;
   justify-content: center;
 `;
-const PreviewInfoText = styled.p`
+const PreviewInfoContent = styled.p`
   box-sizing: border-box;
   padding: 24px;
   background-color: #131C22;
@@ -247,7 +252,31 @@ const PreviewInfoText = styled.p`
   font-weight: 600;
   scrollbar-width: none;
   max-height: 300px;
+  width: 100%;
   overflow-y: auto;
+`;
+
+const PreviewInfoTitle = styled.h4`
+  font-size: 16px;
+  font-weight: 700;
+`;
+const PreviewInfoText = styled.span`
+  scrollbar-width: none;
+  white-space: pre-wrap;
+  word-break: break-word;
+`;
+const PreviewInfoLinkIcon = styled.span`
+  font-size: 14px;
+`;
+const PreviewInfoLink = styled.a`
+  color: #0048ff;
+  cursor: pointer;
+  font-size: 14px;
+  text-decoration: underline;
+
+  &:hover {
+    text-decoration: none;
+  }
 `;
 const EmptyText = styled.p`
   height: 100px;

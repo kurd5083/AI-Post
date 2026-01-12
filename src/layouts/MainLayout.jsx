@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { Outlet } from "react-router";
 import styled from "styled-components";
@@ -10,6 +10,7 @@ import MobileMenu from "@/components/MobileMenu";
 import Notification from "@/components/Notification";
 import Lightbox from "@/components/Lightbox";
 import Popup from "@/components/Popup/Popup";
+import PopupWindow from "@/components/PopupWindow/PopupWindow";
 
 import { usePopupStore } from "@/store/popupStore";
 import { useLightboxStore } from "@/store/lightboxStore";
@@ -38,7 +39,7 @@ const MainLayout = () => {
   useEffect(() => {
     closePopup();
   }, [location.pathname, token, isAuthenticated]);
-  console.log(isAuthenticated)
+
   return (
     <MainContainer>
       <Sidebar />
@@ -46,20 +47,20 @@ const MainLayout = () => {
         <Header />
         {!isAuthenticated ? (
           <AuthOverlay>
-              <h2>Войдите в систему</h2>
-              <p>Чтобы продолжить работу, авторизуйтесь через Telegram-бота.</p>
-           
-              <BtnBase
-                $padding="12px 24px"
-                $bg="#336CFF"
-                $color="#fff"
-                $radius="12px"
-                $fs="16px"
-                onClick={() => {
+            <h2>Войдите в систему</h2>
+            <p>Чтобы продолжить работу, авторизуйтесь через Telegram-бота.</p>
+
+            <BtnBase
+              $padding="12px 24px"
+              $bg="#336CFF"
+              $color="#fff"
+              $radius="12px"
+              $fs="16px"
+              onClick={() => {
                 if (!botLinkData) return;
-                  window.location.href = botLinkData.botLink;
-                }}
-              >
+                window.location.href = botLinkData.botLink;
+              }}
+            >
               <TgIcon width="22" height="20" />
               Войти через бот
             </BtnBase>
@@ -70,7 +71,7 @@ const MainLayout = () => {
         <MobileMenu />
         {popup && (
           popup.view === 'popup_window'
-            ? <Popup content={popup.content} />
+            ? <PopupWindow content={popup.content} />
             : <Popup content={popup.content} />
         )}
 

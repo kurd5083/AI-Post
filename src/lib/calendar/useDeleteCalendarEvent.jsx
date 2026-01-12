@@ -11,11 +11,11 @@ export const useDeleteCalendarEvent = () => {
 
     onSuccess: (_, id) => {
       queryClient.invalidateQueries({ queryKey: ['calendar-events'] });
-      addNotification('Пост успешно удален', 'delete');
+      addNotification('Событие успешно удалено', 'delete');
     },
 
     onError: (_, id) => {
-      addNotification('Ошибка при удалении поста', 'error');
+      addNotification('Ошибка при удалении события', 'error');
     },
   });
 };

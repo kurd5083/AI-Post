@@ -147,14 +147,6 @@ export const popupDatas = [
         }
     },
     {
-        key: "schedule_interval",
-        name: "Интервал",
-        extra: {
-            background: "#5F6046",
-            image: schedule
-        }
-    },
-    {
         key: "sources",
         name: "Источники",
         extra: {

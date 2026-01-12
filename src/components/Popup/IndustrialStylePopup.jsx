@@ -31,7 +31,6 @@ const IndustrialStylePopup = () => {
 
   const testResult = useTestDriveStore(state => state.results[channelId]);
   const testProgress = useTestDriveStore(state => state.progress[channelId] ?? 0);
-  // const testPending = useTestDriveStore(state => state.testPending[channelId] ?? false);
   const runTestDrive = useTestDriveStore(state => state.runTestDrive);
   
   useEffect(() => {
@@ -44,7 +43,6 @@ const IndustrialStylePopup = () => {
       if (e.target.value.length <= MAX_PROMPT_LENGTH) setLocalPrompt(e.target.value);
     };
   const handleTest = () => runTestDrive(channelId, localPrompt);
-
   const { mutate: updateGlobalPrompt, isPending: isPromptPending } = useUpdateChannelGlobalPrompt();
   const { mutate: updateCreativity, isPending: isCreativityPending } = useUpdateChannelCreativity();
   const { mutate: updateCaption, isPending: isCaptionPending } = useUpdateChannelCaption();

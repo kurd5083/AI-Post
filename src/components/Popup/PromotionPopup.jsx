@@ -123,7 +123,7 @@ const PromotionPopup = () => {
               Просмотры на пост по ссылке
             </PostTitle>
           </PromotionViews>
-
+ 
           {autoViews && (
             <ViewsPost>
               <PostTitle>Просмотры на пост</PostTitle>
