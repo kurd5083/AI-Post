@@ -5,7 +5,6 @@ import CardPablishPremoderation from "@/components/CardPablishPremoderation";
 import { usePopupStore } from "@/store/popupStore";
 import { usePostsByChannel } from "@/lib/posts/usePostsByChannel";
 import { useUserChannels } from "@/lib/channels/useUserChannels";
-
 import ModernLoading from "@/components/ModernLoading";
 import CustomSelectSec from "@/shared/CustomSelectSec";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -35,26 +34,27 @@ const PublicationsPopup = () => {
 
   const selectedChannel = userChannels.find(c => c.id === channelId);
 
+  // Изменение itemsPerPage при ресайзе
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth < 768) setItemsPerPage(itemsPerPageMob);
       else if (window.innerWidth < 1600) setItemsPerPage(itemsPerPageSmall);
       else setItemsPerPage(itemsPerPageDefault);
     };
-
     handleResize();
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
+  // Сброс страницы при смене фильтра или даты
   useEffect(() => setCurrentPage(1), [dateFilter, filter]);
 
-  const filteredPosts = useMemo(() => {
+  // Фильтрация постов по дате
+  const filteredPostsByDate = useMemo(() => {
     if (!posts) return [];
-    const now = new Date();
-    let result = [...posts];
 
-    result.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    let result = [...posts];
+    const now = new Date();
 
     switch (dateFilter.period) {
       case "year":
@@ -64,7 +64,6 @@ const PublicationsPopup = () => {
           );
         }
         break;
-
       case "month":
         if (dateFilter.value) {
           const { year, month } = dateFilter.value;
@@ -74,12 +73,9 @@ const PublicationsPopup = () => {
           });
         }
         break;
-
       case "week":
         if (dateFilter.value) {
-          const now = new Date();
           const threshold = new Date(now.getTime() - dateFilter.value * 24 * 60 * 60 * 1000);
-
           result = result.filter((p) => new Date(p.createdAt) >= threshold);
         }
         break;
@@ -87,12 +83,20 @@ const PublicationsPopup = () => {
         break;
     }
 
-    if (filter === "premoderation") {
-      result = result.filter((p) => p.status === "PENDING_MODERATION");
-    }
-
     return result;
-  }, [posts, dateFilter, filter]);
+  }, [posts, dateFilter]);
+
+  // Общие и премодерационные посты после фильтрации по дате
+  const commonPostsCount = filteredPostsByDate.length;
+  const premoderationPostsCount = filteredPostsByDate.filter(p => p.status === "PENDING_MODERATION").length;
+
+  // Фильтрация для отображения в списке по фильтру "common" или "premoderation"
+  const filteredPosts = useMemo(() => {
+    if (filter === "premoderation") {
+      return filteredPostsByDate.filter(p => p.status === "PENDING_MODERATION");
+    }
+    return filteredPostsByDate;
+  }, [filteredPostsByDate, filter]);
 
   const totalPages = filteredPosts.length
     ? Math.ceil(filteredPosts.length / itemsPerPage)
@@ -133,9 +137,7 @@ const PublicationsPopup = () => {
   }, [dateFilter.period]);
 
   const getPaginationRange = (current, total, max = 3) => {
-    if (total <= max) {
-      return Array.from({ length: total }, (_, i) => i + 1);
-    }
+    if (total <= max) return Array.from({ length: total }, (_, i) => i + 1);
 
     const half = Math.floor(max / 2);
     let start = Math.max(current - half, 1);
@@ -148,29 +150,28 @@ const PublicationsPopup = () => {
 
     return Array.from({ length: max }, (_, i) => start + i);
   };
+
   return (
     <>
-      <PublicationsHead
-        spaceBetween={64}
-        slidesPerView="auto"
-        grabCursor
-      >
+      <PublicationsHead spaceBetween={64} slidesPerView="auto" grabCursor>
         <SwiperSlideHead>
           <PublicationsFilter
             $active={filter === "common"}
             onClick={() => setFilter("common")}
           >
-            Общие посты <span>{posts?.length || 0}</span>
+            Общие посты <span>{commonPostsCount}</span>
           </PublicationsFilter>
         </SwiperSlideHead>
+
         <SwiperSlideHead>
           <PublicationsFilter
             $active={filter === "premoderation"}
             onClick={() => setFilter("premoderation")}
           >
-            Премодерация <span>{posts?.filter(p => p.status === "PENDING_MODERATION").length || 0}</span>
+            Премодерация <span>{premoderationPostsCount}</span>
           </PublicationsFilter>
         </SwiperSlideHead>
+
         <SwiperSlideHead>
           <CustomSelectSec
             placeholder="Выбор даты"
@@ -188,6 +189,7 @@ const PublicationsPopup = () => {
             fs="24px"
           />
         </SwiperSlideHead>
+
         {dateFilter.period !== "all" && (
           <SwiperSlideHead>
             <CustomSelectSec
@@ -217,7 +219,9 @@ const PublicationsPopup = () => {
               )
             ) : (
               <EmptyState>
-                {filter === "premoderation" ? "Постов на премодерации пока нет" : "Постов пока нет"}
+                {filter === "premoderation"
+                  ? "Постов на премодерации пока нет"
+                  : "Постов пока нет"}
               </EmptyState>
             )}
           </PublicationsList>
@@ -225,9 +229,7 @@ const PublicationsPopup = () => {
           {totalPages > 1 && (
             <PaginationWrapper>
               {currentPage > 1 && (
-                <PageBtn onClick={() => setCurrentPage(currentPage - 1)}>
-                  ←
-                </PageBtn>
+                <PageBtn onClick={() => setCurrentPage(currentPage - 1)}>←</PageBtn>
               )}
 
               {currentPage > 3 && (
@@ -257,9 +259,7 @@ const PublicationsPopup = () => {
               )}
 
               {currentPage < totalPages && (
-                <PageBtn onClick={() => setCurrentPage(currentPage + 1)}>
-                  →
-                </PageBtn>
+                <PageBtn onClick={() => setCurrentPage(currentPage + 1)}>→</PageBtn>
               )}
             </PaginationWrapper>
           )}
