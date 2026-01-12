@@ -85,6 +85,7 @@ const SelectList = styled.ul`
   box-sizing: border-box;
   position: absolute;
   top: calc(100% + 4px);
+  min-width: fit-content;
   left: 0;
   width: 100%;
   background: #202638;

@@ -12,7 +12,7 @@ const CardPablish = ({ item, bg, selectedChannel }) => {
   const { openLightbox } = useLightboxStore();
   const { addPost } = usePostsStore();
   const { changeContent } = usePopupStore();
-
+  console.log(item)
   const handleEdit = () => {
     addPost({
       postId: item.id,

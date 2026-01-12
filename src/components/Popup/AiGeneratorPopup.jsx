@@ -101,7 +101,9 @@ const AiGeneratorPopup = () => {
       addNotification("Пост должен иметь заголовок и текст", "info");
       return;
     }
-
+    if (!post.time?.date) {
+      return addNotification("Выберите дату публикации", "info");
+    }
     const postChannelId = post.serverId
       ? popup?.data?.channelId
       : usePostsStore.getState().channelMap[post.postId] || (userChannels.length ? userChannels[0].id : null);
