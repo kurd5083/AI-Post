@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { getChannelGlobalPrompt } from "@/api/channels/global-prompt/useGetChannelCaption";
+import { getChannelGlobalPrompt } from "@/api/channels/global-prompt/getChannelGlobalPrompt";
 
 export const useChannelGlobalPrompt = (channelId) => {
     const { data: globalPrompt, isPending: promptPending } = useQuery({

@@ -74,17 +74,17 @@ const IndustrialStylePopup = () => {
                     onSuccess: () =>
                       addNotification("Настройки успешно сохранены", "success"),
                     onError: (err) =>
-                      addNotification(err.message + '1'  || "Ошибка при сохранении подписи", "error"),
+                      addNotification(err.message || "Ошибка при сохранении подписи", "error"),
                   }
                 );
               },
               onError: (err) =>
-                addNotification(err.message + '2'  || "Ошибка при сохранении креативности", "error"),
+                addNotification(err.message || "Ошибка при сохранении креативности", "error"),
             }
           );
         },
         onError: (err) =>
-          addNotification(err.message + '3', "Ошибка при сохранении промпта", "error"),
+          addNotification(err.message, "Ошибка при сохранении промпта", "error"),
       }
     );
   };

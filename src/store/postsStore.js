@@ -135,6 +135,7 @@ export const usePostsStore = create((set, get) => ({
         title: data.title || "",
         text: data.summary || "",
         summary: data.summary || "",
+        url: data.url || "",
         images: data.images || [],
       });
       setTimeout(() => get().resetPostProgress(postId), 1000);

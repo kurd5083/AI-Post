@@ -7,7 +7,7 @@ export const useUpdateChannelCaption = () => {
   return useMutation({
     mutationFn: ({ channelId, value }) => updateChannelCaption(channelId, value),
     onSuccess: () => {
-      queryClient.invalidateQueries(["channel-caption", channelId]);
+      queryClient.invalidateQueries(["channel-caption"]);
     },
   });
 };

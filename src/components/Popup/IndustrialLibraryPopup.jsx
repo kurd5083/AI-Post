@@ -18,7 +18,6 @@ const IndustrialLibraryPopup = () => {
   const { globalPrompt } = useChannelGlobalPrompt(channelId);
   const { addNotification } = useNotificationStore();
 
-  // Синхронизация локального выбора с сервером
   useEffect(() => {
     if (!globalPrompt || !promptLibrary) return;
 
@@ -37,13 +36,11 @@ const IndustrialLibraryPopup = () => {
 
   const { mutate: updateGlobalPrompt, isPending } = useUpdateChannelGlobalPrompt();
 
-  // Выбор промпта локально
   const handleSelectPrompt = (item, index) => {
     setSelectedIndex(index);
     setLocalPrompt(item.prompt);
   };
 
-  // Сохранение промпта на сервере
   const handleSave = () => {
     if (!localPrompt?.trim()) {
       addNotification("Выберите промпт", "info");

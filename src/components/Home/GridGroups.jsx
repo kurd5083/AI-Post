@@ -257,10 +257,6 @@ const BaseButton = styled.button`
 `;
 const ButtonDir = styled(BaseButton)`
   border: 2px solid #2F3953;
-
-  /* &:hover {
-    background-color: #336CFF;
-  } */
 `;
 const ButtonSetting = styled(BaseButton)`
   border: 2px solid #2F3953;

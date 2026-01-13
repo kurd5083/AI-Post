@@ -6,8 +6,8 @@ export const useUpdateChannelCreativity = () => {
 
   return useMutation({
     mutationFn: ({ channelId, value }) => updateChannelCreativity(channelId, value),
-    onSuccess: (_data, variables) => {
-      queryClient.invalidateQueries(["channel-creativity", variables.channelId]);
+    onSuccess: () => {
+      queryClient.invalidateQueries(["channel-creativity"]);
     },
   });
 };

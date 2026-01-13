@@ -7,35 +7,61 @@ import preview_img from "@/assets/popup/preview-img.png";
 import upload_media from "@/assets/upload-media.svg";
 import { usePopupStore } from "@/store/popupStore";
 import { useUploadMedia } from '@/lib/mediaLibrary/useUploadMedia';
+import { useNotificationStore } from "@/store/notificationStore";
+import { useUpdateMediaMetadata } from "@/lib/mediaLibrary/useUpdateMediaMetadata";
+import { useLightboxStore } from "@/store/lightboxStore";
 
 const UploadMediaPopup = () => {
   const { closePopup } = usePopupStore();
-	const { mutate: uploadMedia, isLoading: uploadMediaLoading } = useUploadMedia();
+  const { mutate: uploadMedia, isPending: uploadMediaPending } = useUploadMedia();
+  const { mutate: updateMetadata } = useUpdateMediaMetadata();
+  const { addNotification } = useNotificationStore();
+  const { openLightbox } = useLightboxStore();
+
   const fileInputRef = useRef(null);
-  const [selectedFile, setSelectedFile] = useState(null);
-  const [preview, setPreview] = useState(preview_img);
+
+  const [selectedFiles, setSelectedFiles] = useState([]);
+  const [previews, setPreviews] = useState([]);
   const [isDragOver, setIsDragOver] = useState(false);
+
+  const [title, setTitle] = useState("");
+  const [tag, setTag] = useState("");
+  const [tags, setTags] = useState([]);
+
+  const handleAddTag = () => {
+    const trimmed = tag.trim();
+    if (!trimmed) return;
+    if (tags.includes(trimmed)) return;
+    setTags(prev => [...prev, trimmed]);
+    setTag(""); 
+  };
 
   const handleFileButtonClick = () => {
     fileInputRef.current?.click();
   };
 
-  const processFile = (file) => {
-    if (!file) return;
+  const addFiles = (files) => {
+    const arr = Array.from(files);
 
-    setSelectedFile(file);
-
-    if (file.type.startsWith('image/')) {
-      const reader = new FileReader();
-      reader.onloadend = () => setPreview(reader.result);
-      reader.readAsDataURL(file);
+    if (selectedFiles.length + arr.length > 10) {
+      addNotification("Можно загрузить максимум 10 файлов", "error");
+      return;
     }
+
+    arr.forEach(file => {
+      if (file.type.startsWith("image/")) {
+        const reader = new FileReader();
+        reader.onloadend = () => setPreviews(prev => [...prev, reader.result]);
+        reader.readAsDataURL(file);
+      } else {
+        setPreviews(prev => [...prev, preview_img]);
+      }
+    });
+
+    setSelectedFiles(prev => [...prev, ...arr]);
   };
 
-  const handleFileChange = (event) => {
-    const file = event.target.files?.[0];
-    processFile(file);
-  };
+  const handleFileChange = (e) => addFiles(e.target.files);
 
   const handleDragOver = useCallback((e) => {
     e.preventDefault();
@@ -50,26 +76,38 @@ const UploadMediaPopup = () => {
   const handleDrop = useCallback((e) => {
     e.preventDefault();
     setIsDragOver(false);
-    const files = e.dataTransfer.files;
-    if (files && files.length > 0) processFile(files[0]);
-  }, []);
+    addFiles(e.dataTransfer.files);
+  }, [selectedFiles]);
 
-  const removeFile = () => {
-    setSelectedFile(null);
-    setPreview(preview_img);
+  const removeFile = (index) => {
+    setSelectedFiles(prev => prev.filter((_, i) => i !== index));
+    setPreviews(prev => prev.filter((_, i) => i !== index));
   };
 
-  const handleSave = async () => {
+  const handleSave = () => {
+    if (!selectedFiles.length) return;
 
-    if (!selectedFile) return;
+    uploadMedia(selectedFiles, {
+      onSuccess: async (uploadedItems) => {
+        if (!uploadedItems?.length) {
+          addNotification("Ошибка: не получены ID файлов", "error");
+          return;
+        }
 
-    try {
-      await uploadMedia([selectedFile]); 
-      closePopup(); 
-    } catch (err) {
-      console.error("Ошибка загрузки файла", err);
-      alert("Ошибка при загрузке файла");
-    }
+        await Promise.all(
+          uploadedItems.map((file) =>
+            updateMetadata(
+              { id: file.id, data: { description: title, tags } },
+              { onError: () => addNotification("Ошибка обновления метаданных", "error") }
+            )
+          )
+        );
+
+        addNotification("Файлы загружены и обновлены", "success");
+        closePopup();
+      },
+      onError: (err) => addNotification(err?.message || "Ошибка загрузки файлов", "error")
+    });
   };
 
   return (
@@ -81,7 +119,13 @@ const UploadMediaPopup = () => {
         $isDragOver={isDragOver}
       >
         <UploadMediaDesc>
-          <UploadDescImg src={preview} alt="preview img" />
+          {previews[0] && (
+            <UploadDescImg
+              src={previews[0]}
+              alt="preview img"
+              onClick={() => openLightbox({ images: previews, initialIndex: 0 })}
+            />
+          )}
           <UploadDescContent>
             <h2>Перетяните файлы сюда</h2>
             <p>Для загрузки медиа загрузите файлы на этой странице</p>
@@ -90,6 +134,7 @@ const UploadMediaPopup = () => {
               ref={fileInputRef}
               onChange={handleFileChange}
               id="file-upload"
+              multiple
             />
             <BtnBase
               onClick={handleFileButtonClick}
@@ -112,11 +157,17 @@ const UploadMediaPopup = () => {
         </UploadMediaMobile>
       </UploadMediaDownload>
 
-      {selectedFile && (
-        <SelectedFileInfo>
-          <span>Выбран файл: {selectedFile.name} ({(selectedFile.size / 1024 / 1024).toFixed(2)} MB)</span>
-          <RemoveButton onClick={removeFile}>×</RemoveButton>
-        </SelectedFileInfo>
+      {selectedFiles.length > 0 && (
+        <div style={{ marginBottom: 32 }}>
+          {selectedFiles.map((file, i) => (
+            <SelectedFileInfo key={i}>
+              <span>
+                {file.name} ({(file.size / 1024 / 1024).toFixed(2)} MB)
+              </span>
+              <RemoveButton onClick={() => removeFile(i)}>×</RemoveButton>
+            </SelectedFileInfo>
+          ))}
+        </div>
       )}
 
       <UploadMediaItem>
@@ -125,26 +176,44 @@ const UploadMediaPopup = () => {
         <ItemInput
           type="text"
           placeholder="Название"
-          defaultValue={selectedFile?.name?.replace(/\.[^/.]+$/, "") || ""}
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
         />
       </UploadMediaItem>
 
       <UploadMediaBlock>
-        <InputPlus title="ХЕШТЕГИ" placeholder="Введите хештег" bg="#2B243C" color="#FF55AD" />
-        <BlocksItems items={[{ value: 'Технологии' }, { value: 'Программирование' }, { value: 'Деньги' }]} color="#EF6284" />
+        <InputPlus
+          title="ХЕШТЕГИ"
+          placeholder="Введите хештег"
+          bg="#2B243C"
+          color="#FF55AD"
+          value={tag}
+          onChange={setTag}
+          onSubmit={handleAddTag}
+        />
+        <BlocksItems
+          items={tags.map(t => ({ value: t }))}
+          color="#EF6284"
+          onRemove={(tag) => setTags(prev => prev.filter(t => t !== tag))}
+        />
       </UploadMediaBlock>
 
       <UploadMediaButtons>
-        <BtnBase $color="#D6DCEC" $bg="#336CFF" onClick={handleSave} disabled={uploadMediaLoading}>
-          {uploadMediaLoading ? "Загрузка..." : "Сохранить"}
+        <BtnBase
+          $color="#D6DCEC"
+          $bg="#336CFF"
+          onClick={handleSave}
+          disabled={uploadMediaPending || selectedFiles.length === 0}
+        >
+          {uploadMediaPending ? "Загрузка..." : "Сохранить"}
         </BtnBase>
         <BtnBase $color="#D6DCEC" $bg="#242A3A" onClick={() => closePopup()}>
           Отменить
         </BtnBase>
       </UploadMediaButtons>
     </UploadMediaContainer>
-  )
-}
+  );
+};
 
 const UploadMediaContainer = styled.div`
   padding: 0 56px 30px;
@@ -203,7 +272,7 @@ const SelectedFileInfo = styled.div`
   border-radius: 8px;
   max-width: 400px;
   width: 100%;
-	margin-bottom: 48px;
+	margin-bottom: 12px;
 `;
 const RemoveButton = styled.button`
   background: #FC5B5B;
@@ -225,7 +294,7 @@ const UploadDescImg = styled.img`
   border-radius: 32px;
   object-fit: cover;
   border: 7px solid #2E3954;
-`
+`;
 const UploadDescContent = styled.div`
   display: flex;
   flex-direction: column;
@@ -243,12 +312,12 @@ const UploadDescContent = styled.div`
     color: #6A7080;
     margin-bottom: 32px;
   }
-`
+`;
 const UploadMediaItem = styled.div`
   display: flex;
   flex-direction: column;
   gap: 24px;
-`
+`;
 const ItemTitle = styled.h3`
   font-size: 24px;
   font-weight: 700;
@@ -256,7 +325,7 @@ const ItemTitle = styled.h3`
   mark {
     color: #6A7080;
   }
-`
+`;
 const ItemDesc = styled.p`
   font-size: 14px;
   line-height: 24px;
@@ -266,7 +335,7 @@ const ItemDesc = styled.p`
   mark {
     color: #FC5B5B;
   }
-`
+`;
 const ItemInput = styled.input`
   box-sizing: border-box;
   border: 2px solid #333E59;
@@ -282,14 +351,14 @@ const ItemInput = styled.input`
   &::placeholder {
     color: #D6DCEC;
   }
-`
+`;
 const UploadMediaBlock = styled.div`
   margin-top: 40px;
-`
+`;
 const UploadMediaButtons = styled.div`
   display: flex;
   gap: 8px;
   margin-top: 64px;
-`
+`;
 
-export default UploadMediaPopup
+export default UploadMediaPopup;

@@ -7,8 +7,8 @@ export const useUpdateChannelGlobalPrompt = () => {
   return useMutation({
     mutationFn: ({ channelId, value }) => updateChannelGlobalPrompt(channelId, value),
 
-    onSuccess: (channelId) => {
-      queryClient.invalidateQueries(["channel-global-prompt", channelId]);
+    onSuccess: () => {
+      queryClient.invalidateQueries(["channel-global-prompt"]);
     },
   });
 };
