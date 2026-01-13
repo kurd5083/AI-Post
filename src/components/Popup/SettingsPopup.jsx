@@ -53,15 +53,15 @@ const SettingsPopup = () => {
           enablePosting(channelId, {
             onSuccess: () =>
               addNotification("Автопостинг включён", "update"),
-            onError: () =>
-              addNotification("Ошибка включения автопостинга", "error"),
+            onError: (err) =>
+              addNotification(err.message || "Ошибка включения автопостинга", "error"),
           });
         } else {
           disablePosting(channelId, {
             onSuccess: () =>
               addNotification("Автопостинг выключен", "update"),
-            onError: () =>
-              addNotification("Ошибка выключения автопостинга", "error"),
+            onError: (err) =>
+              addNotification(err.message || "Ошибка выключения автопостинга", "error"),
           });
         }
       },

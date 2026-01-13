@@ -1,10 +1,21 @@
 import styled from "styled-components";
-import BtnBase from "@/shared/BtnBase";
+
 import { useLightboxStore } from "@/store/lightboxStore";
 import { usePostsStore } from "@/store/postsStore";
 import { usePopupStore } from "@/store/popupStore";
+import { useNotificationStore } from "@/store/notificationStore";
+
 import normalizeUrl from "@/lib/normalizeUrl";
+import { useDeletePost } from "@/lib/posts/useDeletePost";
+import { useSendPostToChannel } from "@/lib/posts/useSendPostToChannel";
+
 import AvaPlug from "@/shared/AvaPlug";
+import BtnBase from "@/shared/BtnBase";
+
+import EyeIcon from "@/icons/EyeIcon";
+import EditIcon from "@/icons/EditIcon";
+import DelIcon from "@/icons/DelIcon";
+import TimeIcon from "@/icons/TimeIcon";
 
 const MAX_VISIBLE_IMAGES = 3;
 
@@ -12,7 +23,11 @@ const CardPablish = ({ item, bg, selectedChannel }) => {
   const { openLightbox } = useLightboxStore();
   const { addPost } = usePostsStore();
   const { changeContent } = usePopupStore();
-  console.log(item)
+  const { addNotification } = useNotificationStore();
+
+  const { mutate: deletePost, isPending: deletePending } = useDeletePost();
+  const { mutate: sendPost, isPending: isSendPending } = useSendPostToChannel();
+
   const handleEdit = () => {
     addPost({
       postId: item.id,
@@ -20,19 +35,16 @@ const CardPablish = ({ item, bg, selectedChannel }) => {
       text: item.text || "",
       summary: item.summary || "",
       images: item.images || [],
-      time: item.calendarScheduledAt
+      time: item.publishedAt
         ? {
-          date: item.calendarScheduledAt,
-          time: new Date(item.calendarScheduledAt).toLocaleTimeString("ru-RU", {
+          date: item.publishedAt,
+          time: new Date(item.publishedAt).toLocaleTimeString("ru-RU", {
             hour: "2-digit",
             minute: "2-digit",
             timeZone: "UTC",
           }),
         }
-        : {
-          date: new Date().toISOString(),
-          time: "00:00",
-        },
+        : null,
       serverId: item.id,
       placeholder: "Новый пост",
       url: item.url
@@ -40,6 +52,24 @@ const CardPablish = ({ item, bg, selectedChannel }) => {
     changeContent('create_post', 'popup')
   };
 
+  const handlePublishNow = () => {
+    if (!item.summary) return addNotification("Нельзя публиковать пустой пост", "info");
+    const channelId = selectedChannel?.id;
+    const telegramId = selectedChannel?.ownerTelegramId;
+    const serverPostId = item.id;
+
+    sendPost(
+      { postId: serverPostId, channelId, channelTelegramId: telegramId },
+      {
+        onSuccess: () => {
+          deletePost(item.id);
+          addNotification("Пост успешно опубликован", "success");
+        },
+        onError: (err) => addNotification(err.message || "Ошибка публикации поста", "error"),
+      }
+    );
+  };
+  console.log(item)
   return (
     <CardPablishItem $bg={bg}>
       <CardPablishItemHead>
@@ -97,15 +127,44 @@ const CardPablish = ({ item, bg, selectedChannel }) => {
       />
       <CardPablishButtons>
         <BtnBase
-          $padding="16px 24px"
+          $padding="16px 12px"
+          $border
           $width="100%"
           $bg="transporent"
           $color="#D6DCEC"
-          $border={true}
-          onClick={handleEdit}
+          onClick={handlePublishNow}
+          disabled={isSendPending}
         >
-          Редактировать
+          {isSendPending ? "Публикация..." : "Опубликовать сейчас"}
         </BtnBase>
+        <CardButton onClick={() => changeContent('live_preview_popup', 'popup', { selectedPost: item, channelId: selectedChannel?.id })}>
+          <EyeIcon />
+        </CardButton>
+        <CardButton onClick={handleEdit}>
+          <EditIcon />
+        </CardButton>
+        <CardButton
+          onClick={(e) => {
+            e.stopPropagation();
+            changeContent("delete_confirm", "popup_window", {
+              itemName: item.title,
+              onDelete: () => deletePost(item.id),
+            });
+          }}
+          disabled={deletePending}>
+          <DelIcon />
+        </CardButton>
+        <CardButton
+          onClick={() =>
+            changeContent("change_time_card", "popup_window", {
+              postId: item.id,
+              channelId: selectedChannel?.id,
+              time: item.publishedAt,
+            })
+          }
+        >
+          <TimeIcon />
+        </CardButton>
       </CardPablishButtons>
     </CardPablishItem>
   )
@@ -239,8 +298,26 @@ const CardPablishSubtext = styled.p`
 const CardPablishButtons = styled.div`
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   gap: 8px;
   margin-top: 24px;
+`
+const CardButton = styled.button`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  flex-shrink: 0;
+  transition: all 0.2s;
+  border: 2px solid #2F3953;
+  color: #6A7080;
+
+  &:hover {
+    transform: scale(1.1);    
+    color: #fff;
+  }
 `
 
 export default CardPablish

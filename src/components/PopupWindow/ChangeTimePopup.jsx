@@ -17,9 +17,10 @@ const ChangeTimePopup = () => {
 
   const initial = getPostTime(postId) || {};
   const [initHours, initMinutes] = initial.time ? initial.time.split(":") : ["", ""];
-  const [date, setDate] = useState(initial.date ? new Date(initial.date) : new Date());
-  const [hoursState, setHours] = useState(initHours);
-  const [minutesState, setMinutes] = useState(initMinutes);
+  
+  const [date, setDate] = useState(initial.date ? new Date(initial.date) : null);
+const [hoursState, setHours] = useState(initHours);
+const [minutesState, setMinutes] = useState(initMinutes);
 
   const handleHoursChange = (e) => {
     let value = e.target.value;

@@ -9,7 +9,8 @@ import { useLightboxStore } from "@/store/lightboxStore";
 import { useNotificationStore } from "@/store/notificationStore";
 import normalizeUrl from "@/lib/normalizeUrl";
 
-const Preview = ({ collapsed, onChange, testResult }) => {
+const Preview = ({ collapsed, onChange, testResult, view=true }) => {
+  console.log(testResult)
   const { openLightbox } = useLightboxStore();
   const { mutate: sendTestPost, isPending: sendPending } = useSendTestPost();
   const { addNotification } = useNotificationStore();
@@ -66,7 +67,7 @@ const Preview = ({ collapsed, onChange, testResult }) => {
             <img src={eye_blue} alt="eye icon" />
             Лайв превью
           </HeadLeft>
-          <HeadArrow src={arrow} alt="arrow icon" onClick={onChange} $collapsed={collapsed} />
+          {view && <HeadArrow src={arrow} alt="arrow icon" onClick={onChange} $collapsed={collapsed} />}
         </PreviewHead>
 
         {!collapsed && (
@@ -123,7 +124,6 @@ const Preview = ({ collapsed, onChange, testResult }) => {
                 </PreviewInfoContent>
               </PreviewInfoContainer>
             </PreviewInfo>
-
             <PreviewButton onClick={handleSend} disabled={sendPending}>
               <TgIcon color="#336CFF" width="24" height="20" />
               <p>{sendPending ? "Отправляем..." : "Отправить в Telegram"}</p>

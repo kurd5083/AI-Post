@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import CheckboxCircle from "@/shared/CheckboxCircle";
-import TimeIcons from "@/icons/TimeIcons";
+import TimeIcon from "@/icons/TimeIcon";
 
 const CardСhoose = ({ item, bg }) => {
 	return (
@@ -11,7 +11,7 @@ const CardСhoose = ({ item, bg }) => {
 					<p>{item.username}</p>
 				</CardPablishItemName>
 				<CardPablishItemTime>
-					<TimeIcons/>
+					<TimeIcon/>
 					{item.time}
 				</CardPablishItemTime>
 			</CardPablishItemHead>

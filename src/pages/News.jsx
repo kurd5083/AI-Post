@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { useParams } from 'react-router-dom';
-import TimeIcons from "@/icons/TimeIcons";
+import TimeIcon from "@/icons/TimeIcon";
 import TapeList from "@/components/TapeList";
 import ModernLoading from "@/components/ModernLoading";
 import { useNews } from "@/lib/news/useNews";
@@ -46,7 +46,7 @@ const NewsDetail = () => {
 									initialIndex: 0
 								})}
 							/>
-							<PostTimeMobile ><TimeIcons color="#336CFF" />{news?.readingTime}</PostTimeMobile>
+							<PostTimeMobile ><TimeIcon color="#336CFF" />{news?.readingTime}</PostTimeMobile>
 							<PostTilte>{news?.title}</PostTilte>
 							<PostDescription>{news?.summary}</PostDescription>
 							<PostFooter className="news-meta">
@@ -60,8 +60,8 @@ const NewsDetail = () => {
 												id,
 												data: {
 													channelId,
-													publishedAt: new Date().toISOString(),
-													calendarScheduledAt: new Date().toISOString(),
+													publishedAt: null,
+													calendarScheduledAt: null,
 												},
 											});
 											addNotification("Новость успешно скопирована в канал", "update");
@@ -75,7 +75,7 @@ const NewsDetail = () => {
 								>
 									Сохранить в канал
 								</BtnBase>
-								<PostTime><TimeIcons color="#336CFF" />{timeAgo(news?.createdAt)}</PostTime>
+								<PostTime><TimeIcon color="#336CFF" />{timeAgo(news?.createdAt)}</PostTime>
 							</PostFooter>
 						</PostLeft>
 						<NewsImg

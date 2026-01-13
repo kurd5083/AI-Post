@@ -6,6 +6,7 @@ import { popupDatas } from "@/data/popupDatas";
 import CloseIcon from "@/icons/CloseIcon";
 import { useChannelById } from "@/lib/channels/useChannelById";
 import СhannelPlug from "@/shared/СhannelPlug";
+
 const PopupHead = () => {
   const { popup, closePopup, goBack } = usePopupStore()
   const channelId = popup?.data?.channelId;

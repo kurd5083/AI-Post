@@ -107,6 +107,7 @@ const AiGeneratorPopup = () => {
     const postChannelId = post.serverId
       ? popup?.data?.channelId
       : usePostsStore.getState().channelMap[post.postId] || (userChannels.length ? userChannels[0].id : null);
+
     const [hoursStr, minutesStr] = post.time?.time?.split(":") || ["00", "00"];
     const hours = parseInt(hoursStr);
     const minutes = parseInt(minutesStr);
@@ -117,15 +118,15 @@ const AiGeneratorPopup = () => {
     baseDate.setUTCSeconds(0);
     baseDate.setUTCMilliseconds(0);
 
-    const calendarScheduledAt = baseDate.toISOString();
+    const publishedAt = baseDate.toISOString();
 
     const basePayload = {
       title: post.title,
       text: post.text,
       channelId: postChannelId,
-      publishedAt: new Date().toISOString(),
-      calendarScheduledAt,
-      summary: post.summary,
+      publishedAt,
+      calendarScheduledAt: null,
+      summary: post.summary,  
       url: post.url,
     };
 
@@ -503,7 +504,7 @@ const AiGeneratorPopup = () => {
                 <ButtonsMainTop>
                   <BtnBase $padding="21px 22px" $color="#EF6284" $bg="#241E2D" onClick={() => handleRemovePost(post.postId)}>Отменить</BtnBase>
                   <BtnBase $padding="21px 22px" $border $bg="transporent" $color="#6A7080" onClick={() => changeContent("change_time", "popup_window", { postId: post.postId })}>Изменить время</BtnBase>
-                  <BtnBase $padding="21px 21.5px" $color="#336CFF" $bg="#161F37" onClick={() => handleSavePost(post)} disabled={updatePending || createPostPending}>{createPostPending ? "Сохраняем..." : "Сохранить"}</BtnBase>
+                  <BtnBase $padding="21px 21.5px" $color="#336CFF" $bg="#161F37" onClick={() => handleSavePost(post)} disabled={updatePending || createPostPending}>{updatePending ||createPostPending ? "Сохраняем..." : "Сохранить"}</BtnBase>
                 </ButtonsMainTop>
                 <BtnBase $padding="21px 18px" $border $width="100%" $bg="transporent" $color="#6A7080" onClick={() => handlePublishNow(post)} disabled={isSendPending}>{isSendPending ? "Публикация..." : "Опубликовать сейчас"}</BtnBase>
               </ButtonsAll>

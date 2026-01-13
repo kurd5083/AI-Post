@@ -1,0 +1,26 @@
+import { useState } from "react";
+
+const EditIcon = ({ color, hoverColor = "#FFFFFF", width = 18, height = 16, onClick }) => {
+  const [isHover, setIsHover] = useState(false);
+    
+    return (
+        <svg 
+            width={width}
+            height={height} 
+            viewBox="0 0 18 16" 
+            fill="none" 
+            xmlns="http://www.w3.org/2000/svg"
+            onMouseEnter={() => setIsHover(true)}
+            onMouseLeave={() => setIsHover(false)}
+            onClick={onClick}
+            style={{ cursor: "pointer" }}
+        >
+            <path 
+                d="M12 12.0008L8 16.0008H18V12.0008H12ZM9.06 3.19079L0 12.2508V16.0008H3.75L12.81 6.94079L9.06 3.19079ZM15.71 4.04079C16.1 3.65079 16.1 3.00079 15.71 2.63079L13.37 0.290793C13.1826 0.104542 12.9292 0 12.665 0C12.4008 0 12.1474 0.104542 11.96 0.290793L10.13 2.12079L13.88 5.87079L15.71 4.04079Z" 
+                fill={color ? isHover ? hoverColor : color : "currentColor"}
+            />
+        </svg>
+    )
+}
+
+export default EditIcon

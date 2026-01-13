@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import arrow from "@/assets/arrow.svg";
-import TimeIcons from "@/icons/TimeIcons";
+import TimeIcon from "@/icons/TimeIcon";
 import timeAgo from "@/lib/timeAgo";
 
 const MentionsCard = ({ item, bg }) => {
@@ -13,7 +13,7 @@ const MentionsCard = ({ item, bg }) => {
 					<p>{item.mentionType === "channel" ? `Канал ${item.channelId}` : item.mentionType}</p>
 				</MentionsCardItemName>
 				<MentionsCardItemTime>
-          <TimeIcons/>
+          <TimeIcon/>
           {timeAgo(post?.date * 1000)}
 				</MentionsCardItemTime>
 			</MentionsCardItemHead>

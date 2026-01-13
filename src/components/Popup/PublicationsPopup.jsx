@@ -34,7 +34,6 @@ const PublicationsPopup = () => {
 
   const selectedChannel = userChannels.find(c => c.id === channelId);
 
-  // Изменение itemsPerPage при ресайзе
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth < 768) setItemsPerPage(itemsPerPageMob);
@@ -46,10 +45,8 @@ const PublicationsPopup = () => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // Сброс страницы при смене фильтра или даты
   useEffect(() => setCurrentPage(1), [dateFilter, filter]);
 
-  // Фильтрация постов по дате
   const filteredPostsByDate = useMemo(() => {
     if (!posts) return [];
 
@@ -86,11 +83,9 @@ const PublicationsPopup = () => {
     return result;
   }, [posts, dateFilter]);
 
-  // Общие и премодерационные посты после фильтрации по дате
   const commonPostsCount = filteredPostsByDate.length;
   const premoderationPostsCount = filteredPostsByDate.filter(p => p.status === "PENDING_MODERATION").length;
 
-  // Фильтрация для отображения в списке по фильтру "common" или "premoderation"
   const filteredPosts = useMemo(() => {
     if (filter === "premoderation") {
       return filteredPostsByDate.filter(p => p.status === "PENDING_MODERATION");

@@ -7,7 +7,7 @@ import SelectChannelsPopup from "@/components/PopupWindow/SelectChannelsPopup";
 import ChangeTimePopup from "@/components/PopupWindow/ChangeTimePopup";
 import EnterLinkPopup from "@/components/PopupWindow/EnterLinkPopup";
 import UpdateCalendarEventPopup from "@/components/PopupWindow/UpdateCalendarEventPopup";
-
+import ChangeTimePopupCard from "@/components/PopupWindow/ChangeTimePopupCard";
 const PopupWindow = () => {
     const { popup, goBack, closePopup } = usePopupStore();
 
@@ -24,6 +24,8 @@ const PopupWindow = () => {
                     <SelectChannelsPopup />
                 ) : popup.content == 'change_time' ?(
                     <ChangeTimePopup />
+                ) : popup.content == 'change_time_card' ?(
+                    <ChangeTimePopupCard />
                 ) : popup.content == 'enter_link' ?(
                     <EnterLinkPopup />
                 ) : popup.content == 'update_calendar_event' ?(

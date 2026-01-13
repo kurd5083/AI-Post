@@ -16,6 +16,7 @@ import advanced from "@/assets/popup/advanced.svg";
 import replenish from "@/assets/popup/replenish.svg";
 import bell from "@/assets/bell.svg";
 import media from "@/assets/media.svg";
+import EyeIcon from "@/icons/EyeIcon";
 
 export const popupDatas = [
     {
@@ -247,5 +248,13 @@ export const popupDatas = [
             image: promotion
         }
     },
-    
+    {
+        key: "live_preview_popup",
+        name: "Лайв превью",
+        extra: {
+            background: "#1F326B",
+            image: '',
+            svg: <EyeIcon color="#336CFF" width={24} height={24} />
+        }
+    },
 ]

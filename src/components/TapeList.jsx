@@ -5,7 +5,7 @@ import { Navigation } from "swiper/modules";
 import "swiper/css";
 import useSwipeAllowed from "@/lib/useSwipeAllowed";
 import useFadeOnScroll from "@/lib/useFadeOnScroll";
-import TimeIcons from "@/icons/TimeIcons";
+import TimeIcon from "@/icons/TimeIcon";
 import arrow from "@/assets/arrow.svg";
 import dzen_icon from "@/assets/dzen-icon.svg";
 import news_stub from "@/assets/news-stub.png";
@@ -42,8 +42,8 @@ const TapeList = ({ forceHorizontal = false, padding, newsData, pending }) => {
         id,
         data: {
           channelId,
-          publishedAt: new Date().toISOString(),
-          calendarScheduledAt: new Date().toISOString(),
+          publishedAt: null,
+          calendarScheduledAt: null,
         },
       });
       addNotification("Новость успешно скопирована в канал", "update");
@@ -101,7 +101,7 @@ const TapeList = ({ forceHorizontal = false, padding, newsData, pending }) => {
                   Сохранить в канал
                 </TapeItemAction>
                 <TapeTime>
-                  <TimeIcons />
+                  <TimeIcon />
                   <span>{timeAgo(news.createdAt)}</span>
                 </TapeTime>
               </TapeItemContent>
