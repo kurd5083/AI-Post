@@ -23,7 +23,6 @@ const ScheduleContainer = () => {
   const [localScheduleEnabled, setLocalScheduleEnabled] = useState(false);
   const [localIntervalEnabled, setLocalIntervalEnabled] = useState(false);
 
-  // синхронизируем локальное состояние с сервером
   useEffect(() => {
     if (scheduleStatus) setLocalScheduleEnabled(scheduleStatus.scheduleEnabled);
   }, [scheduleStatus]);
@@ -36,51 +35,51 @@ const ScheduleContainer = () => {
   const { mutate: updateInterval, isPending: intervalPending } = useUpdateChannelInterval(channelId);
 
   const toggleSchedule = () => {
-  const nextSchedule = !localScheduleEnabled;
+    const nextSchedule = !localScheduleEnabled;
+    const disableIntervalIfNeeded = localIntervalEnabled && nextSchedule;
 
-
-  const disableIntervalIfNeeded = localIntervalEnabled && nextSchedule;
-
-  toggleScheduleApi(undefined, {
-    onSuccess: () => {
-      setLocalScheduleEnabled(nextSchedule);
-
-      if (disableIntervalIfNeeded) {
-        setLocalIntervalEnabled(false);
-      }
-    },
-    onError: (err) => addNotification(err.message, "error"),
-  });
-
-  if (disableIntervalIfNeeded) {
-    updateInterval({ isEnabled: false }, {
-      onError: (err) => addNotification(err.message, "error"),
-    });
-  }
-};
-
-const toggleInterval = () => {
-  const nextInterval = !localIntervalEnabled;
-
-  const disableScheduleIfNeeded = localScheduleEnabled && nextInterval;
-
-  updateInterval({ isEnabled: nextInterval }, {
-    onSuccess: () => {
-      setLocalIntervalEnabled(nextInterval);
-
-      if (disableScheduleIfNeeded) {
-        setLocalScheduleEnabled(false);
-      }
-    },
-    onError: (err) => addNotification(err.message, "error"),
-  });
-
-  if (disableScheduleIfNeeded) {
     toggleScheduleApi(undefined, {
-      onError: (err) => addNotification(err.message, "error"),
+      onSuccess: () => {
+        setLocalScheduleEnabled(nextSchedule);
+        addNotification('Публикация по расписанию включена', "success");
+
+        if (disableIntervalIfNeeded) {
+          setLocalIntervalEnabled(false);
+        }
+      },
+      onError: (err) => addNotification(err.message || "Ошибка переключения расписания", "error"),
     });
-  }
-};
+
+    if (disableIntervalIfNeeded) {
+      updateInterval({ isEnabled: false }, {
+        onError: (err) => addNotification(err.message || "Ошибка отключения интервала", "error"),
+      });
+    }
+  };
+
+  const toggleInterval = () => {
+    const nextInterval = !localIntervalEnabled;
+    const disableScheduleIfNeeded = localScheduleEnabled && nextInterval;
+
+    updateInterval({ isEnabled: nextInterval }, {
+      onSuccess: () => {
+        setLocalIntervalEnabled(nextInterval);
+        addNotification( "Интервальная публикация включена", "success" );
+
+        if (disableScheduleIfNeeded) {
+          setLocalScheduleEnabled(false);
+        }
+      },
+      onError: (err) => addNotification(err.message || "Ошибка переключения интервала", "error"),
+    });
+
+    if (disableScheduleIfNeeded) {
+      toggleScheduleApi(undefined, {
+        onError: (err) => addNotification(err.message || "Ошибка отключения расписания", "error"),
+      });
+    }
+  };
+
 
   return (
     <ScheduleContent>
