@@ -81,15 +81,31 @@ const CardPablish = ({ item, bg, selectedChannel }) => {
           )}
           <p>{selectedChannel.name}</p>
         </CardPablishItemName>
-        <CardPablishItemTime>
-          <p>{new Date(item.createdAt).toLocaleDateString("ru-RU")}</p>
-          <span>
-            {new Date(item.createdAt).toLocaleTimeString("ru-RU", {
-              hour: "2-digit",
-              minute: "2-digit",
-            })}
-          </span>
-        </CardPablishItemTime>
+        <CardPablishItemTimeContainer>
+          <CardPablishItemTime>
+            <p>Дата создания поста:</p>
+            <span>
+              {new Date(item.createdAt).toLocaleDateString("ru-RU")}{" "}
+              {new Date(item.createdAt).toLocaleTimeString("ru-RU", {
+                hour: "2-digit",
+                minute: "2-digit",
+              })}
+            </span>
+          </CardPablishItemTime>
+
+          <CardPablishItemTime>
+            <p>Дата публикации поста: </p>
+            <span>
+              {item.publishedAt
+                ? new Date(item.publishedAt).toLocaleDateString("ru-RU") + " " +
+                new Date(item.publishedAt).toLocaleTimeString("ru-RU", {
+                  hour: "2-digit",
+                  minute: "2-digit",
+                })
+                : "Дата не указана"}
+            </span>
+          </CardPablishItemTime>
+        </CardPablishItemTimeContainer>
       </CardPablishItemHead>
       <CardPablishImages>
         {item.images.slice(0, MAX_VISIBLE_IMAGES).map((elem, index) => {
@@ -209,6 +225,7 @@ const CardPablishItem = styled.div`
 const CardPablishItemHead = styled.div`
   display: flex;
   justify-content: space-between;
+  align-items: flex-start;
 `
 const CardPablishItemName = styled.div`
   display: flex;
@@ -229,13 +246,25 @@ const CardPablishItemImg = styled.img`
   height: 24px;
   border-radius: 50%;
 `
-const CardPablishItemTime = styled.p`
+const CardPablishItemTimeContainer = styled.div`
   display: flex;
   flex-direction: column;
+  gap: 4px;
+`
+const CardPablishItemTime = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
   align-items: flex-end;
   font-size: 14px;
   font-weight: 700;
+  p {
+    text-align: right;
+    font-size: 13px;
+  }
   span {
+    text-align: right;
+    font-size: 12px;
     color:#6A7080;
   }
 `
@@ -294,6 +323,7 @@ const CardPablishSubtext = styled.p`
   -webkit-line-clamp: 4;
   -webkit-box-orient: vertical;
   overflow: hidden;
+  word-break: break-all;
 `
 const CardPablishButtons = styled.div`
   display: flex;

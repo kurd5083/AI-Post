@@ -102,14 +102,20 @@ const PromotionPopup = () => {
   };
 
   const handlePromotePosts = () => {
-    if (!manualPosts.length) return addNotification("Сначала добавьте хотя бы один пост для продвижения", "error");
+    let postsToPromote = [...manualPosts];
+    if (!postsToPromote.length && postLink && postQuantity) {
+      postsToPromote.push({ link: postLink, quantity: Number(postQuantity) });
+    }
 
-    const orders = manualPosts.map(post => ({
+    if (!postsToPromote.length)
+      return addNotification("Сначала добавьте хотя бы один пост для продвижения", "error");
+
+    const orders = postsToPromote.map(post => ({
       link: post.link,
       username: popup?.data?.channelUsername || "",
       quantity: Number(post.quantity),
     }));
-    console.log(orders)
+
     createPromotionOrders(
       {
         channelId: channelId,
@@ -119,6 +125,8 @@ const PromotionPopup = () => {
         onSuccess: () => {
           addNotification("Заказы успешно созданы", "success");
           setManualPosts([]);
+          setPostLink("");
+          setPostQuantity("");
         },
         onError: (err) => addNotification(err?.message || "Недостаточно прав для создания заказов", "error")
       }

@@ -5,6 +5,7 @@ export const useAuthStore = create((set, get) => ({
   refreshToken: null,
   user: null,
   isAuthenticated: false,
+  isInitialized: false,
 
   init() {
     const t = localStorage.getItem("accessToken");
@@ -15,7 +16,8 @@ export const useAuthStore = create((set, get) => ({
       token: t,
       refreshToken: r,
       user: u,
-      isAuthenticated: !!t
+      isAuthenticated: !!t,
+      isInitialized: true,
     });
   },
 

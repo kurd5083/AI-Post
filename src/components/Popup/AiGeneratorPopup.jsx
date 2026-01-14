@@ -136,7 +136,7 @@ const AiGeneratorPopup = () => {
     };
 
     if (!post.serverId) {
-      createPostMutation({ ...basePayload, ...post.images.filter(img => typeof img === "string") }, {
+      createPostMutation({ ...basePayload, images: post.images.filter(img => typeof img === "string") }, {
         onSuccess: (createdPost) => {
           const serverPostId = createdPost.id;
           const localFiles = post.images.filter(img => img instanceof File);

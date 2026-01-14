@@ -18,6 +18,7 @@ const GridGroups = () => {
   const { mutate: deleteChannel } = useDeleteChannel();
   const { mutate: updateAvatar } = useUpdateUserAvatar();
   const { mutate: upload, isPending } = useUploadMedia();
+  console.log(channels, 'channels')
   if (channelsPending) {
 
     return (

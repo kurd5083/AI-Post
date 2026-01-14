@@ -16,11 +16,11 @@ import { useNotificationStore } from "@/store/notificationStore";
 const SettingsPopup = () => {
   const { changeContent, popup } = usePopupStore();
   const { user } = useUser();
-
   const channelId = popup?.data?.channelId;
   const { channel } = useChannelById(channelId);
   const { posts } = usePostsByChannel(channelId);
   const { addNotification } = useNotificationStore();
+  console.log(channel)
 
   const [localSwitches, setLocalSwitches] = useState({
     posting: channel?.posting || false,
@@ -160,10 +160,29 @@ const SettingsPopup = () => {
                   />
                 ) : item.right == 'textarrow' ? (
                   <PopupContentRight>
-                    <span>
-                      {channel?.workMode === "PREMODERATION" && "Предмодерация"}
-                      {channel?.workMode === "AUTOPOSTING" && "Автопостинг"}
-                    </span>
+                    {item.key == 'mode' ? (
+                      <ContentRightColumn>
+                        <span>{channel?.workMode === "PREMODERATION" && "Предмодерация"}</span>
+                        <span>{channel?.workMode === "AUTOPOSTING" && "Автопостинг"}</span>
+                      </ContentRightColumn>
+                    ) : item.key == 'filtering' ? (
+                      <ContentRightColumn>
+                        <span>Ключевые слова: {channel?.keywords?.join(', ')}</span>
+                        <span>Стоп-слова: {channel?.stopWords?.join(', ')}</span>
+                      </ContentRightColumn>
+                    ) : item.key == 'sources' ? (
+                      <ContentRightColumn>
+                        <ContentRightColumn>
+                          <span>
+                            {channel?.sources?.map((source, index) => (
+                              <>{source.name}{index < channel.sources.length - 1 ? ', ' : ''}</>
+                            ))}
+                          </span>
+                        </ContentRightColumn>
+                      </ContentRightColumn>
+                    ) : (
+                      2
+                    )}
                     <img src={arrow} alt="arrow icon" height={12} width={6} />
                   </PopupContentRight>
                 ) : item.right == 'imgarrow' ? (
@@ -209,11 +228,12 @@ const PopupContentTitle = styled.h2`
 const PopupContentItem = styled.li`
   display: flex;
   justify-content: space-between;
+  gap: 20px;
   align-items: center;
   padding: 24px 0;
   border-bottom: 2px solid #2E3954;
   cursor: pointer;
-    
+
   &:first-child {
     padding-top: 0;
   }
@@ -269,6 +289,13 @@ const PopupContentRight = styled.div`
   display: flex;
   align-items: center;
   gap: 16px;
+`
+const ContentRightColumn = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 5px;
+  text-align: right;
 `
 const PopupContentCounter = styled.p`
   display: flex;

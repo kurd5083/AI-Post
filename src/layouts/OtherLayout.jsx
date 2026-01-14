@@ -23,6 +23,7 @@ const OtherLayout = () => {
   const { popup, closePopup } = usePopupStore();
   const { isOpen } = useLightboxStore();
   const isAuthenticated = useAuthStore(s => s.isAuthenticated);
+  const isInitialized = useAuthStore(s => s.isInitialized);
   const token = useAuthStore(s => s.token);
   const init = useAuthStore(state => state.init);
   const { botLinkData } = useTelegramBotLink();
@@ -44,7 +45,7 @@ const OtherLayout = () => {
       <Sidebar/>
       <Main $blocked={!isAuthenticated || popup?.status}>
         <Header/>
-        {!isAuthenticated ? (
+        {!isInitialized ? null : !isAuthenticated ? (
           <AuthOverlay>
             <h2>Войдите в систему</h2>
             <p>Чтобы продолжить работу, авторизуйтесь через Telegram-бота.</p>

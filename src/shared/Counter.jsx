@@ -2,7 +2,7 @@ import { useState } from "react";
 import styled from "styled-components";
 import arrow from "@/assets/arrow.svg";
 
-const Counter = ({ placeholder, value, onChange }) => {
+const Counter = ({ placeholder, value, onChange, disabled }) => {
   const handleChange = (e) => {
     const val = e.target.value;
     if (/^\d*$/.test(val)) {
@@ -23,12 +23,12 @@ const Counter = ({ placeholder, value, onChange }) => {
 
   return (
     <CounterWrapper>
-      <Input type="text" placeholder={placeholder} value={value} onChange={handleChange} />
+      <Input type="text" placeholder={placeholder} value={value} onChange={handleChange} disabled={disabled}/>
       <ButtonsContainer>
-        <CounterButton onClick={increment}>
+        <CounterButton disabled={disabled} onClick={increment}>
           <img src={arrow} alt="arrow icon" width={9} height={9} />
         </CounterButton>
-        <CounterButton onClick={decrement}>
+        <CounterButton disabled={disabled} onClick={decrement}>
           <img src={arrow} alt="arrow icon" width={9} height={9} />
         </CounterButton>
       </ButtonsContainer>

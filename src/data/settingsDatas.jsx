@@ -130,7 +130,7 @@ export const settingsDatas = {
                 {
                     key: "image_generation",
                     name: "Генерация изображений",
-                    right: 'arrow',
+                    right: 'textarrow',
                     extra: {
                         background: "#375930",
                         image: image_generation
@@ -139,7 +139,7 @@ export const settingsDatas = {
                 {
                     key: "filtering",
                     name: "Фильтрация",
-                    right: 'arrow',
+                    right: 'textarrow',
                     extra: {
                         background: "#643358",
                         image: filtering
@@ -148,7 +148,7 @@ export const settingsDatas = {
                 {
                     key: "calendar",
                     name: "Календарь",
-                    right: 'arrow',
+                    right: 'textarrow',
                     extra: {
                         background: "#47346C",
                         image: calendar
@@ -166,7 +166,7 @@ export const settingsDatas = {
                 {
                     key: "sources",
                     name: "Источники",
-                    right: 'arrow',
+                    right: 'textarrow',
                     extra: {
                         background: "#203F67",
                         image: sources
@@ -175,7 +175,7 @@ export const settingsDatas = {
                 {
                     key: "post_style",
                     name: "Стиль промптов",
-                    right: 'arrow',
+                    right: 'textarrow',
                     extra: {
                         background: "#5F3C36",
                         image: post_style
@@ -184,7 +184,7 @@ export const settingsDatas = {
                 {
                     key: "advanced",
                     name: "Дополнительно",
-                    right: 'arrow',
+                    right: 'textarrow',
                     extra: {
                         background: "#2F3440",
                         image: advanced
