@@ -81,7 +81,6 @@ const CardPablish = ({ item, bg, selectedChannel }) => {
           )}
           <p>{selectedChannel.name}</p>
         </CardPablishItemName>
-        <CardPablishItemTimeContainer>
           <CardPablishItemTime>
             <p>Дата создания поста:</p>
             <span>
@@ -91,21 +90,7 @@ const CardPablish = ({ item, bg, selectedChannel }) => {
                 minute: "2-digit",
               })}
             </span>
-          </CardPablishItemTime>
-
-          <CardPablishItemTime>
-            <p>Дата публикации поста: </p>
-            <span>
-              {item.publishedAt
-                ? new Date(item.publishedAt).toLocaleDateString("ru-RU") + " " +
-                new Date(item.publishedAt).toLocaleTimeString("ru-RU", {
-                  hour: "2-digit",
-                  minute: "2-digit",
-                })
-                : "Дата не указана"}
-            </span>
-          </CardPablishItemTime>
-        </CardPablishItemTimeContainer>
+          </CardPablishItemTime>  
       </CardPablishItemHead>
       <CardPablishImages>
         {item.images.slice(0, MAX_VISIBLE_IMAGES).map((elem, index) => {
@@ -246,11 +231,7 @@ const CardPablishItemImg = styled.img`
   height: 24px;
   border-radius: 50%;
 `
-const CardPablishItemTimeContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-`
+
 const CardPablishItemTime = styled.div`
   display: flex;
   flex-direction: column;

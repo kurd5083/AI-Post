@@ -55,13 +55,17 @@ const CardPablishPremoderation = ({ item, bg, channelId, selectedChannel }) => {
           )}
           <p>{selectedChannel.name}</p>
         </CardPablishItemName>
+
         <CardPablishItemTime>
-          <p>{new Date(item.createdAt).toLocaleDateString("ru-RU")}</p>
+          <p>Дата публикации поста: </p>
           <span>
-            {new Date(item.createdAt).toLocaleTimeString("ru-RU", {
-              hour: "2-digit",
-              minute: "2-digit",
-            })}
+            {item.publishedAt
+              ? new Date(item.publishedAt).toLocaleDateString("ru-RU") + " " +
+              new Date(item.publishedAt).toLocaleTimeString("ru-RU", {
+                hour: "2-digit",
+                minute: "2-digit",
+              })
+              : "Дата не указана"}
           </span>
         </CardPablishItemTime>
       </CardPablishItemHead>

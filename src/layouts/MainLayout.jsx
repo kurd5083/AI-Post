@@ -40,7 +40,7 @@ const MainLayout = () => {
   useEffect(() => {
     closePopup();
   }, [location.pathname, token, isAuthenticated]);
-
+  console.log(isInitialized, 'asdasd')
   return (
     <MainContainer>
       <Sidebar />

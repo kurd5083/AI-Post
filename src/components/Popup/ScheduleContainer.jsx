@@ -25,8 +25,8 @@ const ScheduleContainer = () => {
   const { addNotification } = useNotificationStore();
 
   const { scheduleStatus } = useChannelScheduleStatus(channelId);
-  console.log(scheduleStatus, 'scheduleStatus')
   const { channelInterval } = useChannelInterval(channelId);
+  console.log(channelInterval, 'channelInterval')
 
   const [localScheduleEnabled, setLocalScheduleEnabled] = useState(false);
   const [localIntervalEnabled, setLocalIntervalEnabled] = useState(false);

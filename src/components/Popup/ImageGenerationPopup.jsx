@@ -31,12 +31,10 @@ const ImageGenerationPopup = () => {
   const handlePresetChange = (presetId) => {
     if (!channelId) return;
 
-    // вызываем мутацию
     updateImagePreset(
       { channelId, presetId },
       {
         onSuccess: () => {
-          // только после успешного ответа меняем выбранный preset
           setSelectedPresetId(presetId);
           addNotification("Стилизация успешно применена", "success");
         },

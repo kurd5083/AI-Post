@@ -166,7 +166,14 @@ const PublicationsPopup = () => {
             Премодерация <span>{premoderationPostsCount}</span>
           </PublicationsFilter>
         </SwiperSlideHead>
-
+        <SwiperSlideHead>
+          <PublicationsFilter
+            $active={filter === "premoderation"}
+            onClick={() => setFilter("premoderation")}
+          >
+            Архив <span>{premoderationPostsCount}</span>
+          </PublicationsFilter>
+        </SwiperSlideHead>
         <SwiperSlideHead>
           <CustomSelectSec
             placeholder="Выбор даты"

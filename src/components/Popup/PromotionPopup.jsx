@@ -44,7 +44,17 @@ const PromotionPopup = () => {
       setMaxViews(promotionConfig.maxViews || "");
     }
   }, [promotionConfig]);
-
+   const parseUrlDomain = (input) => {
+    try {
+      const trimmed = input.trim();
+      if (!/^https?:\/\//i.test(trimmed)) return null;
+      const urlObj = new URL(trimmed);
+      if (!urlObj.hostname.includes(".")) return null;
+      return urlObj.hostname;
+    } catch (err) {
+      return null;
+    }
+  }
   const handleSaveConfig = () => {
     if (autoViews) {
       if (!minViews || !maxViews) {
@@ -86,11 +96,22 @@ const PromotionPopup = () => {
   const handleAddPost = () => {
     const quantityNumber = Number(postQuantity);
 
-    if (!postLink) return addNotification("Введите ссылку на пост", "error");
-    if (!postQuantity) return addNotification("Укажите количество просмотров", "error");
-    if (quantityNumber < 10 || quantityNumber > 300000)
+    if (!postLink && !postQuantity) {
+      return addNotification("Введите ссылку и количество просмотров", "error");
+    }
+    if (!postLink || !postQuantity) {
+      return addNotification("Укажите и ссылку на пост, и количество просмотров", "error");
+    }
+    if (!parseUrlDomain(postLink)) {
+      return addNotification("Введите корректную ссылку на пост", "error");
+    }
+    if (quantityNumber < 10 || quantityNumber > 300000) {
       return addNotification("Количество просмотров должно быть от 10 до 300 000", "error");
-    if (manualPosts.length >= MAX_POSTS) return addNotification(`Максимум ${MAX_POSTS} постов можно добавить`, "error");
+    }
+
+    if (manualPosts.length >= MAX_POSTS) {
+      return addNotification(`Максимум ${MAX_POSTS} постов можно добавить`, "error");
+    }
 
     setManualPosts(prev => [
       ...prev,
@@ -103,12 +124,25 @@ const PromotionPopup = () => {
 
   const handlePromotePosts = () => {
     let postsToPromote = [...manualPosts];
-    if (!postsToPromote.length && postLink && postQuantity) {
+
+    if (postLink || postQuantity) {
+      if (!postLink || !postQuantity) {
+        return addNotification("Укажите и ссылку на пост, и количество просмотров", "error");
+      }
+      if (!parseUrlDomain(postLink)) {
+        return addNotification("Введите корректную ссылку на пост", "error");
+      }
       postsToPromote.push({ link: postLink, quantity: Number(postQuantity) });
     }
 
-    if (!postsToPromote.length)
+    if (!postsToPromote.length) {
       return addNotification("Сначала добавьте хотя бы один пост для продвижения", "error");
+    }
+
+    if (postsToPromote.length > MAX_POSTS) {
+      postsToPromote = postsToPromote.slice(0, MAX_POSTS);
+      addNotification(`Максимум ${MAX_POSTS} постов можно продвигать за раз`, "error");
+    }
 
     const orders = postsToPromote.map(post => ({
       link: post.link,
@@ -117,10 +151,7 @@ const PromotionPopup = () => {
     }));
 
     createPromotionOrders(
-      {
-        channelId: channelId,
-        orders: orders
-      },
+      { channelId, orders },
       {
         onSuccess: () => {
           addNotification("Заказы успешно созданы", "success");
@@ -128,7 +159,8 @@ const PromotionPopup = () => {
           setPostLink("");
           setPostQuantity("");
         },
-        onError: (err) => addNotification(err?.message || "Недостаточно прав для создания заказов", "error")
+        onError: (err) =>
+          addNotification(err?.message || "Недостаточно прав для создания заказов", "error"),
       }
     );
   };
@@ -269,7 +301,7 @@ const PromotionPopup = () => {
                   $color="#fff"
                   $bg="#336CFF"
                   onClick={handleAddPost}
-                  disabled={!postLink || !postQuantity || creatingOrdersPending}
+                  disabled={creatingOrdersPending}
                 >
                   + Добавить ссылку на пост
                 </BtnBase>

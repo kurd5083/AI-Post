@@ -42,7 +42,6 @@ const MyOrdersPopup = () => {
   };
 
   const typeOptions = [
-    { value: "", label: "Все типы" },
     { value: "VIEWS", label: "Просмотры" },
     { value: "BOOST", label: "Буст" },
     { value: "GENERAL", label: "Общее" },

@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import arrow from "@/assets/arrow.svg";
-import bell_blue from "@/assets/popup/bell-blue.svg";
 import { settingsDatas } from "@/data/settingsDatas";
 import ToggleSwitch from "@/shared/ToggleSwitch";
 import { usePopupStore } from "@/store/popupStore"
@@ -12,6 +11,11 @@ import { useEnableChannelPromotion, useDisnableChannelPromotion } from "@/lib/ch
 import { usePostsByChannel } from "@/lib/posts/usePostsByChannel";
 import { useUser } from "@/lib/useUser";
 import { useNotificationStore } from "@/store/notificationStore";
+import { useGetChannelImagePreset } from "@/lib/channels/image-generation/useGetChannelImagePreset";
+import { usePromptLibrary } from "@/lib/channels/usePromptLibrary";
+import { useChannelGlobalPrompt } from "@/lib/channels/global-prompt/useChannelGlobalPrompt";
+import { useChannelScheduleStatus } from "@/lib/channels/schedule/useChannelScheduleStatus";
+import { useChannelInterval } from "@/lib/channels/useChannelInterval";
 
 const SettingsPopup = () => {
   const { changeContent, popup } = usePopupStore();
@@ -19,14 +23,46 @@ const SettingsPopup = () => {
   const channelId = popup?.data?.channelId;
   const { channel } = useChannelById(channelId);
   const { posts } = usePostsByChannel(channelId);
+  const { imageChannelPreset } = useGetChannelImagePreset(channelId);
+  const { promptLibrary } = usePromptLibrary();
+  const { globalPrompt } = useChannelGlobalPrompt(channelId);
+  const [localPrompt, setLocalPrompt] = useState("");
+  const [scheduleSettings, setScheduleSettings] = useState("");
+  const { scheduleStatus } = useChannelScheduleStatus(channelId);
+  const { channelInterval } = useChannelInterval(channelId);
+
+  console.log(channelInterval, 'channelInterval')
+
   const { addNotification } = useNotificationStore();
-  console.log(channel)
 
   const [localSwitches, setLocalSwitches] = useState({
     posting: channel?.posting || false,
     activate_promotion: channel?.promotionEnabled || false,
     auto_accepting: channel?.autoApprovalEnabled || false,
   });
+  console.log(promptLibrary)
+  useEffect(() => {
+  if (scheduleStatus?.scheduleEnabled) {
+    setScheduleSettings("Расписание");
+  } else if (channelInterval?.isEnabled) {
+    setScheduleSettings("Интервальное");
+  } else {
+    setScheduleSettings("");
+  }
+}, [scheduleStatus, channelInterval]);
+  useEffect(() => {
+    if (!globalPrompt || !promptLibrary) return;
+
+    const foundIndex = promptLibrary.findIndex(
+      item => item.prompt === globalPrompt.globalPromt
+    );
+
+    if (foundIndex !== -1) {
+      setLocalPrompt(promptLibrary[foundIndex].title);
+    } else {
+      setLocalPrompt('Пользовательский стиль');
+    }
+  }, [globalPrompt, promptLibrary]);
 
   useEffect(() => {
     setLocalSwitches({
@@ -172,22 +208,27 @@ const SettingsPopup = () => {
                       </ContentRightColumn>
                     ) : item.key == 'sources' ? (
                       <ContentRightColumn>
-                        <ContentRightColumn>
-                          <span>
-                            {channel?.sources?.map((source, index) => (
-                              <>{source.name}{index < channel.sources.length - 1 ? ', ' : ''}</>
-                            ))}
-                          </span>
-                        </ContentRightColumn>
+                        <span>
+                          {channel?.sources?.map((source, index) => (
+                            <>{source.name}{index < channel.sources.length - 1 ? ', ' : ''}</>
+                          ))}
+                        </span>
+                      </ContentRightColumn>
+                    ) : item.key == 'image_generation' ? (
+                      <ContentRightColumn>
+                        <span>{imageChannelPreset?.name}</span>
+                      </ContentRightColumn>
+                    ) : item.key == 'post_style' ? (
+                      <ContentRightColumn>
+                        <span>{localPrompt}</span>
+                      </ContentRightColumn>
+                    ) : item.key == 'schedule' ? (
+                      <ContentRightColumn>
+                        <span>{scheduleSettings}</span>
                       </ContentRightColumn>
                     ) : (
-                      2
+                      <></>
                     )}
-                    <img src={arrow} alt="arrow icon" height={12} width={6} />
-                  </PopupContentRight>
-                ) : item.right == 'imgarrow' ? (
-                  <PopupContentRight>
-                    <img src={bell_blue} alt="bell icon" height={24} width={20} />
                     <img src={arrow} alt="arrow icon" height={12} width={6} />
                   </PopupContentRight>
                 ) : (

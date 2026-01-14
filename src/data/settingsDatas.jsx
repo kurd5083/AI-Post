@@ -51,6 +51,26 @@ export const settingsDatas = {
                     }
                 },
                 {
+                    key: "schedule",
+                    name: "Расписание",
+                    size: true,
+                    right: 'textarrow',
+                    extra: {
+                        background: "#5F6046",
+                        image: schedule
+                    }
+                },
+                {
+                    key: "calendar",
+                    name: "Календарь",
+                    size: true,
+                    right: 'textarrow',
+                    extra: {
+                        background: "#47346C",
+                        image: calendar
+                    }
+                },
+                {
                     key: "create_post",
                     name: "Создать пост",
                     right: 'arrow',
@@ -64,31 +84,7 @@ export const settingsDatas = {
             ]
         },
         {
-            label: "Продвижение",
-            items: [
-                // {
-                //     key: "activate_promotion",
-                //     name: "Активировать продвижение",
-                //     status: true,
-                //     right: 'switch',
-                //     extra: {
-                //         background: "#445838",
-                //         image: activate_promotion
-                //     }, 
-                // },
-                {
-                    key: "promotion",
-                    name: "Продвижение",
-                    right: 'arrow',
-                    extra: {
-                        background: "#552F43",
-                        image: promotion
-                    }
-                }
-            ]
-        },
-        {
-            label: "Управление",
+            label: "Администрирование",
             items: [
                 {
                     key: "auto_accepting",
@@ -107,12 +103,7 @@ export const settingsDatas = {
                         background: "#603642",
                         image: link_generation
                     }
-                }
-            ]
-        },
-        {
-            label: "Администрирование",
-            items: [
+                },
                 {
                     key: "my_team",
                     name: "Моя команда",
@@ -120,6 +111,15 @@ export const settingsDatas = {
                     extra: {
                         background: "#2F4F6D",
                         image: my_team
+                    }
+                },
+                {
+                    key: "promotion",
+                    name: "Продвижение",
+                    right: 'arrow',
+                    extra: {
+                        background: "#552F43",
+                        image: promotion
                     }
                 }
             ]
@@ -146,24 +146,6 @@ export const settingsDatas = {
                     }
                 },
                 {
-                    key: "calendar",
-                    name: "Календарь",
-                    right: 'textarrow',
-                    extra: {
-                        background: "#47346C",
-                        image: calendar
-                    }
-                },
-                {
-                    key: "schedule",
-                    name: "Расписание",
-                    right: 'imgarrow',
-                    extra: {
-                        background: "#5F6046",
-                        image: schedule
-                    }
-                },
-                {
                     key: "sources",
                     name: "Источники",
                     right: 'textarrow',
@@ -184,7 +166,7 @@ export const settingsDatas = {
                 {
                     key: "advanced",
                     name: "Дополнительно",
-                    right: 'textarrow',
+                    right: 'arrow',
                     extra: {
                         background: "#2F3440",
                         image: advanced
