@@ -49,7 +49,10 @@ const ScheduleContainer = () => {
     toggleScheduleApi(undefined, {
       onSuccess: () => {
         setLocalScheduleEnabled(nextSchedule);
-        addNotification('Публикация по расписанию включена', "success");
+        addNotification(
+          nextSchedule ? "Публикация по расписанию включена" : "Публикация по расписанию выключена",
+          nextSchedule ? "success" : "error"
+        );
 
         if (disableIntervalIfNeeded) {
           setLocalIntervalEnabled(false);
@@ -72,7 +75,10 @@ const ScheduleContainer = () => {
     updateInterval({ isEnabled: nextInterval }, {
       onSuccess: () => {
         setLocalIntervalEnabled(nextInterval);
-        addNotification( "Интервальная публикация включена", "success" );
+        addNotification(
+          nextInterval ? "Интервальная публикация включена" : "Интервальная публикация выключена",
+          nextInterval ? "success" : "error"
+        );
 
         if (disableScheduleIfNeeded) {
           setLocalScheduleEnabled(false);
@@ -115,7 +121,7 @@ const ScheduleContainer = () => {
         </ScheduleTitle>
       </ScheduleViews>
 
-      {localScheduleEnabled && <SchedulePopup channelId={channelId} DAYS={DAYS}/>}
+      {localScheduleEnabled && <SchedulePopup channelId={channelId} DAYS={DAYS} />}
       {localIntervalEnabled && (
         <ScheduleIntervalPopup
           channelInterval={channelInterval}

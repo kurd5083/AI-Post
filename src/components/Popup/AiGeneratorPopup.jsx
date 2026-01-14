@@ -104,9 +104,14 @@ const AiGeneratorPopup = () => {
     if (!post.time?.date) {
       return addNotification("Выберите дату публикации", "info");
     }
-    const postChannelId = post.serverId
-      ? popup?.data?.channelId
-      : usePostsStore.getState().channelMap[post.postId] || (userChannels.length ? userChannels[0].id : null);
+    const postChannelId =
+      popup?.data?.channelId ||
+      (post.serverId ? popup?.data?.channelId : null) || 
+      usePostsStore.getState().channelMap[post.postId]
+
+    if (!postChannelId) {
+      return addNotification("Выберите канал публикации", "info");
+    }
 
     const [hoursStr, minutesStr] = post.time?.time?.split(":") || ["00", "00"];
     const hours = parseInt(hoursStr);
@@ -125,7 +130,7 @@ const AiGeneratorPopup = () => {
       text: post.text,
       channelId: postChannelId,
       publishedAt,
-      calendarScheduledAt: null,
+      calendarScheduledAt: publishedAt,
       summary: post.summary,  
       url: post.url,
     };

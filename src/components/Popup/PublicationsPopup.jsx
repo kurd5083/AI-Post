@@ -31,7 +31,7 @@ const PublicationsPopup = () => {
 
   const channelId = popup?.data?.channelId;
   const { posts, loadingPosts } = usePostsByChannel(channelId);
-
+  console.log(posts, 'posts123')
   const selectedChannel = userChannels.find(c => c.id === channelId);
 
   useEffect(() => {
@@ -79,7 +79,7 @@ const PublicationsPopup = () => {
       default:
         break;
     }
-
+    result.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
     return result;
   }, [posts, dateFilter]);
 
