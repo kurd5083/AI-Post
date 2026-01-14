@@ -3,7 +3,7 @@ import styled from "styled-components";
 import Checkbox from "@/shared/Checkbox";
 import arrow_blue from "@/assets/arrow-blue.svg";
 
-const CustomSelectThree = ({ options = [], value = null, onChange, view = false }) => {
+const CustomSelectThree = ({ placeholder = 'Выберите канал', options = [], value = null, onChange, view = false }) => {
   const [isOpen, setIsOpen] = useState(false);
   const ref = useRef(null);
 
@@ -13,9 +13,9 @@ const CustomSelectThree = ({ options = [], value = null, onChange, view = false 
   };
 
   const headerLabel = useMemo(() => {
-    if (!value) return "Выберите канал";
+    if (!value) return placeholder;
     const selectedOption = options?.find((o) => o.id === value);
-    return selectedOption?.label || "Выберите канал";
+    return selectedOption?.label || placeholder;
   }, [value, options]);
 
   useEffect(() => {

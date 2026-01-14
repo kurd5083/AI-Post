@@ -6,22 +6,44 @@ import edit from "@/assets/templates/edit.svg";
 import icon from "@/assets/templates/icon.svg";
 import InputPlus from "@/shared/InputPlus";
 import BlocksItems from "@/shared/BlocksItems";
+import CustomSelectThree from "@/shared/CustomSelectThree";
 
-const EditCard = ({ template, onSave }) => {
-	const [title, setTitle] = useState(template.title);
+const categoryMap = {
+  MARKETING: "Маркетинг",
+  EDUCATION: "Образование",
+  ENTERTAINMENT: "Развлечения",
+  NEWS: "Новости",
+  PROMO: "Промо",
+};
+
+const EditCard = ({ template, onSave, categories }) => {
+  const [title, setTitle] = useState(template.title);
   const [content, setContent] = useState(template.content);
-	const [hashtags, setHashtags] = useState(template.hashtags);
+  const [hashtags, setHashtags] = useState(template.hashtags);
   const [hashtag, setHashtag] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState(template.category);
+
   const handleSave = () => {
     onSave({
       ...template,
       title,
       content,
-      hashtags
+      hashtags,
+      category: selectedCategory,
     });
   };
-	return (
-		<CardContainer>
+
+  return (
+    <CardContainer>
+      <CustomSelectThree
+        placeholder="Выберите категорию"
+        options={categories?.map(c => ({
+          id: c,
+          label: categoryMap[c] ?? c,
+        })) ?? []}
+        value={selectedCategory}
+        onChange={setSelectedCategory}
+      />
       <CardHead>
         <img src={icon} alt={template.title} width={24} height={20} />
         <CardInput
@@ -48,7 +70,7 @@ const EditCard = ({ template, onSave }) => {
           color="#FF55AD"
           fs="16px"
           padding="16px"
-					value={hashtag}
+          value={hashtag}
           onChange={setHashtag}
           onSubmit={() => {
             if (!hashtag.trim()) return;
@@ -57,13 +79,13 @@ const EditCard = ({ template, onSave }) => {
             setHashtag("");
           }}
         />
-        <BlocksItems 
-					items={hashtags.map((h, index) => ({ value: h, id: index }))} 
-					color="#EF6284" 
-					onRemove={(id) => {
-          	setHashtags((prev) => prev.filter((h) => h.id !== id));
+        <BlocksItems
+          items={hashtags.map((h, index) => ({ value: h, id: index }))}
+          color="#EF6284"
+          onRemove={(id) => {
+            setHashtags((prev) => prev.filter((h) => h.id !== id));
           }}
-				/>
+        />
       </CardBlock>
 
       <CardBtns>
@@ -71,19 +93,22 @@ const EditCard = ({ template, onSave }) => {
           $padding="23px"
           $bg="#336CFF"
           $color="#D6DCEC"
+          $width="280px"
           onClick={handleSave}
         >
           Сохранить
         </BtnBase>
+        <Buttons>
         <ButtonCopy>
           <img src={copy} alt="copy icon" width={14} height={16} />
         </ButtonCopy>
         <ButtonEdit>
           <img src={edit} alt="edit icon" width={18} height={16} />
         </ButtonEdit>
+        </Buttons>
       </CardBtns>
     </CardContainer>
-	)
+  )
 }
 const CardContainer = styled.div`
 	display: flex;
@@ -143,25 +168,22 @@ const Textarea = styled.textarea`
 	height: 140px;
 `;
 
-const HeadTitle = styled.h3`
-	font-size: 24px;
-	font-weight: 700;
-`
 const CardBlock = styled.div`
   margin-top: 40px;
 `
 const CardBtns = styled.div`
 	display: flex;
+  flex-wrap: wrap;
 	gap: 8px;
 	margin-top: 30px;
   flex-grow: 1;
 	align-items: flex-end;
 
-	& button:first-child {
-		width: 305px;
-		justify-content: center;
-	}
 `
+const Buttons = styled.div`
+  display: flex;
+  gap: 8px;
+`;
 const BaseButton = styled.button`
   display: flex;
   align-items: center;
@@ -172,6 +194,7 @@ const BaseButton = styled.button`
   flex-shrink: 0;
   transition: all 0.2s;
 `;
+
 const ButtonCopy = styled(BaseButton)`
   border: 2px solid #333E59;
 `;

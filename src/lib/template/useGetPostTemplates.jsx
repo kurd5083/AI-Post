@@ -3,7 +3,7 @@ import { getGetPostTemplates } from "@/api/template/getGetPostTemplates";
 
 export const useGetPostTemplates = ({category}) => {
   const { data: templates, isLoading: templatesLoading } = useQuery({
-    queryKey: ["postTemplates"],
+    queryKey: ["post-templates"],
     queryFn: () => getGetPostTemplates(category),
   });
 

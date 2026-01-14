@@ -7,7 +7,7 @@ import PlusIcon from "@/icons/PlusIcon";
 import { usePopupStore } from "@/store/popupStore";
 import { useNotificationStore } from "@/store/notificationStore";
 
-const ScheduleIntervalPopup = ({ channelInterval, updateInterval, intervalPending }) => {
+const ScheduleIntervalPopup = ({ channelInterval, updateInterval, intervalPending, DAYS }) => {
   const { goBack } = usePopupStore();
   const { addNotification } = useNotificationStore();
 
@@ -18,7 +18,8 @@ const ScheduleIntervalPopup = ({ channelInterval, updateInterval, intervalPendin
   const [avoidNight, setAvoidNight] = useState(false);
   const [showResultInterval, setShowResultInterval] = useState(false);
   const [showResultActiveTime, setShowResultActiveTime] = useState(false);
-
+  const [selectedDays, setSelectedDays] = useState([]);
+  console.log(channelInterval)
   useEffect(() => {
     if (channelInterval) {
       setIntervalMinutes(channelInterval.intervalMinutes);
@@ -26,33 +27,46 @@ const ScheduleIntervalPopup = ({ channelInterval, updateInterval, intervalPendin
       setActiveStartHour(channelInterval.activeStartHour);
       setActiveEndHour(channelInterval.activeEndHour);
       setAvoidNight(channelInterval.avoidNight);
+      setSelectedDays(channelInterval.intervalPostDays);
     }
   }, [channelInterval]);
+  
+  const toggleDay = (day) => {
+    if (selectedDays.includes(day)) {
+      setSelectedDays(selectedDays.filter((d) => d !== day));
+    } else {
+      setSelectedDays([...selectedDays, day]);
+    }
+  };
 
   const handleSave = () => {
-  if (finalMinutes <= 0) 
-    return addNotification("Выберите корректный интервал", "info");
+    if (finalMinutes <= 0)
+      return addNotification("Выберите корректный интервал", "info");
 
-  if (activeStartHour === null || activeEndHour === null)
-    return addNotification("Установите активное время публикаций", "info");
+    if (activeStartHour === null || activeEndHour === null)
+      return addNotification("Установите активное время публикаций", "info");
 
-  updateInterval(
-    {
-      intervalMinutes: finalMinutes,
-      avoidNight,
-      activeStartHour,
-      activeEndHour,
-    },
-    {
-      onSuccess: () => {
-        addNotification("Настройки сохранены", "success");
-      },
-      onError: (err) => {
-        addNotification(err.message || "Ошибка при сохранении интервала", "error");
-      },
+     if (!selectedDays.length) {
+      return addNotification("Выберите дни недели", "info");
     }
-  );
-};
+    updateInterval(
+      {
+        intervalMinutes: finalMinutes,
+        avoidNight,
+        activeStartHour,
+        activeEndHour,
+        intervalPostDays: selectedDays,
+      },
+      {
+        onSuccess: () => {
+          addNotification("Настройки сохранены", "success");
+        },
+        onError: (err) => {
+          addNotification(err.message || "Ошибка при сохранении интервала", "error");
+        },
+      }
+    );
+  };
 
 
   const hours = Math.floor(finalMinutes / 60);
@@ -60,68 +74,86 @@ const ScheduleIntervalPopup = ({ channelInterval, updateInterval, intervalPendin
 
   return (
     <ScheduleContainer>
-        <ScheduleTitle>Интервал публикаций</ScheduleTitle>
-        <ScheduleDesc>
-          Установите периодичность, с которой система будет отправлять посты.<br />
-          Интервал применяется поверх расписания и очереди.<br />
-          Для равномерного охвата выбирайте разумные значения.
-        </ScheduleDesc>
+      <ScheduleTitle>Интервал публикаций</ScheduleTitle>
+      <ScheduleDesc>
+        Установите периодичность, с которой система будет отправлять посты.<br />
+        Интервал применяется поверх расписания и очереди.<br />
+        Для равномерного охвата выбирайте разумные значения.
+      </ScheduleDesc>
 
-        <ScheduleKey>
-          <ScheduleKeyTitle>Выберите интервал</ScheduleKeyTitle>
-          <ScheduleInputContainer>
-            <TimeInput
-              hours={Math.floor(intervalMinutes / 60)}
-              minutes={intervalMinutes % 60}
-              onChange={(h, m) => setIntervalMinutes(h * 60 + m)}
-            />
-            <ScheduleBtn onClick={() => { setFinalMinutes(intervalMinutes); setShowResultInterval(true); }}>
-              <PlusIcon color="#FFF980" />
-            </ScheduleBtn>
-          </ScheduleInputContainer>
-          {showResultInterval && (
-            <ScheduleResult>
-              Будет публиковаться каждые{" "}
-              <mark>
-                {hours > 0 && `${hours} ч `}
-                {minutes > 0 && `${minutes} мин`}
-              </mark>
-            </ScheduleResult>
-          )}
-        </ScheduleKey>
+      <ScheduleKey>
+        <ScheduleKeyTitle>Выберите интервал</ScheduleKeyTitle>
+        <ScheduleInputContainer>
+          <TimeInput
+            hours={Math.floor(intervalMinutes / 60)}
+            minutes={intervalMinutes % 60}
+            onChange={(h, m) => setIntervalMinutes(h * 60 + m)}
+          />
+          <ScheduleBtn onClick={() => { setFinalMinutes(intervalMinutes); setShowResultInterval(true); }}>
+            <PlusIcon color="#FFF980" />
+          </ScheduleBtn>
+        </ScheduleInputContainer>
+        {showResultInterval && (
+          <ScheduleResult>
+            Будет публиковаться каждые{" "}
+            <mark>
+              {hours > 0 && `${hours} ч `}
+              {minutes > 0 && `${minutes} мин`}
+            </mark>
+          </ScheduleResult>
+        )}
+      </ScheduleKey>
 
-        <ScheduleKey>
-          <ScheduleKeyTitle>Активное время публикаций</ScheduleKeyTitle>
-          <ScheduleInputContainer>
-            <TimeInput hours={activeStartHour} onChange={(h) => setActiveStartHour(h)} />
-            <Dash />
-            <TimeInput hours={activeEndHour} onChange={(h) => setActiveEndHour(h)} />
-            <ScheduleBtn onClick={() => setShowResultActiveTime(true)}>
-              <PlusIcon color="#FFF980" />
-            </ScheduleBtn>
-          </ScheduleInputContainer>
-          {showResultActiveTime && (
-            <ScheduleResult>
-              Активное время: <mark>{activeStartHour}</mark> - <mark>{activeEndHour}</mark>
-            </ScheduleResult>
-          )}
-        </ScheduleKey>
+      <ScheduleKey>
+        <ScheduleKeyTitle>Активное время публикаций</ScheduleKeyTitle>
+        <ScheduleInputContainer>
+          <TimeInput hours={activeStartHour} onChange={(h) => setActiveStartHour(h)} />
+          <Dash />
+          <TimeInput hours={activeEndHour} onChange={(h) => setActiveEndHour(h)} />
+          <ScheduleBtn onClick={() => setShowResultActiveTime(true)}>
+            <PlusIcon color="#FFF980" />
+          </ScheduleBtn>
+        </ScheduleInputContainer>
+        {showResultActiveTime && (
+          <ScheduleResult>
+            Активное время: <mark>{activeStartHour}</mark> - <mark>{activeEndHour}</mark>
+          </ScheduleResult>
+        )}
+      </ScheduleKey>
 
-        <ScheduleKey>
-          <ScheduleKeyTitle>Дополнительно</ScheduleKeyTitle>
-          <ScheduleKeyItem>
-            <Checkbox checked={avoidNight} onChange={() => setAvoidNight(!avoidNight)}>
-              <h4>Не публиковать в ночное время</h4>
-            </Checkbox>
-          </ScheduleKeyItem>
-        </ScheduleKey>
+      <ScheduleKey>
+        <ScheduleKeyTitle>Выберите дни недели</ScheduleKeyTitle>
+        <ScheduleDays>
+          {DAYS.map((day) => (
+            <ScheduleDaysBlock key={day.value}>
+              <Checkbox
+                color="#FFF980"
+                checked={selectedDays.includes(day.value)}
+                onChange={() => toggleDay(day.value)}
+              >
+                <h4>{day.label}</h4>
+              </Checkbox>
+            </ScheduleDaysBlock>
+          ))}
+        </ScheduleDays>
+      </ScheduleKey>
 
-        <ScheduleButtons>
-          <BtnBase $color="#D6DCEC" $bg="#336CFF" onClick={handleSave} disabled={intervalPending}>
-            {intervalPending ? "Сохраняем..." : "Сохранить"}
-          </BtnBase>
-          <BtnBase onClick={goBack} $color="#D6DCEC" $bg="#242A3A">Отменить</BtnBase>
-        </ScheduleButtons>
+
+      <ScheduleKey>
+        <ScheduleKeyTitle>Дополнительно</ScheduleKeyTitle>
+        <ScheduleKeyItem>
+          <Checkbox checked={avoidNight} onChange={() => setAvoidNight(!avoidNight)}>
+            <h4>Не публиковать в ночное время</h4>
+          </Checkbox>
+        </ScheduleKeyItem>
+      </ScheduleKey>
+
+      <ScheduleButtons>
+        <BtnBase $color="#D6DCEC" $bg="#336CFF" onClick={handleSave} disabled={intervalPending}>
+          {intervalPending ? "Сохраняем..." : "Сохранить"}
+        </BtnBase>
+        <BtnBase onClick={goBack} $color="#D6DCEC" $bg="#242A3A">Отменить</BtnBase>
+      </ScheduleButtons>
     </ScheduleContainer>
   );
 };
@@ -202,6 +234,24 @@ const ScheduleKeyItem = styled.div`
     align-items: center;
   }
 `
+const ScheduleDays = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px 80px;
+
+  h4 {
+    font-size: 16px;
+    font-weight: 700;
+    width: 120px;
+    display: flex;
+    align-items: center;
+  }
+`;
+const ScheduleDaysBlock = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+`;
 const ScheduleButtons = styled.div`
   display: flex;
   gap: 8px;

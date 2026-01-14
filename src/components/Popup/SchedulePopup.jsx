@@ -11,17 +11,7 @@ import { useChannelSchedule } from "@/lib/channels/schedule/useChannelSchedule";
 import { useUpdateChannelSchedule } from "@/lib/channels/schedule/useUpdateChannelSchedule";
 import { useNotificationStore } from "@/store/notificationStore";
 
-const DAYS = [
-  { label: "Понедельник", value: "MONDAY" },
-  { label: "Вторник", value: "TUESDAY" },
-  { label: "Среда", value: "WEDNESDAY" },
-  { label: "Четверг", value: "THURSDAY" },
-  { label: "Пятница", value: "FRIDAY" },
-  { label: "Суббота", value: "SATURDAY" },
-  { label: "Воскресенье", value: "SUNDAY" },
-];
-
-const SchedulePopup = ({ channelId }) => {
+const SchedulePopup = ({ channelId, DAYS }) => {
   const { addNotification } = useNotificationStore();
 
   const { channelSchedule } = useChannelSchedule(channelId);

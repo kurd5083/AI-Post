@@ -10,7 +10,15 @@ import { useToggleChannelSchedule } from "@/lib/channels/schedule/useToggleChann
 import { useChannelInterval } from "@/lib/channels/useChannelInterval";
 import { useUpdateChannelInterval } from "@/lib/channels/useUpdateChannelInterval";
 import { useNotificationStore } from "@/store/notificationStore";
-
+const DAYS = [
+  { label: "Понедельник", value: "MONDAY" },
+  { label: "Вторник", value: "TUESDAY" },
+  { label: "Среда", value: "WEDNESDAY" },
+  { label: "Четверг", value: "THURSDAY" },
+  { label: "Пятница", value: "FRIDAY" },
+  { label: "Суббота", value: "SATURDAY" },
+  { label: "Воскресенье", value: "SUNDAY" },
+];
 const ScheduleContainer = () => {
   const { popup } = usePopupStore();
   const channelId = popup?.data?.channelId;
@@ -107,12 +115,13 @@ const ScheduleContainer = () => {
         </ScheduleTitle>
       </ScheduleViews>
 
-      {localScheduleEnabled && <SchedulePopup channelId={channelId} />}
+      {localScheduleEnabled && <SchedulePopup channelId={channelId} DAYS={DAYS}/>}
       {localIntervalEnabled && (
         <ScheduleIntervalPopup
           channelInterval={channelInterval}
           updateInterval={updateInterval}
           intervalPending={intervalPending}
+          DAYS={DAYS}
         />
       )}
     </ScheduleContent>

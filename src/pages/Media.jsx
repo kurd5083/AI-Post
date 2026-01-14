@@ -112,7 +112,7 @@ const Media = () => {
       {mediaLoading ? (
         <ModernLoading text="Загрузка медиа..." />
       ) : filteredMedia?.length === 0 ? (
-        <EmptyStat>Медиа отсутствует</EmptyStat>
+        <EmptyMedia>Медиа отсутствует</EmptyMedia>
       ) : (
         <MediaCards>
           {filteredMedia?.map((item) => (
@@ -324,7 +324,7 @@ const DeleteButton = styled.button`
 		background-color: rgba(239, 98, 132, 0.08);
 	}
 `
-const EmptyStat = styled.div`
+const EmptyMedia = styled.div`
   text-align: center;
   color: #6A7080;
   padding: 48px 0;

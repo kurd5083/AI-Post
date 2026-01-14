@@ -5,8 +5,8 @@ export const useUpdateChannelInterval = (channelId) => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ intervalMinutes, isEnabled, avoidNight, activeStartHour, activeEndHour }) =>
-      updateChannelInterval(channelId, { intervalMinutes, isEnabled, avoidNight, activeStartHour, activeEndHour }),
+    mutationFn: ({ intervalMinutes, isEnabled, avoidNight, activeStartHour, activeEndHour, intervalPostDays  }) =>
+      updateChannelInterval(channelId, { intervalMinutes, isEnabled, avoidNight, activeStartHour, activeEndHour, intervalPostDays }),
     onSuccess: (data) => {
       queryClient.invalidateQueries(["channelInterval", channelId]);
     },

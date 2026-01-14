@@ -1,13 +1,13 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { createPostTemplate } from "@/api/template/createPostTemplate";
+import { deletePostTemplate } from "@/api/template/deletePostTemplate";
 
-export const useCreatePostTemplate = () => {
+export const useDeletePostTemplate = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (dataToSend) => createPostTemplate(dataToSend),
+    mutationFn: (id) => deletePostTemplate(id),
     onSuccess: () => {
       queryClient.invalidateQueries(["post-templates"]);
-    },
+    }
   });
 };
