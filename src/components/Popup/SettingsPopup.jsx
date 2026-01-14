@@ -16,6 +16,14 @@ import { usePromptLibrary } from "@/lib/channels/usePromptLibrary";
 import { useChannelGlobalPrompt } from "@/lib/channels/global-prompt/useChannelGlobalPrompt";
 import { useChannelScheduleStatus } from "@/lib/channels/schedule/useChannelScheduleStatus";
 import { useChannelInterval } from "@/lib/channels/useChannelInterval";
+import { useCalendarEventsByRange } from "@/lib/calendar/useCalendarEventsByRange";
+
+
+
+
+
+
+
 
 const SettingsPopup = () => {
   const { changeContent, popup } = usePopupStore();
@@ -30,8 +38,23 @@ const SettingsPopup = () => {
   const [scheduleSettings, setScheduleSettings] = useState("");
   const { scheduleStatus } = useChannelScheduleStatus(channelId);
   const { channelInterval } = useChannelInterval(channelId);
+  const today = new Date();
 
-  console.log(channelInterval, 'channelInterval')
+  const startISO = new Date(Date.UTC(
+    today.getUTCFullYear(),
+    today.getUTCMonth(),
+    today.getUTCDate(),
+    0, 0, 0, 0
+  )).toISOString();
+
+  const endISO = new Date(Date.UTC(
+    today.getUTCFullYear(),
+    today.getUTCMonth(),
+    today.getUTCDate(),
+    23, 59, 59, 999
+  )).toISOString();
+
+  const { events } = useCalendarEventsByRange(startISO, endISO);
 
   const { addNotification } = useNotificationStore();
 
@@ -40,16 +63,16 @@ const SettingsPopup = () => {
     activate_promotion: channel?.promotionEnabled || false,
     auto_accepting: channel?.autoApprovalEnabled || false,
   });
-  console.log(promptLibrary)
+
   useEffect(() => {
-  if (scheduleStatus?.scheduleEnabled) {
-    setScheduleSettings("Расписание");
-  } else if (channelInterval?.isEnabled) {
-    setScheduleSettings("Интервальное");
-  } else {
-    setScheduleSettings("");
-  }
-}, [scheduleStatus, channelInterval]);
+    if (scheduleStatus?.scheduleEnabled) {
+      setScheduleSettings("Расписание");
+    } else if (channelInterval?.isEnabled) {
+      setScheduleSettings("Интервальное");
+    } else {
+      setScheduleSettings("");
+    }
+  }, [scheduleStatus, channelInterval]);
   useEffect(() => {
     if (!globalPrompt || !promptLibrary) return;
 
@@ -222,17 +245,19 @@ const SettingsPopup = () => {
                       <ContentRightColumn>
                         <span>{localPrompt}</span>
                       </ContentRightColumn>
-                    ) : item.key == 'schedule' ? (
+                    ) : item.key == 'schedule' && (
                       <ContentRightColumn>
                         <span>{scheduleSettings}</span>
                       </ContentRightColumn>
-                    ) : (
-                      <></>
                     )}
                     <img src={arrow} alt="arrow icon" height={12} width={6} />
                   </PopupContentRight>
-                ) : (
-                  <PopupContentCounter>{posts?.length || 0}</PopupContentCounter>
+                ) : item.right == 'quantity' && (
+                  item.key == 'publications' ? (
+                    <PopupContentCounter>{posts?.length || 0}</PopupContentCounter>
+                  ) : item.key == 'calendar' && (
+                    <PopupContentCounter>{events?.length || 0}</PopupContentCounter>
+                  )
                 )}
               </PopupContentItem>
             ))}

@@ -44,6 +44,7 @@ export const settingsDatas = {
                 {
                     key: "publications",
                     name: "Публикации",
+                    right: 'quantity',
                     size: true,
                     extra: {
                         background: "#382B73",
@@ -63,8 +64,8 @@ export const settingsDatas = {
                 {
                     key: "calendar",
                     name: "Календарь",
+                    right: 'quantity',
                     size: true,
-                    right: 'textarrow',
                     extra: {
                         background: "#47346C",
                         image: calendar

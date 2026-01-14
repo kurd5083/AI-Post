@@ -12,14 +12,14 @@ const MyOrdersPopup = () => {
   const channelId = popup?.data?.channelId;
   const { addNotification } = useNotificationStore();
 
-  const [filterType, setFilterType] = useState("");
+  const [filterType, setFilterType] = useState("GENERAL");
   const [filterSuccess, setFilterSuccess] = useState("");
 
   const { myOrders, myOrdersPending, refetch } = usePromotionOrders({
     channelId,
     page: 1,
     limit: 50,
-    orderType: filterType || undefined,
+    orderType: filterType || "GENERAL",
     success: filterSuccess !== "" ? filterSuccess === "true" : undefined,
   });
 
@@ -42,9 +42,9 @@ const MyOrdersPopup = () => {
   };
 
   const typeOptions = [
+    { value: "GENERAL", label: "Общее" },
     { value: "VIEWS", label: "Просмотры" },
     { value: "BOOST", label: "Буст" },
-    { value: "GENERAL", label: "Общее" },
   ];
 
   const statusOptions = [

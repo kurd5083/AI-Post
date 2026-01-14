@@ -28,7 +28,7 @@ const CalendarPopup = () => {
 
   const startISO = startDate.toISOString();
   const endISO = endDate.toISOString();
-
+  console.log(startISO, endISO)
   const { events = [], eventsLoading } = useCalendarEventsByRange(startISO, endISO);
   const filteredEvents = events.filter( event => event.channelId === channelId);
 
