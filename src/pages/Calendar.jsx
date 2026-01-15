@@ -1,16 +1,27 @@
 import styled from "styled-components";
 import BtnBase from "@/shared/BtnBase";
-import { usePopupStore } from "@/store/popupStore"
+
 import PageHead from '@/components/PageHead'
 import CalendarBlock from '@/components/Calendar/CalendarBlock';
 import ThisDay from "@/components/Calendar/ThisDay";
+
 import AiGeneratorIcon from '@/icons/AiGeneratorIcon';
 
+import { useCalendarEventsByRange } from "@/lib/calendar/useCalendarEventsByRange";
 
-
+import { usePopupStore } from "@/store/popupStore"
+import { useCalendarStore } from "@/store/calendarStore";
 
 const Calendar = () => {
   const { openPopup } = usePopupStore()
+  const { selectedDate, setSelectedDate } = useCalendarStore();
+  
+    const { events: posts, eventsPending } = useCalendarEventsByRange(
+      selectedDate.startISO,
+      selectedDate.endISO
+    );
+    console.log(posts, 'asss')
+ 
   return (
     <CalendarContainer>
       <PageHead>
@@ -24,7 +35,7 @@ const Calendar = () => {
       </PageHead>
       <CalendarContent>
         <CalendarGrid>
-          <CalendarBlock />
+          <CalendarBlock posts={posts} eventsPending={eventsPending}/>
         </CalendarGrid>
         <CalendarStatistic >
           <StatisticTitle><AiGeneratorIcon color="#336CFF" />Статистика</StatisticTitle>
@@ -53,7 +64,7 @@ const Calendar = () => {
           </StatisticList>
         </CalendarStatistic>
         <CalendarThisDay>
-          <ThisDay/>
+          <ThisDay posts={posts} eventsPending={eventsPending}/>
         </CalendarThisDay>
       </CalendarContent>
     </CalendarContainer>
@@ -67,7 +78,10 @@ const CalendarContent = styled.div`
   grid-template-columns: repeat(5, 1fr);
   grid-template-rows: min-content;
   align-items: end;
-  gap: 64px 105px;
+  gap: 64px;
+  grid-template-columns: 440px 440px 1fr 1fr 1fr;
+  grid-template-rows: min-content;
+  align-items: end;
   @media(max-width: 1600px) {
     gap: 40px;
   }
@@ -76,9 +90,10 @@ const CalendarGrid = styled.div`
   box-sizing: border-box;
   width: 880px;
   align-self: start;
-  grid-column:  1 / span 3;
+  grid-column:  1 / span 2;
   grid-row: 1;
-
+  
+  
   @media(max-width: 1600px) {
     width: 800px;
   }
@@ -89,7 +104,7 @@ const CalendarGrid = styled.div`
 `;
 const CalendarStatistic = styled.div`
   box-sizing: border-box;
-  grid-column:  1 / span 3;
+  grid-column:  1 / span 2;
   grid-row: 2;
   display: flex;
   flex-direction: column;
@@ -153,7 +168,7 @@ const ItemTime = styled.p`
 `;
 const CalendarThisDay = styled.div`
   box-sizing: border-box;
-  grid-column: 4 / span 2;
+  grid-column: 3 / span 3;
   grid-row: 1/ span 2;
   width: 100%;
   padding-right: 56px;

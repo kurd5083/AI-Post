@@ -1,19 +1,34 @@
 import { useState, useEffect } from "react";
-import { useCalendarStore } from "@/store/calendarStore";
 import styled from "styled-components";
-import arrow from "@/assets/arrow.svg";
-import CustomSelect from "@/shared/CustomSelect";
-import useFadeOnScroll from "@/lib/useFadeOnScroll";
-import { useCalendarEventsByRange } from "@/lib/calendar/useCalendarEventsByRange";
-import { useUserChannels } from "@/lib/channels/useUserChannels";
 
-const ThisDay = () => {
+import arrow from "@/assets/arrow.svg";
+
+import useFadeOnScroll from "@/lib/useFadeOnScroll";
+import { useUserChannels } from "@/lib/channels/useUserChannels";
+import { useSendPostToChannel } from "@/lib/posts/useSendPostToChannel";
+
+import ModernLoading from "@/components/ModernLoading";
+
+import CustomSelect from "@/shared/CustomSelect";
+import AvaPlug from "@/shared/AvaPlug";
+
+import { useCalendarStore } from "@/store/calendarStore";
+import { useNotificationStore } from "@/store/notificationStore";
+import { usePopupStore } from "@/store/popupStore"
+
+
+const ThisDay = ({ posts, eventsPending }) => {
   const { fadeVisible, ref } = useFadeOnScroll(20);
   const { selectedDate, setSelectedDate } = useCalendarStore();
   const { userChannels } = useUserChannels();
+  const [publishingPosts, setPublishingPosts] = useState({});
+  const { addNotification } = useNotificationStore();
+  const { popup, openPopup } = usePopupStore();
 
+  console.log(publishingPosts)
   const [selectedChannel, setSelectedChannel] = useState(null);
-
+    const { mutate: sendPost, isPending: isSendPending } = useSendPostToChannel();
+  
   useEffect(() => {
     if (!selectedDate) {
       const today = new Date();
@@ -32,7 +47,6 @@ const ThisDay = () => {
   if (!selectedDate) return null;
 
   const dateObj = new Date(selectedDate.startISO);
-
   const changeDay = (direction) => {
     const newDate = new Date(dateObj);
     newDate.setDate(dateObj.getDate() + direction);
@@ -52,14 +66,41 @@ const ThisDay = () => {
     day: "numeric",
     month: "long",
   });
-  console.log(selectedDate, 'selectedDate?.startISO')
-  const { events: posts, eventsLoading } = useCalendarEventsByRange(
-    selectedDate.startISO,
-    selectedDate.endISO
-  );
+
   const filteredPosts = selectedChannel
     ? posts?.filter(post => post.channelId === selectedChannel.value)
     : posts;
+
+  const formatUTCTime = (utcString) => {
+    if (!utcString) return "";
+    const d = new Date(utcString);
+    const hours = String(d.getUTCHours()).padStart(2, "0");
+    const minutes = String(d.getUTCMinutes()).padStart(2, "0");
+    return `${hours}:${minutes}`;
+  };
+
+  const handlePublishNow = (item) => {
+    const cardId = item.id;
+    const postId = item.postId;
+    const channelId = item.channelId;
+
+    setPublishingPosts(prev => ({ ...prev, [cardId]: true }));
+
+    sendPost(
+      { postId, channelId, channelTelegramId: userChannels[0].ownerTelegramId },
+      {
+        onSuccess: () => {
+          addNotification("Пост успешно опубликован", "success");
+        },
+        onError: (err) => {
+          addNotification(err.message || "Ошибка публикации поста", "error");
+        },
+        onSettled: () => {
+          setPublishingPosts(prev => ({ ...prev, [cardId]: false }));
+        },
+      }
+    );
+  };
 
   return (
     <DayWrapper>
@@ -89,28 +130,39 @@ const ThisDay = () => {
       </ChannelRow>
 
       <SectionTitle>Посты в этот день:</SectionTitle>
+      {eventsPending && <ModernLoading text="Загрузка постов..." />}
+      {filteredPosts?.length === 0 && !eventsPending && <EmptyCalendar>Нет постов</EmptyCalendar>}
 
       <Grid $fadeVisible={fadeVisible} ref={ref}>
-        {eventsLoading && <p>Загрузка...</p>}
         {filteredPosts?.map((item) => (
           <Card key={item.id}>
             <CardHeader>
               <CardAuthor>
-                <CardAva src={item.ava} alt="ava icon" width={24} height={24} />
+                <AvaPlug width="32px" height="32px" />
                 <CardName>{item.username}</CardName>
               </CardAuthor>
-              <CardEdit>Изменить</CardEdit>
+              <CardEdit
+              onClick={(e) => {
+                  e.stopPropagation();
+                  openPopup("update_calendar_event", "popup_window", { event: item, channelId: item.channelId });
+                }}
+              
+              >Изменить</CardEdit>
             </CardHeader>
             {item.img && <CardPreview src={item.img} width={48} height={48} />}
             <CardTitle>{item.title}</CardTitle>
-            <CardSubtitle>{item.description}</CardSubtitle>
+            <CardSubtitle>{item?.post?.summary}</CardSubtitle>
             <CardFooter>
-              <CardTime>{item.time}</CardTime>
-              <CardPublish>Опубликовать</CardPublish>
+              <CardTime>В {formatUTCTime(item.scheduledAt)}</CardTime>
+              <CardPublish
+  onClick={() => handlePublishNow(item)}
+  disabled={publishingPosts[item.id]} 
+>
+  {publishingPosts[item.id] ? "Публикация..." : "Опубликовать"}
+</CardPublish>
             </CardFooter>
           </Card>
         ))}
-        {filteredPosts?.length === 0 && !eventsLoading && <p>Нет постов</p>}
       </Grid>
     </DayWrapper>
   )
@@ -160,6 +212,7 @@ const Grid = styled.div`
 	box-sizing: border-box;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  grid-template-rows: min-content;
   gap: 16px 8px;
 	overflow-y: auto;
   scrollbar-width: none;
@@ -204,9 +257,6 @@ const CardAuthor = styled.div`
   display: flex;
   align-items: center;
   gap: 16px;
-`;
-const CardAva = styled.img`
-  border-radius: 50%;
 `;
 const CardName = styled.p`
   font-size: 14px;
@@ -254,5 +304,13 @@ const CardPublish = styled.p`
   font-size: 14px;
   color: #336CFF;
 	cursor: pointer;
+`;
+const EmptyCalendar = styled.p`
+  text-align: center;
+  color: #6A7080;
+  padding: 48px 0;
+  font-weight: 600;
+  background-color: #1C2438;
+  border-radius: 16px;
 `;
 export default ThisDay

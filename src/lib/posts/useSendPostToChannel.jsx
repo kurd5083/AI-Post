@@ -4,6 +4,5 @@ import { sendPostToChannel } from "@/api/posts/sendPostToChannel";
 export const useSendPostToChannel = () => {
   return useMutation({
     mutationFn: sendPostToChannel,
- 
   });
 };

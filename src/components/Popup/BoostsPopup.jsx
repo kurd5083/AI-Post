@@ -16,9 +16,9 @@ const BoostsPopup = () => {
   const [quantity, setQuantity] = useState(null);
   const [boostDays, setBoostDays] = useState(null);
 
-  const handleStartBoost = () => {
-    if (!quantity) {
-      addNotification("Укажите количество бустов", "info");
+   const handleStartBoost = () => {
+    if (!quantity || quantity < 10) {
+      addNotification("Минимальное количество бустов — 10", "info");
       return;
     }
     if (!boostDays) {

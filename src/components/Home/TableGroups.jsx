@@ -375,9 +375,9 @@ const Status = styled.div`
   position: absolute;
   width: 40px;
   height: 40px;
-  transform: translate(40%, -40%);
+  transform: translate(60%, -50%);
   right: 0;
-  top: 0;
+  top: 50%;
   color: #336CFF;
   background-color: #1F305C;
   border-radius: 50%;

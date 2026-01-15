@@ -2,48 +2,43 @@ import styled from "styled-components";
 import arrow from "@/assets/arrow.svg";
 import { DAYS_OF_WEEK } from "@/data/calendarDatas";
 import { formatRange } from "@/lib/generateWeek";
+import { useCalendarPopupStore } from "@/store/calendarPopupStore";
 
-export const CalendarWeek = ({
-  currentWeek,
-  selectedDate,
-  startDate,
-  endDate,
-  changeWeek,
-  syncDate,
-}) => (
-  <>
-    <Header>
-      <NavButtonLeft onClick={() => changeWeek(-1)}>
-        <img src={arrow} alt="arrow icon" />
-      </NavButtonLeft>
+const CalendarWeek = ({ currentWeek, startDate, endDate }) => {
+  const { selectedDate, syncDate, changeWeek } = useCalendarPopupStore();
 
-      <DateDisplay>
-        {startDate && endDate ? formatRange(startDate, endDate) : ""}
-      </DateDisplay>
+  return (
+    <>
+      <Header>
+        <NavButtonLeft onClick={() => changeWeek(-1)}>
+          <img src={arrow} alt="arrow icon" />
+        </NavButtonLeft>
 
-      <NavButton onClick={() => changeWeek(1)}>
-        <img src={arrow} alt="arrow icon" />
-      </NavButton>
-    </Header>
+        <DateDisplay>
+          {startDate && endDate ? formatRange(startDate, endDate) : ""}
+        </DateDisplay>
 
-    <WeekGrid>
-      {currentWeek.map((day, i) => {
-        const selected =
-          day.toDateString() === selectedDate.toDateString();
+        <NavButton onClick={() => changeWeek(1)}>
+          <img src={arrow} alt="arrow icon" />
+        </NavButton>
+      </Header>
 
-        return (
-          <DayColumn key={i}>
-            <DayOfWeek>{DAYS_OF_WEEK[i]}</DayOfWeek>
-            <DayCell isSelected={selected} onClick={() => syncDate(day)}>
-              <DayNumber isSelected={selected}>{day.getDate()}</DayNumber>
-            </DayCell>
-          </DayColumn>
-        );
-      })}
-    </WeekGrid>
-  </>
-);
-
+      <WeekGrid>
+        {currentWeek.map((day, i) => {
+          const selected = day.toDateString() === selectedDate.toDateString();
+          return (
+            <DayColumn key={i}>
+              <DayOfWeek>{DAYS_OF_WEEK[i]}</DayOfWeek>
+              <DayCell isSelected={selected} onClick={() => syncDate(day)}>
+                <DayNumber isSelected={selected}>{day.getDate()}</DayNumber>
+              </DayCell>
+            </DayColumn>
+          );
+        })}
+      </WeekGrid>
+    </>
+  );
+};
 const Header = styled.div`
   display: flex;
   align-items: center;

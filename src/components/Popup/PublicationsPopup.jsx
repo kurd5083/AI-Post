@@ -13,10 +13,9 @@ import ModernLoading from "@/components/ModernLoading";
 import { usePostsByChannel } from "@/lib/posts/usePostsByChannel";
 import { useUserChannels } from "@/lib/channels/useUserChannels";
 import { useGetArchivedPosts } from "@/lib/posts/useGetArchivedPosts";
-
 import CustomSelectSec from "@/shared/CustomSelectSec";
-
 import { usePopupStore } from "@/store/popupStore";
+import { usePublicationsStore } from "@/store/publicationsStore";
 
 const itemsPerPageDefault = 9;
 const itemsPerPageSmall = 6;
@@ -25,24 +24,20 @@ const itemsPerPageMob = 4;
 const PublicationsPopup = () => {
   const { popup } = usePopupStore();
   const { userChannels } = useUserChannels();
-
-  const initialFilter = popup?.data?.filter || "common";
-
-  const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(itemsPerPageDefault);
-  const [filter, setFilter] = useState(initialFilter);
-
-  const [dateFilter, setDateFilter] = useState({
-    period: "all",
-    value: null,
-  });
-
   const channelId = popup?.data?.channelId;
-  const { posts, loadingPosts } = usePostsByChannel(channelId);
-  console.log(posts, 'posts')
-  const { postsArchived, loadingArchived } = useGetArchivedPosts(channelId);
-  const selectedChannel = userChannels.find(c => c.id === channelId);
 
+  const filter = usePublicationsStore((state) => state.filter);
+  const dateFilter = usePublicationsStore((state) => state.dateFilter);
+  const currentPage = usePublicationsStore((state) => state.currentPage);
+  const setFilter = usePublicationsStore((state) => state.setFilter);
+  const setDateFilter = usePublicationsStore((state) => state.setDateFilter);
+  const setCurrentPage = usePublicationsStore((state) => state.setCurrentPage);
+
+  const { posts, loadingPosts } = usePostsByChannel(channelId);
+  const { postsArchived } = useGetArchivedPosts(channelId);
+  const selectedChannel = userChannels.find((c) => c.id === channelId);
+
+  const [itemsPerPage, setItemsPerPage] = useState(itemsPerPageDefault);
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth < 768) setItemsPerPage(itemsPerPageMob);
@@ -54,27 +49,24 @@ const PublicationsPopup = () => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  useEffect(() => setCurrentPage(1), [dateFilter, filter]);
-
   const basePosts = useMemo(() => {
     if (filter === "archive") return postsArchived || [];
-    if (filter === "premoderation") return posts?.filter(p => p.status === "PENDING_MODERATION") || [];
+    if (filter === "premoderation")
+      return posts?.filter((p) => p.status === "PENDING_MODERATION") || [];
     return posts || [];
   }, [filter, posts, postsArchived]);
 
   const filteredPostsByDate = useMemo(() => {
     if (!basePosts) return [];
     let result = [...basePosts];
-
     const now = new Date();
 
     switch (dateFilter.period) {
       case "year":
-        if (dateFilter.value) {
+        if (dateFilter.value)
           result = result.filter(
             (p) => new Date(p.createdAt).getUTCFullYear() === dateFilter.value
           );
-        }
         break;
       case "month":
         if (dateFilter.value) {
@@ -87,41 +79,37 @@ const PublicationsPopup = () => {
         break;
       case "week":
         if (dateFilter.value) {
-          const threshold = new Date(now.getTime() - dateFilter.value * 24 * 60 * 60 * 1000);
+          const threshold = new Date(
+            now.getTime() - dateFilter.value * 24 * 60 * 60 * 1000
+          );
           result = result.filter((p) => new Date(p.createdAt) >= threshold);
         }
         break;
-      default:
-        break;
     }
 
-    result.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    result.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
     return result;
   }, [basePosts, dateFilter]);
 
   const allPostsCount = posts?.length || 0;
-  const allPremoderationCount = posts?.filter(p => p.status === "PENDING_MODERATION").length || 0;
+  const allPremoderationCount =
+    posts?.filter((p) => p.status === "PENDING_MODERATION").length || 0;
   const allArchivedCount = postsArchived?.length || 0;
 
-  const totalPages = filteredPostsByDate.length
-    ? Math.ceil(filteredPostsByDate.length / itemsPerPage)
-    : 0;
-
+  const totalPages = Math.ceil(filteredPostsByDate.length / itemsPerPage);
   const indexOfLast = currentPage * itemsPerPage;
   const indexOfFirst = indexOfLast - itemsPerPage;
   const currentItems = filteredPostsByDate.slice(indexOfFirst, indexOfLast);
 
   const dateValueOptions = useMemo(() => {
     const now = new Date();
-
     if (dateFilter.period === "year") {
       const currentYear = now.getFullYear();
-      return Array.from({ length: 5 }, (_, i) => {
-        const year = currentYear - i;
-        return { value: year, label: year.toString() };
-      });
+      return Array.from({ length: 5 }, (_, i) => ({
+        value: currentYear - i,
+        label: (currentYear - i).toString(),
+      }));
     }
-
     if (dateFilter.period === "month") {
       const year = now.getFullYear();
       return Array.from({ length: 12 }, (_, i) => ({
@@ -129,7 +117,6 @@ const PublicationsPopup = () => {
         label: new Date(year, i).toLocaleString("ru", { month: "long" }),
       }));
     }
-
     if (dateFilter.period === "week") {
       return [
         { value: 7, label: "Последние 7 дней" },
@@ -137,22 +124,18 @@ const PublicationsPopup = () => {
         { value: 21, label: "Последние 21 день" },
       ];
     }
-
     return [];
   }, [dateFilter.period]);
-
+  
   const getPaginationRange = (current, total, max = 3) => {
     if (total <= max) return Array.from({ length: total }, (_, i) => i + 1);
-
     const half = Math.floor(max / 2);
     let start = Math.max(current - half, 1);
     let end = start + max - 1;
-
     if (end > total) {
       end = total;
       start = end - max + 1;
     }
-
     return Array.from({ length: max }, (_, i) => start + i);
   };
 
@@ -167,6 +150,7 @@ const PublicationsPopup = () => {
             Общие посты <span>{allPostsCount}</span>
           </PublicationsFilter>
         </SwiperSlideHead>
+
         <SwiperSlideHead>
           <PublicationsFilter
             $active={filter === "premoderation"}
@@ -175,6 +159,7 @@ const PublicationsPopup = () => {
             Премодерация <span>{allPremoderationCount}</span>
           </PublicationsFilter>
         </SwiperSlideHead>
+
         <SwiperSlideHead>
           <PublicationsFilter
             $active={filter === "archive"}
@@ -183,6 +168,7 @@ const PublicationsPopup = () => {
             Архив <span>{allArchivedCount}</span>
           </PublicationsFilter>
         </SwiperSlideHead>
+
         <SwiperSlideHead>
           <CustomSelectSec
             placeholder="Выбор даты"
@@ -200,6 +186,7 @@ const PublicationsPopup = () => {
             fs="24px"
           />
         </SwiperSlideHead>
+
         {dateFilter.period !== "all" && (
           <SwiperSlideHead>
             <CustomSelectSec
@@ -222,11 +209,26 @@ const PublicationsPopup = () => {
             {currentItems.length > 0 ? (
               currentItems.map((item) =>
                 filter === "premoderation" ? (
-                  <CardPablishPremoderation key={item.id} item={item} channelId={channelId} selectedChannel={selectedChannel} />
+                  <CardPablishPremoderation
+                    key={item.id}
+                    item={item}
+                    channelId={channelId}
+                    selectedChannel={selectedChannel}
+                  />
                 ) : filter === "archive" ? (
-                  <CardArhive key={item.id} item={item} channelId={channelId} selectedChannel={selectedChannel} />
+                  <CardArhive
+                    key={item.id}
+                    item={item}
+                    channelId={channelId}
+                    selectedChannel={selectedChannel}
+                  />
                 ) : (
-                  <CardPablish key={item.id} item={item} bg selectedChannel={selectedChannel} />
+                  <CardPablish
+                    key={item.id}
+                    item={item}
+                    bg
+                    selectedChannel={selectedChannel}
+                  />
                 )
               )
             ) : (
@@ -234,8 +236,8 @@ const PublicationsPopup = () => {
                 {filter === "premoderation"
                   ? "Постов на премодерации пока нет"
                   : filter === "archive"
-                    ? "Архивных постов пока нет"
-                    : "Постов пока нет"}
+                  ? "Архивных постов пока нет"
+                  : "Постов пока нет"}
               </EmptyState>
             )}
           </PublicationsList>
@@ -243,7 +245,9 @@ const PublicationsPopup = () => {
           {totalPages > 1 && (
             <PaginationWrapper>
               {currentPage > 1 && (
-                <PageBtn onClick={() => setCurrentPage(currentPage - 1)}>←</PageBtn>
+                <PageBtn onClick={() => setCurrentPage(currentPage - 1)}>
+                  ←
+                </PageBtn>
               )}
 
               {currentPage > 3 && (
@@ -273,7 +277,9 @@ const PublicationsPopup = () => {
               )}
 
               {currentPage < totalPages && (
-                <PageBtn onClick={() => setCurrentPage(currentPage + 1)}>→</PageBtn>
+                <PageBtn onClick={() => setCurrentPage(currentPage + 1)}>
+                  →
+                </PageBtn>
               )}
             </PaginationWrapper>
           )}
@@ -290,13 +296,13 @@ const PublicationsHead = styled(Swiper)`
   padding: 0 56px;
   min-height: max-content;
   margin: 0;
-  overflow: visible;
+  padding-bottom: 200px;
 
   @media (max-width: 1600px) {
-    padding: 0 32px;
+    padding: 0 32px 200px;
   }
   @media (max-width: 768px) {
-    padding: 0 24px;
+    padding: 0 24px 200px;
   }
 `;
 const SwiperSlideHead = styled(SwiperSlide)`
@@ -325,7 +331,7 @@ const PublicationsFilter = styled.p`
 
 const PublicationsList = styled.div`
   display: grid;
-  margin-top: 50px;
+  margin-top: -150px;
   gap: 16px 24px;
   padding: 0 56px ;
   grid-template-columns: repeat(3, 1fr);

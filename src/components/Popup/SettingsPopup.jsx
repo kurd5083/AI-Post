@@ -218,7 +218,7 @@ const SettingsPopup = () => {
                         <span>{channel?.workMode === "AUTOPOSTING" && "Автопостинг"}</span>
                       </ContentRightColumn>
                     ) : item.key == 'filtering' ? (
-                      <ContentRightColumn>
+                      <ContentRightColumn style={{ minWidth: "300px" }}>
                         <span>Ключевые слова: {channel?.keywords?.join(', ')}</span>
                         <span>Стоп-слова: {channel?.stopWords?.join(', ')}</span>
                       </ContentRightColumn>
@@ -287,6 +287,7 @@ const PopupContentTitle = styled.h2`
 const PopupContentItem = styled.li`
   display: flex;
   justify-content: space-between;
+  flex-wrap: wrap;
   gap: 20px;
   align-items: center;
   padding: 24px 0;
@@ -348,6 +349,9 @@ const PopupContentRight = styled.div`
   display: flex;
   align-items: center;
   gap: 16px;
+  @media(max-width: 768px) {
+    flex: 1;
+  }
 `
 const ContentRightColumn = styled.div`
   display: flex;
@@ -355,6 +359,10 @@ const ContentRightColumn = styled.div`
   align-items: flex-end;
   gap: 5px;
   text-align: right;
+  @media(max-width: 768px) {
+    width: 100%;
+    justify-content: flex-end;
+    }
   span {
     display: -webkit-box;
     -webkit-line-clamp: 2;
@@ -362,7 +370,8 @@ const ContentRightColumn = styled.div`
     overflow: hidden;
     white-space: normal;
     text-overflow: ellipsis;
-    max-width: 500px;
+    max-width: 450px;
+    /* min-width: 200px; */
   }
 `
 const PopupContentCounter = styled.p`

@@ -1,10 +1,13 @@
 import styled from "styled-components";
 import CustomSelectSec from "@/shared/CustomSelectSec";
 import { MONTH_OPTIONS, YEAR_OPTIONS } from "@/data/calendarDatas";
+import { useCalendarPopupStore } from "@/store/calendarPopupStore";
 
 const getDaysInMonth = (y, m) => new Date(y, m + 1, 0).getDate();
 
-export const CalendarHeader = ({ selectedDate, syncDate }) => {
+const CalendarHeader = () => {
+  const { selectedDate, syncDate } = useCalendarPopupStore();
+
   const dayOptions = Array.from(
     { length: getDaysInMonth(selectedDate.getFullYear(), selectedDate.getMonth()) },
     (_, i) => ({ value: i + 1, label: String(i + 1) })
@@ -20,7 +23,7 @@ export const CalendarHeader = ({ selectedDate, syncDate }) => {
           const newDate = new Date(Date.UTC(
             selectedDate.getFullYear(),
             selectedDate.getMonth(),
-            o.value 
+            o.value
           ));
           syncDate(newDate);
         }}
@@ -34,8 +37,8 @@ export const CalendarHeader = ({ selectedDate, syncDate }) => {
         value={selectedDate.getMonth()}
         onChange={(o) => {
           const newDate = new Date(Date.UTC(
+            selectedDate.getFullYear(),
             o.value,
-            selectedDate.getMonth(),
             selectedDate.getDate()
           ));
           syncDate(newDate);

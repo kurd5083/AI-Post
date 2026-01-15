@@ -16,6 +16,7 @@ import { useNotificationStore } from "@/store/notificationStore";
 import { getPostsById } from "@/api/posts/getPostsById";
 
 const CalendarPostsList = ({ posts }) => {
+  console.log(posts)
   const [publishingPosts, setPublishingPosts] = useState({});
 
   const { popup, changeContent } = usePopupStore();
@@ -27,12 +28,13 @@ const CalendarPostsList = ({ posts }) => {
 
   const formatTime = (dateStr) => {
     const d = new Date(dateStr);
-    const hours = String(d.getHours()).padStart(2, "0");
-    const minutes = String(d.getMinutes()).padStart(2, "0");
+    const hours = String(d.getUTCHours()).padStart(2, "0");
+    const minutes = String(d.getUTCMinutes()).padStart(2, "0");
     return `${hours}:${minutes}`;
   };
 
   const handleEye = async (post) => {
+    console.log(post)
     if (!post?.postId) {
       addNotification("Не удалось открыть пост: нет ID", "error");
       return;
@@ -60,7 +62,7 @@ const CalendarPostsList = ({ posts }) => {
   };
 
   const handlePublishNow = (post) => {
-    const postId = post.id;
+    const postId = post.postId;
     const channelId = post.channelId;
 
     setPublishingPosts(prev => ({ ...prev, [postId]: true }));
@@ -81,7 +83,6 @@ const CalendarPostsList = ({ posts }) => {
     );
   };
 
-
   return (
     <ListContainer>
       {posts.map((post) => (
@@ -92,7 +93,18 @@ const CalendarPostsList = ({ posts }) => {
             <Description>{post.description}</Description>
             <Meta>
               <MetaItem><strong>Канал:</strong> {post.channelId}</MetaItem>
-              <MetaItem><strong>Запланировано:</strong> {new Date(post.scheduledAt).toLocaleString()}</MetaItem>
+              <MetaItem>
+                <strong>Запланировано:</strong>
+                {(() => {
+                  const d = new Date(post.scheduledAt);
+                  const day = String(d.getUTCDate()).padStart(2, "0");
+                  const month = String(d.getUTCMonth() + 1).padStart(2, "0");
+                  const year = d.getUTCFullYear();
+                  const hours = String(d.getUTCHours()).padStart(2, "0");
+                  const minutes = String(d.getUTCMinutes()).padStart(2, "0");
+                  return `${day}.${month}.${year} ${hours}:${minutes}`;
+                })()}
+              </MetaItem>
             </Meta>
           </Content>
           <ButtonsContainer>
@@ -102,10 +114,10 @@ const CalendarPostsList = ({ posts }) => {
               $width="100%"
               $bg="transporent"
               $color="#D6DCEC"
-              onClick={() => handlePublishNow(post)} // передаем весь объект
-              disabled={publishingPosts[post.id]}    // используем post.id
+              onClick={() => handlePublishNow(post)}
+              disabled={publishingPosts[post.postId]}
             >
-              {publishingPosts[post.id] ? "Публикация..." : "Опубликовать сейчас"}
+              {publishingPosts[post.postId] ? "Публикация..." : "Опубликовать сейчас"}
             </BtnBase>
             <Buttons>
               <ButtonEye onClick={() => handleEye(post)}>

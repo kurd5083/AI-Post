@@ -47,14 +47,30 @@ const ChangeTimePopupCard = () => {
 		const fixedHours = hoursState.padStart(2, "0");
 		const fixedMinutes = minutesState.padStart(2, "0");
 
-		const baseDate = new Date(date);
-		baseDate.setUTCHours(parseInt(fixedHours, 10));
-		baseDate.setUTCMinutes(parseInt(fixedMinutes, 10));
-		baseDate.setSeconds(0);
-		baseDate.setMilliseconds(0);
+		const selected = date || new Date();
+
+		const baseDateUTC = new Date(Date.UTC(
+			selected.getFullYear(),
+			selected.getMonth(),
+			selected.getDate(),
+			parseInt(fixedHours, 10),
+			parseInt(fixedMinutes, 10),
+			0,
+			0
+		));
 
 		const now = new Date();
-		if (baseDate < now) {
+		const nowUTCms = Date.UTC(
+			now.getUTCFullYear(),
+			now.getUTCMonth(),
+			now.getUTCDate(),
+			now.getUTCHours(),
+			now.getUTCMinutes(),
+			now.getUTCSeconds(),
+			now.getUTCMilliseconds()
+		);
+
+		if (baseDateUTC.getTime() < nowUTCms) {
 			return addNotification("Нельзя выбрать дату и время в прошлом", "info");
 		}
 
@@ -62,7 +78,7 @@ const ChangeTimePopupCard = () => {
 			{
 				postId,
 				channelId,
-				publishedAt: baseDate.toISOString(),
+				publishedAt: baseDateUTC.toISOString(),
 			},
 			{
 				onSuccess: () => {

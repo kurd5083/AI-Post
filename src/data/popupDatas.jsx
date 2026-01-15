@@ -254,7 +254,7 @@ export const popupDatas = [
         extra: {
             background: "#1F326B",
             image: '',
-            svg: <EyeIcon color="#336CFF" width={24} height={24} />
+            svg: <EyeIcon color="#336CFF" hoverColor="#336CFF" width={24} height={24} />
         }
     },
 ]

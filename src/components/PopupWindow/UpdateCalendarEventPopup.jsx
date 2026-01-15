@@ -12,13 +12,23 @@ import ru from "date-fns/locale/ru";
 registerLocale("ru", ru);
 
 const UpdateCalendarEventPopup = () => {
-  const { goBack, popup } = usePopupStore();
+  const { goBack, popup, closePopup } = usePopupStore();
   const { addNotification } = useNotificationStore();
 
   const event = popup?.data?.event;
   const { mutate: updateEvent, isPending: updatingPending } = useUpdateCalendarEvent();
 
   const [scheduledAt, setScheduledAt] = useState('');
+
+   const getDateFromUtc = (utcString) => {
+    if (!utcString) return null;
+    const d = new Date(utcString);
+    return new Date(d.getTime() + d.getTimezoneOffset() * 60000);
+  };
+
+  const getUtcString = (date) => {
+    return new Date(date.getTime() - date.getTimezoneOffset() * 60000).toISOString();
+  };
 
   useEffect(() => {
     setScheduledAt(event.scheduledAt);
@@ -37,7 +47,7 @@ const UpdateCalendarEventPopup = () => {
       {
         onSuccess: () => {
           addNotification("Событие успешно обновлено", "update");
-          goBack();
+          popup && popup?.previousPage.length > 0 ? goBack() : closePopup()
         },
         onError: () => addNotification("Ошибка при обновлении события", "error"),
       }
@@ -48,14 +58,14 @@ const UpdateCalendarEventPopup = () => {
     <div>
       <PopupHead>
         <HeadTitle>Редактировать событие</HeadTitle>
-        <CloseButton onClick={() => goBack()}>
+        <CloseButton onClick={() => popup && popup?.previousPage.length > 0 ? goBack() : closePopup()}>
           <CloseIcon color="#336CFF" />
         </CloseButton>
       </PopupHead>
       <InputLabel>Дата и время</InputLabel>
       <StyledDatePicker
-        selected={scheduledAt ? new Date(scheduledAt) : null}
-        onChange={(date) => setScheduledAt(date.toISOString())}
+        selected={scheduledAt ? getDateFromUtc(scheduledAt) : null}
+        onChange={(date) => setScheduledAt(getUtcString(date))}
         locale="ru"
         showTimeSelect
         timeIntervals={5}
@@ -75,7 +85,7 @@ const UpdateCalendarEventPopup = () => {
           {updatingPending ? "Обновление..." : "Обновить"}
         </BtnBase>
         <BtnBase
-          onClick={() => goBack()}
+          onClick={() => popup && popup?.previousPage.length > 0 ? goBack() : closePopup()}
           $color="#D6DCEC"
           $bg="#242A3A"
         >

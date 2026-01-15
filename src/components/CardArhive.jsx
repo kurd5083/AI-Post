@@ -25,7 +25,7 @@ const CardArhive = ({ item, bg, selectedChannel }) => {
   const { addPost } = usePostsStore();
   const { changeContent } = usePopupStore();
   const { addNotification } = useNotificationStore();
-
+  console.log(item)
   const { mutate: deletePost, isPending: deletePending } = useDeletePost();
   const { mutate: sendPost, isPending: isSendPending } = useSendPostToChannel();
   const { mutate: archivePost } = useArchivePost();
@@ -54,25 +54,6 @@ const CardArhive = ({ item, bg, selectedChannel }) => {
     changeContent('create_post', 'popup')
   };
 
-  const handlePublishNow = () => {
-    if (!item.summary) return addNotification("Нельзя публиковать пустой пост", "info");
-    const channelId = selectedChannel?.id;
-    const telegramId = selectedChannel?.ownerTelegramId;
-    const serverPostId = item.id;
-
-    sendPost(
-      { postId: serverPostId, channelId, channelTelegramId: telegramId },
-      {
-        onSuccess: () => {
-          archivePost(item.id);
-          // deletePost(item.id);
-          addNotification("Пост успешно опубликован", "success");
-        },
-        onError: (err) => addNotification(err.message || "Ошибка публикации поста", "error"),
-      }
-    );
-  };
-
   return (
     <CardPablishItem $bg={bg}>
       <CardPablishItemHead>
@@ -85,15 +66,17 @@ const CardArhive = ({ item, bg, selectedChannel }) => {
           <p>{selectedChannel.name}</p>
         </CardPablishItemName>
           <CardPablishItemTime>
-            <p>Дата создания поста:</p>
-            <span>
-              {new Date(item.createdAt).toLocaleDateString("ru-RU")}{" "}
-              {new Date(item.createdAt).toLocaleTimeString("ru-RU", {
+          <p>Дата публикации поста: </p>
+          <span>
+            {item.publishedAt
+              ? new Date(item.publishedAt).toLocaleDateString("ru-RU") + " " +
+              new Date(item.publishedAt).toLocaleTimeString("ru-RU", {
                 hour: "2-digit",
                 minute: "2-digit",
-              })}
-            </span>
-          </CardPablishItemTime>  
+              })
+              : "Дата не указана"}
+          </span>
+        </CardPablishItemTime>
       </CardPablishItemHead>
       <CardPablishImages>
         {item.images.slice(0, MAX_VISIBLE_IMAGES).map((elem, index) => {
@@ -130,7 +113,7 @@ const CardArhive = ({ item, bg, selectedChannel }) => {
         dangerouslySetInnerHTML={{ __html: item.summary }}
       />
       <CardPablishButtons>
-        <BtnBase
+        {/* <BtnBase
           $padding="16px 12px"
           $border
           $width="100%"
@@ -140,7 +123,7 @@ const CardArhive = ({ item, bg, selectedChannel }) => {
           disabled={isSendPending}
         >
           {isSendPending ? "Публикация..." : "Опубликовать сейчас"}
-        </BtnBase>
+        </BtnBase> */}
         <CardButton onClick={() => changeContent('live_preview_popup', 'popup', { selectedPost: item, channelId: selectedChannel?.id })}>
           <EyeIcon />
         </CardButton>

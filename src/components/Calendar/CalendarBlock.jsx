@@ -9,6 +9,7 @@ const CalendarBlock = () => {
 	const today = new Date();
 	const [currentDate, setCurrentDate] = useState(today);
 	const { selectedDate, setSelectedDate } = useCalendarStore();
+	
 	useEffect(() => {
 		const startISO = new Date(
 			Date.UTC(today.getFullYear(), today.getMonth(), today.getDate(), 0, 0, 0, 0)
@@ -20,6 +21,7 @@ const CalendarBlock = () => {
 
 		setSelectedDate({ startISO, endISO });
 	}, []);
+
 	const days = useMemo(() => {
 		const year = currentDate.getFullYear();
 		const month = currentDate.getMonth();
@@ -43,16 +45,7 @@ const CalendarBlock = () => {
 				dateObj.getMonth() === new Date(selectedDate.startISO).getMonth() &&
 				dateObj.getDate() === new Date(selectedDate.startISO).getDate();
 
-			result.push({
-				day,
-				channels:
-					day === 1 || day === 15 || day === 26
-						? "1 канал"
-						: day === 17
-							? "3 канала"
-							: null,
-				active: isActive,
-			});
+			result.push({ day, active: isActive });
 		}
 
 		return result;

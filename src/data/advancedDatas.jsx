@@ -4,7 +4,6 @@ import text from "@/assets/popup/text.svg";
 import SourcePost from "@/icons/SourcePost";
 
 export const advancedDatas = [
-
   {
     key: 'forced_posting',
     title: "Принудительный постинг",

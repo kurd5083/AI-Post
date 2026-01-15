@@ -26,9 +26,17 @@ const CardAddPost = ({ item, bg, selectedChannel }) => {
   const selectedDate = popup?.data?.selectedDate;
 
   const { mutate: createEvent, isPending: creatingPending } = useCreateCalendarEvent();
+  const getDateFromUtc = (utcString) => {
+    if (!utcString) return null;
+    const d = new Date(utcString);
+    return new Date(d.getTime() + d.getTimezoneOffset() * 60000);
+  };
 
+  const getUtcString = (date) => {
+    return new Date(date.getTime() - date.getTimezoneOffset() * 60000).toISOString();
+  };
   useEffect(() => {
-    setScheduledAt(new Date(selectedDate).toISOString());
+    setScheduledAt(getUtcString(new Date(selectedDate)));
   }, [selectedDate]);
 
   const handleSave = (postId) => {
@@ -37,16 +45,16 @@ const CardAddPost = ({ item, bg, selectedChannel }) => {
       return;
     }
     const scheduledAtValue = scheduledAt;
-      createEvent(
-        { channelId, description: '', scheduledAt: scheduledAtValue, postId },
-        {
-          onSuccess: () => {
-            addNotification("Событие успешно создано", "success");
-            goBack();
-          },
-          onError: (err) => addNotification(err.message || "Ошибка при создании события", "error"),
-        }
-      );
+    createEvent(
+      { channelId, description: '', scheduledAt: scheduledAtValue, postId },
+      {
+        onSuccess: () => {
+          addNotification("Событие успешно создано", "success");
+          goBack();
+        },
+        onError: (err) => addNotification(err.message || "Ошибка при создании события", "error"),
+      }
+    );
   };
 
   return (
@@ -105,24 +113,46 @@ const CardAddPost = ({ item, bg, selectedChannel }) => {
         dangerouslySetInnerHTML={{ __html: item.summary }}
       />
       <StyledDatePicker
-  selected={scheduledAt ? new Date(scheduledAt) : null}
-  onChange={(date) => {
-    const now = new Date();
-    if (date < now) {
-      addNotification("Нельзя выбрать дату и время в прошлом", "error");
-      return;
-    }
-    setScheduledAt(date.toISOString());
-  }}
-  locale="ru"
-  showTimeSelect
-  timeIntervals={5}
-  dateFormat="yyyy-MM-dd HH:mm"
-  wrapperClassName="picker-wrapper"
-  calendarClassName="dark-calendar"
-  className="picker-input"
-  minDate={new Date()}
-/>
+        selected={scheduledAt ? getDateFromUtc(scheduledAt) : null}
+        onChange={(date) => {
+          if (!date) return;
+
+          const selectedUTC = new Date(Date.UTC(
+            date.getFullYear(),
+            date.getMonth(),
+            date.getDate(),
+            date.getHours(),
+            date.getMinutes(),
+            0,
+            0
+          ));
+
+          const nowUTCms = Date.UTC(
+            new Date().getUTCFullYear(),
+            new Date().getUTCMonth(),
+            new Date().getUTCDate(),
+            new Date().getUTCHours(),
+            new Date().getUTCMinutes(),
+            new Date().getUTCSeconds(),
+            new Date().getUTCMilliseconds()
+          );
+
+          if (selectedUTC.getTime() < nowUTCms) {
+            addNotification("Нельзя выбрать дату и время в прошлом", "error");
+            return;
+          }
+
+          setScheduledAt(selectedUTC.toISOString());
+        }}
+        locale="ru"
+        showTimeSelect
+        timeIntervals={5}
+        dateFormat="yyyy-MM-dd HH:mm"
+        wrapperClassName="picker-wrapper"
+        calendarClassName="dark-calendar"
+        className="picker-input"
+        minDate={new Date()}
+      />
       <CardAddButtons>
         <BtnBase
           $padding="16px 24px"

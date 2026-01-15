@@ -1,24 +1,24 @@
 import styled from "styled-components";
 import BtnBase from "@/shared/BtnBase";
-import { usePopupStore } from "@/store/popupStore"
+import { usePopupStore } from "@/store/popupStore";
+import { useCalendarPopupStore } from "@/store/calendarPopupStore";
 
 const safeDate = (value) => {
   const d = new Date(value);
   return isNaN(d.getTime()) ? null : d;
 };
 
-const dayKeyUTC = (d) =>
-  `${d.getUTCFullYear()}-${d.getUTCMonth() + 1}-${d.getUTCDate()}`;
+const dayKeyUTC = (d) => `${d.getUTCFullYear()}-${d.getUTCMonth() + 1}-${d.getUTCDate()}`;
 
-export const CalendarFooter = ({ events, channelId, selectedDate }) => {
+const CalendarFooter = ({ events, channelId }) => {
   const { changeContent } = usePopupStore();
-  
+  const { selectedDate } = useCalendarPopupStore();
+
   const selectedKey = dayKeyUTC(selectedDate);
 
   const hasEvents = events.some((e) => {
     const d = safeDate(e.scheduledAt);
     if (!d) return false;
-
     return dayKeyUTC(d) === selectedKey;
   });
 
@@ -28,10 +28,7 @@ export const CalendarFooter = ({ events, channelId, selectedDate }) => {
         <BtnBase
           onClick={(e) => {
             e.stopPropagation();
-            changeContent("add_post", "popup", {
-              selectedDate,
-              channelId
-            });
+            changeContent("add_post", "popup", { selectedDate, channelId });
           }}
           $color="#AC60FD"
           $bg="#1F203D"
@@ -41,9 +38,7 @@ export const CalendarFooter = ({ events, channelId, selectedDate }) => {
       </CalendarButton>
 
       <CalendarText>
-        {hasEvents
-          ? "Запланированные посты:"
-          : "На этот день нету запланированных постов"}
+        {hasEvents ? "Запланированные посты:" : "На этот день нету запланированных постов"}
       </CalendarText>
     </>
   );

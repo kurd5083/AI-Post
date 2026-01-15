@@ -10,8 +10,10 @@ export const useDeletePost = () => {
     mutationFn: (postId) => deletePost(postId),
 
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["posts-by-channel"] });
+      queryClient.invalidateQueries(["posts-by-channel"]);
+      queryClient.invalidateQueries(["posts-by-channel-archived"]);
       addNotification("Пост удалён", "delete")
+
     },
     onError: (err) =>
         addNotification(err?.message || "Ошибка удаления поста", "error"),
