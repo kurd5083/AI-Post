@@ -9,7 +9,7 @@ const CalendarBlock = () => {
 	const today = new Date();
 	const [currentDate, setCurrentDate] = useState(today);
 	const { selectedDate, setSelectedDate } = useCalendarStore();
-	
+
 	useEffect(() => {
 		const startISO = new Date(
 			Date.UTC(today.getFullYear(), today.getMonth(), today.getDate(), 0, 0, 0, 0)
@@ -180,7 +180,9 @@ const Grid = styled.div`
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   gap: 24px 16px;
+	min-width: 830px;
   @media(max-width: 1600px) { gap: 24px 8px; }
+	
 `;
 const DayCard = styled.div`
   box-sizing: border-box;

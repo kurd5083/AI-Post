@@ -101,11 +101,15 @@ const CalendarContent = styled.div`
   grid-template-rows: min-content;
   align-items: end;
   gap: 64px;
-  grid-template-columns: 440px 440px 1fr 1fr 1fr;
+  grid-template-columns: 410px 410px 1fr 1fr 1fr;
   grid-template-rows: min-content;
   align-items: end;
   @media(max-width: 1600px) {
     gap: 40px;
+    grid-template-columns: 380px 380px 1fr 1fr 1fr;
+  }
+  @media(max-width: 1400px) {
+    grid-template-columns: repeat(5, 1fr);
   }
 `;
 const CalendarGrid = styled.div`
