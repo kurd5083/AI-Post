@@ -17,7 +17,7 @@ const PopupHead = () => {
     <>
       {popup.content !== 'notifications' && popup.content !== 'replenish' && popup.content !== 'upload_media' && popup.content !== 'profile' && popup.content !== 'create_post' && (
         <PopupListInfo>
-          {popup.content != 'settings' && <PopupArrow src={arrow} alt="arrow icon" width={8} height={16} onClick={goBack} />}
+          {popup.content != 'settings' && popup.previousPage?.length !== 0 && <PopupArrow src={arrow} alt="arrow icon" width={8} height={16} onClick={goBack} />}
           {channel?.avatarUrl ? (
             <PopupListAva src={channel?.avatarUrl} alt="ava icon" width={48} height={48} />
           ) : (
