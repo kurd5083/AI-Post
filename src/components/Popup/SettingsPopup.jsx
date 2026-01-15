@@ -18,13 +18,6 @@ import { useChannelScheduleStatus } from "@/lib/channels/schedule/useChannelSche
 import { useChannelInterval } from "@/lib/channels/useChannelInterval";
 import { useCalendarEventsByRange } from "@/lib/calendar/useCalendarEventsByRange";
 
-
-
-
-
-
-
-
 const SettingsPopup = () => {
   const { changeContent, popup } = usePopupStore();
   const { user } = useUser();
@@ -55,7 +48,7 @@ const SettingsPopup = () => {
   )).toISOString();
 
   const { events } = useCalendarEventsByRange(startISO, endISO);
-
+  const filteredEvents = events?.filter( event => event.channelId === channelId);
   const { addNotification } = useNotificationStore();
 
   const [localSwitches, setLocalSwitches] = useState({
@@ -256,7 +249,7 @@ const SettingsPopup = () => {
                   item.key == 'publications' ? (
                     <PopupContentCounter>{posts?.length || 0}</PopupContentCounter>
                   ) : item.key == 'calendar' && (
-                    <PopupContentCounter>{events?.length || 0}</PopupContentCounter>
+                    <PopupContentCounter>{filteredEvents?.length || 0}</PopupContentCounter>
                   )
                 )}
               </PopupContentItem>

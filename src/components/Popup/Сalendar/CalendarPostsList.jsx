@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 import styled from "styled-components";
 import { useDeleteCalendarEvent } from "@/lib/calendar/useDeleteCalendarEvent";
 import { useSendPostToChannel } from "@/lib/posts/useSendPostToChannel";
@@ -11,9 +13,11 @@ import BtnBase from "@/shared/BtnBase";
 import { usePopupStore } from "@/store/popupStore"
 import { useNotificationStore } from "@/store/notificationStore";
 
-import { getPostsById } from "@/api/posts/getPostsById"; 
+import { getPostsById } from "@/api/posts/getPostsById";
 
 const CalendarPostsList = ({ posts }) => {
+  const [publishingPosts, setPublishingPosts] = useState({});
+
   const { popup, changeContent } = usePopupStore();
   const telegramId = popup?.data?.telegramId;
 
@@ -27,8 +31,8 @@ const CalendarPostsList = ({ posts }) => {
     const minutes = String(d.getMinutes()).padStart(2, "0");
     return `${hours}:${minutes}`;
   };
-  
-    const handleEye = async (post) => {
+
+  const handleEye = async (post) => {
     if (!post?.postId) {
       addNotification("Не удалось открыть пост: нет ID", "error");
       return;
@@ -55,17 +59,28 @@ const CalendarPostsList = ({ posts }) => {
     deleteMutation(post.id);
   };
 
-  const handlePublishNow = ({ postId, channelId }) => {
+  const handlePublishNow = (post) => {
+    const postId = post.id;
+    const channelId = post.channelId;
+
+    setPublishingPosts(prev => ({ ...prev, [postId]: true }));
+
     sendPost(
       { postId, channelId, channelTelegramId: telegramId },
       {
         onSuccess: () => {
           addNotification("Пост успешно опубликован", "success");
         },
-        onError: (err) => addNotification(err.message || "Ошибка публикации поста", "error"),
+        onError: (err) => {
+          addNotification(err.message || "Ошибка публикации поста", "error");
+        },
+        onSettled: () => {
+          setPublishingPosts(prev => ({ ...prev, [postId]: false }));
+        },
       }
     );
   };
+
 
   return (
     <ListContainer>
@@ -87,10 +102,10 @@ const CalendarPostsList = ({ posts }) => {
               $width="100%"
               $bg="transporent"
               $color="#D6DCEC"
-              onClick={() => handlePublishNow({ postId: post.postId, channelId: post.channelId })}
-              disabled={isSendPending}
+              onClick={() => handlePublishNow(post)} // передаем весь объект
+              disabled={publishingPosts[post.id]}    // используем post.id
             >
-              {isSendPending ? "Публикация..." : "Опубликовать сейчас"}
+              {publishingPosts[post.id] ? "Публикация..." : "Опубликовать сейчас"}
             </BtnBase>
             <Buttons>
               <ButtonEye onClick={() => handleEye(post)}>
