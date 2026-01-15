@@ -20,7 +20,7 @@ import TimeIcon from "@/icons/TimeIcon";
 
 const MAX_VISIBLE_IMAGES = 3;
 
-const CardPablish = ({ item, bg, selectedChannel }) => {
+const CardArhive = ({ item, bg, selectedChannel }) => {
   const { openLightbox } = useLightboxStore();
   const { addPost } = usePostsStore();
   const { changeContent } = usePopupStore();
@@ -152,7 +152,7 @@ const CardPablish = ({ item, bg, selectedChannel }) => {
             e.stopPropagation();
             changeContent("delete_confirm", "popup_window", {
               itemName: item.title,
-              onDelete: () => archivePost(item.id),
+              onDelete: () => deletePost(item.id),
             });
           }}
           disabled={deletePending}>
@@ -337,4 +337,4 @@ const CardButton = styled.button`
   }
 `
 
-export default CardPablish
+export default CardArhive

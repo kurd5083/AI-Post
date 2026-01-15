@@ -30,22 +30,22 @@ const OtherLayout = () => {
   const location = useLocation();
 
   useEffect(() => {
-    const handler = () => init();
-    window.addEventListener('pageshow', handler);
-    return () => window.removeEventListener('pageshow', handler);
-  }, []);
-
-  useEffect(() => {
-    closePopup();
-  }, [location.pathname, token, isAuthenticated]);
-
-
+      init();
+    }, [init]);
+  
+    useEffect(() => {
+      closePopup();
+    }, [location.pathname, token, isAuthenticated]);
+  
+    if (!isInitialized) {
+      return <p>Загрузка...</p>;
+    }
   return (
     <OtherContainer>
       <Sidebar/>
       <Main $blocked={!isAuthenticated || popup?.status}>
         <Header/>
-        {!isInitialized ? null : !isAuthenticated ? (
+        {!isAuthenticated ? (
           <AuthOverlay>
             <h2>Войдите в систему</h2>
             <p>Чтобы продолжить работу, авторизуйтесь через Telegram-бота.</p>

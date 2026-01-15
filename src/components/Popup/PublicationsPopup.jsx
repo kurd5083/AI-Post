@@ -6,6 +6,8 @@ import "swiper/css";
 
 import CardPablish from "@/components/CardPablish";
 import CardPablishPremoderation from "@/components/CardPablishPremoderation";
+import CardArhive from "@/components/CardArhive";
+
 import ModernLoading from "@/components/ModernLoading";
 
 import { usePostsByChannel } from "@/lib/posts/usePostsByChannel";
@@ -37,7 +39,8 @@ const PublicationsPopup = () => {
 
   const channelId = popup?.data?.channelId;
   const { posts, loadingPosts } = usePostsByChannel(channelId);
-  const { archivedPosts, loadingArchived } = useGetArchivedPosts(channelId);
+  console.log(posts, 'posts')
+  const { postsArchived, loadingArchived } = useGetArchivedPosts(channelId);
   const selectedChannel = userChannels.find(c => c.id === channelId);
 
   useEffect(() => {
@@ -54,9 +57,10 @@ const PublicationsPopup = () => {
   useEffect(() => setCurrentPage(1), [dateFilter, filter]);
 
   const basePosts = useMemo(() => {
-    if (filter === "archive") return archivedPosts || [];
+    if (filter === "archive") return postsArchived || [];
+    if (filter === "premoderation") return posts?.filter(p => p.status === "PENDING_MODERATION") || [];
     return posts || [];
-  }, [filter, posts, archivedPosts]);
+  }, [filter, posts, postsArchived]);
 
   const filteredPostsByDate = useMemo(() => {
     if (!basePosts) return [];
@@ -90,13 +94,14 @@ const PublicationsPopup = () => {
       default:
         break;
     }
+
     result.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
     return result;
-  }, [posts, dateFilter]);
+  }, [basePosts, dateFilter]);
 
-  const commonPostsCount = filteredPostsByDate.length;
-  const premoderationPostsCount = filteredPostsByDate.filter(p => p.status === "PENDING_MODERATION").length;
-  const archivedPostsCount = archivedPosts?.length || 0;
+  const allPostsCount = posts?.length || 0;
+  const allPremoderationCount = posts?.filter(p => p.status === "PENDING_MODERATION").length || 0;
+  const allArchivedCount = postsArchived?.length || 0;
 
   const totalPages = filteredPostsByDate.length
     ? Math.ceil(filteredPostsByDate.length / itemsPerPage)
@@ -159,16 +164,15 @@ const PublicationsPopup = () => {
             $active={filter === "common"}
             onClick={() => setFilter("common")}
           >
-            Общие посты <span>{commonPostsCount}</span>
+            Общие посты <span>{allPostsCount}</span>
           </PublicationsFilter>
         </SwiperSlideHead>
-
         <SwiperSlideHead>
           <PublicationsFilter
             $active={filter === "premoderation"}
             onClick={() => setFilter("premoderation")}
           >
-            Премодерация <span>{premoderationPostsCount}</span>
+            Премодерация <span>{allPremoderationCount}</span>
           </PublicationsFilter>
         </SwiperSlideHead>
         <SwiperSlideHead>
@@ -176,7 +180,7 @@ const PublicationsPopup = () => {
             $active={filter === "archive"}
             onClick={() => setFilter("archive")}
           >
-            Архив <span>{archivedPostsCount}</span>
+            Архив <span>{allArchivedCount}</span>
           </PublicationsFilter>
         </SwiperSlideHead>
         <SwiperSlideHead>
@@ -196,7 +200,6 @@ const PublicationsPopup = () => {
             fs="24px"
           />
         </SwiperSlideHead>
-
         {dateFilter.period !== "all" && (
           <SwiperSlideHead>
             <CustomSelectSec
@@ -220,6 +223,8 @@ const PublicationsPopup = () => {
               currentItems.map((item) =>
                 filter === "premoderation" ? (
                   <CardPablishPremoderation key={item.id} item={item} channelId={channelId} selectedChannel={selectedChannel} />
+                ) : filter === "archive" ? (
+                  <CardArhive key={item.id} item={item} channelId={channelId} selectedChannel={selectedChannel} />
                 ) : (
                   <CardPablish key={item.id} item={item} bg selectedChannel={selectedChannel} />
                 )

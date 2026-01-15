@@ -6,6 +6,9 @@ import CalendarBlock from '@/components/Calendar/CalendarBlock';
 import ThisDay from "@/components/Calendar/ThisDay";
 import AiGeneratorIcon from '@/icons/AiGeneratorIcon';
 
+
+
+
 const Calendar = () => {
   const { openPopup } = usePopupStore()
   return (
@@ -23,7 +26,7 @@ const Calendar = () => {
         <CalendarGrid>
           <CalendarBlock />
         </CalendarGrid>
-        <CalendarStatistic>
+        <CalendarStatistic >
           <StatisticTitle><AiGeneratorIcon color="#336CFF" />Статистика</StatisticTitle>
           <StatisticList>
             <div>

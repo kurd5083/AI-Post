@@ -6,6 +6,7 @@ import { useRejectPost } from "@/lib/posts/useRejectPost";
 import { useNotificationStore } from "@/store/notificationStore";
 import normalizeUrl from "@/lib/normalizeUrl";
 import AvaPlug from "@/shared/AvaPlug";
+import { useArchivePost } from "@/lib/posts/useArchivePost";
 
 const MAX_VISIBLE_IMAGES = 3;
 
@@ -15,6 +16,8 @@ const CardPablishPremoderation = ({ item, bg, channelId, selectedChannel }) => {
 
   const { mutate: approvePostMutation, isPending: isApprovePending } = useApprovePost();
   const { mutate: rejectPostMutation, isPending: isRejectPending } = useRejectPost();
+  const { mutate: archivePost } = useArchivePost();
+
 
   const handleApprove = () => {
     approvePostMutation(
@@ -146,7 +149,10 @@ const CardPablishItem = styled.div`
 
 const CardPablishItemHead = styled.div`
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
+  align-items: flex-start;
+  gap: 10px 20px;
 `;
 
 const CardPablishItemName = styled.div`
@@ -176,8 +182,14 @@ const CardPablishItemTime = styled.div`
   align-items: flex-end;
   font-size: 14px;
   font-weight: 700;
+  p {
+    text-align: right;
+    font-size: 13px;
+  }
   span {
-    color: #6A7080;
+    text-align: right;
+    font-size: 12px;
+    color:#6A7080;
   }
 `;
 

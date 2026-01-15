@@ -1,52 +1,116 @@
+import { useState, useEffect } from "react";
+import { useCalendarStore } from "@/store/calendarStore";
 import styled from "styled-components";
 import arrow from "@/assets/arrow.svg";
-import ava_icon from "@/assets/ava-icon.png";
 import CustomSelect from "@/shared/CustomSelect";
-import { postsDatas } from "@/data/postsDatas";
 import useFadeOnScroll from "@/lib/useFadeOnScroll";
+import { useCalendarEventsByRange } from "@/lib/calendar/useCalendarEventsByRange";
+import { useUserChannels } from "@/lib/channels/useUserChannels";
 
 const ThisDay = () => {
-	const { fadeVisible, ref } = useFadeOnScroll(20);
+  const { fadeVisible, ref } = useFadeOnScroll(20);
+  const { selectedDate, setSelectedDate } = useCalendarStore();
+  const { userChannels } = useUserChannels();
+
+  const [selectedChannel, setSelectedChannel] = useState(null);
+
+  useEffect(() => {
+    if (!selectedDate) {
+      const today = new Date();
+      const startISO = new Date(Date.UTC(
+        today.getFullYear(), today.getMonth(), today.getDate(), 0, 0, 0, 0
+      )).toISOString();
+
+      const endISO = new Date(Date.UTC(
+        today.getFullYear(), today.getMonth(), today.getDate(), 23, 59, 59, 999
+      )).toISOString();
+
+      setSelectedDate({ startISO, endISO });
+    }
+  }, [selectedDate]);
+
+  if (!selectedDate) return null;
+
+  const dateObj = new Date(selectedDate.startISO);
+
+  const changeDay = (direction) => {
+    const newDate = new Date(dateObj);
+    newDate.setDate(dateObj.getDate() + direction);
+
+    const startISO = new Date(Date.UTC(
+      newDate.getFullYear(), newDate.getMonth(), newDate.getDate(), 0, 0, 0, 0
+    )).toISOString();
+
+    const endISO = new Date(Date.UTC(
+      newDate.getFullYear(), newDate.getMonth(), newDate.getDate(), 23, 59, 59, 999
+    )).toISOString();
+
+    setSelectedDate({ startISO, endISO });
+  };
+
+  const dateString = dateObj.toLocaleDateString("ru-RU", {
+    day: "numeric",
+    month: "long",
+  });
+  console.log(selectedDate, 'selectedDate?.startISO')
+  const { events: posts, eventsLoading } = useCalendarEventsByRange(
+    selectedDate.startISO,
+    selectedDate.endISO
+  );
+  const filteredPosts = selectedChannel
+    ? posts?.filter(post => post.channelId === selectedChannel.value)
+    : posts;
+
   return (
     <DayWrapper>
       <DayHeader>
-        <Date>15 ноября</Date>
+        <DateText>{dateString}</DateText>
         <DayNav>
-          <DayNavButton><img src={arrow} alt="arrow icon" /></DayNavButton>
-          <DayNavButton><img src={arrow} alt="arrow icon" /></DayNavButton>
+          <DayNavButton onClick={() => changeDay(-1)}>
+            <img src={arrow} alt="arrow icon" />
+          </DayNavButton>
+          <DayNavButton onClick={() => changeDay(1)}>
+            <img src={arrow} alt="arrow icon" />
+          </DayNavButton>
         </DayNav>
       </DayHeader>
 
       <ChannelRow>
         <Label>Канал</Label>
         <CustomSelect
-          options={[
-            { icon: ava_icon, value: "Antropia Digital", label: "Antropia Digital" },
-          ]}
-				/>
+          options={userChannels?.map(c => ({
+            value: c.id,
+            label: c.name,
+            avatar: c.avatarUrl
+          }))}
+          value={selectedChannel?.value}
+          onChange={(option) => setSelectedChannel(option)}
+        />
       </ChannelRow>
 
       <SectionTitle>Посты в этот день:</SectionTitle>
 
       <Grid $fadeVisible={fadeVisible} ref={ref}>
-        {postsDatas.map((item, index) => (
-          <Card key={index}>
+        {eventsLoading && <p>Загрузка...</p>}
+        {filteredPosts?.map((item) => (
+          <Card key={item.id}>
             <CardHeader>
               <CardAuthor>
-                <CardAva src={item.ava} alt="ava icon" width={24} height={24}/>
+                <CardAva src={item.ava} alt="ava icon" width={24} height={24} />
                 <CardName>{item.username}</CardName>
               </CardAuthor>
               <CardEdit>Изменить</CardEdit>
             </CardHeader>
-            <CardPreview src={item.img} width={48} height={48}/>
+            {item.img && <CardPreview src={item.img} width={48} height={48} />}
             <CardTitle>{item.title}</CardTitle>
             <CardSubtitle>{item.description}</CardSubtitle>
             <CardFooter>
-              <CardTime>в 21:00</CardTime>
+              <CardTime>{item.time}</CardTime>
               <CardPublish>Опубликовать</CardPublish>
             </CardFooter>
           </Card>
         ))}
+        {filteredPosts?.length === 0 && !eventsLoading && <p>Нет постов</p>}
       </Grid>
     </DayWrapper>
   )
@@ -59,7 +123,7 @@ const DayHeader = styled.div`
   justify-content: space-between;
   align-items: center;
 `;
-const Date = styled.h2`
+const DateText = styled.h2`
   color: #336CFF;
   font-size: 24px;
   font-weight: 700;
@@ -117,7 +181,7 @@ const Grid = styled.div`
     backdrop-filter: blur(8px);
     mask-image: linear-gradient(to top, black 50%, transparent);
     transition: opacity 0.2s;
-    opacity: ${({$fadeVisible}) => $fadeVisible ? 1 : 0};
+    opacity: ${({ $fadeVisible }) => $fadeVisible ? 1 : 0};
     pointer-events: none;
 		z-index: 1;
     @media(max-width: 1400px) {
