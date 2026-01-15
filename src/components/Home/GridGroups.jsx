@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import del from "@/assets/del.svg";
 import setting from "@/assets/setting.svg";
@@ -10,14 +11,37 @@ import СhannelPlug from '@/shared/СhannelPlug';
 import { useUpdateUserAvatar } from '@/lib/channels/useUpdateUserAvatar';
 import edit from "@/assets/templates/edit.svg";
 import { useUploadMedia } from '@/lib/mediaLibrary/useUploadMedia';
+import { getPendingModerationCount } from '@/api/channels/getPendingModerationCount';
+import { useQueryClient } from "@tanstack/react-query";
 
 const GridGroups = () => {
   const { openPopup } = usePopupStore();
   const { selectedId } = useChannelsStore();
   const { channels, channelsPending } = useChannelsGroupedByFolders();
+
   const { mutate: deleteChannel } = useDeleteChannel();
   const { mutate: updateAvatar } = useUpdateUserAvatar();
   const { mutate: upload, isPending } = useUploadMedia();
+  const [pendingCounts, setPendingCounts] = useState({});
+  const queryClient = useQueryClient();
+  
+  useEffect(() => {
+    if (!channels) return;
+
+    const allChannels = [
+      ...(channels.channelsWithoutFolder || []),
+      ...channels.folders?.flatMap(folder => folder.channels) || []
+    ];
+
+    allChannels.forEach(async (channel) => {
+      try {
+        const data = await getPendingModerationCount(channel.id);
+        setPendingCounts(prev => ({ ...prev, [channel.id]: data.count || 0 }));
+      } catch (err) {
+        console.error(err);
+      }
+    });
+  }, [channels]);
   console.log(channels, 'channels')
   if (channelsPending) {
 
@@ -92,8 +116,12 @@ const GridGroups = () => {
             {channel?.workMode === "PREMODERATION" && "Предмодерация"}
             {channel?.workMode === "AUTOPOSTING" && "Автопостинг"}
           </p>
-
-          <GridStatus onClick={() => openPopup("premoderation", "popup", { channelId: channel.id, filter: "premoderation" })}>Премодерация</GridStatus>
+          <GridStatus onClick={() => openPopup("premoderation", "popup", { channelId: channel.id, filter: "premoderation" })}>
+            <Status>
+                  {pendingCounts[channel.id] || 0}
+                </Status>
+            Премодерация
+          </GridStatus>
           <ButtonsWrap>
             <ButtonDir onClick={() => openPopup("move_channel", "popup_window", { channelId: channel.id })} title="Перейти">
               <DirIcon />
@@ -215,6 +243,7 @@ const CellName = styled.span`
   }
 `;
 const GridStatus = styled.button`
+  position: relative;
   padding: 18px 24px;
   border-radius: 12px;
   color: #6A7080;
@@ -232,6 +261,21 @@ const GridStatus = styled.button`
     color: #fff;
     border: 2px solid #336CFF;;
   }
+`;
+const Status = styled.div`
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  transform: translate(40%, -40%);
+  right: 0;
+  top: 0;
+  color: #336CFF;
+  background-color: #1F305C;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
 `;
 const ButtonsWrap = styled.div`
   display: flex;

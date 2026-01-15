@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import del from "@/assets/del.svg";
 import setting from "@/assets/setting.svg";
@@ -9,6 +10,7 @@ import { useDeleteChannel } from "@/lib/channels/useDeleteChannel";
 import useResolution from "@/lib/useResolution";
 import DirIcon from '@/icons/DirIcon';
 import СhannelPlug from '@/shared/СhannelPlug';
+import { getPendingModerationCount } from '@/api/channels/getPendingModerationCount';
 
 const TableGroups = () => {
   const { openPopup } = usePopupStore();
@@ -16,6 +18,25 @@ const TableGroups = () => {
   const { selectedId } = useChannelsStore();
   const { channels, channelsPending } = useChannelsGroupedByFolders();
   const { mutate: deleteChannel } = useDeleteChannel();
+  const [pendingCounts, setPendingCounts] = useState({});
+
+  useEffect(() => {
+    if (!channels) return;
+
+    const allChannels = [
+      ...(channels.channelsWithoutFolder || []),
+      ...channels.folders?.flatMap(folder => folder.channels) || []
+    ];
+
+    allChannels.forEach(async (channel) => {
+      try {
+        const data = await getPendingModerationCount(channel.id);
+        setPendingCounts(prev => ({ ...prev, [channel.id]: data.count || 0 }));
+      } catch (err) {
+        console.error(err);
+      }
+    });
+  }, [channels]);
 
   if (channelsPending) {
     return (
@@ -76,14 +97,19 @@ const TableGroups = () => {
                   {channel?.avatarUrl ? (
                     <img src={channel.avatarUrl} alt="Group" />
                   ) : (
-                    <СhannelPlug width="40px" height="40px" text={channel.name}/>
+                    <СhannelPlug width="40px" height="40px" text={channel.name} />
                   )}
                 </TableCellAva>
                 <CellName>{channel.name}</CellName>
               </p>
             </TableCell>
             <TableCell>
-              <TableCellStatus onClick={() => openPopup("premoderation", "popup", { channelId: channel.id, filter: "premoderation" })}>{isSmall ? 'Премодерация' : 'Премодерация постов'}</TableCellStatus>
+              <TableCellStatus onClick={() => openPopup("premoderation", "popup", { channelId: channel.id, filter: "premoderation" })}>
+                <Status>
+                  {pendingCounts[channel.id] || 0}
+                </Status>
+                {isSmall ? 'Премодерация' : 'Премодерация постов'}
+              </TableCellStatus>
             </TableCell>
             <TableCell >
               <p>
@@ -329,8 +355,8 @@ const TableCellAva = styled.div`
     transition: transform 0.2s ease;
   }
 `;
-
 const TableCellStatus = styled.button`
+  position: relative;
   padding: 18px 24px;
   border-radius: 12px;
   color: #6A7080;
@@ -342,9 +368,25 @@ const TableCellStatus = styled.button`
   &:hover {
     background-color: #336CFF;
     color: #fff;
-    border: 2px solid #336CFF;;
+    border: 2px solid #336CFF;
   }
 `;
+const Status = styled.div`
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  transform: translate(40%, -40%);
+  right: 0;
+  top: 0;
+  color: #336CFF;
+  background-color: #1F305C;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+`;
+
 const ButtonsWrap = styled.div`
   display: flex;
   align-items: center;

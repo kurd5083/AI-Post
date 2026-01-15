@@ -226,6 +226,7 @@ const TapeItemContent = styled.div`
   max-width: calc(100% - 162px);
   max-width: ${({ $forceHorizontal }) =>
     $forceHorizontal ? 'calc(100% - 115px)' : 'calc(100% - 162px)'};
+  flex-grow: 1;
 
   @media(max-width: 1600px) {
     max-width: calc(100% - 115px);

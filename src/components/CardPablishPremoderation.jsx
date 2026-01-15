@@ -225,6 +225,7 @@ const CardPablishText = styled.p`
   -webkit-line-clamp: 1;
   -webkit-box-orient: vertical;
   overflow: hidden;
+  word-break: break-word;
 `;
 
 const CardPablishSubtext = styled.p`

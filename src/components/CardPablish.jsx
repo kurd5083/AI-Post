@@ -69,7 +69,7 @@ const CardPablish = ({ item, bg, selectedChannel }) => {
       }
     );
   };
-  console.log(item)
+
   return (
     <CardPablishItem $bg={bg}>
       <CardPablishItemHead>
@@ -209,8 +209,10 @@ const CardPablishItem = styled.div`
 `
 const CardPablishItemHead = styled.div`
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
   align-items: flex-start;
+  gap: 10px 20px;
 `
 const CardPablishItemName = styled.div`
   display: flex;
@@ -292,6 +294,7 @@ const CardPablishText = styled.p`
   -webkit-line-clamp: 1;
   -webkit-box-orient: vertical;
   overflow: hidden;
+  word-break: break-word;
 `
 const CardPablishSubtext = styled.p`
   box-sizing: border-box;

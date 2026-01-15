@@ -17,13 +17,13 @@ const ChangeTimePopupCard = () => {
 	const channelId = popup?.data?.channelId;
 	const publishedAt = popup?.data?.time;
 
-const initialDate = publishedAt ? new Date(publishedAt) : null;
-const initialHours = publishedAt ? new Date(publishedAt).getUTCHours().toString().padStart(2, "0") : "";
-const initialMinutes = publishedAt ? new Date(publishedAt).getUTCMinutes().toString().padStart(2, "0") : "";
+	const initialDate = publishedAt ? new Date(publishedAt) : null;
+	const initialHours = publishedAt ? new Date(publishedAt).getUTCHours().toString().padStart(2, "0") : "";
+	const initialMinutes = publishedAt ? new Date(publishedAt).getUTCMinutes().toString().padStart(2, "0") : "";
 
-const [date, setDate] = useState(initialDate);
-const [hoursState, setHours] = useState(initialHours);
-const [minutesState, setMinutes] = useState(initialMinutes);
+	const [date, setDate] = useState(initialDate);
+	const [hoursState, setHours] = useState(initialHours);
+	const [minutesState, setMinutes] = useState(initialMinutes);
 
 	const handleHoursChange = (e) => {
 		let value = e.target.value;

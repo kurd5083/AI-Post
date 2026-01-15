@@ -1,14 +1,20 @@
 import { useState, useEffect, useMemo } from "react";
 import styled from "styled-components";
-import CardPablish from "@/components/CardPablish";
-import CardPablishPremoderation from "@/components/CardPablishPremoderation";
-import { usePopupStore } from "@/store/popupStore";
-import { usePostsByChannel } from "@/lib/posts/usePostsByChannel";
-import { useUserChannels } from "@/lib/channels/useUserChannels";
-import ModernLoading from "@/components/ModernLoading";
-import CustomSelectSec from "@/shared/CustomSelectSec";
+
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
+
+import CardPablish from "@/components/CardPablish";
+import CardPablishPremoderation from "@/components/CardPablishPremoderation";
+import ModernLoading from "@/components/ModernLoading";
+
+import { usePostsByChannel } from "@/lib/posts/usePostsByChannel";
+import { useUserChannels } from "@/lib/channels/useUserChannels";
+import { useGetArchivedPosts } from "@/lib/posts/useGetArchivedPosts";
+
+import CustomSelectSec from "@/shared/CustomSelectSec";
+
+import { usePopupStore } from "@/store/popupStore";
 
 const itemsPerPageDefault = 9;
 const itemsPerPageSmall = 6;
@@ -31,7 +37,7 @@ const PublicationsPopup = () => {
 
   const channelId = popup?.data?.channelId;
   const { posts, loadingPosts } = usePostsByChannel(channelId);
-  console.log(posts, 'posts123')
+  const { archivedPosts, loadingArchived } = useGetArchivedPosts(channelId);
   const selectedChannel = userChannels.find(c => c.id === channelId);
 
   useEffect(() => {
@@ -47,10 +53,15 @@ const PublicationsPopup = () => {
 
   useEffect(() => setCurrentPage(1), [dateFilter, filter]);
 
-  const filteredPostsByDate = useMemo(() => {
-    if (!posts) return [];
+  const basePosts = useMemo(() => {
+    if (filter === "archive") return archivedPosts || [];
+    return posts || [];
+  }, [filter, posts, archivedPosts]);
 
-    let result = [...posts];
+  const filteredPostsByDate = useMemo(() => {
+    if (!basePosts) return [];
+    let result = [...basePosts];
+
     const now = new Date();
 
     switch (dateFilter.period) {
@@ -85,21 +96,15 @@ const PublicationsPopup = () => {
 
   const commonPostsCount = filteredPostsByDate.length;
   const premoderationPostsCount = filteredPostsByDate.filter(p => p.status === "PENDING_MODERATION").length;
+  const archivedPostsCount = archivedPosts?.length || 0;
 
-  const filteredPosts = useMemo(() => {
-    if (filter === "premoderation") {
-      return filteredPostsByDate.filter(p => p.status === "PENDING_MODERATION");
-    }
-    return filteredPostsByDate;
-  }, [filteredPostsByDate, filter]);
-
-  const totalPages = filteredPosts.length
-    ? Math.ceil(filteredPosts.length / itemsPerPage)
+  const totalPages = filteredPostsByDate.length
+    ? Math.ceil(filteredPostsByDate.length / itemsPerPage)
     : 0;
 
   const indexOfLast = currentPage * itemsPerPage;
   const indexOfFirst = indexOfLast - itemsPerPage;
-  const currentItems = filteredPosts.slice(indexOfFirst, indexOfLast);
+  const currentItems = filteredPostsByDate.slice(indexOfFirst, indexOfLast);
 
   const dateValueOptions = useMemo(() => {
     const now = new Date();
@@ -168,10 +173,10 @@ const PublicationsPopup = () => {
         </SwiperSlideHead>
         <SwiperSlideHead>
           <PublicationsFilter
-            $active={filter === "premoderation"}
-            onClick={() => setFilter("premoderation")}
+            $active={filter === "archive"}
+            onClick={() => setFilter("archive")}
           >
-            Архив <span>{premoderationPostsCount}</span>
+            Архив <span>{archivedPostsCount}</span>
           </PublicationsFilter>
         </SwiperSlideHead>
         <SwiperSlideHead>
@@ -223,7 +228,9 @@ const PublicationsPopup = () => {
               <EmptyState>
                 {filter === "premoderation"
                   ? "Постов на премодерации пока нет"
-                  : "Постов пока нет"}
+                  : filter === "archive"
+                    ? "Архивных постов пока нет"
+                    : "Постов пока нет"}
               </EmptyState>
             )}
           </PublicationsList>

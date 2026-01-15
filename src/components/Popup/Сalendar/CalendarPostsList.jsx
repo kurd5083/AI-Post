@@ -1,14 +1,25 @@
 import styled from "styled-components";
 import { useDeleteCalendarEvent } from "@/lib/calendar/useDeleteCalendarEvent";
-import edit from "@/assets/templates/edit.svg";
-import del from "@/assets/del.svg";
+import { useSendPostToChannel } from "@/lib/posts/useSendPostToChannel";
+
+import EyeIcon from "@/icons/EyeIcon";
+import DelIcon from "@/icons/DelIcon";
+import TimeIcon from "@/icons/TimeIcon";
+
+import BtnBase from "@/shared/BtnBase";
+
 import { usePopupStore } from "@/store/popupStore"
 import { useNotificationStore } from "@/store/notificationStore";
 
+import { getPostsById } from "@/api/posts/getPostsById"; 
+
 const CalendarPostsList = ({ posts }) => {
-  const { mutate: deleteMutation, isPending: deletePending } = useDeleteCalendarEvent();
-  const { changeContent } = usePopupStore();
+  const { popup, changeContent } = usePopupStore();
+  const telegramId = popup?.data?.telegramId;
+
   const { addNotification } = useNotificationStore();
+  const { mutate: deleteMutation, isPending: deletePending } = useDeleteCalendarEvent();
+  const { mutate: sendPost, isPending: isSendPending } = useSendPostToChannel();
 
   const formatTime = (dateStr) => {
     const d = new Date(dateStr);
@@ -16,14 +27,44 @@ const CalendarPostsList = ({ posts }) => {
     const minutes = String(d.getMinutes()).padStart(2, "0");
     return `${hours}:${minutes}`;
   };
+  
+    const handleEye = async (post) => {
+    if (!post?.postId) {
+      addNotification("Не удалось открыть пост: нет ID", "error");
+      return;
+    }
+
+    try {
+      const fullPost = await getPostsById(post.postId);
+
+      changeContent("live_preview_popup", "popup", {
+        selectedPost: fullPost,
+        channelId: post.channelId,
+        postId: post.id
+      });
+    } catch (err) {
+      addNotification(err.message || "Ошибка загрузки поста", "error");
+    }
+  };
 
   const handleDelete = (post) => {
     if (!post?.id) {
       addNotification("Не удалось удалить пост: нет ID", "error");
       return;
     }
-
     deleteMutation(post.id);
+  };
+
+  const handlePublishNow = ({ postId, channelId }) => {
+    sendPost(
+      { postId, channelId, channelTelegramId: telegramId },
+      {
+        onSuccess: () => {
+          addNotification("Пост успешно опубликован", "success");
+        },
+        onError: (err) => addNotification(err.message || "Ошибка публикации поста", "error"),
+      }
+    );
   };
 
   return (
@@ -39,28 +80,44 @@ const CalendarPostsList = ({ posts }) => {
               <MetaItem><strong>Запланировано:</strong> {new Date(post.scheduledAt).toLocaleString()}</MetaItem>
             </Meta>
           </Content>
-          <Buttons>
-            <ButtonEdit
-              onClick={(e) => {
-                e.stopPropagation();
-                changeContent("update_calendar_event", "popup_window", { event: post, channelId: post.channelId });
-              }}
+          <ButtonsContainer>
+            <BtnBase
+              $padding="16px 24px"
+              $border
+              $width="100%"
+              $bg="transporent"
+              $color="#D6DCEC"
+              onClick={() => handlePublishNow({ postId: post.postId, channelId: post.channelId })}
+              disabled={isSendPending}
             >
-              <img src={edit} alt="edit icon" width={22} height={16} />
-            </ButtonEdit>
-            <DeleteButton
-              onClick={(e) => {
-                e.stopPropagation(); 
-                changeContent("delete_confirm", "popup_window", {
-                  itemName: post.title,
-                  onDelete: () => handleDelete(post),
-                });
-              }}
-              disabled={deletePending}
-            >
-              <img src={del} alt="del icon" width={14} height={16} />
-            </DeleteButton>
-          </Buttons>
+              {isSendPending ? "Публикация..." : "Опубликовать сейчас"}
+            </BtnBase>
+            <Buttons>
+              <ButtonEye onClick={() => handleEye(post)}>
+                <EyeIcon />
+              </ButtonEye>
+              <ButtonEdit
+                onClick={(e) => {
+                  e.stopPropagation();
+                  changeContent("update_calendar_event", "popup_window", { event: post, channelId: post.channelId });
+                }}
+              >
+                <TimeIcon />
+              </ButtonEdit>
+              <DeleteButton
+                onClick={(e) => {
+                  e.stopPropagation();
+                  changeContent("delete_confirm", "popup_window", {
+                    itemName: post.title,
+                    onDelete: () => handleDelete(post),
+                  });
+                }}
+                disabled={deletePending}
+              >
+                <DelIcon />
+              </DeleteButton>
+            </Buttons>
+          </ButtonsContainer>
         </PostItem>
       ))}
     </ListContainer>
@@ -88,7 +145,7 @@ const PostItem = styled.div`
   }
 
   &:hover {
-    background-color: #2a2b4f;
+    transform: translateY(-4px);
   }
 `;
 const Time = styled.div`
@@ -125,13 +182,11 @@ const MetaItem = styled.div`
   padding: 4px 8px;
   border-radius: 6px;
 `;
-const BaseButton = styled.button`
+const ButtonsContainer = styled.div`
   display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 48px;
-  height: 48px;
-  border-radius: 8px;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 10px;
 `;
 const Buttons = styled.div`
   display: flex;
@@ -139,9 +194,30 @@ const Buttons = styled.div`
   justify-content: center;
   gap: 10px;
 `;
+const BaseButton = styled.button`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-width: 48px;
+  height: 48px;
+  border-radius: 8px;
+  border: 2px solid #2F3953;
+`;
+const ButtonEye = styled(BaseButton)`
+  color: #6A7080;
 
+  &:hover {
+    transform: scale(1.1);    
+    color: #fff;
+  }
+`;
 const ButtonEdit = styled(BaseButton)`
-	background-color: #333E59;
+	color: #6A7080;
+
+  &:hover {
+    transform: scale(1.1);    
+    color: #fff;
+  }
 `;
 const DeleteButton = styled(BaseButton)`
   border: 2px solid #2D3241;
@@ -149,6 +225,7 @@ const DeleteButton = styled(BaseButton)`
   &:hover {
     border: none;
     background-color: rgba(239, 98, 132, 0.08);
+    transform: scale(1.1);    
   }
 `
 const EmptyText = styled.div`

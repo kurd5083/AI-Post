@@ -264,6 +264,7 @@ const CardAddSubtext = styled.p`
   -webkit-line-clamp: 4;
   -webkit-box-orient: vertical;
   overflow: hidden;
+  word-break: break-all;
 `
 const StyledDatePicker = styled(DatePicker)`
   background-color: transparent;

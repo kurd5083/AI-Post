@@ -362,6 +362,15 @@ const ContentRightColumn = styled.div`
   align-items: flex-end;
   gap: 5px;
   text-align: right;
+  span {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    white-space: normal;
+    text-overflow: ellipsis;
+    max-width: 500px;
+  }
 `
 const PopupContentCounter = styled.p`
   display: flex;
