@@ -68,6 +68,7 @@ const CardAddPost = ({ item, bg, selectedChannel }) => {
           )}
           <p>{selectedChannel.name}</p>
         </CardAddItemName>
+        
         <CardAddItemTime>
           <p>{new Date(item.createdAt).toLocaleDateString("ru-RU")}</p>
           <span>

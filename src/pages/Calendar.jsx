@@ -13,15 +13,13 @@ import { usePopupStore } from "@/store/popupStore"
 import { useCalendarStore } from "@/store/calendarStore";
 
 const Calendar = () => {
-  const { openPopup } = usePopupStore()
+  const { openPopup, changeContent } = usePopupStore()
   const { selectedDate, setSelectedDate } = useCalendarStore();
   
     const { events: posts, eventsPending } = useCalendarEventsByRange(
       selectedDate.startISO,
       selectedDate.endISO
     );
-    console.log(posts, 'asss')
- 
   return (
     <CalendarContainer>
       <PageHead>
@@ -29,6 +27,30 @@ const Calendar = () => {
           $padding="16px 32px"
           $bg="#336CFF"
           $color="#FFFFFF"
+          onClick={(e) => {
+  e.stopPropagation();
+
+  openPopup("select_channel", "popup_window", {
+    onSave: (selectedChannelId) => {
+  // Закрываем текущий popup выбора канала
+  const closeCurrent = () => {
+    const { popup, goBack, closePopup } = usePopupStore.getState();
+    popup?.previousPage?.length > 0 ? goBack() : closePopup();
+  };
+
+  closeCurrent();
+
+  // Открываем add_post с небольшой задержкой
+  setTimeout(() => {
+    openPopup("add_post", "popup", {
+      selectedDate: new Date(), // текущее время
+      channelId: selectedChannelId, // передаем id выбранного канала
+    });
+  }, 0); // 50ms задержка, можно увеличить до 100ms, если нужно
+},
+    loading: false,
+  });
+}}
         >
           + Создать новый пост
         </BtnBase>

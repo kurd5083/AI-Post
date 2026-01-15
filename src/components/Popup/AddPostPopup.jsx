@@ -178,7 +178,6 @@ const AddPostPopup = () => {
 					<PublicationsList>
 						{currentItems.length > 0 ? (
 							currentItems.map((item) =>
-
 								<CardAddPost key={item.id} item={item} bg selectedChannel={selectedChannel} />
 							)
 						) : (
