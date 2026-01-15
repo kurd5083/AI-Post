@@ -7,8 +7,7 @@ import { useNotificationStore } from "@/store/notificationStore";
 
 import normalizeUrl from "@/lib/normalizeUrl";
 import { useDeletePost } from "@/lib/posts/useDeletePost";
-import { useSendPostToChannel } from "@/lib/posts/useSendPostToChannel";
-import { useArchivePost } from "@/lib/posts/useArchivePost";
+import { useUnarchivePost } from "@/lib/posts/useUnarchivePost";
 
 import AvaPlug from "@/shared/AvaPlug";
 import BtnBase from "@/shared/BtnBase";
@@ -25,10 +24,8 @@ const CardArhive = ({ item, bg, selectedChannel }) => {
   const { addPost } = usePostsStore();
   const { changeContent } = usePopupStore();
   const { addNotification } = useNotificationStore();
-  console.log(item)
   const { mutate: deletePost, isPending: deletePending } = useDeletePost();
-  const { mutate: sendPost, isPending: isSendPending } = useSendPostToChannel();
-  const { mutate: archivePost } = useArchivePost();
+  const { mutate: unarchivePost, isPending: isSendPending } = useUnarchivePost();
 
   const handleEdit = () => {
     addPost({
@@ -113,23 +110,23 @@ const CardArhive = ({ item, bg, selectedChannel }) => {
         dangerouslySetInnerHTML={{ __html: item.summary }}
       />
       <CardPablishButtons>
-        {/* <BtnBase
+        <BtnBase
           $padding="16px 12px"
           $border
           $width="100%"
           $bg="transporent"
           $color="#D6DCEC"
-          onClick={handlePublishNow}
+          onClick={() => unarchivePost(item.id)}
           disabled={isSendPending}
         >
-          {isSendPending ? "Публикация..." : "Опубликовать сейчас"}
-        </BtnBase> */}
+          {isSendPending ? "Разархивация..." : "Разархивировать пост"}
+        </BtnBase>
         <CardButton onClick={() => changeContent('live_preview_popup', 'popup', { selectedPost: item, channelId: selectedChannel?.id })}>
           <EyeIcon />
         </CardButton>
-        <CardButton onClick={handleEdit}>
+        {/* <CardButton onClick={handleEdit}>
           <EditIcon />
-        </CardButton>
+        </CardButton> */}
         <CardButton
           onClick={(e) => {
             e.stopPropagation();
@@ -141,7 +138,7 @@ const CardArhive = ({ item, bg, selectedChannel }) => {
           disabled={deletePending}>
           <DelIcon />
         </CardButton>
-        <CardButton
+        {/* <CardButton
           onClick={() =>
             changeContent("change_time_card", "popup_window", {
               postId: item.id,
@@ -151,7 +148,7 @@ const CardArhive = ({ item, bg, selectedChannel }) => {
           }
         >
           <TimeIcon />
-        </CardButton>
+        </CardButton> */}
       </CardPablishButtons>
     </CardPablishItem>
   )
