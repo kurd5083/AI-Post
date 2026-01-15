@@ -180,9 +180,8 @@ const Grid = styled.div`
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   gap: 24px 16px;
-	min-width: 830px;
   @media(max-width: 1600px) { gap: 24px 8px; }
-	
+	@media(max-width: 1400px) { min-width: 830px; }
 `;
 const DayCard = styled.div`
   box-sizing: border-box;
