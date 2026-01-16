@@ -1,11 +1,17 @@
 import { useState } from "react";
 import styled from "styled-components";
-import { usePopupStore } from "@/store/popupStore";
+
+import { Swiper, SwiperSlide } from "swiper/react";
+import "swiper/css";
+
 import BtnBase from "@/shared/BtnBase";
 import Counter from "@/shared/Counter";
-import { useCreateBoostOrder } from "@/lib/channels/useCreateBoostOrder";
 import CheckboxText from "@/shared/CheckboxText";
+
+import { useCreateBoostOrder } from "@/lib/channels/useCreateBoostOrder";
+
 import { useNotificationStore } from "@/store/notificationStore";
+import { usePopupStore } from "@/store/popupStore";
 
 const BoostsPopup = () => {
   const { changeContent, popup } = usePopupStore();
@@ -16,7 +22,7 @@ const BoostsPopup = () => {
   const [quantity, setQuantity] = useState(null);
   const [boostDays, setBoostDays] = useState(null);
 
-   const handleStartBoost = () => {
+  const handleStartBoost = () => {
     if (!quantity || quantity < 10) {
       addNotification("Минимальное количество бустов — 10", "info");
       return;
@@ -41,10 +47,16 @@ const BoostsPopup = () => {
 
   return (
     <BoostsContainer>
-      <BoostsHead>
-        <BoostsHeadText onClick={() => changeContent("promotion")}>Просмотр</BoostsHeadText>
-        <BoostsHeadText $active={true}>Бусты</BoostsHeadText>
-        <BoostsHeadText onClick={() => changeContent("my_orders")}>Мои заказы</BoostsHeadText>
+      <BoostsHead spaceBetween={32} slidesPerView="auto" grabCursor>
+        <BoostsHeadTextSlide>
+          <BoostsHeadText onClick={() => changeContent("promotion")}>Просмотр</BoostsHeadText>
+        </BoostsHeadTextSlide>
+        <BoostsHeadTextSlide>
+          <BoostsHeadText $active={true}>Бусты</BoostsHeadText>
+        </BoostsHeadTextSlide>
+        <BoostsHeadTextSlide>
+          <BoostsHeadText onClick={() => changeContent("my_orders")}>Мои заказы</BoostsHeadText>
+        </BoostsHeadTextSlide>
       </BoostsHead>
 
       <BoostsBlock>
@@ -65,28 +77,35 @@ const BoostsPopup = () => {
           onChange={(id) => setBoostDays(Number(id))}
         />
       </BoostsBlock>
-      <BtnBase
-        $color="#D6DCEC"
-        $bg="#2B89ED"
-        onClick={handleStartBoost}
-        disabled={boostOrderPending}
-        $margin="40"
-      >
-        {boostOrderPending ? "Продвигаем..." : "Начать продвижение"}
-      </BtnBase>
+      <BoostsButtons>
+        <BtnBase
+          $color="#D6DCEC"
+          $bg="#2B89ED"
+          onClick={handleStartBoost}
+          disabled={boostOrderPending}
+          $margin="40"
+        >
+          {boostOrderPending ? "Продвигаем..." : "Начать продвижение"}
+        </BtnBase>
+      </BoostsButtons>
     </BoostsContainer>
   );
 };
 
 const BoostsContainer = styled.div`
-  padding: 0 56px 30px;
-
-  @media(max-width: 1600px) { padding: 0 32px 30px; }
-  @media(max-width: 768px) { padding: 0 24px 30px; }
-
+  padding-bottom: 30px;
 `;
 
-const BoostsHead = styled.div` display: flex; gap: 32px; `;
+const BoostsHead = styled(Swiper)` 
+  display: flex; 
+  margin: 0; 
+  padding: 0 56px;
+  @media(max-width: 1600px) { padding: 0 32px }
+  @media(max-width: 768px) { padding: 0 24px }
+`;
+const BoostsHeadTextSlide = styled(SwiperSlide)`
+  width: fit-content;
+`;
 const BoostsHeadText = styled.p`
   display: flex;
   gap: 32px;
@@ -105,9 +124,17 @@ const BoostsBlock = styled.div`
   display: flex;
   flex-direction: column;
   gap: 32px;
+  padding: 0 56px;
+  @media(max-width: 1600px) { padding: 0 32px }
+  @media(max-width: 768px) { padding: 0 24px }
   @media(max-width: 480px) { margin-top: 32px; gap: 24px; }
 `;
 
 const BlockTitle = styled.h2` font-size: 24px; font-weight: 700; `;
 
+const BoostsButtons = styled.div`
+  padding: 0 56px;
+  @media(max-width: 1600px) { padding: 0 32px }
+  @media(max-width: 768px) { padding: 0 24px }
+`;
 export default BoostsPopup;

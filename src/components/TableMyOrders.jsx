@@ -139,6 +139,11 @@ const HeaderCell = styled.th`
   text-align: left;
   text-transform: uppercase;
   padding: 20px 15px;
+  position: sticky;
+  top: 0px;
+  z-index: 2;
+  background-color: #131826;
+  
   &:first-child {
     padding-left: 0;
   }

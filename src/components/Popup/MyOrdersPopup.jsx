@@ -1,10 +1,17 @@
 import { useState, useEffect } from "react";
 import styled from "styled-components";
-import { usePopupStore } from "@/store/popupStore";
-import ModernLoading from "@/components/ModernLoading";
-import { useNotificationStore } from "@/store/notificationStore";
-import { usePromotionOrders } from "@/lib/channels/promotion/useGetPromotionOrders";
+
+import { Swiper, SwiperSlide } from "swiper/react";
+import "swiper/css";
+
 import CustomSelect from "@/shared/CustomSelect";
+
+import ModernLoading from "@/components/ModernLoading";
+
+import { usePromotionOrders } from "@/lib/channels/promotion/useGetPromotionOrders";
+
+import { useNotificationStore } from "@/store/notificationStore";
+import { usePopupStore } from "@/store/popupStore";
 
 const MyOrdersPopup = () => {
   const [copied, setCopied] = useState({});
@@ -55,10 +62,16 @@ const MyOrdersPopup = () => {
   console.log(myOrders)
   return (
     <OrdersContainer>
-      <OrdersHead>
-        <OrdersHeadText onClick={() => changeContent("promotion")}>Просмотр</OrdersHeadText>
-        <OrdersHeadText onClick={() => changeContent("boosts")}>Бусты</OrdersHeadText>
-        <OrdersHeadText $active={true}>Мои заказы</OrdersHeadText>
+      <OrdersHead spaceBetween={32} slidesPerView="auto" grabCursor>
+        <OrdersHeadTextSlide>
+          <OrdersHeadText onClick={() => changeContent("promotion")}>Просмотр</OrdersHeadText>
+        </OrdersHeadTextSlide>
+        <OrdersHeadTextSlide>
+          <OrdersHeadText onClick={() => changeContent("boosts")}>Бусты</OrdersHeadText>
+        </OrdersHeadTextSlide>
+        <OrdersHeadTextSlide>
+          <OrdersHeadText $active={true}>Мои заказы</OrdersHeadText>
+        </OrdersHeadTextSlide>
       </OrdersHead>
       <Filters>
         <CustomSelect
@@ -139,6 +152,7 @@ const MyOrdersPopup = () => {
     </OrdersContainer>
   );
 };
+const OrdersContainer = styled.div``;
 const TableWrapper = styled.div`
   box-sizing: border-box;
   padding: 0 56px;
@@ -152,10 +166,7 @@ const TableWrapper = styled.div`
     padding: 0 24px;
   }
 `;
-const OrdersContainer = styled.div`
-  
-`;
-const OrdersHead = styled.div` 
+const OrdersHead = styled(Swiper)` 
   display: flex; 
   gap: 32px; 
   padding: 0 56px;
@@ -165,6 +176,9 @@ const OrdersHead = styled.div`
   @media(max-width: 768px) { 
     padding: 0 24px; 
   }
+`;
+const OrdersHeadTextSlide = styled(SwiperSlide)`
+  width: fit-content;
 `;
 const OrdersHeadText = styled.p`
   display: flex;
@@ -188,6 +202,12 @@ const Filters = styled.div`
   }
   @media(max-width: 768px) { 
     padding: 0 24px; 
+  }
+  @media(max-width: 480px) { 
+    flex-wrap: wrap;
+    div {
+      width: 100%;
+    }
   }
 `;
 const Table = styled.table`

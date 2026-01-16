@@ -336,19 +336,17 @@ const PromotionPopup = () => {
         </>
       )}
       <PromotionButtons>
-         <BtnBase
-        $margin="64"
-        onClick={handleSaveConfig}
-        disabled={createConfigPending || updatePromotionPending}
-      >
-        {createConfigPending || updatePromotionPending ? "Сохраняем..." : "Сохранить"}
-      </BtnBase>
+        <BtnBase
+          $margin="64"
+          onClick={handleSaveConfig}
+          disabled={createConfigPending || updatePromotionPending}
+        >
+          {createConfigPending || updatePromotionPending ? "Сохраняем..." : "Сохранить"}
+        </BtnBase>
       </PromotionButtons>
-     
     </PromotionContainer>
   );
 };
-
 
 const PromotionContainer = styled.div`
   padding-bottom: 30px;
@@ -450,7 +448,7 @@ const PostInput = styled.input`
   @media(max-width: 480px) { font-size: 16px; }
 `;
 const PromotionButtons = styled.div`
-   padding: 0 56px;
+  padding: 0 56px;
   @media(max-width: 1600px) { padding: 0 32px }
   @media(max-width: 768px) { padding: 0 24px }
 `;
