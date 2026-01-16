@@ -5,8 +5,12 @@ import PageHead from '@/components/PageHead'
 import { Link } from "react-router";
 import PageFilter from "@/components/PageFilter";
 import TableMyOrders from "@/components/TableMyOrders";
+import { usePromotionOrders } from "@/lib/promotion/usePromotionOrders";
+
 const MyOrders = () => {
   const [activeFilter, setActiveFilter] = useState("all");
+  const { promotionOrders, promotionOrdersPending } = usePromotionOrders();
+
   return (
     <>
       <PageHead/>
@@ -19,7 +23,7 @@ const MyOrders = () => {
         setActiveFilter={setActiveFilter}
         placeholder="Поиск по заказам"
       />
-      <TableMyOrders/>
+      <TableMyOrders promotionOrders={promotionOrders} promotionOrdersPending={promotionOrdersPending}/>
     </>
   )
 }
@@ -27,7 +31,6 @@ const PromotionHead = styled.div`
   display: flex;
   gap: 32px;
   margin-bottom: 48px;
-  overflow-x: auto;
   scrollbar-width: none;
 	padding: 0 56px;
 

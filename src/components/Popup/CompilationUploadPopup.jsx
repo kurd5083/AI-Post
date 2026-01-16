@@ -14,11 +14,25 @@ const CompilationUploadPopup = () => {
   return (
     <CompilationContainer>
       <CompilationTitle>Источники категорий:</CompilationTitle>
+      {category?.sources.length > 0 ? (
       <BlocksItems
-        items={category?.sources?.map((source) => ({ value: source.name }))}
+        items={category?.sources?.map((source, index) => {
+              const url = new URL(source.url);
+              const domain = url.origin;
+              const favicon = `${domain}/favicon.ico`;
+
+              return {
+                icon: favicon,
+                value: source.name,
+                id: index
+              };
+            })}
         view={false}
         color="#EF6284"
       />
+      ) : (
+        <EmptyText>Нет источников для этой категории</EmptyText>
+      )}
       <BtnBase onClick={goBack} $margin="48">Вернуться в подборки</BtnBase>
     </CompilationContainer>
   )
@@ -38,4 +52,10 @@ const CompilationTitle = styled.h2`
   font-weight: 700;
   font-size: 24px;
 `
+const EmptyText = styled.p`
+  font-size: 16px;
+  font-weight: 600;
+  color: #6A7080;
+  margin-top: 32px;
+`;
 export default CompilationUploadPopup

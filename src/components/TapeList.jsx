@@ -1,7 +1,7 @@
 import styled, { keyframes } from "styled-components";
 import { Link } from "react-router";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation } from "swiper/modules";
+import { Navigation, Mousewheel } from "swiper/modules";
 import "swiper/css";
 import useSwipeAllowed from "@/lib/useSwipeAllowed";
 import useFadeOnScroll from "@/lib/useFadeOnScroll";
@@ -77,11 +77,19 @@ const TapeList = ({ forceHorizontal = false, padding, newsData, pending }) => {
           $fadeVisible={fadeVisible}
           $forceHorizontal={forceHorizontal}
           $padding={padding}
-          modules={[Navigation]}
+          modules={[Navigation, Mousewheel]}
           navigation={{
             nextEl: ".TapeNext",
             prevEl: ".TapePrev",
           }}
+           mousewheel={{
+            forceToAxis: true,
+            releaseOnEdges: true,
+            sensitivity: 1,
+          }}
+          speed={600}
+          freeMode={true} 
+          freeModeMomentum={true} 
         >
           {newsData.map((news, index) => (
             <TapeItem
@@ -154,8 +162,6 @@ const TapeContainer = styled(Swiper)`
   display: flex;
   gap: 24px;
   margin-top: 32px;
-  overflow-y: auto;
-  scrollbar-width: none;  
   max-height: calc(100dvh - 215px);
   padding: ${({ $padding }) => $padding && "0 52px"};
   padding-bottom: 20px;

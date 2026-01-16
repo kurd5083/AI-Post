@@ -1,77 +1,89 @@
+import { useState } from "react";
 import styled from 'styled-components';
-import del from "@/assets/del.svg";
-import { tableMyOrdersDatas } from "@/data/tableMyOrdersDatas";
-import useResolution from "@/lib/useResolution";
+import { useNotificationStore } from "@/store/notificationStore";
+import ModernLoading from "@/components/ModernLoading";
 
-const TableMyOrders = () => {
-  const { isSmall } = useResolution();
+const TableMyOrders = ({ promotionOrders, promotionOrdersPending }) => {
+  const { addNotification } = useNotificationStore();
+  const [copied, setCopied] = useState({});
+
+  const handleCopy = (link, orderId) => {
+    if (!link) {
+      addNotification("Ссылка недоступна для копирования", "error");
+      return;
+    }
+    navigator.clipboard.writeText(link);
+    setCopied(prev => ({ ...prev, [orderId]: true }));
+    addNotification("Ссылка скопирована в буфер обмена", "success");
+
+    setTimeout(() => setCopied(prev => ({ ...prev, [orderId]: false })), 2000);
+  };
 
   return (
     <TableContainer>
-      <TableWrapper>
-        <Table>
-          <colgroup>
-            <col />
-            <col />
-            <col />
-            <col />
-            <col />
-            <col />
-            <col />
-            <col />
-            <col />
-            <col />
-          </colgroup>
-          <thead>
-            <tr>
-              <HeaderCell>ID</HeaderCell>
-              <HeaderCell>Название</HeaderCell>
-              <HeaderCell>Дата</HeaderCell>
-              <HeaderCell>Ссылка</HeaderCell>
-              <HeaderCell>Сумма</HeaderCell>
-              <HeaderCell>Стартовое число</HeaderCell>
-              <HeaderCell>Кол-во</HeaderCell>
-              <HeaderCell>Статус</HeaderCell>
-              <HeaderCell>Осталось</HeaderCell>
-              <HeaderCell></HeaderCell>
-            </tr>
-          </thead>
-          <tbody>
-            {tableMyOrdersDatas.map((row) => (
-              <tr key={row.id}>
-                <TableCell>
-                  <TableCellNum>{row.number}</TableCellNum>
-                </TableCell>
-                <TableCell>
-                  <TableCellName>
-                    <img src={row.image} alt="Group" />
-                    <span>{row.name}</span>
-                  </TableCellName>
-                </TableCell>
-                <TableCell>{row.data}</TableCell>
-                <TableCell>
-                  <TableCellLink href={row.link || "tg.me/owadawd"} target="_blank">
-                    {isSmall ? row.link?.split('/').pop() || "tg.me/..." : row.link || "tg.me/owadawd"}
-                  </TableCellLink>
-                </TableCell>
-                <TableCell>{row.amount}</TableCell>
-                <TableCell>{row.starting}</TableCell>
-                <TableCell>{row.quantity}</TableCell>
-                <TableCell>
-                  <TableCellOnline $online={row.online}>
-                    <StatusIndicator $online={row.online} />
-                    {row.online ? 'Онлайн' : 'Ошибка'}
-                  </TableCellOnline>
-                </TableCell>
-                <TableCell>{row.remained}</TableCell>
-                <TableCell>
-                  <ButtonDel title="Удалить"><img src={del} alt="del icon" width={14} height={16} /></ButtonDel>
-                </TableCell>
-              </tr>
-            ))}
-          </tbody>
-        </Table>
-      </TableWrapper>
+      {promotionOrdersPending ? (
+        <ModernLoading text="Загрузка заказов..." />
+      ) : (
+        <TableWrapper>
+          {promotionOrders?.length > 0 ? (
+            <Table>
+              <colgroup>
+                <col />
+                <col />
+                <col />
+                <col />
+                <col />
+                <col />
+              </colgroup>
+              <thead>
+                <tr>
+                  <HeaderCell>Дата</HeaderCell>
+                  <HeaderCell>Ссылка</HeaderCell>
+                  <HeaderCell>Тип</HeaderCell>
+                  <HeaderCell>Статус</HeaderCell>
+                  <HeaderCell>Количество</HeaderCell>
+                  <HeaderCell>Срок буста</HeaderCell>
+                </tr>
+              </thead>
+              <tbody>
+                {promotionOrders.map((order) => (
+                  <TableItem key={order.id}>
+                    <TableCell>
+                      <CellDate>
+                        <p>{new Date(order.createdAt).toLocaleDateString("ru-RU")}</p>
+                        <span>{new Date(order.createdAt).toLocaleTimeString("ru-RU", { hour: "2-digit", minute: "2-digit" })}</span>
+                      </CellDate>
+                    </TableCell>
+                    <TableCell>
+                      <CellOrdersLink>
+                        <span>{order.link}</span>
+                        <p onClick={() => handleCopy(order.link, order.id)}>
+                          {copied[order.id] ? "Скопировано!" : "Скопировать"}
+                        </p>
+                      </CellOrdersLink>
+                    </TableCell>
+                    <TableCell>
+                      {order.orderType === "VIEWS" ? "Просмотры" : order.orderType === "BOOST" ? "Буст" : "Общее"}
+                    </TableCell>
+                    <TableCell>
+                      <TableCellStatus $status={order.success}>
+                        <StatusIndicator $status={order.success} />
+                        {order.success ? "Успешно" : 'Ошибка'}
+                      </TableCellStatus>
+                    </TableCell>
+                    <TableCell>{order.quantity || order.minQuantity || 0}</TableCell>
+                    <TableCell>{order.boostDays || "-"}</TableCell>
+                  </TableItem>
+                ))
+                }
+
+              </tbody>
+            </Table>
+          ) : (
+            <EmptyBlock>Заказы не найдены</EmptyBlock>
+          )}
+        </TableWrapper>
+      )}
     </TableContainer>
   );
 };
@@ -96,121 +108,96 @@ const TableWrapper = styled.div`
 `;
 const Table = styled.table`
   width: 100%;
-  border-collapse: separate;
-  border-spacing: 0 20px;
+  border-spacing: 0;
+  margin-top: 16px;
   table-layout: fixed;
-
-  @media(max-width: 768px) {
-    border-spacing: 0;
-  }
+  border-collapse: separate;
 
   & colgroup col:first-child {
-    width: 58px;
+    width: 130px;
   }
   & colgroup col:nth-child(2) {
-    width: 276px;
+    width: 290px;
   }
   & colgroup col:nth-child(3) {
-    width: 163px;
+    width: 160px;
   }
   & colgroup col:nth-child(4) {
-    width: 209px;
-  }
-  & colgroup col:nth-child(5) {
-    width: 152px;
-  }
-  & colgroup col:nth-child(6) {
-    width: 176px;
-  }
-  & colgroup col:nth-child(7) {
-    width: 143px;
-  }
-  & colgroup col:nth-child(8) {
     width: 180px;
   }
-  & colgroup col:nth-child(9) {
-   width: 134px;
+  & colgroup col:nth-child(5) {
+    width: 160px;
   }
-  & colgroup col:last-child {
-    width: 40px;
+  & colgroup col:nth-child(6) {
+    width: 160px;
   }
 `;
 const HeaderCell = styled.th`
-  text-align: left;
   font-weight: 700;
   color: #6A7080;
   font-size: 12px;
+  text-align: left;
   text-transform: uppercase;
-  position: sticky;
-  top: 0px;
-  z-index: 2;
-  padding: 20px 0;
-  background-color: #131826;
+  padding: 20px 15px;
+  &:first-child {
+    padding-left: 0;
+  }
+  &:last-child {
+    padding-right: 0;
+  }
+`;
+const TableItem = styled.tr`
+  &:last-child td { border-bottom: none; }
 `;
 const TableCell = styled.td`
   font-size: 14px;
   font-weight: 700;
   color: #6A7080;
-  padding: 15px 0;
+  padding: 15px;
+  border-bottom: 2px solid #2E3954;
+  &:first-child {
+    padding-left: 0;
+  }
+  &:last-child {
+    padding-right: 0;
+  }
 `;
-const TableCellNum = styled.span`
-  color: #D6DCEC;
+
+const CellDate = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  p { color: #D6DCEC; }
 `;
-const TableCellName = styled.div`
+const CellOrdersLink = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  span { color: #D6DCEC; }
+  p { color: #336CFF; font-size: 12px; cursor: pointer; }
+`;
+const TableCellStatus = styled.div`
   display: flex;
   align-items: center;
-  margin: 0;
-  color: #D6DCEC;
-  img {
-    margin: 0 24px 0 0;
-    width: 40px;
-    height: 40px;
-    border-radius: 12px;
-    object-fit: cover;
-  }
-  span {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-`;
-const TableCellLink = styled.a`
-  &:hover {
-    text-decoration: underline;
-  }
-`;
-const TableCellOnline = styled.div`
-  display: flex;
-  align-items: center;
-  color: ${props => props.$online ? '#D6DCEC' : '#EF6284'};
+  color: ${props => props.$status ? '#D6DCEC' : '#EF6284'};
 `;
 const StatusIndicator = styled.span`
   display: inline-block;
   width: 12px;
   height: 12px;
   border-radius: 50%;
-  background-color: ${props => props.$online ? '#B5EC5B' : '#EF6284'};
+  background-color: ${props => props.$status ? '#B5EC5B' : '#EF6284'};
   margin-right: 16px;
 `;
-const ButtonDel = styled.button`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 48px;
-  height: 48px;
-  border-radius: 12px;
-  transition: all 0.2s;
-  border: 2px solid #2F3953;
-
-  @media (max-width: 480px) {
-    width: 40px;
-    height: 40px;
-  }
-
-  &:hover {
-    border: none;
-    background-color: rgba(239, 98, 132, 0.08);
-  }
+const EmptyBlock = styled.div`
+  text-align: center;
+  color: #6A7080;
+  padding: 48px 0;
+  font-weight: 600;
+  background-color: #1C2438;
+  border-radius: 16px;
+  margin-top: 40px;
 `;
 
 export default TableMyOrders;

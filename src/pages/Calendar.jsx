@@ -15,11 +15,11 @@ import { useCalendarStore } from "@/store/calendarStore";
 const Calendar = () => {
   const { openPopup, changeContent } = usePopupStore()
   const { selectedDate, setSelectedDate } = useCalendarStore();
-  
-    const { events: posts, eventsPending } = useCalendarEventsByRange(
-      selectedDate.startISO,
-      selectedDate.endISO
-    );
+
+  const { events: posts, eventsPending } = useCalendarEventsByRange(
+    selectedDate.startISO,
+    selectedDate.endISO
+  );
   return (
     <CalendarContainer>
       <PageHead>
@@ -28,36 +28,34 @@ const Calendar = () => {
           $bg="#336CFF"
           $color="#FFFFFF"
           onClick={(e) => {
-  e.stopPropagation();
+            e.stopPropagation();
 
-  openPopup("select_channel", "popup_window", {
-    onSave: (selectedChannelId) => {
-  // Закрываем текущий popup выбора канала
-  const closeCurrent = () => {
-    const { popup, goBack, closePopup } = usePopupStore.getState();
-    popup?.previousPage?.length > 0 ? goBack() : closePopup();
-  };
+            openPopup("select_channel", "popup_window", {
+              onSave: (selectedChannelId) => {
+                const closeCurrent = () => {
+                  const { popup, goBack, closePopup } = usePopupStore.getState();
+                  popup?.previousPage?.length > 0 ? goBack() : closePopup();
+                };
 
-  closeCurrent();
+                closeCurrent();
 
-  // Открываем add_post с небольшой задержкой
-  setTimeout(() => {
-    openPopup("add_post", "popup", {
-      selectedDate: new Date(), // текущее время
-      channelId: selectedChannelId, // передаем id выбранного канала
-    });
-  }, 0); // 50ms задержка, можно увеличить до 100ms, если нужно
-},
-    loading: false,
-  });
-}}
+                setTimeout(() => {
+                  openPopup("add_post", "popup", {
+                    selectedDate: new Date(),
+                    channelId: selectedChannelId, 
+                  });
+                }, 0);
+              },
+              loading: false,
+            });
+          }}
         >
           + Создать новый пост
         </BtnBase>
       </PageHead>
       <CalendarContent>
         <CalendarGrid>
-          <CalendarBlock posts={posts} eventsPending={eventsPending}/>
+          <CalendarBlock posts={posts} eventsPending={eventsPending} />
         </CalendarGrid>
         <CalendarStatistic >
           <StatisticTitle><AiGeneratorIcon color="#336CFF" />Статистика</StatisticTitle>
@@ -86,7 +84,7 @@ const Calendar = () => {
           </StatisticList>
         </CalendarStatistic>
         <CalendarThisDay>
-          <ThisDay posts={posts} eventsPending={eventsPending}/>
+          <ThisDay posts={posts} eventsPending={eventsPending} />
         </CalendarThisDay>
       </CalendarContent>
     </CalendarContainer>

@@ -52,7 +52,7 @@ const MyOrdersPopup = () => {
     { value: "true", label: "Успешно" },
     { value: "false", label: "Ошибка" },
   ];
-
+  console.log(myOrders)
   return (
     <OrdersContainer>
       <OrdersHead>

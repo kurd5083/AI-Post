@@ -49,8 +49,7 @@ const CardPablish = ({ item, bg, selectedChannel }) => {
         : null,
       serverId: item.id,
       placeholder: "Новый пост",
-      url: item.url,
-      progress: `${postsById.text?.length || 0} / 1024`,
+      url: item.url
     });
     changeContent('create_post', 'popup')
   };

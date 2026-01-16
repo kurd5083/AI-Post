@@ -1,15 +1,30 @@
 import styled from "styled-components";
+import { useState } from "react";
 import { usePopupStore } from "@/store/popupStore"
 
 const BlocksItems = ({ items, color, view = true, onRemove }) => {
   const { popup } = usePopupStore();
-
+  const [errorAvatars, setErrorAvatars] = useState([]);
+  console.log(errorAvatars)
+  console.log(items)
   return (
     <ItemsContainer>
-      {items?.map((item, index) => (
+      {items?.map((item, index) => {
+        const isError = errorAvatars.includes(item.id);
+
+        return (
         <BlocksItem key={index}>
           <ItemValue>
-            {item.icon && <img src={item.icon} alt="item icon" />}
+            {item.icon && !isError &&
+              <img
+                src={item.icon} alt="item icon" 
+                onError={() =>
+                  setErrorAvatars((prev) => [
+                    ...prev,
+                    item.id,
+                  ])
+                }
+              />}
             {item.value}
           </ItemValue>
           {view && (
@@ -27,34 +42,41 @@ const BlocksItems = ({ items, color, view = true, onRemove }) => {
             </RemoveBtn>
           )}
         </BlocksItem>
-      ))}
+        )
+      })}
     </ItemsContainer>
   )
 }
+
 const ItemsContainer = styled.div`
-    display: flex;
-    flex-wrap: wrap;
-    gap: 16px;
-    margin-top: 32px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-top: 32px;
 `
 const BlocksItem = styled.p`
-    flex: 1;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 20px;
-    border-radius: 12px;
-    border: 2px solid #333E59;
-    padding: 16px 16px 18px 24px;
-    max-width: 240px;
-    width: 100%;
-    font-size: 14px;
-    font-weight: 700;
+  flex: 1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  border-radius: 12px;
+  border: 2px solid #333E59;
+  padding: 16px 16px 18px 24px;
+  max-width: 240px;
+  width: 100%;
+  font-size: 14px;
+  font-weight: 700;
 `
 const ItemValue = styled.span`
-    display: flex;
-    align-items: center;
-    gap: 16px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+
+  img {
+    width: 24px;
+    height: 24px;
+  }
 `
 const RemoveBtn = styled.button`
   padding: 0;
@@ -68,4 +90,5 @@ const RemoveBtn = styled.button`
     }
   }     
 `;
+
 export default BlocksItems

@@ -62,14 +62,17 @@ const CardArhive = ({ item, bg, selectedChannel }) => {
           )}
           <p>{selectedChannel.name}</p>
         </CardPablishItemName>
-          <CardPablishItemTime>
+        <CardPablishItemTime>
           <p>Дата публикации поста: </p>
           <span>
             {item.publishedAt
-              ? new Date(item.publishedAt).toLocaleDateString("ru-RU") + " " +
-              new Date(item.publishedAt).toLocaleTimeString("ru-RU", {
+              ? new Date(item.publishedAt).toLocaleString("ru-RU", {
+                day: "2-digit",
+                month: "2-digit",
+                year: "numeric",
                 hour: "2-digit",
                 minute: "2-digit",
+                timeZone: "UTC",
               })
               : "Дата не указана"}
           </span>
@@ -138,17 +141,7 @@ const CardArhive = ({ item, bg, selectedChannel }) => {
           disabled={deletePending}>
           <DelIcon />
         </CardButton>
-        {/* <CardButton
-          onClick={() =>
-            changeContent("change_time_card", "popup_window", {
-              postId: item.id,
-              channelId: selectedChannel?.id,
-              time: item.publishedAt,
-            })
-          }
-        >
-          <TimeIcon />
-        </CardButton> */}
+
       </CardPablishButtons>
     </CardPablishItem>
   )

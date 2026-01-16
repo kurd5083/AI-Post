@@ -4,17 +4,16 @@ import BtnBase from "@/shared/BtnBase";
 import CloseIcon from "@/icons/CloseIcon";
 import { usePopupStore } from "@/store/popupStore";
 import { useNotificationStore } from "@/store/notificationStore";
-import { useUpdatePostTime } from "@/lib/posts/useUpdatePostTime";
+import { useUpdatePost } from "@/lib/posts/useUpdatePost";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
 const ChangeTimePopupCard = () => {
 	const { popup, goBack } = usePopupStore();
 	const { addNotification } = useNotificationStore();
-	const { mutate: updatePostTime, isPending: isTimePending } = useUpdatePostTime();
+	const { mutate: updatePostMutation, isPending: updatePending } = useUpdatePost();
 
 	const postId = popup?.data?.postId;
-	const channelId = popup?.data?.channelId;
 	const publishedAt = popup?.data?.time;
 
 	const initialDate = publishedAt ? new Date(publishedAt) : null;
@@ -73,12 +72,14 @@ const ChangeTimePopupCard = () => {
 		if (baseDateUTC.getTime() < nowUTCms) {
 			return addNotification("Нельзя выбрать дату и время в прошлом", "info");
 		}
-
-		updatePostTime(
+		const basePayload = {
+			publishedAt: baseDateUTC.toISOString(),
+			calendarScheduledAt: baseDateUTC.toISOString(),
+		};
+		updatePostMutation(
 			{
 				postId,
-				channelId,
-				publishedAt: baseDateUTC.toISOString(),
+				postData: basePayload
 			},
 			{
 				onSuccess: () => {
@@ -129,8 +130,8 @@ const ChangeTimePopupCard = () => {
 			</TimeWrapper>
 
 			<ChangeTimeButtons>
-				<BtnBase $color="#D6DCEC" $bg="#336CFF" onClick={handleSave} disabled={isTimePending}>
-					{isTimePending ? "Сохранение..." : "Сохранить"}
+				<BtnBase $color="#D6DCEC" $bg="#336CFF" onClick={handleSave} disabled={updatePending}>
+					{updatePending ? "Сохранение..." : "Сохранить"}
 				</BtnBase>
 				<BtnBase $color="#D6DCEC" $bg="#242A3A" onClick={() => goBack()}>
 					Отменить

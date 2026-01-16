@@ -6,6 +6,7 @@ import arrow from "@/assets/arrow.svg";
 import useFadeOnScroll from "@/lib/useFadeOnScroll";
 import { useUserChannels } from "@/lib/channels/useUserChannels";
 import { useSendPostToChannel } from "@/lib/posts/useSendPostToChannel";
+import normalizeUrl from "@/lib/normalizeUrl";
 
 import ModernLoading from "@/components/ModernLoading";
 
@@ -15,7 +16,7 @@ import AvaPlug from "@/shared/AvaPlug";
 import { useCalendarStore } from "@/store/calendarStore";
 import { useNotificationStore } from "@/store/notificationStore";
 import { usePopupStore } from "@/store/popupStore"
-
+import { useLightboxStore } from "@/store/lightboxStore";
 
 const ThisDay = ({ posts, eventsPending }) => {
   const { fadeVisible, ref } = useFadeOnScroll(20);
@@ -24,11 +25,12 @@ const ThisDay = ({ posts, eventsPending }) => {
   const [publishingPosts, setPublishingPosts] = useState({});
   const { addNotification } = useNotificationStore();
   const { popup, openPopup } = usePopupStore();
+  const { openLightbox } = useLightboxStore();
 
   console.log(publishingPosts)
   const [selectedChannel, setSelectedChannel] = useState(null);
-    const { mutate: sendPost, isPending: isSendPending } = useSendPostToChannel();
-  
+  const { mutate: sendPost, isPending: isSendPending } = useSendPostToChannel();
+
   useEffect(() => {
     if (!selectedDate) {
       const today = new Date();
@@ -67,18 +69,25 @@ const ThisDay = ({ posts, eventsPending }) => {
     month: "long",
   });
 
-  const filteredPosts = selectedChannel
-    ? posts?.filter(post => post.channelId === selectedChannel.value)
-    : posts;
+  const filteredPosts =
+    !selectedChannel || selectedChannel.value === 'all'
+      ? posts
+      : posts?.filter(post => post.channelId === selectedChannel.value);
 
   const formatUTCTime = (utcString) => {
     if (!utcString) return "";
+
     const d = new Date(utcString);
+
+    const day = String(d.getUTCDate()).padStart(2, "0");
+    const month = String(d.getUTCMonth() + 1).padStart(2, "0");
+    const year = d.getUTCFullYear();
+
     const hours = String(d.getUTCHours()).padStart(2, "0");
     const minutes = String(d.getUTCMinutes()).padStart(2, "0");
-    return `${hours}:${minutes}`;
-  };
 
+    return `${day}.${month}.${year} ${hours}:${minutes}`;
+  };
   const handlePublishNow = (item) => {
     const cardId = item.id;
     const postId = item.postId;
@@ -119,11 +128,18 @@ const ThisDay = ({ posts, eventsPending }) => {
       <ChannelRow>
         <Label>Канал</Label>
         <CustomSelect
-          options={userChannels?.map(c => ({
-            value: c.id,
-            label: c.name,
-            avatar: c.avatarUrl
-          }))}
+          options={[
+            {
+              value: 'all',
+              label: 'Все каналы',
+              avatar: null
+            },
+            ...(userChannels?.map(c => ({
+              value: c.id,
+              label: c.name,
+              avatar: c.avatarUrl
+            })) ?? [])
+          ]}
           value={selectedChannel?.value}
           onChange={(option) => setSelectedChannel(option)}
         />
@@ -135,31 +151,46 @@ const ThisDay = ({ posts, eventsPending }) => {
 
       <Grid $fadeVisible={fadeVisible} ref={ref}>
         {filteredPosts?.map((item) => (
+
           <Card key={item.id}>
+            {console.log(item)}
             <CardHeader>
               <CardAuthor>
                 <AvaPlug width="32px" height="32px" />
-                <CardName>{item.username}</CardName>
+                <CardName>{item.channel.name}</CardName>
               </CardAuthor>
               <CardEdit
-              onClick={(e) => {
+                onClick={(e) => {
                   e.stopPropagation();
                   openPopup("update_calendar_event", "popup_window", { event: item, channelId: item.channelId });
                 }}
-              
+
               >Изменить</CardEdit>
             </CardHeader>
-            {item.img && <CardPreview src={item.img} width={48} height={48} />}
+            {item.post?.images[0] && (
+              <CardImage
+                src={normalizeUrl(item.post?.images[0])}
+                alt='post'
+                onClick={() =>
+                  openLightbox({
+                    images: item.post?.images.map(i =>
+                      i instanceof File || i instanceof Blob ? URL.createObjectURL(i) : normalizeUrl(i)
+                    ),
+                    initialIndex: 0
+                  })
+                }
+              />
+            )}
             <CardTitle>{item.title}</CardTitle>
             <CardSubtitle>{item?.post?.summary}</CardSubtitle>
             <CardFooter>
-              <CardTime>В {formatUTCTime(item.scheduledAt)}</CardTime>
+              <CardTime>{formatUTCTime(item.scheduledAt)}</CardTime>
               <CardPublish
-  onClick={() => handlePublishNow(item)}
-  disabled={publishingPosts[item.id]} 
->
-  {publishingPosts[item.id] ? "Публикация..." : "Опубликовать"}
-</CardPublish>
+                onClick={() => handlePublishNow(item)}
+                disabled={publishingPosts[item.id]}
+              >
+                {publishingPosts[item.id] ? "Публикация..." : "Опубликовать"}
+              </CardPublish>
             </CardFooter>
           </Card>
         ))}
@@ -211,19 +242,24 @@ const SectionTitle = styled.h2`
 const Grid = styled.div`
 	box-sizing: border-box;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(500px, 1fr));
   grid-template-rows: min-content;
   gap: 16px 8px;
 	overflow-y: auto;
   scrollbar-width: none;
   max-height: calc(100dvh - 480px);
-	min-height: 600px;
+	min-height: 800px;
 	padding-bottom: 30px;
-	
+  @media(max-width: 1800px) {
+    grid-template-columns: 1fr;
+  }
 	@media(max-width: 1400px) {
     padding-bottom: 0px;
+    grid-template-columns: repeat(2, 1fr);
   }
-
+  @media(max-width: 768px) {
+    grid-template-columns: 1fr;
+  }
 	&::after {
     content: '';
     position: fixed;
@@ -243,6 +279,8 @@ const Grid = styled.div`
   }
 `;
 const Card = styled.div`
+  display: flex;
+  flex-direction: column;
   background: #181F30;
   border-radius: 24px;
   padding: 24px;
@@ -268,9 +306,10 @@ const CardEdit = styled.p`
   font-weight: 700;
   cursor: pointer;
 `;
-const CardPreview = styled.img`
+const CardImage = styled.img`
+  height: 300px;
+  object-fit: cover;
   border-radius: 16px;
-  margin-bottom: 16px;
 `;
 const CardTitle = styled.h2`
   font-size: 24px;
@@ -279,16 +318,15 @@ const CardTitle = styled.h2`
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
+  flex-grow: 1;
+  margin-top: 16px;
 `;
 const CardSubtitle = styled.p`
 	font-weight: 600;
   font-size: 14px;
   color: #6A7080;
   margin: 16px 0;
-	display: -webkit-box;
-  -webkit-line-clamp: 1;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
+
 `;
 const CardFooter = styled.div`
   display: flex;

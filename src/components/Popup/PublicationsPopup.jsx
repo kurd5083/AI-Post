@@ -90,6 +90,7 @@ const PublicationsPopup = () => {
     result.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
     return result;
   }, [basePosts, dateFilter]);
+
   const filterByDate = (postsArray) => {
     if (!postsArray) return [];
     let result = [...postsArray];
@@ -123,17 +124,17 @@ const PublicationsPopup = () => {
 
     return result;
   };
+
   const filteredAllPosts = useMemo(() => filterByDate(posts), [posts, dateFilter]);
   const filteredPremoderation = useMemo(
     () => filterByDate(posts?.filter((p) => p.status === "PENDING_MODERATION")),
     [posts, dateFilter]
   );
   const filteredArchived = useMemo(() => filterByDate(postsArchived), [postsArchived, dateFilter]);
-
+  console.log(filteredAllPosts)
   const allPostsCount = filteredAllPosts.length;
   const allPremoderationCount = filteredPremoderation.length;
   const allArchivedCount = filteredArchived.length;
-
 
   const totalPages = Math.ceil(filteredPostsByDate.length / itemsPerPage);
   const indexOfLast = currentPage * itemsPerPage;

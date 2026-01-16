@@ -92,11 +92,22 @@ const SourcesPopup = () => {
           onChange={setUrl}
           onSubmit={handleAddSource}
         />
+        {console.log(localSources)}
         {localSources.length === 0 ? (
           <EmptyText>Источники не добавлены</EmptyText>
         ) : (
           <BlocksItems
-            items={localSources.map((source) => ({ value: source.name, id: source.id }))}
+            items={localSources.map((source) => {
+              const url = new URL(source.url);
+              const domain = url.origin;
+              const favicon = `${domain}/favicon.ico`;
+
+              return {
+                icon: favicon,
+                value: source.name,
+                id: source.id
+              };
+            })}
             color="#2B89ED"
             onRemove={handleRemoveSource}
           />

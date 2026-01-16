@@ -38,6 +38,7 @@ const AiGeneratorPopup = () => {
   const { user } = useUser();
   const { popup, changeContent } = usePopupStore();
   const { userChannels } = useUserChannels();
+  const [savingPosts, setSavingPosts] = useState({});
   const {
     posts,
     selectedPost,
@@ -106,7 +107,7 @@ const AiGeneratorPopup = () => {
     }
     const postChannelId =
       popup?.data?.channelId ||
-      (post.serverId ? popup?.data?.channelId : null) || 
+      (post.serverId ? popup?.data?.channelId : null) ||
       usePostsStore.getState().channelMap[post.postId]
 
     if (!postChannelId) {
@@ -125,13 +126,15 @@ const AiGeneratorPopup = () => {
 
     const publishedAt = baseDate.toISOString();
 
+    setSavingPosts(prev => ({ ...prev, [post.postId]: true }));
+
     const basePayload = {
       title: post.title,
       text: post.text,
       channelId: postChannelId,
       publishedAt,
       calendarScheduledAt: publishedAt,
-      summary: post.summary,  
+      summary: post.summary,
       url: post.url,
     };
 
@@ -153,6 +156,9 @@ const AiGeneratorPopup = () => {
           addNotification("Пост успешно сохранен", "success");
         },
         onError: (err) => addNotification(err.message || "Ошибка сохранения поста", "error"),
+        onSettled: () => {
+          setSavingPosts(prev => ({ ...prev, [post.postId]: false }));
+        }
       });
     } else {
       updatePostMutation({ postId: post.serverId, postData: basePayload }, {
@@ -161,6 +167,9 @@ const AiGeneratorPopup = () => {
           addNotification("Пост успешно обновлен", "update");
         },
         onError: (err) => addNotification(err.message || "Ошибка обновления поста", "error"),
+        onSettled: () => {
+          setSavingPosts(prev => ({ ...prev, [post.postId]: false }));
+        }
       });
     }
   };
@@ -509,7 +518,15 @@ const AiGeneratorPopup = () => {
                 <ButtonsMainTop>
                   <BtnBase $padding="21px 22px" $color="#EF6284" $bg="#241E2D" onClick={() => handleRemovePost(post.postId)}>Отменить</BtnBase>
                   <BtnBase $padding="21px 22px" $border $bg="transporent" $color="#6A7080" onClick={() => changeContent("change_time", "popup_window", { postId: post.postId })}>Изменить время</BtnBase>
-                  <BtnBase $padding="21px 21.5px" $color="#336CFF" $bg="#161F37" onClick={() => handleSavePost(post)} disabled={updatePending || createPostPending}>{updatePending ||createPostPending ? "Сохраняем..." : "Сохранить"}</BtnBase>
+                  <BtnBase
+                    $padding="21px 22px"
+                    $color="#336CFF"
+                    $bg="#161F37"
+                    onClick={() => handleSavePost(post)}
+                    disabled={savingPosts[post.postId]}
+                  >
+                    {savingPosts[post.postId] ? "Сохраняем..." : "Сохранить"}
+                  </BtnBase>
                 </ButtonsMainTop>
                 <BtnBase $padding="21px 18px" $border $width="100%" $bg="transporent" $color="#6A7080" onClick={() => handlePublishNow(post)} disabled={isSendPending}>{isSendPending ? "Публикация..." : "Опубликовать сейчас"}</BtnBase>
               </ButtonsAll>

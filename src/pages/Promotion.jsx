@@ -4,10 +4,13 @@ import CustomSelect from '@/shared/CustomSelect'
 import BtnBase from "@/shared/BtnBase";
 import { Link } from "react-router";
 import { usePromotionServices } from "@/lib/promotion/usePromotionServices";
+import SpeakerIcon from "@/icons/SpeakerIcon";
+import ModernLoading from "@/components/ModernLoading";
+import { useCreatePromotionOrder } from "@/lib/promotion/useCreatePromotionOrder";
 
 const Promotion = () => {
-	const { servicesData } = usePromotionServices();
-
+	const { servicesData, servicesDataPending } = usePromotionServices();
+	console.log(servicesData)
 	return (
 		<PromotionContainer>
 			<PageHead />
@@ -39,21 +42,42 @@ const Promotion = () => {
 					/>
 				</label>
 			</PromotionFilter>
-			<PromotionCards>
-				{servicesData?.length > 0 ? servicesData.map((item) => (
-					<PromotionCard key={item.id}>
-						<img src={item.icon} alt={`${item.title} icon`} />
-						<PromotionCardInfo>
-							<PromotionCardArea>{item.area}</PromotionCardArea>
-							<h3>{item.title}</h3>
-							<PromotionCardDesc>{item.description}</PromotionCardDesc>
-							<BtnBase $color="#fff" $bg="#336CFF" $padding="17px 80px">Заказать</BtnBase>
-						</PromotionCardInfo>
-					</PromotionCard>
-				)) : (
-					<p>Услуги не найдены</p>
-				)}
-			</PromotionCards>
+			{servicesDataPending ? (
+				<ModernLoading text="Загрузка услуг..." />
+			) : (
+				<PromotionCards>
+					{servicesData?.length > 0 ? servicesData.map((item) => (
+						<PromotionCard key={item.service}>
+							<CardIcon>
+								<SpeakerIcon width={24} height={24} />
+
+							</CardIcon>
+							<PromotionCardInfo>
+								<PromotionCardArea>{item.category}</PromotionCardArea>
+								<h3>{item.name}</h3>
+								<PromotionCardDesc>
+									<InfoRow>
+										<span>Мин/Макс: {item.min} / {item.max}</span>
+										<span>Цена: {item.rate}</span>
+										<span>Тип: {item.type}</span>
+									</InfoRow>
+
+									<Tags>
+										{item.refill && <Tag $bg="#336CFF">Refill</Tag>}
+										{item.cancel && <Tag $bg="#FF3B30">Cancel</Tag>}
+										{item.dripfeed && <Tag $bg="#FFD60A" $color="#000">Dripfeed</Tag>}
+									</Tags>
+								</PromotionCardDesc>
+								<BtnBase $color="#fff" $bg="#336CFF" $padding="17px 80px">
+									Заказать
+								</BtnBase>
+							</PromotionCardInfo>
+						</PromotionCard>
+					)) : (
+						<EmptyBlock>Услуги не найдены</EmptyBlock>
+					)}
+				</PromotionCards>
+			)}
 		</PromotionContainer>
 	)
 }
@@ -115,7 +139,7 @@ const PromotionFilter = styled.div`
 `
 const PromotionCards = styled.div`
 	display: grid;
-	grid-template-columns: repeat(2, minmax(400px, 1fr));
+	grid-template-columns: repeat(auto-fill, minmax(500px, 1fr));
 	gap: 16px;
 	padding: 0 56px;
 
@@ -148,12 +172,14 @@ const PromotionCard = styled.div`
 		margin-top: 24px;
 	}
 `
+const CardIcon = styled.div`
+	margin-top: 40px;
+`
 const PromotionCardInfo = styled.div`
 	h3 {
 		font-size: 24px;
 		font-weight: 700;
 		margin-bottom: 16px;
-		max-width: 350px;
 	}
 `
 const PromotionCardArea = styled.p`
@@ -162,16 +188,52 @@ const PromotionCardArea = styled.p`
 	color: #336CFF;
 	margin-bottom: 16px;
 `
-const PromotionCardDesc = styled.p`
-	font-size: 14px;
-	line-height: 18px;
-	font-weight: 600;
-	color: #6A7080;
-	max-width: 350px;
-	margin-bottom: 32px;
-	
-	@media(max-width: 480px) {
- 		margin-bottom: 24px;
-  }
+const PromotionCardDesc = styled.div`
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 600;
+  color: #6A7080;
+  margin-bottom: 24px;
 `
+
+const InfoRow = styled.div`
+  display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #6A7080;
+
+  span {
+    background-color: #1F2538;
+    padding: 6px 10px;
+    border-radius: 8px;
+  }
+`;
+
+const Tags = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+`
+
+const Tag = styled.span`
+  background-color: ${({ $bg }) => $bg || '#fff'};
+  color: ${({ $color }) => $color || '#fff'};
+  font-size: 12px;
+  font-weight: 700;
+  padding: 4px 8px;
+  border-radius: 8px;
+`
+const EmptyBlock = styled.div`
+	text-align: center;
+	color: #6A7080;
+	padding: 48px 0;
+	font-weight: 600;
+	background-color: #1C2438;
+	border-radius: 16px;
+	margin-top: 40px;
+`;
 export default Promotion
