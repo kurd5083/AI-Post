@@ -229,14 +229,11 @@ const IndustrialStyleInfo = styled.div`
   div {
     background-color: #1C2336;
     box-sizing: border-box;
-    padding: 32px;
+    padding: 24px;
     border-radius: 24px;
-    min-height: 170px;
+    height: 270px;
 		@media (max-width: 768px) {
 			width: 100%;
-		}
-    @media (max-width: 480px) {
-			padding: 24px;
 		}
   }
   textarea {
@@ -250,6 +247,7 @@ const IndustrialStyleInfo = styled.div`
     line-height: 24px;
     font-weight: 600;
     scrollbar-width: none;
+    height: calc(100% - 50px);
   }
   button {
     position: absolute;

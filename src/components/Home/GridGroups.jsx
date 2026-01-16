@@ -276,6 +276,12 @@ const Status = styled.div`
   align-items: center;
   justify-content: center;
   font-size: 12px;
+  @media (max-width: 480px) {
+    width: 28px;
+    height: 28px;
+     transform: translate(40%, -50%);
+     font-size: 11px;
+  }
 `;
 const ButtonsWrap = styled.div`
   display: flex;
