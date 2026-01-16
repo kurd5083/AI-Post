@@ -328,7 +328,9 @@ const AiGeneratorPopup = () => {
         </h2>
         <BtnBase $padding="21px 24px" onClick={() => addPost()}>+ Добавить пост</BtnBase>
       </GeneratorHead>
-
+      <AddPostButton>
+        <BtnBase $padding="21px 24px" onClick={() => addPost()}>+ Добавить пост</BtnBase>
+      </AddPostButton>
       <GeneratorList>
         {posts.map(post => (
           <ListItem key={post.postId}>
@@ -598,6 +600,16 @@ const GeneratorHead = styled.div`
     margin: 0;
   }
 `;
+const AddPostButton = styled.div`
+  display: none;
+  @media(max-width: 768px) {
+    display: flex;
+    justify-content: center;
+    grid-column:  1 / span 5;
+    grid-row: 3;
+  }
+`;
+
 const GeneratorList = styled.div`
   position: relative;
   box-sizing: border-box;
@@ -609,7 +621,7 @@ const GeneratorList = styled.div`
   overflow-y: auto;
   scrollbar-width: none;
   max-height: calc(100dvh - 285px);
-  min-height: 600px;
+  min-height: 650px;
   height: 100%;
   
   @media(max-width: 2000px) {
@@ -618,6 +630,9 @@ const GeneratorList = styled.div`
   @media(max-width: 1800px) {
     grid-column: 1 /span 5;
     grid-row: 3;
+  }
+  @media(max-width: 768px) {
+    grid-row: 4;
   }
   @media(max-width: 480px) {
     gap: 240px;
