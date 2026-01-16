@@ -55,7 +55,6 @@ const ItemsContainer = styled.div`
   margin-top: 32px;
 `
 const BlocksItem = styled.p`
-  flex: 1;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -64,7 +63,7 @@ const BlocksItem = styled.p`
   border: 2px solid #333E59;
   padding: 16px 16px 18px 24px;
   max-width: 240px;
-  width: 100%;
+  width: min-content;
   font-size: 14px;
   font-weight: 700;
 `
