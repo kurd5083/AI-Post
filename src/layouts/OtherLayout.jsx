@@ -117,6 +117,7 @@ const AuthOverlay = styled.div`
   justify-content: center;
   align-items: center;
   z-index: 1000;
+  padding: 0 20px;
 
   h2 {
     font-size: 24px;
@@ -126,6 +127,7 @@ const AuthOverlay = styled.div`
   p {
     margin-bottom: 24px;
     color: #6A7080;
+    text-align: center;
   }
 `;
 
