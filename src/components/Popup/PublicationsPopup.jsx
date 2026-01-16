@@ -131,7 +131,6 @@ const PublicationsPopup = () => {
     [posts, dateFilter]
   );
   const filteredArchived = useMemo(() => filterByDate(postsArchived), [postsArchived, dateFilter]);
-  console.log(filteredAllPosts)
   const allPostsCount = filteredAllPosts.length;
   const allPremoderationCount = filteredPremoderation.length;
   const allArchivedCount = filteredArchived.length;

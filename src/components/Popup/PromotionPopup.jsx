@@ -1,16 +1,24 @@
 import { useState, useEffect } from "react";
 import styled from "styled-components";
+import { Swiper, SwiperSlide } from "swiper/react";
+import "swiper/css";
+
+import del from "@/assets/del.svg";
+
 import ToggleSwitch from "@/shared/ToggleSwitch";
 import Counter from "@/shared/Counter";
 import BtnBase from "@/shared/BtnBase";
-import { usePopupStore } from "@/store/popupStore";
+
 import { useCreateConfigСhannel } from "@/lib/channels/promotion/useCreateConfigСhannel";
 import { useGetChannelPromotionConfig } from "@/lib/channels/promotion/useGetChannelPromotionConfig";
 import { useUpdatePromotionConfig } from "@/lib/channels/promotion/useUpdatePromotionConfig";
 import { useCreatePromotionOrders } from "@/lib/channels/promotion/useCreatePromotionOrders";
-import del from "@/assets/del.svg";
+
 import ModernLoading from "@/components/ModernLoading";
+
 import { useNotificationStore } from "@/store/notificationStore";
+import { usePopupStore } from "@/store/popupStore";
+
 
 const MAX_POSTS = 10;
 
@@ -44,7 +52,7 @@ const PromotionPopup = () => {
       setMaxViews(promotionConfig.maxViews || "");
     }
   }, [promotionConfig]);
-   const parseUrlDomain = (input) => {
+  const parseUrlDomain = (input) => {
     try {
       const trimmed = input.trim();
       if (!/^https?:\/\//i.test(trimmed)) return null;
@@ -191,10 +199,16 @@ const PromotionPopup = () => {
 
   return (
     <PromotionContainer>
-      <PromotionHead>
-        <PromotionHeadText $active={true}>Просмотр</PromotionHeadText>
-        <PromotionHeadText onClick={() => changeContent("boosts")}>Бусты</PromotionHeadText>
-        <PromotionHeadText onClick={() => changeContent("my_orders")}>Мои заказы</PromotionHeadText>
+      <PromotionHead spaceBetween={32} slidesPerView="auto" grabCursor>
+        <PromotionHeadTextSlide>
+          <PromotionHeadText $active={true}>Просмотр</PromotionHeadText>
+        </PromotionHeadTextSlide>
+        <PromotionHeadTextSlide>
+          <PromotionHeadText onClick={() => changeContent("boosts")}>Бусты</PromotionHeadText>
+        </PromotionHeadTextSlide>
+        <PromotionHeadTextSlide>
+          <PromotionHeadText onClick={() => changeContent("my_orders")}>Мои заказы</PromotionHeadText>
+        </PromotionHeadTextSlide>
       </PromotionHead>
 
       {promotionLoading ? (
@@ -321,25 +335,34 @@ const PromotionPopup = () => {
           )}
         </>
       )}
-
-      <BtnBase
+      <PromotionButtons>
+         <BtnBase
         $margin="64"
         onClick={handleSaveConfig}
         disabled={createConfigPending || updatePromotionPending}
       >
         {createConfigPending || updatePromotionPending ? "Сохраняем..." : "Сохранить"}
       </BtnBase>
+      </PromotionButtons>
+     
     </PromotionContainer>
   );
 };
 
 
 const PromotionContainer = styled.div`
-  padding: 0 56px 30px;
-  @media(max-width: 1600px) { padding: 0 32px 30px; }
-  @media(max-width: 768px) { padding: 0 24px 30px; }
+  padding-bottom: 30px;
 `;
-const PromotionHead = styled.div` display: flex; gap: 32px; `;
+const PromotionHead = styled(Swiper)` 
+  display: flex; 
+  margin: 0; 
+  padding: 0 56px;
+  @media(max-width: 1600px) { padding: 0 32px }
+  @media(max-width: 768px) { padding: 0 24px }
+`;
+const PromotionHeadTextSlide = styled(SwiperSlide)`
+  width: fit-content;
+`;
 const PromotionHeadText = styled.p`
   display: flex;
   gap: 32px;
@@ -356,6 +379,9 @@ const PromotionViews = styled.div`
   display: flex;
   gap: 32px;
   margin-top: 40px;
+  padding: 0 56px;
+  @media(max-width: 1600px) { padding: 0 32px }
+  @media(max-width: 768px) { padding: 0 24px }
   @media(max-width: 480px) { align-items: flex-start; }
 `;
 const PostTitle = styled.h2` font-size: 24px; font-weight: 700; `;
@@ -365,6 +391,9 @@ const ViewsPost = styled.div`
   display: flex;
   flex-direction: column;
   gap: 32px;
+  padding: 0 56px;
+  @media(max-width: 1600px) { padding: 0 32px }
+  @media(max-width: 768px) { padding: 0 24px }
   @media(max-width: 480px) { margin-top: 48px; }
 `;
 const PromotePost = styled.div`
@@ -372,6 +401,9 @@ const PromotePost = styled.div`
   flex-direction: column;
   gap: 24px;
   margin-top: 64px;
+  padding: 0 56px;
+  @media(max-width: 1600px) { padding: 0 32px }
+  @media(max-width: 768px) { padding: 0 24px }
   @media(max-width: 480px) { margin-top: 48px; }
 `;
 const PromoteText = styled.p`
@@ -416,6 +448,11 @@ const PostInput = styled.input`
   background-color: transparent;
   &::placeholder { color: #D6DCEC; }
   @media(max-width: 480px) { font-size: 16px; }
+`;
+const PromotionButtons = styled.div`
+   padding: 0 56px;
+  @media(max-width: 1600px) { padding: 0 32px }
+  @media(max-width: 768px) { padding: 0 24px }
 `;
 
 export default PromotionPopup;
