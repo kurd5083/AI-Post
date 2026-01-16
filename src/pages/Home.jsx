@@ -12,8 +12,8 @@ const Home = () => {
   return (
     <>
       <Statistics />
-      <FeedMentions/>
-      <TableGroupsHead/>
+      <FeedMentions />
+      <TableGroupsHead />
       <СhannelContainer>
         {viewType === 'grid' ? <GridGroups /> : <TableGroups />}
       </СhannelContainer>

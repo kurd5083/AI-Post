@@ -12,6 +12,7 @@ import Help from '@/pages/Help';
 import News from '@/pages/News';
 import Auth from '@/pages/Auth';
 import AcceptInvite from '@/pages/AcceptInvite';
+import PostAddEdit from '@/pages/PostAddEdit';
 
 export const router = createBrowserRouter([
     {
@@ -87,5 +88,9 @@ export const router = createBrowserRouter([
         children: [
             { index: true, element: <AcceptInvite /> }
         ],
+    },
+    {
+        path: '/post-generated',
+        element: <PostAddEdit />,
     }
 ]);

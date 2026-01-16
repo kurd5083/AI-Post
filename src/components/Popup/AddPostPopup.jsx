@@ -165,7 +165,10 @@ const AddPostPopup = () => {
 						value={dateFilter.value}
 						options={dateValueOptions}
 						onChange={(option) =>
+							{
+							console.log(option)
 							setDateFilter((prev) => ({ ...prev, value: option.value }))
+							}
 						}
 						width="320px"
 						fs="24px"

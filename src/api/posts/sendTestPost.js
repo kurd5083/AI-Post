@@ -14,9 +14,9 @@ export const sendTestPost = async ({ title, summary, images, imagesUrls, url }) 
   const fullUrls = imagesUrls.map(url => {
     try {
       const parsed = new URL(url);
-      return parsed.href; // возвращаем полную ссылку
+      return parsed.href;
     } catch {
-      return url; // если невалидная ссылка — оставляем как есть
+      return url;
     }
   });
 

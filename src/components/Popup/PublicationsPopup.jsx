@@ -90,11 +90,50 @@ const PublicationsPopup = () => {
     result.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
     return result;
   }, [basePosts, dateFilter]);
+  const filterByDate = (postsArray) => {
+    if (!postsArray) return [];
+    let result = [...postsArray];
+    const now = new Date();
 
-  const allPostsCount = posts?.length || 0;
-  const allPremoderationCount =
-    posts?.filter((p) => p.status === "PENDING_MODERATION").length || 0;
-  const allArchivedCount = postsArchived?.length || 0;
+    switch (dateFilter.period) {
+      case "year":
+        if (dateFilter.value)
+          result = result.filter(
+            (p) => new Date(p.createdAt).getUTCFullYear() === dateFilter.value
+          );
+        break;
+      case "month":
+        if (dateFilter.value) {
+          const { year, month } = dateFilter.value;
+          result = result.filter((p) => {
+            const d = new Date(p.createdAt);
+            return d.getUTCFullYear() === year && d.getUTCMonth() === month;
+          });
+        }
+        break;
+      case "week":
+        if (dateFilter.value) {
+          const threshold = new Date(
+            now.getTime() - dateFilter.value * 24 * 60 * 60 * 1000
+          );
+          result = result.filter((p) => new Date(p.createdAt) >= threshold);
+        }
+        break;
+    }
+
+    return result;
+  };
+  const filteredAllPosts = useMemo(() => filterByDate(posts), [posts, dateFilter]);
+  const filteredPremoderation = useMemo(
+    () => filterByDate(posts?.filter((p) => p.status === "PENDING_MODERATION")),
+    [posts, dateFilter]
+  );
+  const filteredArchived = useMemo(() => filterByDate(postsArchived), [postsArchived, dateFilter]);
+
+  const allPostsCount = filteredAllPosts.length;
+  const allPremoderationCount = filteredPremoderation.length;
+  const allArchivedCount = filteredArchived.length;
+
 
   const totalPages = Math.ceil(filteredPostsByDate.length / itemsPerPage);
   const indexOfLast = currentPage * itemsPerPage;
@@ -103,13 +142,15 @@ const PublicationsPopup = () => {
 
   const dateValueOptions = useMemo(() => {
     const now = new Date();
+
     if (dateFilter.period === "year") {
       const currentYear = now.getFullYear();
-      return Array.from({ length: 5 }, (_, i) => ({
-        value: currentYear - i,
-        label: (currentYear - i).toString(),
-      }));
+      return Array.from({ length: 5 }, (_, i) => {
+        const year = currentYear - i;
+        return { value: year, label: year.toString() };
+      });
     }
+
     if (dateFilter.period === "month") {
       const year = now.getFullYear();
       return Array.from({ length: 12 }, (_, i) => ({
@@ -117,6 +158,7 @@ const PublicationsPopup = () => {
         label: new Date(year, i).toLocaleString("ru", { month: "long" }),
       }));
     }
+
     if (dateFilter.period === "week") {
       return [
         { value: 7, label: "Последние 7 дней" },
@@ -124,9 +166,9 @@ const PublicationsPopup = () => {
         { value: 21, label: "Последние 21 день" },
       ];
     }
+
     return [];
   }, [dateFilter.period]);
-  
   const getPaginationRange = (current, total, max = 3) => {
     if (total <= max) return Array.from({ length: total }, (_, i) => i + 1);
     const half = Math.floor(max / 2);
@@ -185,6 +227,7 @@ const PublicationsPopup = () => {
             width="250px"
             fs="24px"
           />
+
         </SwiperSlideHead>
 
         {dateFilter.period !== "all" && (
@@ -193,8 +236,10 @@ const PublicationsPopup = () => {
               placeholder="Уточнить"
               value={dateFilter.value}
               options={dateValueOptions}
-              onChange={(option) =>
+              onChange={(option) => {
+                console.log(option)
                 setDateFilter((prev) => ({ ...prev, value: option.value }))
+              }
               }
               width="320px"
               fs="24px"
@@ -236,8 +281,8 @@ const PublicationsPopup = () => {
                 {filter === "premoderation"
                   ? "Постов на премодерации пока нет"
                   : filter === "archive"
-                  ? "Архивных постов пока нет"
-                  : "Постов пока нет"}
+                    ? "Архивных постов пока нет"
+                    : "Постов пока нет"}
               </EmptyState>
             )}
           </PublicationsList>

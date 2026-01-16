@@ -24,6 +24,7 @@ const CardPablishPremoderation = ({ item, bg, channelId, selectedChannel }) => {
       { postId: item.id, channelId },
       {
         onSuccess: () => {
+          archivePost(item.id);
           addNotification("Пост одобрен", "success");
         },
         onError: (err) => {
@@ -38,6 +39,7 @@ const CardPablishPremoderation = ({ item, bg, channelId, selectedChannel }) => {
       { postId: item.id, channelId },
       {
         onSuccess: () => {
+          archivePost(item.id);
           addNotification("Пост отклонён", "delete");
         },
         onError: (err) => {

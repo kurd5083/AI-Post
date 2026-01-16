@@ -10,9 +10,8 @@ export const useUnarchivePost = () => {
     mutationFn: (postId) => unarchivePost(postId),
     onSuccess: (data) => {
       addNotification("Пост успешно разархивирован", "success");
-      // Обновляем кеш с постами — можно подставить нужный ключ
       queryClient.invalidateQueries(["posts-by-channel-archived"]);
-      queryClient.invalidateQueries(["posts-by-channel"]); // если нужно обновить основной список
+      queryClient.invalidateQueries(["posts-by-channel"]);
     },
     onError: (error) => {
       addNotification(error.message || "Ошибка разархивации поста", "error");

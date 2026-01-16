@@ -22,7 +22,7 @@ import { useTelegramBotLink } from "@/lib/useTelegramBotLink";
 
 
 const MainLayout = () => {
-  const { popup, closePopup } = usePopupStore();
+  const { popup, closePopup, openPopup } = usePopupStore();
   const { isOpen } = useLightboxStore();
   const isAuthenticated = useAuthStore(s => s.isAuthenticated);
   const isInitialized = useAuthStore(s => s.isInitialized);
@@ -31,13 +31,21 @@ const MainLayout = () => {
   const { botLinkData } = useTelegramBotLink();
   const location = useLocation();
 
+
   useEffect(() => {
     init();
   }, [init]);
 
+  //   useEffect(() => {
+  //   closePopup();
+  // }, [location.pathname, token, isAuthenticated, closePopup]);
+
   useEffect(() => {
-    closePopup();
-  }, [location.pathname, token, isAuthenticated]);
+    if (location.state?.openPostPopup && location.state?.postId) {
+      openPopup('create_post', 'popup');
+      window.history.replaceState({}, document.title);
+    }
+  }, [location.state?.openPostPopup, location.state?.postId, openPopup]);
 
   if (!isInitialized) {
     return <p>Загрузка...</p>;

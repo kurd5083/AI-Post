@@ -49,7 +49,8 @@ const CardPablish = ({ item, bg, selectedChannel }) => {
         : null,
       serverId: item.id,
       placeholder: "Новый пост",
-      url: item.url
+      url: item.url,
+      progress: `${postsById.text?.length || 0} / 1024`,
     });
     changeContent('create_post', 'popup')
   };
@@ -65,7 +66,6 @@ const CardPablish = ({ item, bg, selectedChannel }) => {
       {
         onSuccess: () => {
           archivePost(item.id);
-          // deletePost(item.id);
           addNotification("Пост успешно опубликован", "success");
         },
         onError: (err) => addNotification(err.message || "Ошибка публикации поста", "error"),
