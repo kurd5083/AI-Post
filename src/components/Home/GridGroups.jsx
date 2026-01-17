@@ -42,9 +42,8 @@ const GridGroups = () => {
       }
     });
   }, [channels]);
-  console.log(channels, 'channels')
-  if (channelsPending) {
 
+  if (channelsPending) {
     return (
       <GridContainer>
         <NoChannels>Загрузка каналов...</NoChannels>

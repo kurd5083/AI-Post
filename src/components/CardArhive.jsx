@@ -141,7 +141,6 @@ const CardArhive = ({ item, bg, selectedChannel }) => {
           disabled={deletePending}>
           <DelIcon />
         </CardButton>
-
       </CardPablishButtons>
     </CardPablishItem>
   )

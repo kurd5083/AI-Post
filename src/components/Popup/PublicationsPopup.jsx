@@ -337,6 +337,7 @@ const PublicationsPopup = () => {
 };
 
 const PublicationsHead = styled(Swiper)`
+  position: static;
   display: flex;
   padding: 0 56px;
   min-height: max-content;

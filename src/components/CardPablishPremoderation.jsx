@@ -61,21 +61,21 @@ const CardPablishPremoderation = ({ item, bg, channelId, selectedChannel }) => {
           <p>{selectedChannel.name}</p>
         </CardPablishItemName>
 
-      <CardPablishItemTime>
-  <p>Дата публикации поста: </p>
-  <span>
-    {item.publishedAt
-      ? new Date(item.publishedAt).toLocaleString("ru-RU", {
-          day: "2-digit",
-          month: "2-digit",
-          year: "numeric",
-          hour: "2-digit",
-          minute: "2-digit",
-          timeZone: "UTC",
-        })
-      : "Дата не указана"}
-  </span>
-</CardPablishItemTime>
+        <CardPablishItemTime>
+          <p>Дата публикации поста: </p>
+          <span>
+            {item.publishedAt
+              ? new Date(item.publishedAt).toLocaleString("ru-RU", {
+                day: "2-digit",
+                month: "2-digit",
+                year: "numeric",
+                hour: "2-digit",
+                minute: "2-digit",
+                timeZone: "UTC",
+              })
+              : "Дата не указана"}
+          </span>
+        </CardPablishItemTime>
 
       </CardPablishItemHead>
 
@@ -146,6 +146,7 @@ const CardPablishItem = styled.div`
   border-radius: 24px;
   background-color: ${({ $bg }) => ($bg ? "#181F30" : "transparent")};
   transition: all 0.2s ease;
+  z-index: 10;
 
   &:hover {
     background-color: #181F30;

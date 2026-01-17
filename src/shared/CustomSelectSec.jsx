@@ -68,7 +68,6 @@ const CustomSelect = ({
 };
 
 const SelectWrapper = styled.div`
-  position: relative;
   max-width: ${({$width}) => $width ? $width : '340px'};
   width: 100%;
   font-weight: 700;
@@ -114,6 +113,7 @@ const SelectList = styled.ul`
   min-width: 140px;
   overflow-y: auto;
   scrollbar-width: none;
+  z-index: 222;
   &::-webkit-scrollbar {
     display: none;
   }

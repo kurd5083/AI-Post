@@ -50,14 +50,7 @@ const CalendarPopup = () => {
 };
 
 const CalendarContent = styled.div`
-  padding: 0 56px 30px;
-
-  @media (max-width: 1600px) {
-    padding: 0 32px 30px;
-  }
-  @media (max-width: 768px) {
-    padding: 0 24px 30px;
-  }
+  padding-bottom: 30px;
 `;
 
 export default CalendarPopup;

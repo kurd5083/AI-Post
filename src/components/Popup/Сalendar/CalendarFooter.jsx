@@ -46,12 +46,18 @@ const CalendarFooter = ({ events, channelId }) => {
 
 const CalendarButton = styled.div`
   margin-top: 64px;
+  padding: 0 56px;
+  @media(max-width: 1600px) { padding: 0 32px }
+  @media(max-width: 768px) { padding: 0 24px }
 `;
 
 const CalendarText = styled.p`
   font-size: 24px;
   font-weight: 700;
   margin-top: 64px;
+  padding: 0 56px;
+  @media(max-width: 1600px) { padding: 0 32px }
+  @media(max-width: 768px) { padding: 0 24px }
 `;
 
 export default CalendarFooter;

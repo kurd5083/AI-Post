@@ -46,7 +46,7 @@ const NewsDetail = () => {
 									initialIndex: 0
 								})}
 							/>
-							<PostTimeMobile ><TimeIcon color="#336CFF" />{news?.readingTime}</PostTimeMobile>
+							<PostTimeMobile ><TimeIcon color="#336CFF" />{timeAgo(news?.createdAt)}</PostTimeMobile>
 							<PostTilte>{news?.title}</PostTilte>
 							<PostDescription>{news?.summary}</PostDescription>
 							<PostFooter className="news-meta">
