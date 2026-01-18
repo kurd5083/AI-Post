@@ -10,7 +10,6 @@ import { useNotificationStore } from "@/store/notificationStore";
 import normalizeUrl from "@/lib/normalizeUrl";
 
 const Preview = ({ collapsed, onChange, testResult, view=true }) => {
-  console.log(testResult)
   const { openLightbox } = useLightboxStore();
   const { mutate: sendTestPost, isPending: sendPending } = useSendTestPost();
   const { addNotification } = useNotificationStore();

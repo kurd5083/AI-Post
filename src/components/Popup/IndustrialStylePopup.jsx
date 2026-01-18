@@ -247,7 +247,7 @@ const IndustrialStyleInfo = styled.div`
     line-height: 24px;
     font-weight: 600;
     scrollbar-width: none;
-    height: calc(100% - 50px);
+    height: calc(100% - 70px);
   }
   button {
     position: absolute;
