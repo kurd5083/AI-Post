@@ -70,6 +70,7 @@ const CalendarHeader = () => {
           }}
           width="165px"
           fs="22px"
+          position={false}
         />
       </CalendarHeadSlide>
     </CalendarHead>
@@ -77,7 +78,7 @@ const CalendarHeader = () => {
 };
 
 const CalendarHead = styled(Swiper)`
-  position: static;
+  /* position: static; */
   display: flex;
   margin-bottom: 48px;
   padding: 0 56px 200px;
