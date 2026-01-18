@@ -10,7 +10,6 @@ const CustomSelect = ({
   fs,
   padding,
   width,
-  position=true
 }) => {
   const [open, setOpen] = useState(false);
   const [selected, setSelected] = useState(null);
@@ -42,7 +41,7 @@ const CustomSelect = ({
   }, [value, options]);
 
   return (
-    <SelectWrapper $position={position} ref={selectRef} $width={width}>
+    <SelectWrapper ref={selectRef} $width={width}>
       <SelectHeader onClick={toggle} $fs={fs} $padding={padding}>
         <HeaderLeft>
           {selected?.icon && <img src={selected.icon} alt="icon" width={16} height={16} />}
@@ -69,7 +68,7 @@ const CustomSelect = ({
 };
 
 const SelectWrapper = styled.div`
-  position: ${({$position}) => $position ? 'relative': 'static'};
+  position: relative;
   max-width: ${({$width}) => $width ? $width : '340px'};
   width: 100%;
   font-weight: 700;

@@ -70,7 +70,6 @@ const CalendarHeader = () => {
           }}
           width="165px"
           fs="22px"
-          position={false}
         />
       </CalendarHeadSlide>
     </CalendarHead>
@@ -78,13 +77,13 @@ const CalendarHeader = () => {
 };
 
 const CalendarHead = styled(Swiper)`
-  /* position: static; */
   display: flex;
   margin-bottom: 48px;
-  padding: 0 56px 200px;
+  padding: 0 56px;
   z-index: 0;
-  @media(max-width: 1600px) { padding: 0 32px 200px}
-  @media(max-width: 768px) { padding: 0 24px 200px}
+  overflow: visible !important;
+  @media(max-width: 1600px) { padding: 0 32px}
+  @media(max-width: 768px) { padding: 0 24px}
 `;
 const CalendarHeadSlide = styled(SwiperSlide)`
   width: fit-content;

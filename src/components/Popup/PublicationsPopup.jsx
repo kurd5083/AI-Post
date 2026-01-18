@@ -337,18 +337,17 @@ const PublicationsPopup = () => {
 };
 
 const PublicationsHead = styled(Swiper)`
-  position: static;
   display: flex;
   padding: 0 56px;
   min-height: max-content;
   margin: 0;
-  padding-bottom: 200px;
+  overflow: visible !important;
 
   @media (max-width: 1600px) {
-    padding: 0 32px 200px;
+    padding: 0 32px;
   }
   @media (max-width: 768px) {
-    padding: 0 24px 200px;
+    padding: 0 24px;
   }
 `;
 const SwiperSlideHead = styled(SwiperSlide)`
@@ -377,7 +376,7 @@ const PublicationsFilter = styled.p`
 
 const PublicationsList = styled.div`
   display: grid;
-  margin-top: -150px;
+  margin-top: 40px;
   gap: 16px 24px;
   padding: 0 56px ;
   grid-template-columns: repeat(3, 1fr);
