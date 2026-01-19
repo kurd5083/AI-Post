@@ -7,7 +7,7 @@ export const useDeleteFolder = () => {
   return useMutation({
     mutationFn: (folderId) => deleteFolder(folderId),
     onSuccess: () => {
-      queryClient.invalidateQueries(["channelsGroupedByFolders"]);
+      queryClient.invalidateQueries(["channels-grouped-by-folders"]);
     },
   });
 };

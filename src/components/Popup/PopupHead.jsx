@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import setting from "@/assets/setting.svg";
-import arrow from "@/assets/arrow.svg";
+import ArrowIcon from "@/icons/ArrowIcon";
 import { usePopupStore } from "@/store/popupStore"
 import { popupDatas } from "@/data/popupDatas";
 import CloseIcon from "@/icons/CloseIcon";
@@ -17,7 +17,11 @@ const PopupHead = () => {
     <>
       {popup.content !== 'notifications' && popup.content !== 'replenish' && popup.content !== 'upload_media' && popup.content !== 'profile' && popup.content !== 'create_post' && (
         <PopupListInfo>
-          {popup.content != 'settings' && popup.previousPage?.length !== 0 && <PopupArrow src={arrow} alt="arrow icon" width={8} height={16} onClick={goBack} />}
+          {popup.content != 'settings' && popup.previousPage?.length !== 0 && 
+          <PopupArrow onClick={goBack}> 
+            <ArrowIcon width={8} height={16}/>
+          </PopupArrow>
+          }
           {channel?.avatarUrl ? (
             <PopupListAva src={channel?.avatarUrl} alt="ava icon" width={48} height={48} />
           ) : (
@@ -83,7 +87,7 @@ const PopupListInfo = styled.section`
     padding: 0 24px;
   }
 `
-const PopupArrow = styled.img`
+const PopupArrow = styled.div`
   transform: rotate(180deg);
   cursor: pointer;
 `

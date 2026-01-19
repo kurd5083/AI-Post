@@ -5,6 +5,7 @@ import timeAgo from "@/lib/timeAgo";
 
 const MentionsCard = ({ item, bg }) => {
   const post = item.postDetails;
+  
 	return (
 		<MentionsCardItem $bg={bg}>
 			<MentionsCardItemHead>
@@ -101,6 +102,7 @@ const MentionsCardText = styled.p`
   -webkit-box-orient: vertical;
   overflow: hidden;
   padding-right: 40px;
+  font-family: "Montserrat Alternates", sans-serif;
 `
 
 export default MentionsCard

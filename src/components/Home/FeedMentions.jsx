@@ -1,16 +1,23 @@
 import { useState, useEffect } from "react";
 import styled from "styled-components";
+
 import { Swiper, SwiperSlide } from "swiper/react";
-import "swiper/css";
 import { Navigation } from "swiper/modules";
-import arrow from "@/assets/arrow.svg";
-import MentionsCard from "@/components/MentionsCard";
+import "swiper/css";
+
+import ArrowIcon from "@/icons/ArrowIcon";
 import TgIcon from "@/icons/TgIcon";
+
+import MentionsCard from "@/components/Cards/MentionsCard";
+
 import CustomSelectThree from "@/shared/CustomSelectThree";
+
 import { useUserChannels } from "@/lib/channels/useUserChannels";
 import { useMentions } from "@/lib/tgStat/useMentions";
 
 const FeedMentions = () => {
+  const [atStart, setAtStart] = useState(true);
+  const [atEnd, setAtEnd] = useState(false);
   const [fadeVisible, setFadeVisible] = useState(true);
   const { userChannels } = useUserChannels();
   const [selectedChannelId, setSelectedChannelId] = useState(null);
@@ -27,6 +34,7 @@ const FeedMentions = () => {
   });
 
   const mentionItems = mentions?.response?.items || [];
+  
   return (
     <FeedMentionsContainer>
       <FeedMentionsHead>
@@ -45,22 +53,31 @@ const FeedMentions = () => {
             onChange={setSelectedChannelId}
           />
         </FeedMentionsTitle>
-
-        <FeedMentionsButtons>
-          <FeedMentionsButton className="FeedMentionsPrev">
-            <img src={arrow} alt="arrow icon" />
-          </FeedMentionsButton>
-          <FeedMentionsButton className="FeedMentionsNext">
-            <img src={arrow} alt="arrow icon" />
-          </FeedMentionsButton>
-        </FeedMentionsButtons>
+        {!!mentionItems || !mentionItems.length === 0 && (
+          <FeedMentionsButtons>
+            <FeedMentionsButton
+              disabled={atStart}
+              $disabled={atStart}
+              className="FeedMentionsPrev"
+            >
+              <ArrowIcon color="#D6DCEC" />
+            </FeedMentionsButton>
+            <FeedMentionsButton
+              disabled={atEnd}
+              $disabled={atEnd}
+              className="FeedMentionsNext"
+            >
+              <ArrowIcon color="#D6DCEC" />
+            </FeedMentionsButton>
+          </FeedMentionsButtons>
+        )}
       </FeedMentionsHead>
 
-       {!selectedChannelId || mentionsLoading ? (
-          <EmptyMentions>Загрузка упоминаний...</EmptyMentions>
-        ) : !mentionItems || mentionItems.length === 0 ? (
-          <EmptyMentions>Для выбранного канала нет упоминаний</EmptyMentions>
-        ) : (
+      {!selectedChannelId || mentionsLoading ? (
+        <EmptyMentions>Загрузка упоминаний...</EmptyMentions>
+      ) : !mentionItems || mentionItems.length === 0 ? (
+        <EmptyMentions>Для выбранного канала нет упоминаний</EmptyMentions>
+      ) : (
         <FeedMentionsList
           $fadeVisible={fadeVisible}
           modules={[Navigation]}
@@ -70,8 +87,20 @@ const FeedMentions = () => {
           }}
           spaceBetween={16}
           slidesPerView="auto"
-          onReachEnd={() => setFadeVisible(false)}
-          onFromEdge={() => setFadeVisible(true)}
+          onReachEnd={() => {
+            setFadeVisible(false)
+            setAtEnd(true)
+          }}
+          onFromEdge={() => {
+            setFadeVisible(true)
+            setAtStart(false);
+            setAtEnd(false);
+          }}
+          onReachBeginning={() => setAtStart(true)}
+          onSlideChange={(swiper) => {
+            setAtStart(swiper.isBeginning);
+            setAtEnd(swiper.isEnd);
+          }}
         >
           {mentionItems.map((item, index) => (
             <FeedMentionsItem key={item.mentionId || index}>
@@ -114,6 +143,7 @@ const FeedMentionsTitle = styled.h2`
   display: flex;
   align-items: center;
   gap: 30px;
+  
   @media (max-width: 640px) {
     flex-direction: column;
     align-items: flex-start;
@@ -136,7 +166,9 @@ const FeedMentionsButton = styled.button`
   width: 48px;
   height: 48px;
   border-radius: 50%;
-  background-color: #1C2438;
+  border: 2px solid  ${({ $disabled }) => ($disabled ? "#1C2438" : "transparent")};
+	background-color: ${({ $disabled }) => ($disabled ? "transparent" : "#1C2438")};
+  pointer-events: ${({ $disabled }) => ($disabled ? "none" : "auto")};
 
   @media (max-width: 768px) {
     position: absolute;
@@ -207,6 +239,9 @@ const EmptyMentions = styled.div`
   }
   @media (max-width: 768px) {
     margin: 24px 24px;
+  }
+  @media (max-width: 480px) {
+    font-size: 12px;
   }
 `;
 

@@ -1,11 +1,14 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
+
+import PlusIcon from "@/icons/PlusIcon";
+
 import CustomSelect from "@/shared/CustomSelect";
 import Checkbox from "@/shared/Checkbox";
 import TimeInput from "@/shared/TimeInput";
 import BtnBase from "@/shared/BtnBase";
 import BlocksItems from "@/shared/BlocksItems";
-import PlusIcon from "@/icons/PlusIcon";
+
 import { useCreateChannelSchedule } from "@/lib/channels/schedule/useCreateChannelSchedule";
 import { useChannelSchedule } from "@/lib/channels/schedule/useChannelSchedule";
 import { useUpdateChannelSchedule } from "@/lib/channels/schedule/useUpdateChannelSchedule";
@@ -15,7 +18,6 @@ const SchedulePopup = ({ channelId, DAYS }) => {
   const { addNotification } = useNotificationStore();
 
   const { channelSchedule } = useChannelSchedule(channelId);
-  console.log(channelSchedule, 'channelSchedule')
   const scheduleId = channelSchedule?.id;
   const createSchedule = useCreateChannelSchedule(channelId);
   const updateSchedule = useUpdateChannelSchedule(scheduleId, channelId);
@@ -72,14 +74,12 @@ const SchedulePopup = ({ channelId, DAYS }) => {
     };
 
     if (scheduleId) {
-      // Обновление
       updateSchedule.mutate(payload, {
         onSuccess: () => addNotification("Расписание обновлено", "update"),
         onError: (err) =>
           addNotification(err?.message || "Ошибка при обновлении расписания", "error"),
       });
     } else {
-      // Создание
       createSchedule.mutate(payload, {
         onSuccess: () => addNotification("Расписание создано", "success"),
         onError: (err) =>
@@ -100,10 +100,8 @@ const SchedulePopup = ({ channelId, DAYS }) => {
         value={timezone}
         onChange={(option) => setTimezone(option.value)}
       />
-
       <ScheduleKey>
         <ScheduleKeyTitle>Выберите время публикаций</ScheduleKeyTitle>
-
         <ScheduleInputContainer>
           <TimeInput
             hours={currentTime.hours}
@@ -114,7 +112,6 @@ const SchedulePopup = ({ channelId, DAYS }) => {
             <PlusIcon color="#FFF980" />
           </ScheduleBtn>
         </ScheduleInputContainer>
-
         {publicationTimes.length === 0 ? (
           <EmptyText>Время публикаций не добавлены</EmptyText>
         ) : (
@@ -159,6 +156,7 @@ const ScheduleContainer = styled.div`
   flex-direction: column;
 `;
 const ScheduleTitle = styled.h2`
+  font-family: "Montserrat Alternates", sans-serif; 
   font-size: 24px;
   font-weight: 700;
   margin-bottom: 32px;
@@ -206,6 +204,7 @@ const ScheduleDays = styled.div`
   }
 `;
 const ScheduleDaysBlock = styled.div`
+  font-family: "Montserrat Alternates", sans-serif;
   display: flex;
   flex-direction: column;
   gap: 24px;

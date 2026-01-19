@@ -59,7 +59,7 @@ const MyOrdersPopup = () => {
     { value: "true", label: "Успешно" },
     { value: "false", label: "Ошибка" },
   ];
-  console.log(myOrders)
+
   return (
     <OrdersContainer>
       <OrdersHead spaceBetween={32} slidesPerView="auto" grabCursor>
@@ -181,6 +181,7 @@ const OrdersHeadTextSlide = styled(SwiperSlide)`
   width: fit-content;
 `;
 const OrdersHeadText = styled.p`
+  font-family: "Montserrat Alternates", sans-serif;
   display: flex;
   gap: 32px;
   color: ${({ $active }) => $active ? '#D6DCEC' : '#6A7080'};

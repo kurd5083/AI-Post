@@ -1,16 +1,21 @@
 import { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import del from "@/assets/del.svg";
+
 import setting from "@/assets/setting.svg";
 import list from "@/assets/table-groups/list.svg";
-import { usePopupStore } from "@/store/popupStore"
-import { useChannelsStore } from "@/store/channelsStore";
+import DirIcon from '@/icons/DirIcon';
+import DelIcon from "@/icons/DelIcon";
+
+import СhannelPlug from '@/shared/СhannelPlug';
+
 import { useChannelsGroupedByFolders } from "@/lib/useChannelsGroupedByFolders";
 import { useDeleteChannel } from "@/lib/channels/useDeleteChannel";
 import useResolution from "@/lib/useResolution";
-import DirIcon from '@/icons/DirIcon';
-import СhannelPlug from '@/shared/СhannelPlug';
+
 import { getPendingModerationCount } from '@/api/channels/getPendingModerationCount';
+
+import { usePopupStore } from "@/store/popupStore"
+import { useChannelsStore } from "@/store/channelsStore";
 
 const TableGroups = () => {
   const { openPopup } = usePopupStore();
@@ -134,7 +139,7 @@ const TableGroups = () => {
                   }}
                   title="Удалить"
                 >
-                  <img src={del} alt="del icon" width={14} height={16} />
+                  <DelIcon/>
                 </ButtonDel>
               </ButtonsWrap>
             </TableCell>

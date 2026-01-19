@@ -6,15 +6,15 @@ import del from "@/assets/del.svg";
 
 import PageHead from '@/components/PageHead'
 import PageFilter from "@/components/PageFilter";
+import ModernLoading from "@/components/ModernLoading";
+
+import { useGetMediaLibrary } from "@/lib/mediaLibrary/useGetMediaLibrary";
+import { useDeleteMediaFile } from "@/lib/mediaLibrary/useDeleteMediaFile";
+import { useAddPostImagesMedia } from "@/lib/mediaLibrary/useAddPostImagesMedia";
 
 import { usePopupStore } from "@/store/popupStore";
 import { useNotificationStore } from "@/store/notificationStore";
 import { useLightboxStore } from "@/store/lightboxStore";
-
-import { useGetMediaLibrary } from "@/lib/mediaLibrary/useGetMediaLibrary";
-import ModernLoading from "@/components/ModernLoading";
-import { useDeleteMediaFile } from "@/lib/mediaLibrary/useDeleteMediaFile";
-import { useAddPostImagesMedia } from "@/lib/mediaLibrary/useAddPostImagesMedia";
 
 import BtnBase from "@/shared/BtnBase";
 
@@ -61,7 +61,6 @@ const Media = () => {
     document.body.removeChild(a);
   };
   const handleAddToPost = (item) => {
-    console.log(item)
     if (addingIds.includes(item.id)) return;
 
     setAddingIds(prev => [...prev, item.id]);

@@ -198,6 +198,7 @@ const LinkGenerationItem = styled.div`
   gap: 24px;
 `
 const ItemTitle = styled.h3`
+  font-family: "Montserrat Alternates", sans-serif;
   font-size: 24px;
   font-weight: 700;
 

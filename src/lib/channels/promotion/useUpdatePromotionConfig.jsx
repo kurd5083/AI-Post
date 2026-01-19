@@ -6,6 +6,6 @@ export const useUpdatePromotionConfig = () => {
 
     return useMutation({
         mutationFn: ({channelId, payload}) => updatePromotionConfigByChannel(channelId, payload),
-        onSuccess: (_, { channelId }) => { queryClient.invalidateQueries({ queryKey: ["promotion-config", channelId] }); },
+        onSuccess: (_, { channelId }) => { queryClient.invalidateQueries(["promotion-config", channelId])},
     });
 };

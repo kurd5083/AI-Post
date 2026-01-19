@@ -4,8 +4,8 @@ import bell from "@/assets/bell.svg";
 import burger from "@/assets/header/burger.svg";
 import { usePopupStore } from "@/store/popupStore"
 import { useMenuStore } from "@/store/menuStore";
-import { useUser } from "@/lib/useUser";
-import { useUserBalance } from "@/lib/useUserBalance";
+import { useUser } from "@/lib/user/useUser";
+import { useUserBalance } from "@/lib/user/useUserBalance";
 import { useSidebarStore } from "@/store/sidebarStore";
 
 const Header = () => {

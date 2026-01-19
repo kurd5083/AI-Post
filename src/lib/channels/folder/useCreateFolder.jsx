@@ -7,7 +7,7 @@ export const useCreateFolder = () => {
   return useMutation({
     mutationFn: (folderData) => createFolder(folderData),
     onSuccess: (data) => {
-      queryClient.invalidateQueries(["channelsGroupedByFolders"]);
+      queryClient.invalidateQueries(["channels-grouped-by-folders"]);
     },
   });
 };

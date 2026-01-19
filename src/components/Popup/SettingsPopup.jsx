@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
-import arrow from "@/assets/arrow.svg";
+import ArrowIcon from "@/icons/ArrowIcon";
 import { settingsDatas } from "@/data/settingsDatas";
 import ToggleSwitch from "@/shared/ToggleSwitch";
 import { usePopupStore } from "@/store/popupStore"
@@ -9,7 +9,7 @@ import { useEnableChannelPosting, useDisableChannelPosting } from "@/lib/channel
 import { useAutoApprovalStatus } from "@/lib/channels/useAutoApprovalStatus";
 import { useEnableChannelPromotion, useDisnableChannelPromotion } from "@/lib/channels/useEnableChannelPromotion";
 import { usePostsByChannel } from "@/lib/posts/usePostsByChannel";
-import { useUser } from "@/lib/useUser";
+import { useUser } from "@/lib/user/useUser";
 import { useNotificationStore } from "@/store/notificationStore";
 import { useGetChannelImagePreset } from "@/lib/channels/image-generation/useGetChannelImagePreset";
 import { usePromptLibrary } from "@/lib/channels/usePromptLibrary";
@@ -203,7 +203,7 @@ const SettingsPopup = () => {
                   </PopupContentInfo>
                 </PopupContentLeft>
                 {item.right == 'arrow' ? (
-                  <img src={arrow} alt="arrow icon" height={12} width={6} />
+                  <ArrowIcon height={12} width={6}/>
                 ) : item.right == 'switch' ? (
                   <ToggleSwitch
                     bg="#FF9C55"
@@ -243,7 +243,7 @@ const SettingsPopup = () => {
                         <span>{scheduleSettings}</span>
                       </ContentRightColumn>
                     )}
-                    <img src={arrow} alt="arrow icon" height={12} width={6} />
+                    <ArrowIcon height={12} width={6}/>
                   </PopupContentRight>
                 ) : item.right == 'quantity' && (
                   item.key == 'publications' ? (
@@ -331,6 +331,7 @@ const PopupContentInfo = styled.div`
     
   h3 {
     font-weight: 700;   
+    font-family: "Montserrat Alternates", sans-serif;
     font-size: ${props => props.$size ? '24px' : '16px'};
   }
 
@@ -364,6 +365,7 @@ const ContentRightColumn = styled.div`
     justify-content: flex-end;
     }
   span {
+    font-size: 14px;
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
@@ -371,7 +373,7 @@ const ContentRightColumn = styled.div`
     white-space: normal;
     text-overflow: ellipsis;
     max-width: 450px;
-    /* min-width: 200px; */
+    font-family: "Montserrat Alternates", sans-serif;
   }
 `
 const PopupContentCounter = styled.p`

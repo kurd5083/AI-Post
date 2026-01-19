@@ -1,21 +1,24 @@
 import { useEffect, useRef } from "react";
 import styled, { css } from "styled-components";
+import { Swiper, SwiperSlide } from "swiper/react";
+import "swiper/css";
+
 import refresh from "@/assets/table-groups/refresh.svg";
-import del from "@/assets/del.svg";
+import DelIcon from "@/icons/DelIcon";
+import GridIcon from "@/icons/GridIcon";
+import ListIcon from "@/icons/ListIcon";
+import DirIcon from "@/icons/DirIcon";
+
 import useResolution from "@/lib/useResolution";
 import useSwipeAllowed from "@/lib/useSwipeAllowed";
 import { useChannelsGroupedByFolders } from "@/lib/useChannelsGroupedByFolders";
 import { useDeleteFolder } from "@/lib/channels/folder/useDeleteFolder";
-import { Swiper, SwiperSlide } from "swiper/react";
-import "swiper/css";
+import { useTelegramBotInfo } from "@/lib/user/useTelegramBotInfo";
+
+import { useNotificationStore } from "@/store/notificationStore";
 import { usePopupStore } from "@/store/popupStore"
 import { useViewStore } from "@/store/viewStore";
 import { useChannelsStore } from "@/store/channelsStore";
-import GridIcon from "@/icons/GridIcon";
-import ListIcon from "@/icons/ListIcon";
-import DirIcon from "@/icons/DirIcon";
-import { useTelegramBotInfo } from "@/lib/useTelegramBotInfo";
-import { useNotificationStore } from "@/store/notificationStore";
 
 const TableGroups = () => {
   const { openPopup } = usePopupStore();
@@ -70,8 +73,6 @@ const TableGroups = () => {
                   <FolderName>{folder.name}</FolderName>
                   <mark>{folder.channels.length}</mark>
                   <DeleteFolderButton
-                    src={del}
-                    alt="del icon"
                     onClick={(e) => {
                       e.stopPropagation();
                       openPopup("delete_confirm", "popup_window", {
@@ -82,7 +83,9 @@ const TableGroups = () => {
                         }),
                       });
                     }}
-                  />
+                  >
+                    <DelIcon/>
+                  </DeleteFolderButton>
                 </SlideBtn>
               </TableGroupsSlide>
             ))}
@@ -221,7 +224,7 @@ const FolderName = styled.p`
   overflow: hidden;
   text-overflow: ellipsis;
 `
-const DeleteFolderButton = styled.img`
+const DeleteFolderButton = styled.div`
   cursor: pointer;
   width: 12px;
 `;

@@ -10,8 +10,7 @@ export const useMoveChannelToFolder = () => {
     mutationFn: moveChannelToFolder,
 
     onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ["channelFolders"] });
-      queryClient.invalidateQueries({ queryKey: ["channelsGroupedByFolders"] });
+      queryClient.invalidateQueries(["channels-grouped-by-folders"]);
       closePopup();
     },
 

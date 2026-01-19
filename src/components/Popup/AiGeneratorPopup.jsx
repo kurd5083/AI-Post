@@ -20,9 +20,8 @@ import CustomSelectThree from "@/shared/CustomSelectThree";
 
 import { useCreatePost } from "@/lib/posts/useCreatePost";
 import { usePopupStore } from "@/store/popupStore";
-import { formatText } from "@/lib/formatText";
 import { useLightboxStore } from "@/store/lightboxStore";
-import { useUser } from "@/lib/useUser";
+import { useUser } from "@/lib/user/useUser";
 import { usePostsStore } from "@/store/postsStore";
 import { useSendPostToChannel } from "@/lib/posts/useSendPostToChannel";
 import { useUpdatePost } from "@/lib/posts/useUpdatePost";
@@ -317,6 +316,10 @@ const AiGeneratorPopup = () => {
     if (postIntervals.current[postId]) { clearInterval(postIntervals.current[postId]); delete postIntervals.current[postId]; }
     if (imageIntervals.current[postId]) { clearInterval(imageIntervals.current[postId]); delete imageIntervals.current[postId]; }
     removePost(postId);
+  };
+
+  const formatText = command => {
+    document.execCommand(command, false, null);
   };
 
   return (

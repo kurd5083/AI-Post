@@ -362,6 +362,7 @@ const PromotionHeadTextSlide = styled(SwiperSlide)`
   width: fit-content;
 `;
 const PromotionHeadText = styled.p`
+  font-family: "Montserrat Alternates", sans-serif;
   display: flex;
   gap: 32px;
   color: ${({ $active }) => $active ? '#D6DCEC' : '#6A7080'};
@@ -371,6 +372,7 @@ const PromotionHeadText = styled.p`
   font-size: 24px;
   padding-right: 40px;
   cursor: pointer;
+
   @media(max-width: 480px) { padding-right: 0; }
 `;
 const PromotionViews = styled.div`
@@ -382,7 +384,7 @@ const PromotionViews = styled.div`
   @media(max-width: 768px) { padding: 0 24px }
   @media(max-width: 480px) { align-items: flex-start; }
 `;
-const PostTitle = styled.h2` font-size: 24px; font-weight: 700; `;
+const PostTitle = styled.h2`font-family: "Montserrat Alternates", sans-serif; font-size: 24px; font-weight: 700; `;
 const PostContainer = styled.div` display: flex; gap: 16px; align-items: flex-end; flex-wrap: wrap;`;
 const ViewsPost = styled.div`
   margin-top: 64px;

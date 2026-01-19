@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import styled from "styled-components";
+
 import ToggleSwitch from "@/shared/ToggleSwitch";
-import { usePopupStore } from "@/store/popupStore";
+
 import SchedulePopup from "@/components/Popup/SchedulePopup";
 import ScheduleIntervalPopup from "@/components/Popup/ScheduleIntervalPopup";
 
@@ -9,7 +10,11 @@ import { useChannelScheduleStatus } from "@/lib/channels/schedule/useChannelSche
 import { useToggleChannelSchedule } from "@/lib/channels/schedule/useToggleChannelSchedule";
 import { useChannelInterval } from "@/lib/channels/useChannelInterval";
 import { useUpdateChannelInterval } from "@/lib/channels/useUpdateChannelInterval";
+
 import { useNotificationStore } from "@/store/notificationStore";
+
+import { usePopupStore } from "@/store/popupStore";
+
 const DAYS = [
   { label: "Понедельник", value: "MONDAY" },
   { label: "Вторник", value: "TUESDAY" },
@@ -19,6 +24,7 @@ const DAYS = [
   { label: "Суббота", value: "SATURDAY" },
   { label: "Воскресенье", value: "SUNDAY" },
 ];
+
 const ScheduleContainer = () => {
   const { popup } = usePopupStore();
   const channelId = popup?.data?.channelId;
@@ -26,7 +32,6 @@ const ScheduleContainer = () => {
 
   const { scheduleStatus } = useChannelScheduleStatus(channelId);
   const { channelInterval } = useChannelInterval(channelId);
-  console.log(channelInterval, 'channelInterval')
 
   const [localScheduleEnabled, setLocalScheduleEnabled] = useState(false);
   const [localIntervalEnabled, setLocalIntervalEnabled] = useState(false);
@@ -151,6 +156,7 @@ const ScheduleViews = styled.div`
 `;
 
 const ScheduleTitle = styled.h2`
+  font-family: "Montserrat Alternates", sans-serif;
   font-size: 24px; 
   font-weight: 700; 
 `;

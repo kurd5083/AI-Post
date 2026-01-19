@@ -18,7 +18,7 @@ import { useAuthStore } from "@/store/authStore";
 
 import BtnBase from "@/shared/BtnBase";
 import TgIcon from "@/icons/TgIcon";
-import { useTelegramBotLink } from "@/lib/useTelegramBotLink";
+import { useTelegramBotLink } from "@/lib/user/useTelegramBotLink";
 
 
 const MainLayout = () => {

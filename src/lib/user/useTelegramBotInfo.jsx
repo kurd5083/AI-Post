@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { getTelegramBotInfo } from "@/api/getTelegramBotInfo";
+import { getTelegramBotInfo } from "@/api/user/getTelegramBotInfo";
 
 export const useTelegramBotInfo = () => {
   const { data: botInfo } = useQuery({

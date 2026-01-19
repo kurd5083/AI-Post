@@ -7,7 +7,7 @@ export const useDeleteChannel = () => {
   return useMutation({
     mutationFn: (channelId) => deleteChannel(channelId),
     onSuccess: (channelId) => {
-      queryClient.invalidateQueries(["channelsGroupedByFolders"]);
+      queryClient.invalidateQueries(["channels-grouped-by-folders"]);
     },
   });
 };

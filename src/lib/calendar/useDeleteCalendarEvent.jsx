@@ -10,7 +10,7 @@ export const useDeleteCalendarEvent = () => {
     mutationFn: (id) => deleteCalendarEvent(id),
 
     onSuccess: (_, id) => {
-      queryClient.invalidateQueries({ queryKey: ['calendar-events'] });
+      queryClient.invalidateQueries(['calendar-events']);
       addNotification('Событие успешно удалено', 'delete');
     },
 

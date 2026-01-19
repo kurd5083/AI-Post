@@ -1,12 +1,15 @@
 import styled from "styled-components";
-import BtnBase from "@/shared/BtnBase";
+
+import search from "@/assets/search.svg";
 import AllIcon from "@/icons/AllIcon";
 import MarketingIcon from "@/icons/MarketingIcon";
 import TrainingIcon from "@/icons/TrainingIcon";
 import EntertainmentIcon from "@/icons/EntertainmentIcon";
 import NewsIcon from "@/icons/NewsIcon";
 import PromotionIcon from "@/icons/PromotionIcon";
-import search from "@/assets/search.svg";
+
+import BtnBase from "@/shared/BtnBase";
+
 import useSearchStore from "@/store/searchStore";
 
 const PageFilter = ({ activeFilter, setActiveFilter, placeholder, filter = true }) => {

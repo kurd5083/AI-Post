@@ -1,12 +1,16 @@
 
 import { useEffect, useState } from "react";
 import styled from "styled-components";
+
 import Checkbox from "@/shared/Checkbox";
-import { useUpdateWorkMode } from "@/lib/channels/mode/useUpdateWorkMode";
-import { usePopupStore } from "@/store/popupStore";
 import CustomSelectSec from "@/shared/CustomSelectSec";
+
+import { useUpdateWorkMode } from "@/lib/channels/mode/useUpdateWorkMode";
 import { useUpdateChannelPremoderationMinutes } from "@/lib/channels/mode/useUpdateChannelPremoderationMinutes";
+
 import { useNotificationStore } from "@/store/notificationStore";
+import { usePopupStore } from "@/store/popupStore";
+
 
 const ModePopup = () => {
   const { popup } = usePopupStore();
@@ -120,7 +124,6 @@ const ModePopup = () => {
   );
 };
 
-// Стили
 const ModeContent = styled.div`
   display: flex;
   flex-direction: column;
@@ -147,6 +150,7 @@ const ModeContentItem = styled.div`
   &:last-child { padding-bottom: 0; border-bottom: 0; }
 
   h4 {
+    font-family: "Montserrat Alternates", sans-serif;
     font-size: 24px;
     font-weight: 700;
     margin-bottom: 16px;

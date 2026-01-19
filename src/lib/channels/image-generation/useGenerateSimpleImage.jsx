@@ -7,7 +7,7 @@ export const useGenerateSimpleImage = () => {
   return useMutation({
     mutationFn: ({ prompt }) => generateSimpleImage(prompt),
     onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ["generated-images"] });
+      queryClient.invalidateQueries(["generated-images"]);
     },
   });
 };

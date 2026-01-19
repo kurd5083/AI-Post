@@ -1,4 +1,4 @@
-import posting from "@/assets/popup/posting.svg";
+import SpeakerIcon from "@/icons/SpeakerIcon";
 import image_generation from "@/assets/popup/image-generation.svg";
 import text from "@/assets/popup/text.svg";
 import SourcePost from "@/icons/SourcePost";
@@ -10,7 +10,8 @@ export const advancedDatas = [
     desc: "Сервис будет брать последнюю статью из источников, в случае если по найдем ключевым словам ничего не найдено или все новости были уже опубликованы",
     extra: {
       background: "#5D443A",
-      image: posting
+      image: '',
+      icon: <SpeakerIcon color="#FF9C55"/>,
     }
   },
   {

@@ -8,7 +8,7 @@ export const useEnableChannelPromotion = () => {
     mutationFn: (channelId) => enableChannelPromotion(channelId),
 
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["channel"] });
+      queryClient.invalidateQueries(["channel"]);
     },
   });
 };
@@ -19,7 +19,7 @@ export const useDisnableChannelPromotion = () => {
     mutationFn: (channelId) => disenableChannelPromotion(channelId),
 
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["channel"] });
+      queryClient.invalidateQueries(["channel"]);
     },
   });
 };

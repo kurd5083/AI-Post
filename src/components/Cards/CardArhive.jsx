@@ -1,9 +1,7 @@
 import styled from "styled-components";
 
 import { useLightboxStore } from "@/store/lightboxStore";
-import { usePostsStore } from "@/store/postsStore";
 import { usePopupStore } from "@/store/popupStore";
-import { useNotificationStore } from "@/store/notificationStore";
 
 import normalizeUrl from "@/lib/normalizeUrl";
 import { useDeletePost } from "@/lib/posts/useDeletePost";
@@ -13,56 +11,28 @@ import AvaPlug from "@/shared/AvaPlug";
 import BtnBase from "@/shared/BtnBase";
 
 import EyeIcon from "@/icons/EyeIcon";
-import EditIcon from "@/icons/EditIcon";
 import DelIcon from "@/icons/DelIcon";
-import TimeIcon from "@/icons/TimeIcon";
 
 const MAX_VISIBLE_IMAGES = 3;
 
 const CardArhive = ({ item, bg, selectedChannel }) => {
   const { openLightbox } = useLightboxStore();
-  const { addPost } = usePostsStore();
   const { changeContent } = usePopupStore();
-  const { addNotification } = useNotificationStore();
   const { mutate: deletePost, isPending: deletePending } = useDeletePost();
   const { mutate: unarchivePost, isPending: isSendPending } = useUnarchivePost();
 
-  const handleEdit = () => {
-    addPost({
-      postId: item.id,
-      title: item.title,
-      text: item.text || "",
-      summary: item.summary || "",
-      images: item.images || [],
-      time: item.publishedAt
-        ? {
-          date: item.publishedAt,
-          time: new Date(item.publishedAt).toLocaleTimeString("ru-RU", {
-            hour: "2-digit",
-            minute: "2-digit",
-            timeZone: "UTC",
-          }),
-        }
-        : null,
-      serverId: item.id,
-      placeholder: "Новый пост",
-      url: item.url
-    });
-    changeContent('create_post', 'popup')
-  };
-
   return (
-    <CardPablishItem $bg={bg}>
-      <CardPablishItemHead>
-        <CardPablishItemName>
+    <CardArhiveItem $bg={bg}>
+      <CardArhiveItemHead>
+        <CardArhiveItemName>
           {selectedChannel.avatarUrl ? (
-            <CardPablishItemImg src={selectedChannel.avatarUrl} alt={selectedChannel.name} />
+            <CardArhiveItemImg src={selectedChannel.avatarUrl} alt={selectedChannel.name} />
           ) : (
             <AvaPlug width="32px" height="32px" />
           )}
           <p>{selectedChannel.name}</p>
-        </CardPablishItemName>
-        <CardPablishItemTime>
+        </CardArhiveItemName>
+        <CardArhiveItemTime>
           <p>Дата публикации поста: </p>
           <span>
             {item.publishedAt
@@ -76,9 +46,9 @@ const CardArhive = ({ item, bg, selectedChannel }) => {
               })
               : "Дата не указана"}
           </span>
-        </CardPablishItemTime>
-      </CardPablishItemHead>
-      <CardPablishImages>
+        </CardArhiveItemTime>
+      </CardArhiveItemHead>
+      <CardArhiveImages>
         {item.images.slice(0, MAX_VISIBLE_IMAGES).map((elem, index) => {
           const isLastVisible = index === MAX_VISIBLE_IMAGES - 1;
           const extraCount = item.images.length - MAX_VISIBLE_IMAGES;
@@ -107,12 +77,12 @@ const CardArhive = ({ item, bg, selectedChannel }) => {
             </ImageItemWrapper>
           );
         })}
-      </CardPablishImages>
-      <CardPablishText>{item.title}</CardPablishText>
-      <CardPablishSubtext
+      </CardArhiveImages>
+      <CardArhiveText>{item.title}</CardArhiveText>
+      <CardArhiveSubtext
         dangerouslySetInnerHTML={{ __html: item.summary }}
       />
-      <CardPablishButtons>
+      <CardArhiveButtons>
         <BtnBase
           $padding="16px 12px"
           $border
@@ -127,9 +97,6 @@ const CardArhive = ({ item, bg, selectedChannel }) => {
         <CardButton onClick={() => changeContent('live_preview_popup', 'popup', { selectedPost: item, channelId: selectedChannel?.id })}>
           <EyeIcon />
         </CardButton>
-        {/* <CardButton onClick={handleEdit}>
-          <EditIcon />
-        </CardButton> */}
         <CardButton
           onClick={(e) => {
             e.stopPropagation();
@@ -141,12 +108,12 @@ const CardArhive = ({ item, bg, selectedChannel }) => {
           disabled={deletePending}>
           <DelIcon />
         </CardButton>
-      </CardPablishButtons>
-    </CardPablishItem>
+      </CardArhiveButtons>
+    </CardArhiveItem>
   )
 }
 
-const CardPablishOpen = styled.button`
+const CardArhiveOpen = styled.button`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -160,7 +127,7 @@ const CardPablishOpen = styled.button`
   border: 2px solid #1C2438;
 `
 
-const CardPablishItem = styled.div`
+const CardArhiveItem = styled.div`
   display: flex;
   flex-direction: column;
   position: relative; 
@@ -173,7 +140,7 @@ const CardPablishItem = styled.div`
   &:hover {
     background-color: #181F30;
     border: 2px solid #181F30;
-    ${CardPablishOpen} {
+    ${CardArhiveOpen} {
       background-color: #1C2438;
       
 			svg path {
@@ -182,14 +149,14 @@ const CardPablishItem = styled.div`
     }
   }
 `
-const CardPablishItemHead = styled.div`
+const CardArhiveItemHead = styled.div`
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
   align-items: flex-start;
   gap: 10px 20px;
 `
-const CardPablishItemName = styled.div`
+const CardArhiveItemName = styled.div`
   display: flex;
   align-items: center;
   gap: 16px;
@@ -203,13 +170,13 @@ const CardPablishItemName = styled.div`
     font-weight: 700;
   }
 `
-const CardPablishItemImg = styled.img`
+const CardArhiveItemImg = styled.img`
   width: 24px;
   height: 24px;
   border-radius: 50%;
 `
 
-const CardPablishItemTime = styled.div`
+const CardArhiveItemTime = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
@@ -226,7 +193,7 @@ const CardPablishItemTime = styled.div`
     color:#6A7080;
   }
 `
-const CardPablishImages = styled.div`
+const CardArhiveImages = styled.div`
   display: flex;
   align-items: center;
   gap: 8px;
@@ -259,7 +226,7 @@ const Overlay = styled.div`
   align-items: center;
   justify-content: center;
 `;
-const CardPablishText = styled.p`
+const CardArhiveText = styled.p`
   box-sizing: border-box;
   margin-top: 18px;
   font-size: 14px;
@@ -271,7 +238,7 @@ const CardPablishText = styled.p`
   overflow: hidden;
   word-break: break-word;
 `
-const CardPablishSubtext = styled.p`
+const CardArhiveSubtext = styled.p`
   box-sizing: border-box;
   margin-top: 16px;
   font-size: 14px;
@@ -284,7 +251,7 @@ const CardPablishSubtext = styled.p`
   overflow: hidden;
   word-break: break-all;
 `
-const CardPablishButtons = styled.div`
+const CardArhiveButtons = styled.div`
   display: flex;
   align-items: center;
   flex-wrap: wrap;

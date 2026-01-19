@@ -1,8 +1,8 @@
 import styled from "styled-components";
 import { useEffect, useState } from "react";
-import eye_blue from "@/assets/eye-blue.svg";
+import EyeIcon from "@/icons/EyeIcon";
 import PreviewBG from "@/assets/ai-generator/PreviewBG.png";
-import arrow from "@/assets/arrow.svg";
+import ArrowIcon from "@/icons/ArrowIcon";
 import TgIcon from "@/icons/TgIcon";
 import { useSendTestPost } from "@/lib/posts/useSendTestPost";
 import { useLightboxStore } from "@/store/lightboxStore";
@@ -63,10 +63,10 @@ const Preview = ({ collapsed, onChange, testResult, view=true }) => {
       <PreviewContent>
         <PreviewHead>
           <HeadLeft>
-            <img src={eye_blue} alt="eye icon" />
+            <EyeIcon color="#336CFF" hoverColor="#336CFF" cursor="default"/>
             Лайв превью
           </HeadLeft>
-          {view && <HeadArrow src={arrow} alt="arrow icon" onClick={onChange} $collapsed={collapsed} />}
+          {view &&  <HeadArrow onClick={onChange} $collapsed={collapsed}><ArrowIcon color="#D6DCEC"/></HeadArrow>}
         </PreviewHead>
 
         {!collapsed && (
@@ -153,7 +153,7 @@ const HeadLeft = styled.h2`
   font-size: 24px;
   font-weight: 800;
 `;
-const HeadArrow = styled.img`
+const HeadArrow = styled.div`
   display: none;
   transform: rotate(90deg);
   cursor: pointer;

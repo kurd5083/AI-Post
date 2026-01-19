@@ -1,21 +1,28 @@
 import styled, { keyframes } from "styled-components";
 import { Link } from "react-router";
+
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Mousewheel } from "swiper/modules";
 import "swiper/css";
-import useSwipeAllowed from "@/lib/useSwipeAllowed";
-import useFadeOnScroll from "@/lib/useFadeOnScroll";
+
 import TimeIcon from "@/icons/TimeIcon";
-import arrow from "@/assets/arrow.svg";
+import ArrowIcon from "@/icons/ArrowIcon";
 import dzen_icon from "@/assets/dzen-icon.svg";
 import news_stub from "@/assets/news-stub.png";
+
 import ModernLoading from "@/components/ModernLoading";
-import { usePopupStore } from "@/store/popupStore"
-import { useLightboxStore } from "@/store/lightboxStore";
+
+import { useNotificationStore } from "@/store/notificationStore";
+
+import { getPostsByChannel } from "@/api/posts/getPostsByChannel";
+
 import { useCopyNewsToChannel } from "@/lib/news/useCopyNewsToChannel";
 import timeAgo from "@/lib/timeAgo";
-import { useNotificationStore } from "@/store/notificationStore";
-import { getPostsByChannel } from "@/api/posts/getPostsByChannel";
+import useSwipeAllowed from "@/lib/useSwipeAllowed";
+import useFadeOnScroll from "@/lib/useFadeOnScroll";
+
+import { usePopupStore } from "@/store/popupStore"
+import { useLightboxStore } from "@/store/lightboxStore";
 
 const TapeList = ({ forceHorizontal = false, padding, newsData, pending }) => {
   const { popup, changeContent, openPopup } = usePopupStore();
@@ -129,11 +136,11 @@ const TapeList = ({ forceHorizontal = false, padding, newsData, pending }) => {
           {(forceHorizontal || isSwipe) && (
             <div>
               <TapePostButton className="TapePrev">
-                <img src={arrow} alt="arrow icon" />
+                 <ArrowIcon color="#D6DCEC"/>
               </TapePostButton>
 
               <TapePostButton className="TapeNext">
-                <img src={arrow} alt="arrow icon" />
+                 <ArrowIcon color="#D6DCEC"/>
               </TapePostButton>
             </div>
           )}
@@ -262,6 +269,7 @@ const TapeItemText = styled.div`
   -webkit-box-orient: vertical;
   overflow: hidden;
   word-wrap: break-word;
+  font-family: "Montserrat Alternates", sans-serif;
 `
 const TapeItemAction = styled.span`
   color: #336CFF;

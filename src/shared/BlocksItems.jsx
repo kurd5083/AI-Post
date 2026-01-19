@@ -1,12 +1,11 @@
 import styled from "styled-components";
 import { useState } from "react";
+
 import { usePopupStore } from "@/store/popupStore"
 
 const BlocksItems = ({ items, color, view = true, onRemove }) => {
   const { popup } = usePopupStore();
   const [errorAvatars, setErrorAvatars] = useState([]);
-  console.log(errorAvatars)
-  console.log(items)
   return (
     <ItemsContainer>
       {items?.map((item, index) => {

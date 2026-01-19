@@ -6,11 +6,10 @@ import { Link } from "react-router";
 import { usePromotionServices } from "@/lib/promotion/usePromotionServices";
 import SpeakerIcon from "@/icons/SpeakerIcon";
 import ModernLoading from "@/components/ModernLoading";
-import { useCreatePromotionOrder } from "@/lib/promotion/useCreatePromotionOrder";
 
 const Promotion = () => {
 	const { servicesData, servicesDataPending } = usePromotionServices();
-	console.log(servicesData)
+
 	return (
 		<PromotionContainer>
 			<PageHead />
@@ -48,10 +47,7 @@ const Promotion = () => {
 				<PromotionCards>
 					{servicesData?.length > 0 ? servicesData.map((item) => (
 						<PromotionCard key={item.service}>
-							<CardIcon>
-								<SpeakerIcon width={24} height={24} />
-
-							</CardIcon>
+							<CardIcon><SpeakerIcon width={24} height={24} /></CardIcon>
 							<PromotionCardInfo>
 								<PromotionCardArea>{item.category}</PromotionCardArea>
 								<h3>{item.name}</h3>

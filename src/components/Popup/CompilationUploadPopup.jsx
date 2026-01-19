@@ -49,6 +49,7 @@ const CompilationContainer = styled.div`
   }
 `;
 const CompilationTitle = styled.h2`
+  font-family: "Montserrat Alternates", sans-serif;
   font-weight: 700;
   font-size: 24px;
 `

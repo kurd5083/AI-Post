@@ -4,7 +4,7 @@ import { sidebarDatas } from "@/data/sidebarDatas";
 import arrow_close from "@/assets/arrow-close.svg";
 import { usePopupStore } from "@/store/popupStore";
 import { useSidebarStore } from "@/store/sidebarStore";
-import { useUser } from "@/lib/useUser";
+import { useUser } from "@/lib/user/useUser";
 import BtnBase from "@/shared/BtnBase";
 
 const Sidebar = () => {

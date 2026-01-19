@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { useAuthTelegram } from "@/lib/useAuthTelegram";
+import { useAuthTelegram } from "@/lib/user/useAuthTelegram";
 import ModernLoading from "@/components/ModernLoading";
 
 const Auth = () => {

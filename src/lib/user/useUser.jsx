@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { getUserById } from "@/api/getUserById";
+import { getUserById } from "@/api/user/getUserById";
 
 export const useUser = () => {
   const userId = localStorage.getItem("userId");

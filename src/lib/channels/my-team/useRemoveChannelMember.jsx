@@ -9,7 +9,7 @@ export const useRemoveChannelMember = () => {
         mutationFn: ({ channelId, memberTelegramId }) => removeChannelMember(channelId, memberTelegramId),
         onSuccess: (data) => {
             addNotification(data.message || "Участник удалён", "delete");
-            queryClient.invalidateQueries({ queryKey: ["channel-members"] });
+            queryClient.invalidateQueries(["channel-members"]);
         },
 
         onError: (err) => {

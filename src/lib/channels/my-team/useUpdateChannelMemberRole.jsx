@@ -7,7 +7,7 @@ export const useUpdateChannelMemberRole = () => {
     return useMutation({
         mutationFn: ({ channelId, memberTelegramId, role }) => updateChannelMemberRole(channelId, memberTelegramId, role),
         onSuccess: (data) => {
-            queryClient.invalidateQueries({ queryKey: ["channel-members"] });
+            queryClient.invalidateQueries(["channel-members"]);
         },
     });
 };

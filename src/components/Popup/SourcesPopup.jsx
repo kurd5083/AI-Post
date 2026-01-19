@@ -1,13 +1,17 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
-import { usePopupStore } from "@/store/popupStore"
+
 import BtnBase from "@/shared/BtnBase";
 import InputPlus from "@/shared/InputPlus";
 import BlocksItems from "@/shared/BlocksItems";
+
 import { useChannelById } from "@/lib/channels/useChannelById";
 import { useAddChannelSource } from "@/lib/channels/sources/useAddChannelSource";
 import { useDeleteChannelSource } from "@/lib/channels/sources/useDeleteChannelSource";
+
 import { useNotificationStore } from "@/store/notificationStore";
+
+import { usePopupStore } from "@/store/popupStore"
 
 const SourcesPopup = () => {
   const { popup, changeContent } = usePopupStore()
@@ -92,7 +96,6 @@ const SourcesPopup = () => {
           onChange={setUrl}
           onSubmit={handleAddSource}
         />
-        {console.log(localSources)}
         {localSources.length === 0 ? (
           <EmptyText>Источники не добавлены</EmptyText>
         ) : (
@@ -143,6 +146,7 @@ const SourcesText = styled.p`
 `
 const SourcesKey = styled.div` margin-top: 40px; `
 const SourcesKeyTitle = styled.h2`
+  font-family: "Montserrat Alternates", sans-serif;
   font-weight: 700;
   font-size: 24px;
   margin-bottom: 40px;

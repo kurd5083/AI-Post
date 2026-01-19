@@ -168,12 +168,7 @@ const PostLeft = styled.div`
 	display: flex;
 	flex-direction: column;
 	gap: 24px;
-	/* max-width: 620px; */
 	width: 100%;
-
-	/* @media (max-width: 1400px) {
-    max-width: 100%; */
-  /* } */
 `
 const PostHead = styled.div`
   display: flex;
@@ -213,6 +208,7 @@ const PostTimeMobile = styled.p`
   }
 `
 const PostTilte = styled.h2`
+  font-family: "Montserrat Alternates", sans-serif;
   font-size: 32px;
   line-height: 32px;
   font-weight: 700;
@@ -260,6 +256,7 @@ const PostTime = styled.p`
   }
 `
 const NewsSubTitle = styled.h3`
+  font-family: "Montserrat Alternates", sans-serif;
   font-size: 24px;
   font-weight: 700;
 	margin-top: 40px;

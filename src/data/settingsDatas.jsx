@@ -1,7 +1,6 @@
-import posting from "@/assets/popup/posting.svg";
+import SpeakerIcon from "@/icons/SpeakerIcon";
 import mode from "@/assets/popup/mode.svg";
 import publications from "@/assets/popup/publications.svg";
-import activate_promotion from "@/assets/popup/activate-promotion.svg";
 import promotion from "@/assets/popup/promotion.svg";
 import auto_accepting from "@/assets/popup/auto-accepting.svg";
 import link_generation  from "@/assets/popup/link-generation.svg";
@@ -28,7 +27,8 @@ export const settingsDatas = {
                     right: 'switch',
                     extra: {
                         background: "#5D443A",
-                        image: posting
+                        image: '',
+                        svg: <SpeakerIcon color="#FF9C55"/>
                     }
                 },
                 {

@@ -52,6 +52,7 @@ const CalendarButton = styled.div`
 `;
 
 const CalendarText = styled.p`
+  font-family: "Montserrat Alternates", sans-serif;
   font-size: 24px;
   font-weight: 700;
   margin-top: 64px;

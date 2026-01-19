@@ -4,16 +4,17 @@ import styled from "styled-components";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 
-import CardPablish from "@/components/CardPablish";
-import CardPablishPremoderation from "@/components/CardPablishPremoderation";
-import CardArhive from "@/components/CardArhive";
-
+import CardPablish from "@/components/Cards/CardPablish";
+import CardPablishPremoderation from "@/components/Cards/CardPablishPremoderation";
+import CardArhive from "@/components/Cards/CardArhive";
 import ModernLoading from "@/components/ModernLoading";
+
+import CustomSelectSec from "@/shared/CustomSelectSec";
 
 import { usePostsByChannel } from "@/lib/posts/usePostsByChannel";
 import { useUserChannels } from "@/lib/channels/useUserChannels";
 import { useGetArchivedPosts } from "@/lib/posts/useGetArchivedPosts";
-import CustomSelectSec from "@/shared/CustomSelectSec";
+
 import { usePopupStore } from "@/store/popupStore";
 import { usePublicationsStore } from "@/store/publicationsStore";
 
@@ -237,7 +238,6 @@ const PublicationsPopup = () => {
               value={dateFilter.value}
               options={dateValueOptions}
               onChange={(option) => {
-                console.log(option)
                 setDateFilter((prev) => ({ ...prev, value: option.value }))
               }
               }

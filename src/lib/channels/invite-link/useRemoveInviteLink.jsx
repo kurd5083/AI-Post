@@ -9,7 +9,7 @@ export const useRemoveInviteLink = () => {
   return useMutation({
     mutationFn: removeInviteLink,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["channel-invite-links"] });
+      queryClient.invalidateQueries(["channel-invite-links"]);
       addNotification("Ссылка успешно удалена", "delete");
     },
     onError: () => {

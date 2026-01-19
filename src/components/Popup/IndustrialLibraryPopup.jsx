@@ -110,6 +110,7 @@ const IndustrialLibraryContentItem = styled.div`
   &:last-of-type { padding-bottom: 0; border-bottom: 0; }
 
   h4 {
+    font-family: "Montserrat Alternates", sans-serif;
     font-size: 24px;
     font-weight: 700;
     margin-bottom: 16px;

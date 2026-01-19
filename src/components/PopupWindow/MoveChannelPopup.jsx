@@ -7,7 +7,7 @@ import CheckboxCircle from "@/shared/CheckboxCircle";
 import CloseIcon from "@/icons/CloseIcon";
 import { useMoveChannelToFolder } from "@/lib/channels/folder/useMoveChannelToFolder";
 import { useChannelsGroupedByFolders } from "@/lib/useChannelsGroupedByFolders";
-import { useUser } from "@/lib/useUser";
+import { useUser } from "@/lib/user/useUser";
 
 const MoveChannelPopup = () => {
 	const { popup, closePopup } = usePopupStore();

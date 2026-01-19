@@ -214,6 +214,9 @@ const EmptyStat = styled.div`
   @media (max-width: 768px) {
     margin: 32px 24px;
   }
+  @media (max-width: 480px) {
+    font-size: 12px;
+  }
 `;
 
 export default Statistics

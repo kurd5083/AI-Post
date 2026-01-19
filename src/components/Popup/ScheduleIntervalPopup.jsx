@@ -1,9 +1,12 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
+
 import TimeInput from "@/shared/TimeInput";
 import Checkbox from "@/shared/Checkbox";
 import BtnBase from "@/shared/BtnBase";
+
 import PlusIcon from "@/icons/PlusIcon";
+
 import { usePopupStore } from "@/store/popupStore";
 import { useNotificationStore } from "@/store/notificationStore";
 
@@ -19,7 +22,7 @@ const ScheduleIntervalPopup = ({ channelInterval, updateInterval, intervalPendin
   const [showResultInterval, setShowResultInterval] = useState(false);
   const [showResultActiveTime, setShowResultActiveTime] = useState(false);
   const [selectedDays, setSelectedDays] = useState([]);
-  console.log(channelInterval)
+
   useEffect(() => {
     if (channelInterval) {
       setIntervalMinutes(channelInterval.intervalMinutes);
@@ -163,6 +166,7 @@ const ScheduleContainer = styled.div`
   flex-direction: column;
 `
 const ScheduleTitle = styled.h2`
+  font-family: "Montserrat Alternates", sans-serif;
   font-size: 24px;
   font-weight: 700;
   margin-bottom: 16px;
@@ -217,6 +221,7 @@ const ScheduleKeyItem = styled.div`
   display: flex;
   padding: 24px 0;
   border-bottom: 2px solid #2E3954;
+  font-family: "Montserrat Alternates", sans-serif;
 
   &:first-child {
     padding-top: 0;
@@ -248,6 +253,7 @@ const ScheduleDays = styled.div`
   }
 `;
 const ScheduleDaysBlock = styled.div`
+  font-family: "Montserrat Alternates", sans-serif;
   display: flex;
   flex-direction: column;
   gap: 24px;

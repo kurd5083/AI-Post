@@ -3,7 +3,7 @@ import { useState } from "react";
 import BtnBase from "@/shared/BtnBase";
 import copy from "@/assets/copy.svg";
 import edit from "@/assets/templates/edit.svg";
-import icon from "@/assets/templates/icon.svg";
+import SpeakerIcon from "@/icons/SpeakerIcon";
 import InputPlus from "@/shared/InputPlus";
 import BlocksItems from "@/shared/BlocksItems";
 import CustomSelectThree from "@/shared/CustomSelectThree";
@@ -45,7 +45,7 @@ const EditCard = ({ template, onSave, categories }) => {
         onChange={setSelectedCategory}
       />
       <CardHead>
-        <img src={icon} alt={template.title} width={24} height={20} />
+        <SpeakerIcon color="#EF6284" width={24} height={24}/>
         <CardInput
           type="text"
           placeholder="Название"
@@ -118,7 +118,7 @@ const CardContainer = styled.div`
 
 const CardHead = styled.div`
 	display: flex;
-	align-items: flex-start;
+	align-items: center;
 	gap: 16px;
 	margin-top: 30px;
 

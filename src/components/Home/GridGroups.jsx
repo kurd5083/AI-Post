@@ -1,18 +1,23 @@
 import { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import del from "@/assets/del.svg";
+
+import edit from "@/assets/templates/edit.svg";
 import setting from "@/assets/setting.svg";
-import { usePopupStore } from "@/store/popupStore"
-import { useChannelsStore } from "@/store/channelsStore";
+import DirIcon from '@/icons/DirIcon';
+import DelIcon from "@/icons/DelIcon";
+
+import СhannelPlug from '@/shared/СhannelPlug';
+
+import { useUpdateUserAvatar } from '@/lib/channels/useUpdateUserAvatar';
+import { useUploadMedia } from '@/lib/mediaLibrary/useUploadMedia';
 import { useDeleteChannel } from "@/lib/channels/useDeleteChannel";
 import { useChannelsGroupedByFolders } from "@/lib/useChannelsGroupedByFolders";
-import DirIcon from '@/icons/DirIcon';
-import СhannelPlug from '@/shared/СhannelPlug';
-import { useUpdateUserAvatar } from '@/lib/channels/useUpdateUserAvatar';
-import edit from "@/assets/templates/edit.svg";
-import { useUploadMedia } from '@/lib/mediaLibrary/useUploadMedia';
+
 import { getPendingModerationCount } from '@/api/channels/getPendingModerationCount';
-import { useQueryClient } from "@tanstack/react-query";
+
+import { usePopupStore } from "@/store/popupStore"
+import { useChannelsStore } from "@/store/channelsStore";
+
 
 const GridGroups = () => {
   const { openPopup } = usePopupStore();
@@ -23,7 +28,6 @@ const GridGroups = () => {
   const { mutate: updateAvatar } = useUpdateUserAvatar();
   const { mutate: upload, isPending } = useUploadMedia();
   const [pendingCounts, setPendingCounts] = useState({});
-  const queryClient = useQueryClient();
   
   useEffect(() => {
     if (!channels) return;
@@ -138,7 +142,7 @@ const GridGroups = () => {
               }}
               title="Удалить"
             >
-              <img src={del} alt="del icon" width={14} height={16} />
+              <DelIcon/>
             </ButtonDel>
           </ButtonsWrap>
         </GridItem>
@@ -233,6 +237,7 @@ const EditOverlay = styled.div`
   font-weight: 600;
 `;
 const CellName = styled.span`
+  font-weight: 700;
   max-width: 180px;
   white-space: nowrap;
   overflow: hidden;

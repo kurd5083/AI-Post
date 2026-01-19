@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { getUserBalance } from '@/api/getUserBalance';
+import { getUserBalance } from '@/api/user/getUserBalance';
 
 export const useUserBalance = () => {
     const { data: balance } = useQuery({

@@ -58,6 +58,7 @@ const MyTeamContainer = styled.div`
 `;
 
 const MyTeamTitle = styled.h2`
+  font-family: "Montserrat Alternates", sans-serif;
   font-size: 24px;
   font-weight: 700;
   margin: 40px 0 24px;

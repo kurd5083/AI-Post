@@ -2,7 +2,8 @@ import { useState } from "react";
 import styled from "styled-components";
 import { usePopupStore } from "@/store/popupStore";
 import del from "@/assets/del.svg";
-import hide from "@/assets/hide.svg"
+import DelIcon from "@/icons/DelIcon";
+import EyeIcon from "@/icons/EyeIcon";
 import { useGetChannelInviteLinks } from "@/lib/channels/invite-link/useGetChannelInviteLinks";
 import { useRemoveInviteLink } from "@/lib/channels/invite-link/useRemoveInviteLink";
 import { useNotificationStore } from "@/store/notificationStore";
@@ -102,7 +103,7 @@ const LinkGenerationMyPopup = () => {
                     </TableCell>
                     <TableCellActions>
                       <HideButton>
-                        <img src={hide} alt="hide icon" width={24} height={17} />
+                        <EyeIcon/>
                       </HideButton>
                       <DeleteButton
                         disabled={removePending}

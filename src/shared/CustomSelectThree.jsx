@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect, useMemo } from "react";
 import styled from "styled-components";
 import Checkbox from "@/shared/Checkbox";
-import arrow_blue from "@/assets/arrow-blue.svg";
+import ArrowIcon from "@/icons/ArrowIcon";
 
 const CustomSelectThree = ({ placeholder = 'Выберите канал', options = [], value = null, onChange, view = false }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -32,7 +32,9 @@ const CustomSelectThree = ({ placeholder = 'Выберите канал', option
     <DropdownContainer ref={ref}>
       <DropdownHeader onClick={() => setIsOpen((v) => !v)} $view={view}>
         <HeaderText title={headerLabel}>{headerLabel}</HeaderText>
-        <Arrow $open={isOpen} src={arrow_blue} alt="arrow icon" width={12} height={6}/>
+        <Arrow $open={isOpen}>
+          <ArrowIcon color="#336CFF" hoverColor = "#336CFF" width={6} height={12}/>
+        </Arrow>
       </DropdownHeader>
 
       {isOpen && (
@@ -83,9 +85,13 @@ const HeaderText = styled.p`
   font-size: 14px;
 `;
 
-const Arrow = styled.img`
-  transition: 0.2s;
-  transform: rotate(${({ $open }) => ($open ? "180deg" : "0deg")});
+const Arrow = styled.div`
+display: flex;
+align-items: center;
+justify-content: center;
+  transition: transform 0.3s ease;
+  transform: rotate(90deg);
+  ${({ $open }) => $open && `transform: rotate(270deg);`}
 `;
 
 const DropdownList = styled.div`

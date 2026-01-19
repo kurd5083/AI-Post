@@ -1,7 +1,6 @@
-import posting from "@/assets/popup/posting.svg";
+import SpeakerIcon from "@/icons/SpeakerIcon";
 import mode from "@/assets/popup/mode.svg";
 import publications from "@/assets/popup/publications.svg";
-import activate_promotion from "@/assets/popup/activate-promotion.svg";
 import promotion from "@/assets/popup/promotion.svg";
 import auto_accepting from "@/assets/popup/auto-accepting.svg";
 import link_generation from "@/assets/popup/link-generation.svg";
@@ -24,7 +23,8 @@ export const popupDatas = [
         name: "Постинг",
         extra: {
             background: "#5D443A",
-            image: posting
+            image: '',
+            icon: <SpeakerIcon color="#FF9C55"/>
         }
     },
     {
@@ -43,14 +43,6 @@ export const popupDatas = [
             image: publications
         }
     },
-    // {
-    //     key: "activate_promotion",
-    //     name: "Активировать продвижение",
-    //     extra: {
-    //         background: "#445838",
-    //         image: activate_promotion
-    //     }
-    // },
     {
         key: "promotion",
         name: "Продвижение",
@@ -254,7 +246,7 @@ export const popupDatas = [
         extra: {
             background: "#1F326B",
             image: '',
-            svg: <EyeIcon color="#336CFF" hoverColor="#336CFF" width={24} height={24} />
+            svg: <EyeIcon color="#336CFF" hoverColor="#336CFF" width={24} height={24}  cursor="default"/>
         }
     },
 ]

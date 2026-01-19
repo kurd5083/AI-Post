@@ -2,6 +2,7 @@ import { createBrowserRouter } from 'react-router-dom';
 import MainLayout from "@/layouts/MainLayout";
 import OtherLayout from "@/layouts/OtherLayout";
 import Home from '@/pages/Home';
+import AnalyticsChannels from '@/pages/AnalyticsChannels';
 import Analytics from '@/pages/Analytics';
 import Templates from '@/pages/Templates';
 import Calendar from '@/pages/Calendar';
@@ -20,6 +21,13 @@ export const router = createBrowserRouter([
         element: <MainLayout />,
         children: [
             { index: true, element: <Home /> } 
+        ],
+    },
+    {
+        path: '/analytics', 
+        element: <MainLayout />,
+        children: [
+            { path: ':slug', element: <AnalyticsChannels /> }, 
         ],
     },
     {

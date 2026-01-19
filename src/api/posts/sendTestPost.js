@@ -8,7 +8,6 @@ export const sendTestPost = async ({ title, summary, images, imagesUrls, url }) 
   images.forEach((image) => {
     formData.append("images", image);
   });
-  console.log(imagesUrls)
 
  if (imagesUrls && imagesUrls.length > 0) {
   const fullUrls = imagesUrls.map(url => {

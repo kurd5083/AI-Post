@@ -7,7 +7,7 @@ import { useSidebarStore } from "@/store/sidebarStore";
 import { usePopupStore } from "@/store/popupStore";
 
 const MobileMenu = () => {
-  const { openPopup } = usePopupStore()
+  const { openPopup, closePopup } = usePopupStore()
   const { menu, closeMenu } = useMenuStore();
   const location = useLocation();
   const {
@@ -38,7 +38,12 @@ const MobileMenu = () => {
                   onClick={() => handleItemClick(item.id)}
                 >
                   {item.to ? (
-                    <Link to={item.to}>
+                    <Link 
+                    to={item.to}
+                     onClick={() => {
+                        closePopup()
+                      }}
+                    >
                       {item.icon(activePage === item.id)}
                       <MenuText>{item.text}</MenuText>
                     </Link>

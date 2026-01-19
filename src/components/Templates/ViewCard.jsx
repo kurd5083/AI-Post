@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import uses from "@/assets/templates/uses.svg";
 import copy from "@/assets/copy.svg";
-import icon from "@/assets/templates/icon.svg";
+import SpeakerIcon from "@/icons/SpeakerIcon";
 import star from "@/assets/templates/star.svg";
 import BtnBase from "@/shared/BtnBase";
 import useResolution from "@/lib/useResolution";
@@ -40,13 +40,8 @@ const ViewCard = ({ template }) => {
 				</CardEstimation>
 			</CardRating>
 			<CardHead>
-				<img src={icon} alt={template.title} width={24} height={20} />
-				<HeadContent>
+				<SpeakerIcon color="#EF6284" width={24} height={24}/>
 					<HeadTitle>{template.title}</HeadTitle>
-					<HeadUses>
-						{/* Всего <mark>{template.uses} использований</mark> */}
-					</HeadUses>
-				</HeadContent>
 			</CardHead>
 			<CardInfo>
 				<p>{template.content}</p>
@@ -76,7 +71,6 @@ const ViewCard = ({ template }) => {
 					>
 						<EditIcon />
 					</ButtonEdit>
-
 					<ButtonDel
 						onClick={(e) => {
 							e.stopPropagation();
@@ -118,12 +112,9 @@ const CardEstimation = styled.p`
 `
 const CardHead = styled.div`
 	display: flex;
-	align-items: flex-start;
+	align-items: center;
 	gap: 16px;
 	margin-top: 30px;
-	img {
-		margin-top: 8px;
-	}
 `
 const CardInfo = styled.div`
 	display: flex;
@@ -143,25 +134,9 @@ const CardInfo = styled.div`
 		padding-left: 20px;
 	}
 `
-const HeadContent = styled.div`
-	display: flex;
-	flex-direction: column;
-	gap: 16px;
-`
 const HeadTitle = styled.h3`
 	font-size: 24px;
 	font-weight: 700;
-`
-const HeadUses = styled.h3`
-	display: flex;
-	gap: 4px;
-	color: #6A7080;
-	font-size: 14px;
-	font-weight: 700;
-
-	mark {
-		color: #D6DCEC;
-	}
 `
 const CardHash = styled.ul`
 	display: flex;

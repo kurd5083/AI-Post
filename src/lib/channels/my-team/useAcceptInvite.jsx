@@ -7,7 +7,7 @@ export const useAcceptInvite = () => {
   return useMutation({
     mutationFn: (code) => acceptInvite(code),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["channel-members"] });
+      queryClient.invalidateQueries(["channel-members"]);
     },
-  });
+  }); 
 };

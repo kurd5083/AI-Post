@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { authTelegram } from "@/api/authTelegram";
+import { authTelegram } from "@/api/user/authTelegram";
 import { useAuthStore } from "@/store/authStore";
 
 export const useAuthTelegram = () => {

@@ -27,7 +27,6 @@ const ThisDay = ({ posts, eventsPending }) => {
   const { popup, openPopup } = usePopupStore();
   const { openLightbox } = useLightboxStore();
 
-  console.log(publishingPosts)
   const [selectedChannel, setSelectedChannel] = useState(null);
   const { mutate: sendPost, isPending: isSendPending } = useSendPostToChannel();
 
@@ -153,7 +152,6 @@ const ThisDay = ({ posts, eventsPending }) => {
         {filteredPosts?.map((item) => (
 
           <Card key={item.id}>
-            {console.log(item)}
             <CardHeader>
               <CardAuthor>
                 <AvaPlug width="32px" height="32px" />

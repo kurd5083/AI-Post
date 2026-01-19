@@ -1,11 +1,15 @@
 import { useState, useEffect, useMemo } from "react";
 import styled from "styled-components";
-import CardAddPost from "@/components/CardAddPost";
-import { usePopupStore } from "@/store/popupStore";
+
+import CustomSelectSec from "@/shared/CustomSelectSec";
+
+import CardAddPost from "@/components/Cards/CardAddPost";
+import ModernLoading from "@/components/ModernLoading";
+
 import { usePostsByChannel } from "@/lib/posts/usePostsByChannel";
 import { useUserChannels } from "@/lib/channels/useUserChannels";
-import ModernLoading from "@/components/ModernLoading";
-import CustomSelectSec from "@/shared/CustomSelectSec";
+
+import { usePopupStore } from "@/store/popupStore";
 
 const itemsPerPageDefault = 9;
 const itemsPerPageSmall = 6;
@@ -166,7 +170,6 @@ const AddPostPopup = () => {
 						options={dateValueOptions}
 						onChange={(option) =>
 							{
-							console.log(option)
 							setDateFilter((prev) => ({ ...prev, value: option.value }))
 							}
 						}

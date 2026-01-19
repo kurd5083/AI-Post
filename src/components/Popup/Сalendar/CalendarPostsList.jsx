@@ -16,7 +16,6 @@ import { useNotificationStore } from "@/store/notificationStore";
 import { getPostsById } from "@/api/posts/getPostsById";
 
 const CalendarPostsList = ({ posts }) => {
-  console.log(posts)
   const [publishingPosts, setPublishingPosts] = useState({});
 
   const { popup, changeContent } = usePopupStore();
@@ -34,7 +33,6 @@ const CalendarPostsList = ({ posts }) => {
   };
 
   const handleEye = async (post) => {
-    console.log(post)
     if (!post?.postId) {
       addNotification("Не удалось открыть пост: нет ID", "error");
       return;

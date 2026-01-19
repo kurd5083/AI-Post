@@ -12,7 +12,6 @@ const PostAddEdit = () => {
 
     useEffect(() => {
         if (!postId || postsByIdPending || !postsById) return;
-        console.log(postsById)
         const posts = usePostsStore.getState().posts;
         const exists = posts.find((p) => p.postId.toString() === postId);
 

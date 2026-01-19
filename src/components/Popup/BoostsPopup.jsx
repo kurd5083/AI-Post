@@ -107,6 +107,7 @@ const BoostsHeadTextSlide = styled(SwiperSlide)`
   width: fit-content;
 `;
 const BoostsHeadText = styled.p`
+  font-family: "Montserrat Alternates", sans-serif;
   display: flex;
   gap: 32px;
   color: ${({ $active }) => $active ? '#D6DCEC' : '#6A7080'};
@@ -130,7 +131,7 @@ const BoostsBlock = styled.div`
   @media(max-width: 480px) { margin-top: 32px; gap: 24px; }
 `;
 
-const BlockTitle = styled.h2` font-size: 24px; font-weight: 700; `;
+const BlockTitle = styled.h2`font-family: "Montserrat Alternates", sans-serif; font-size: 24px; font-weight: 700; `;
 
 const BoostsButtons = styled.div`
   padding: 0 56px;

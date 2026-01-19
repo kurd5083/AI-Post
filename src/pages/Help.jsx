@@ -2,7 +2,7 @@ import { useState, useMemo } from "react";
 import PageHead from '@/components/PageHead'
 import PageFilter from "@/components/PageFilter";
 import styled from "styled-components";
-import arrow from "@/assets/arrow.svg";
+import ArrowIcon from "@/icons/ArrowIcon";
 import { helpDatas } from "@/data/helpDatas";
 import useSearchStore from "@/store/searchStore";
 import useFadeOnScroll from "@/lib/useFadeOnScroll";
@@ -58,7 +58,7 @@ const Help = () => {
                   <p>{highlightMatches(item.q, searchQuery)}</p>
                 </QuestionLeft>
                 <Icon open={openIndex === index}>
-                  <img src={arrow} alt="arrow icon" />
+                  <ArrowIcon/>
                 </Icon>
               </HelpQuestion>
               {openIndex === index && (
