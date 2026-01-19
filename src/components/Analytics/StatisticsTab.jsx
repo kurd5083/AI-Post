@@ -9,7 +9,8 @@ const statisticsData = [
 		details: [
 			{ value: "- 500", label: "За неделю" },
 			{ value: "- 2.257", label: "За месяц" }
-		]
+		],
+		points: [0, 60, 40, 100]
 	},
 	{
 		title: "Средний охват 1 публикации",
@@ -18,7 +19,8 @@ const statisticsData = [
 		details: [
 			{ value: "7%", label: "ERR" },
 			{ value: "6.5%", label: "ERR 24" }
-		]
+		],
+		points: [60, 30, 80, 20]
 	},
 	{
 		title: "Комментарии / Лайки за 24 часа",
@@ -27,7 +29,8 @@ const statisticsData = [
 		details: [
 			{ value: "- 120", label: "За неделю" },
 			{ value: "- 1.050", label: "За месяц" }
-		]
+		],
+		points: [60, 30, 80, 20]
 	},
 	{
 		title: "Просмотры видео",
@@ -36,7 +39,8 @@ const statisticsData = [
 		details: [
 			{ value: "+ 5.678", label: "За неделю" },
 			{ value: "+ 21.234", label: "За месяц" }
-		]
+		],
+		points: [60, 30, 80, 20]
 	},
 	{
 		title: "Комментарии / Лайки за 24 часа",
@@ -45,7 +49,8 @@ const statisticsData = [
 		details: [
 			{ value: "- 120", label: "За неделю" },
 			{ value: "- 1.050", label: "За месяц" }
-		]
+		],
+		points: [60, 30, 80, 20]
 	},
 	{
 		title: "Просмотры видео",
@@ -54,13 +59,36 @@ const statisticsData = [
 		details: [
 			{ value: "+ 5.678", label: "За неделю" },
 			{ value: "+ 21.234", label: "За месяц" }
-		]
+		],
+		points: [60, 30, 80, 20]
 	}
 ];
 
+const months = ["Январь", "Февраль", "Март", "Апрель"];
+
 const StatisticsTab = () => {
 	const { fadeVisible, ref } = useFadeOnScroll(20);
+		const makeSmoothBezierPath = (values, height) => {
+		const width = 200;
+		const step = width / (values.length - 1);
 
+		const maxValue = Math.max(...values);
+		const pts = values.map((v, i) => [i * step, height - (v / maxValue) * height]);
+
+		if (pts.length < 2) return "";
+
+		let d = `M${pts[0][0]},${pts[0][1]}`;
+		for (let i = 1; i < pts.length; i++) {
+			const [x0, y0] = pts[i - 1];
+			const [x1, y1] = pts[i];
+			const cp1x = x0 + (x1 - x0) / 2;
+			const cp1y = y0;
+			const cp2x = x0 + (x1 - x0) / 2;
+			const cp2y = y1;
+			d += ` C${cp1x},${cp1y} ${cp2x},${cp2y} ${x1},${y1}`;
+		}
+		return d;
+	};
 	return (
 		<StatisticsContainer $fadeVisible={fadeVisible} ref={ref}>
 			{statisticsData.map((item, index) => (
@@ -77,6 +105,49 @@ const StatisticsTab = () => {
 							</StatsCardDetailItem>
 						))}
 					</StatsCardDetails>
+					<StatsChart>
+						<StatsChartLine>
+							<svg viewBox="0 0 200 100" preserveAspectRatio="none">
+								<defs>
+									<linearGradient id={`fadeStroke-${index}`} x1="0" x2="1" y1="0" y2="0">
+										<stop offset="0%" stopColor="#1C243800" />
+										<stop offset="50%" stopColor="#6A7080" />
+										<stop offset="100%" stopColor="#1C243800" />
+									</linearGradient>
+								</defs>
+								<path
+									d={makeSmoothBezierPath(item.points, 100)}
+									stroke={`url(#fadeStroke-${index})`}
+									strokeWidth="2"
+									fill="none"
+									strokeLinecap="round"
+									strokeLinejoin="round"
+								/>
+							</svg>
+						</StatsChartLine>
+
+						<StatsChartGradient>
+							<svg viewBox="0 0 200 100" preserveAspectRatio="none">
+								<defs>
+									<linearGradient id={`gradientFill-${index}`} x1="0" x2="0" y1="0" y2="1">
+										<stop offset="0%" stopColor="#283046" />
+										<stop offset="100%" stopColor="#1C243800"/>
+									</linearGradient>
+								</defs>
+								<path
+									d={`${makeSmoothBezierPath(item.points, 100)} L200,100 L0,100 Z`}
+									fill={`url(#gradientFill-${index})`}
+								/>
+							</svg>
+						</StatsChartGradient>
+					</StatsChart>
+					<StatsData>
+						{months.map((month, i) => (
+							<span key={i} style={{ left: `${(i / (months.length - 1)) * 100}%` }}>
+								{month}
+							</span>
+						))}
+					</StatsData>
 				</StatisticsItem>
 			))}
 		</StatisticsContainer>
@@ -123,6 +194,7 @@ const StatisticsContainer = styled.div`
   `}
 `;
 const StatisticsItem = styled.div`
+position: relative;
   flex: 1;
   border: 2px solid #2E3954;
   border-radius: 32px;
@@ -162,4 +234,29 @@ const StatsCardDetailItem = styled.p`
     color: #6A7080;
   }
 `;
+
+const StatsChart = styled.div`
+  position: absolute;
+	bottom: 40px;
+	right: 0;
+  width: 350px;
+`;
+const StatsChartLine = styled.div`
+
+`;
+const StatsChartGradient = styled.div`
+	margin-top: -150px;
+`;
+const StatsData = styled.div`
+display: flex;
+  position: absolute;
+	bottom: 10px;
+	right: 0;
+  width: 350px;
+	color: #6A7080;
+	font-size: 10px;
+	font-weight: 600;
+	gap: 48px;
+`;
+
 export default StatisticsTab
