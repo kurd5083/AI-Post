@@ -109,7 +109,6 @@ const ThisDay = ({ posts, eventsPending }) => {
       }
     );
   };
-
   return (
     <DayWrapper>
       <DayHeader>
@@ -152,6 +151,7 @@ const ThisDay = ({ posts, eventsPending }) => {
         {filteredPosts?.map((item) => (
 
           <Card key={item.id}>
+            {console.log(item.post?.images, 'item.post?.images')}
             <CardHeader>
               <CardAuthor>
                 <AvaPlug width="32px" height="32px" />
