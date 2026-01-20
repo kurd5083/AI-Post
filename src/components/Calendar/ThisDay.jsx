@@ -265,10 +265,13 @@ const Grid = styled.div`
 	@media(max-width: 1400px) {
     padding-bottom: 0px;
     grid-template-columns: repeat(2, 1fr);
+    max-height: 700px;
+	  min-height: auto;
   }
   @media(max-width: 768px) {
     grid-template-columns: 1fr;
   }
+
 	&::after {
     content: '';
     position: fixed;
