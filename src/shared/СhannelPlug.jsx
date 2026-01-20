@@ -3,7 +3,7 @@ import styled from "styled-components";
 const СhannelPlug = ({width, height, text}) => {
   return (
     <Plug $width={width} $height={height}>
-      {text?.split(" ").map(word => word[0]).join("").toUpperCase()}
+      {text?.split(" ").map(word => word[0]).join("").toUpperCase().slice(0, 2)}
     </Plug>
   )
 }

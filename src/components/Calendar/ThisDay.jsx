@@ -22,6 +22,7 @@ const ThisDay = ({ posts, eventsPending }) => {
   const { fadeVisible, ref } = useFadeOnScroll(20);
   const { selectedDate, setSelectedDate } = useCalendarStore();
   const { userChannels } = useUserChannels();
+  console.log(userChannels)
   const [publishingPosts, setPublishingPosts] = useState({});
   const { addNotification } = useNotificationStore();
   const { popup, openPopup } = usePopupStore();
@@ -288,6 +289,7 @@ const CardHeader = styled.div`
   justify-content: space-between;
   align-items: center;
   margin-bottom: 24px;
+  gap: 20px;
 `;
 const CardAuthor = styled.div`
   display: flex;
@@ -306,6 +308,7 @@ const CardEdit = styled.p`
 `;
 const CardImage = styled.img`
   height: 300px;
+  width: 100%;
   object-fit: cover;
   border-radius: 16px;
 `;

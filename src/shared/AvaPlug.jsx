@@ -10,6 +10,7 @@ const AvaPlug = ({width, height}) => {
 }
 
 const Plug = styled.div`
+  flex-shrink: 0;
   display: flex;
   align-items: center;
   justify-content: center;
