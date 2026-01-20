@@ -1,3 +1,4 @@
+import { useRef, useState, useEffect } from "react";
 import styled from "styled-components";
 
 import users from "@/assets/users.svg";
@@ -87,8 +88,30 @@ const posts = [
 	},
 ];
 const PreviewTab = () => {
-	const { fadeVisible: fadeMentions, ref: mentionsRef } = useFadeOnScroll(20);
-	const { fadeVisible: fadePosts, ref: postsRef } = useFadeOnScroll(20);
+	const { fadeVisible: fadeMentions, ref: fadeMentionsRef } = useFadeOnScroll(20);
+	const { fadeVisible: fadePosts, ref: fadePostsRef } = useFadeOnScroll(20);
+
+	const mentionsRef = useRef();
+	const postsRef = useRef();
+
+	const [mentionsWidth, setMentionsWidth] = useState(0);
+	const [postsWidth, setPostsWidth] = useState(0);
+
+	useEffect(() => {
+		const updateWidths = () => {
+			if (mentionsRef.current) {
+				setMentionsWidth(mentionsRef.current.offsetWidth);
+			}
+			if (postsRef.current) {
+				setPostsWidth(postsRef.current.offsetWidth);
+			}
+		};
+
+		updateWidths();
+		window.addEventListener("resize", updateWidths);
+		return () => window.removeEventListener("resize", updateWidths);
+	}, []);
+
 	return (
 		<PreviewContainer>
 			<div>
@@ -99,7 +122,14 @@ const PreviewTab = () => {
 				<PreviewDescription>
 					Просмотрите ленту, где указаны каналы, которые вас упомянули
 				</PreviewDescription>
-				<MentionsList $fadeVisible={fadeMentions} ref={mentionsRef}>
+				<MentionsList
+					ref={el => {
+						mentionsRef.current = el;
+						if (fadeMentionsRef) fadeMentionsRef.current = el;
+					}}
+					$fadeVisible={fadeMentions}
+					$containerWidth={mentionsWidth}
+				>
 					{mentions.map(m => (
 						<MentionCard key={m.id}>
 							<MentionsCardChannelInfo>
@@ -125,7 +155,14 @@ const PreviewTab = () => {
 			<div>
 				<PreviewTitle>Посты канала</PreviewTitle>
 				<PreviewDescription>Лента с постами и статистикой отслеживаемого вами канала</PreviewDescription>
-				<PostsList $fadeVisible={fadePosts} ref={postsRef}>
+				<PostsList
+					ref={el => {
+						postsRef.current = el;
+						if (fadePostsRef) fadePostsRef.current = el;
+					}}
+					$fadeVisible={fadePosts}
+					$containerWidth={postsWidth}
+				>
 					{posts.map(p => (
 						<PostsCard key={p.id}>
 							<PostHead>
@@ -141,7 +178,7 @@ const PreviewTab = () => {
 									<p><img src={pointLine} alt="" /> {p.comments}</p>
 								</PostFooterParams>
 								<PostArrow>
-									<ArrowIcon color="#6A7080" hoverColor="#6A7080"/>
+									<ArrowIcon color="#6A7080" hoverColor="#6A7080" />
 								</PostArrow>
 							</PostFooter>
 						</PostsCard>
@@ -194,7 +231,7 @@ const MentionsList = styled.div`
   scrollbar-width: none;
 
 
-	${({ $forceHorizontal, $fadeVisible }) =>
+	${({ $forceHorizontal, $fadeVisible, $containerWidth }) =>
 		!$forceHorizontal &&
 		`
       &::after {
@@ -202,7 +239,7 @@ const MentionsList = styled.div`
         position: fixed;
         bottom: 0;
         height: 135px;
-        width: 100%;
+        width: ${$containerWidth}px;
         background: linear-gradient(to top, #131826, transparent);
         backdrop-filter: blur(8px);
         mask-image: linear-gradient(to top, black 50%, transparent);
@@ -281,7 +318,7 @@ const PostsList = styled.div`
 	overflow-y: auto;
   scrollbar-width: none;
 
-	${({ $forceHorizontal, $fadeVisible }) =>
+	${({ $forceHorizontal, $fadeVisible, $containerWidth }) =>
 		!$forceHorizontal &&
 		`
       &::after {
@@ -289,7 +326,7 @@ const PostsList = styled.div`
         position: fixed;
         bottom: 0;
         height: 135px;
-        width: 100%;
+        width: ${$containerWidth}px;
         background: linear-gradient(to top, #131826, transparent);
         backdrop-filter: blur(8px);
         mask-image: linear-gradient(to top, black 50%, transparent);

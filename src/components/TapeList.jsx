@@ -1,3 +1,4 @@
+import { useState, useRef, useEffect } from "react";
 import styled, { keyframes } from "styled-components";
 import { Link } from "react-router";
 
@@ -25,12 +26,21 @@ import { usePopupStore } from "@/store/popupStore"
 import { useLightboxStore } from "@/store/lightboxStore";
 
 const TapeList = ({ forceHorizontal = false, padding, newsData, pending }) => {
+  const swiperRef = useRef();
+  const [isHovered, setIsHovered] = useState(false);
   const { popup, changeContent, openPopup } = usePopupStore();
   const { openLightbox } = useLightboxStore();
 
   const { fadeVisible, ref } = useFadeOnScroll(20);
   const { isSwipe } = useSwipeAllowed(1400);
   const { addNotification } = useNotificationStore();
+
+  useEffect(() => {
+    const swiper = swiperRef.current;
+    if (!swiper) return;
+
+    swiper.params.speed = isHovered ? 300 : 2000;
+  }, [isHovered]);
 
   const direction = forceHorizontal ? "horizontal" : (isSwipe ? "horizontal" : "vertical");
 
@@ -75,35 +85,35 @@ const TapeList = ({ forceHorizontal = false, padding, newsData, pending }) => {
         <ModernLoading text="Загрузка новостей..." />
       ) : newsData && newsData.length > 0 ? (
         <TapeContainer
-          ref={ref}
-          key={isSwipe}
+          speed={2000}
+          onSwiper={(swiper) => (swiperRef.current = swiper)}
           spaceBetween={16}
           direction={direction}
           slidesPerView="auto"
           allowTouchMove={true}
-          $fadeVisible={fadeVisible}
-          $forceHorizontal={forceHorizontal}
-          $padding={padding}
-          modules={[Navigation, Mousewheel, Autoplay]}
-          // navigation={{
-          //   nextEl: ".TapeNext",
-          //   prevEl: ".TapePrev",
-          // }}
-          freeMode={true}
-          freeModeMomentum={true}
+          mousewheel={{
+            forceToAxis: true,
+            releaseOnEdges: true,
+            sensitivity: 10,
+          }}
           loop={true}
           autoplay={{
             delay: 0,
             disableOnInteraction: false,
-            pauseOnMouseEnter: false,
+            pauseOnMouseEnter: true,
           }}
-          speed={5000}
+          $fadeVisible={fadeVisible}
+          $forceHorizontal={forceHorizontal}
+          $padding={padding}
+          modules={[Navigation, Mousewheel, Autoplay]}
         >
           {newsData.map((news, index) => (
             <TapeItem
               key={news.id}
               $forceHorizontal={forceHorizontal}
               style={{ animationDelay: `${index * 0.1}s` }}
+              onMouseEnter={() => setIsHovered(true)}
+              onMouseLeave={() => setIsHovered(false)}
             >
               <TapeItemContent $forceHorizontal={forceHorizontal}>
                 <TapeItemHead>

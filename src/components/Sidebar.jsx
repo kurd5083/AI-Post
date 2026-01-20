@@ -164,7 +164,7 @@ const SidebarNav = styled.nav`
   margin-top: 65px;
 `
 const SidebarNavTitle = styled.h2`
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 700;
   color: #6A7080;
   margin-bottom: 32px;

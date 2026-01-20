@@ -1,4 +1,6 @@
+import { useRef, useState, useEffect } from "react";
 import styled from "styled-components";
+
 import useFadeOnScroll from "@/lib/useFadeOnScroll";
 
 const statisticsData = [
@@ -67,8 +69,33 @@ const statisticsData = [
 const months = ["Январь", "Февраль", "Март", "Апрель"];
 
 const StatisticsTab = () => {
+	const [containerWidth, setContainerWidth] = useState(0);
+
+	const containerRef = useRef();
 	const { fadeVisible, ref } = useFadeOnScroll(20);
-		const makeSmoothBezierPath = (values, height) => {
+
+	useEffect(() => {
+		if (!containerRef.current) return;
+
+		const updateWidth = () => {
+			let width = containerRef.current.offsetWidth;
+
+			if (window.innerWidth < 1600) {
+				width -= 32 * 2;
+			} else {
+				width -= 52 * 2;
+			}
+
+			setContainerWidth(width);
+		};
+
+		updateWidth();
+		window.addEventListener("resize", updateWidth);
+
+		return () => window.removeEventListener("resize", updateWidth);
+	}, []);
+
+	const makeSmoothBezierPath = (values, height) => {
 		const width = 200;
 		const step = width / (values.length - 1);
 
@@ -89,8 +116,16 @@ const StatisticsTab = () => {
 		}
 		return d;
 	};
+
 	return (
-		<StatisticsContainer $fadeVisible={fadeVisible} ref={ref}>
+		<StatisticsContainer
+			ref={(el) => {
+				if (ref) ref.current = el;
+				containerRef.current = el;
+			}}
+			$fadeVisible={fadeVisible}
+			$containerWidth={containerWidth}
+		>
 			{statisticsData.map((item, index) => (
 				<StatisticsItem key={index}>
 					<ItemTitle>{item.title}</ItemTitle>
@@ -131,7 +166,7 @@ const StatisticsTab = () => {
 								<defs>
 									<linearGradient id={`gradientFill-${index}`} x1="0" x2="0" y1="0" y2="1">
 										<stop offset="0%" stopColor="#283046" />
-										<stop offset="100%" stopColor="#1C243800"/>
+										<stop offset="100%" stopColor="#1C243800" />
 									</linearGradient>
 								</defs>
 								<path
@@ -170,7 +205,7 @@ const StatisticsContainer = styled.div`
     padding: 0 24px 30px
   }
 
-	${({ $forceHorizontal, $fadeVisible }) =>
+	${({ $forceHorizontal, $fadeVisible, $containerWidth }) =>
 		!$forceHorizontal &&
 		`
       &::after {
@@ -178,7 +213,7 @@ const StatisticsContainer = styled.div`
         position: fixed;
         bottom: 0;
         height: 135px;
-        width: 100%;
+        width: ${$containerWidth}px;
         background: linear-gradient(to top, #131826, transparent);
         backdrop-filter: blur(8px);
         mask-image: linear-gradient(to top, black 50%, transparent);
