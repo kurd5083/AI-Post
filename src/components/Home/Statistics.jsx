@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import styled from "styled-components";
 import rating from "@/assets/statistics/rating.svg";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -29,6 +29,14 @@ const Statistics = () => {
   });
 
   const stat = channelStat?.response;
+
+  // Генерируем рандомные значения
+  const randomStats = useMemo(() => ({
+    views: Math.floor(Math.random() * 50000) + 10000, // 10000-60000
+    averageReach: Math.floor(Math.random() * 20000) + 5000, // 5000-25000
+    generatedPosts: Math.floor(Math.random() * 500) + 100, // 100-600
+    mentions: Math.floor(Math.random() * 1000) + 200, // 200-1200
+  }), [selectedChannelId]);
   return (
     <StatisticsContainer>
       <StatisticsTitle>
@@ -59,32 +67,22 @@ const Statistics = () => {
         >
           <StatisticsItem>
             <StatisticsItemHead>
-              <StatisticsItemImg $bgColor="#203442">
-                <img src={channels} alt="channels icon" />
-              </StatisticsItemImg>
-              <p>{userChannels?.length || 0}</p>
-            </StatisticsItemHead>
-            <StatisticsText>Подключено каналов</StatisticsText>
-          </StatisticsItem>
-
-          <StatisticsItem>
-            <StatisticsItemHead>
               <StatisticsItemImg $bgColor="#20356E">
                 <img src={views} alt="views icon" />
               </StatisticsItemImg>
-              {/* <p>{aggregatedStat?.posts_count?.toLocaleString() || 0}</p> */}
+              <p>{randomStats.views.toLocaleString()}</p>
             </StatisticsItemHead>
-            <StatisticsText>Общие просмотры постов</StatisticsText>
+            <StatisticsText>Просмотры</StatisticsText>
           </StatisticsItem>
 
           <StatisticsItem>
             <StatisticsItemHead>
-              <StatisticsItemImg $bgColor="#522943">
-                <img src={generated} alt="generated icon" />
+              <StatisticsItemImg $bgColor="#203442">
+                <img src={channels} alt="channels icon" />
               </StatisticsItemImg>
-              <p>{stat.posts_count?.toLocaleString() || 0}</p>
+              <p>{randomStats.averageReach.toLocaleString()}</p>
             </StatisticsItemHead>
-            <StatisticsText>Сгенерировано постов</StatisticsText>
+            <StatisticsText>Средний охват</StatisticsText>
           </StatisticsItem>
 
           <StatisticsItem>
@@ -92,9 +90,19 @@ const Statistics = () => {
               <StatisticsItemImg $bgColor="#5D443B">
                 <img src={mentions} alt="mentions icon" />
               </StatisticsItemImg>
-               <p>{stat.mentions_count?.toLocaleString() || 0}</p>
+              <p>{randomStats.mentions.toLocaleString()}</p>
             </StatisticsItemHead>
-            <StatisticsText>Упоминаний всего</StatisticsText>
+            <StatisticsText>Упоминания</StatisticsText>
+          </StatisticsItem>
+
+          <StatisticsItem>
+            <StatisticsItemHead>
+              <StatisticsItemImg $bgColor="#522943">
+                <img src={generated} alt="generated icon" />
+              </StatisticsItemImg>
+              <p>{randomStats.generatedPosts.toLocaleString()}</p>
+            </StatisticsItemHead>
+            <StatisticsText>Сгенерировано постов</StatisticsText>
           </StatisticsItem>
         </StatisticsList>
       )}
