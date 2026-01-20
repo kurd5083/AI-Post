@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { Outlet } from "react-router";
 import styled from "styled-components";
@@ -19,6 +19,7 @@ import { useAuthStore } from "@/store/authStore";
 import BtnBase from "@/shared/BtnBase";
 import TgIcon from "@/icons/TgIcon";
 import { useTelegramBotLink } from "@/lib/user/useTelegramBotLink";
+import { useAuthEmail } from "@/lib/user/useAuthEmail";
 
 
 const MainLayout = () => {
@@ -29,7 +30,16 @@ const MainLayout = () => {
   const token = useAuthStore(s => s.token);
   const init = useAuthStore(state => state.init);
   const { botLinkData } = useTelegramBotLink();
+  const { register, login, isRegistering, isLoggingIn } = useAuthEmail();
   const location = useLocation();
+  const [authMode, setAuthMode] = useState('login'); // 'login' or 'register'
+  const [formData, setFormData] = useState({
+    email: '',
+    password: '',
+    firstName: '',
+    lastName: ''
+  });
+  const [error, setError] = useState('');
 
 
   useEffect(() => {
@@ -50,6 +60,32 @@ const MainLayout = () => {
   if (!isInitialized) {
     return <p>Загрузка...</p>;
   }
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError('');
+
+    try {
+      if (authMode === 'register') {
+        if (!formData.email || !formData.password || !formData.firstName || !formData.lastName) {
+          setError('Заполните все поля');
+          return;
+        }
+        await register(formData);
+        setFormData({ email: '', password: '', firstName: '', lastName: '' });
+      } else {
+        if (!formData.email || !formData.password) {
+          setError('Заполните email и пароль');
+          return;
+        }
+        await login({ email: formData.email, password: formData.password });
+        setFormData({ email: '', password: '', firstName: '', lastName: '' });
+      }
+    } catch (err) {
+      setError(err.message || (authMode === 'register' ? 'Ошибка регистрации' : 'Ошибка входа'));
+    }
+  };
+
   return (
     <MainContainer>
       <Sidebar />
@@ -57,23 +93,97 @@ const MainLayout = () => {
         <Header />
         {!isAuthenticated ? (
           <AuthOverlay>
-            <h2>Войдите в систему</h2>
-            <p>Чтобы продолжить работу, авторизуйтесь через Telegram-бота.</p>
+            <AuthFormContainer>
+              <AuthTabs>
+                <AuthTab 
+                  $active={authMode === 'login'} 
+                  onClick={() => {
+                    setAuthMode('login');
+                    setError('');
+                  }}
+                >
+                  Вход
+                </AuthTab>
+                <AuthTab 
+                  $active={authMode === 'register'} 
+                  onClick={() => {
+                    setAuthMode('register');
+                    setError('');
+                  }}
+                >
+                  Регистрация
+                </AuthTab>
+              </AuthTabs>
 
-            <BtnBase
-              $padding="12px 24px"
-              $bg="#336CFF"
-              $color="#fff"
-              $radius="12px"
-              $fs="16px"
-              onClick={() => {
-                if (!botLinkData) return;
-                window.location.href = botLinkData.botLink;
-              }}
-            >
-              <TgIcon width="22" height="20" />
-              Войти через бот
-            </BtnBase>
+              <AuthForm onSubmit={handleSubmit}>
+                {authMode === 'register' && (
+                  <>
+                    <AuthInput
+                      type="text"
+                      placeholder="Имя"
+                      value={formData.firstName}
+                      onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
+                    />
+                    <AuthInput
+                      type="text"
+                      placeholder="Фамилия"
+                      value={formData.lastName}
+                      onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
+                    />
+                  </>
+                )}
+                <AuthInput
+                  type="email"
+                  placeholder="Email"
+                  value={formData.email}
+                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                />
+                <AuthInput
+                  type="password"
+                  placeholder="Пароль"
+                  value={formData.password}
+                  onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                />
+                
+                {error && <AuthError>{error}</AuthError>}
+
+                <BtnBase
+                  type="submit"
+                  $padding="12px 24px"
+                  $bg="#336CFF"
+                  $color="#fff"
+                  $radius="12px"
+                  $fs="16px"
+                  disabled={isRegistering || isLoggingIn}
+                >
+                  {authMode === 'register' 
+                    ? (isRegistering ? 'Регистрация...' : 'Зарегистрироваться')
+                    : (isLoggingIn ? 'Вход...' : 'Войти')
+                  }
+                </BtnBase>
+              </AuthForm>
+
+              <AuthDivider>
+                <AuthDividerLine />
+                <AuthDividerText>или</AuthDividerText>
+                <AuthDividerLine />
+              </AuthDivider>
+
+              <BtnBase
+                $padding="12px 24px"
+                $bg="#336CFF"
+                $color="#fff"
+                $radius="12px"
+                $fs="16px"
+                onClick={() => {
+                  if (!botLinkData) return;
+                  window.location.href = botLinkData.botLink;
+                }}
+              >
+                <TgIcon width="22" height="20" />
+                Войти через бот
+              </BtnBase>
+            </AuthFormContainer>
           </AuthOverlay>
         ) : (
           <Outlet />
@@ -128,17 +238,89 @@ const AuthOverlay = styled.div`
   align-items: center;
   z-index: 1000;
   padding: 0 20px;
+`;
 
-  h2 {
-    font-size: 24px;
-    margin-bottom: 16px;
+const AuthFormContainer = styled.div`
+  width: 100%;
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+`;
+
+const AuthTabs = styled.div`
+  display: flex;
+  gap: 8px;
+  border-bottom: 2px solid #2E3954;
+`;
+
+const AuthTab = styled.button`
+  flex: 1;
+  padding: 12px;
+  background: transparent;
+  border: none;
+  color: ${({ $active }) => ($active ? '#336CFF' : '#6A7080')};
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  border-bottom: 2px solid ${({ $active }) => ($active ? '#336CFF' : 'transparent')};
+  margin-bottom: -2px;
+  transition: all 0.2s;
+
+  &:hover {
+    color: #336CFF;
+  }
+`;
+
+const AuthForm = styled.form`
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+`;
+
+const AuthInput = styled.input`
+  width: 100%;
+  padding: 12px 16px;
+  background-color: #131826;
+  border: 2px solid #2E3954;
+  border-radius: 12px;
+  color: #D6DCEC;
+  font-size: 16px;
+  transition: border-color 0.2s;
+
+  &:focus {
+    outline: none;
+    border-color: #336CFF;
   }
 
-  p {
-    margin-bottom: 24px;
+  &::placeholder {
     color: #6A7080;
-    text-align: center;
   }
+`;
+
+const AuthError = styled.p`
+  color: #FF4444;
+  font-size: 14px;
+  text-align: center;
+  margin: 0;
+`;
+
+const AuthDivider = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+`;
+
+const AuthDividerLine = styled.div`
+  flex: 1;
+  height: 1px;
+  background-color: #2E3954;
+`;
+
+const AuthDividerText = styled.span`
+  color: #6A7080;
+  font-size: 14px;
 `;
 
 export default MainLayout;
