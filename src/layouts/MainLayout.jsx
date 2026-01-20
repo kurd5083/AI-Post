@@ -32,7 +32,7 @@ const MainLayout = () => {
   const { botLinkData } = useTelegramBotLink();
   const { register, login, isRegistering, isLoggingIn } = useAuthEmail();
   const location = useLocation();
-  const [authMode, setAuthMode] = useState('login'); // 'login' or 'register'
+  const [authMode, setAuthMode] = useState('login');
   const [formData, setFormData] = useState({
     email: '',
     password: '',
