@@ -145,55 +145,64 @@ const ThisDay = ({ posts, eventsPending }) => {
       </ChannelRow>
 
       <SectionTitle>Посты в этот день:</SectionTitle>
-      {eventsPending && <ModernLoading text="Загрузка постов..." />}
-      {filteredPosts?.length === 0 && !eventsPending && <EmptyCalendar>Нет постов</EmptyCalendar>}
+      {eventsPending
+        ? <ModernLoading text="Загрузка постов..." />
+        : filteredPosts?.length === 0
+          ? <EmptyCalendar>Нет постов</EmptyCalendar>
+          :
+          <Grid $fadeVisible={fadeVisible} ref={ref}>
+            {filteredPosts.map((item) => (
+              <Card key={item.id}>
+                {console.log(item.post?.images, 'item.post?.images')}
+                <CardHeader>
+                  <CardAuthor>
+                    <AvaPlug width="32px" height="32px" />
+                    <CardName>{item.channel.name}</CardName>
+                  </CardAuthor>
+                  <CardEdit
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      openPopup("update_calendar_event", "popup_window", { event: item, channelId: item.channelId });
+                    }}
+                  >
+                    Изменить
+                  </CardEdit>
+                </CardHeader>
 
-      <Grid $fadeVisible={fadeVisible} ref={ref}>
-        {filteredPosts?.map((item) => (
+                {item.post?.images[0] && (
+                  <CardImage
+                    src={normalizeUrl(item.post?.images[0])}
+                    alt='post'
+                    onClick={() =>
+                      openLightbox({
+                        images: item.post?.images.map(i =>
+                          i instanceof File || i instanceof Blob
+                            ? URL.createObjectURL(i)
+                            : normalizeUrl(i)
+                        ),
+                        initialIndex: 0
+                      })
+                    }
+                  />
+                )}
 
-          <Card key={item.id}>
-            {console.log(item.post?.images, 'item.post?.images')}
-            <CardHeader>
-              <CardAuthor>
-                <AvaPlug width="32px" height="32px" />
-                <CardName>{item.channel.name}</CardName>
-              </CardAuthor>
-              <CardEdit
-                onClick={(e) => {
-                  e.stopPropagation();
-                  openPopup("update_calendar_event", "popup_window", { event: item, channelId: item.channelId });
-                }}
+                <CardTitle>{item.title}</CardTitle>
+                <CardSubtitle>{item?.post?.summary}</CardSubtitle>
 
-              >Изменить</CardEdit>
-            </CardHeader>
-            {item.post?.images[0] && (
-              <CardImage
-                src={normalizeUrl(item.post?.images[0])}
-                alt='post'
-                onClick={() =>
-                  openLightbox({
-                    images: item.post?.images.map(i =>
-                      i instanceof File || i instanceof Blob ? URL.createObjectURL(i) : normalizeUrl(i)
-                    ),
-                    initialIndex: 0
-                  })
-                }
-              />
-            )}
-            <CardTitle>{item.title}</CardTitle>
-            <CardSubtitle>{item?.post?.summary}</CardSubtitle>
-            <CardFooter>
-              <CardTime>{formatUTCTime(item.scheduledAt)}</CardTime>
-              <CardPublish
-                onClick={() => handlePublishNow(item)}
-                disabled={publishingPosts[item.id]}
-              >
-                {publishingPosts[item.id] ? "Публикация..." : "Опубликовать"}
-              </CardPublish>
-            </CardFooter>
-          </Card>
-        ))}
-      </Grid>
+                <CardFooter>
+                  <CardTime>{formatUTCTime(item.scheduledAt)}</CardTime>
+                  <CardPublish
+                    onClick={() => handlePublishNow(item)}
+                    disabled={publishingPosts[item.id]}
+                  >
+                    {publishingPosts[item.id] ? "Публикация..." : "Опубликовать"}
+                  </CardPublish>
+                </CardFooter>
+              </Card>
+            ))
+            }
+          </Grid>
+      }
     </DayWrapper>
   )
 }
@@ -249,6 +258,7 @@ const Grid = styled.div`
   max-height: calc(100dvh - 480px);
 	min-height: 700px;
 	padding-bottom: 30px;
+  
   @media(max-width: 1800px) {
     grid-template-columns: 1fr;
   }

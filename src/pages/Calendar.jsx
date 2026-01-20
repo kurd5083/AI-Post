@@ -95,13 +95,11 @@ const CalendarContainer = styled.section`
 `;
 const CalendarContent = styled.div`
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  grid-template-rows: min-content;
-  align-items: end;
   gap: 64px;
   grid-template-columns: 410px 410px 1fr 1fr 1fr;
   grid-template-rows: min-content;
-  align-items: end;
+  align-items: start;
+  
   @media(max-width: 1600px) {
     gap: 40px;
     grid-template-columns: 380px 380px 1fr 1fr 1fr;
