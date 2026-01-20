@@ -2,7 +2,7 @@ import styled, { keyframes } from "styled-components";
 import { Link } from "react-router";
 
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation, Mousewheel } from "swiper/modules";
+import { Navigation, Mousewheel, Autoplay } from "swiper/modules";
 import "swiper/css";
 
 import TimeIcon from "@/icons/TimeIcon";
@@ -80,23 +80,24 @@ const TapeList = ({ forceHorizontal = false, padding, newsData, pending }) => {
           spaceBetween={16}
           direction={direction}
           slidesPerView="auto"
-          allowTouchMove={forceHorizontal || isSwipe}
+          allowTouchMove={true}
           $fadeVisible={fadeVisible}
           $forceHorizontal={forceHorizontal}
           $padding={padding}
-          modules={[Navigation, Mousewheel]}
-          navigation={{
-            nextEl: ".TapeNext",
-            prevEl: ".TapePrev",
+          modules={[Navigation, Mousewheel, Autoplay]}
+          // navigation={{
+          //   nextEl: ".TapeNext",
+          //   prevEl: ".TapePrev",
+          // }}
+          freeMode={true}
+          freeModeMomentum={true}
+          loop={true}
+          autoplay={{
+            delay: 0,
+            disableOnInteraction: false,
+            pauseOnMouseEnter: false,
           }}
-           mousewheel={{
-            forceToAxis: true,
-            releaseOnEdges: true,
-            sensitivity: 1,
-          }}
-          speed={600}
-          freeMode={true} 
-          freeModeMomentum={true} 
+          speed={5000}
         >
           {newsData.map((news, index) => (
             <TapeItem
@@ -133,17 +134,17 @@ const TapeList = ({ forceHorizontal = false, padding, newsData, pending }) => {
               />
             </TapeItem>
           ))}
-          {(forceHorizontal || isSwipe) && (
+          {/* {(forceHorizontal || isSwipe) && (
             <div>
               <TapePostButton className="TapePrev">
-                 <ArrowIcon color="#D6DCEC"/>
+                <ArrowIcon color="#D6DCEC" />
               </TapePostButton>
 
               <TapePostButton className="TapeNext">
-                 <ArrowIcon color="#D6DCEC"/>
+                <ArrowIcon color="#D6DCEC" />
               </TapePostButton>
             </div>
-          )}
+          )} */}
         </TapeContainer>
       ) : (
         <EmptyState

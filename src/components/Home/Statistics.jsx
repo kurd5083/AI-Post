@@ -1,15 +1,19 @@
 import { useState, useEffect, useMemo } from "react";
 import styled from "styled-components";
-import rating from "@/assets/statistics/rating.svg";
+
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
-import useSwipeAllowed from "@/lib/useSwipeAllowed";
-import { useChannelStat } from "@/lib/tgStat/useChannelStat";
+
+import CustomSelectThree from "@/shared/CustomSelectThree";
+
+import rating from "@/assets/statistics/rating.svg";
 import channels from "@/assets/statistics/channels.svg";
 import views from "@/assets/statistics/views.svg";
 import generated from "@/assets/statistics/generated.svg";
-import mentions from "@/assets/statistics/mentions.svg";
-import CustomSelectThree from "@/shared/CustomSelectThree";
+import SpeakerIcon from "@/icons/SpeakerIcon";
+
+import useSwipeAllowed from "@/lib/useSwipeAllowed";
+import { useChannelStat } from "@/lib/tgStat/useChannelStat";
 import { useUserChannels } from "@/lib/channels/useUserChannels";
 
 const Statistics = () => {
@@ -88,7 +92,7 @@ const Statistics = () => {
           <StatisticsItem>
             <StatisticsItemHead>
               <StatisticsItemImg $bgColor="#5D443B">
-                <img src={mentions} alt="mentions icon" />
+                <SpeakerIcon color="#FF9C55"/>
               </StatisticsItemImg>
               <p>{randomStats.mentions.toLocaleString()}</p>
             </StatisticsItemHead>

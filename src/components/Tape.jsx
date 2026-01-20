@@ -278,16 +278,22 @@ const FilterWrapper = styled.div`
   overflow-y: auto;
   scrollbar-width: none;
   @media (max-width: 1400px) {
-    left: 32px;
-    max-height: 100dvh;
-    width: calc(100% - 64px);
+    left: auto;
+    top: auto;
+    max-height: 324px;
+    right: 160px;
+    bottom: 30px;
+    margin-left: 24px;
+    width: auto;
   }
   @media (max-width: 480px) {
     right: auto;
-    top: 140px;
+    margin: 0;
+    bottom: auto;
+    top: 160px;
     left: 24px;
     width: calc(100% - 48px);
-    max-height: 100dvh;
+    max-height: 270px;
   }
 `;
 const FilterTitle = styled.h3`

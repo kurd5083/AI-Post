@@ -14,7 +14,7 @@ import post_style from "@/assets/popup/post-style.svg";
 import advanced from "@/assets/popup/advanced.svg";
 import replenish from "@/assets/popup/replenish.svg";
 import bell from "@/assets/bell.svg";
-import media from "@/assets/media.svg";
+import MediaIcon from "@/icons/MediaIcon";
 import EyeIcon from "@/icons/EyeIcon";
 
 export const popupDatas = [
@@ -210,7 +210,8 @@ export const popupDatas = [
         name: "Загрузить медиа",
         extra: {
             background: "#1D3168",
-            image: media
+            image: '',
+            svg: <MediaIcon color="#336CFF"/>
         }
     },
     {

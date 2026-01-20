@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import styled from "styled-components";
 
-import arrow from "@/assets/arrow.svg";
+import ArrowIcon from "@/icons/ArrowIcon";
 
 import useFadeOnScroll from "@/lib/useFadeOnScroll";
 import { useUserChannels } from "@/lib/channels/useUserChannels";
@@ -116,10 +116,10 @@ const ThisDay = ({ posts, eventsPending }) => {
         <DateText>{dateString}</DateText>
         <DayNav>
           <DayNavButton onClick={() => changeDay(-1)}>
-            <img src={arrow} alt="arrow icon" />
+            <ArrowIcon color="#D6DCEC" />
           </DayNavButton>
           <DayNavButton onClick={() => changeDay(1)}>
-            <img src={arrow} alt="arrow icon" />
+            <ArrowIcon color="#D6DCEC" />
           </DayNavButton>
         </DayNav>
       </DayHeader>
@@ -220,7 +220,7 @@ const DayNavButton = styled.button`
   border-radius: 50%;
 	background: #336cff;
 	&:first-child {
-		img {
+		svg {
 			transform: rotate(180deg);
 		}
 	}
@@ -247,7 +247,7 @@ const Grid = styled.div`
 	overflow-y: auto;
   scrollbar-width: none;
   max-height: calc(100dvh - 480px);
-	min-height: 800px;
+	min-height: 700px;
 	padding-bottom: 30px;
   @media(max-width: 1800px) {
     grid-template-columns: 1fr;

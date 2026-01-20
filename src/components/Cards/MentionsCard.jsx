@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import arrow from "@/assets/arrow.svg";
+import ArrowIcon from "@/icons/ArrowIcon";
 import TimeIcon from "@/icons/TimeIcon";
 import timeAgo from "@/lib/timeAgo";
 
@@ -22,7 +22,7 @@ const MentionsCard = ({ item, bg }) => {
         dangerouslySetInnerHTML={{ __html: post?.text }}
       />
 			<MentionsCardOpen onClick={() => window.open(item.postLink, "_blank")}>
-        <img src={arrow} alt="arrow icon" />
+        <ArrowIcon color="#D6DCEC" />
       </MentionsCardOpen>
 		</MentionsCardItem>
 	)
@@ -54,10 +54,6 @@ const MentionsCardItem = styled.div`
     border: 2px solid #181F30;
     ${MentionsCardOpen} {
       background-color: #1C2438;
-      
-			svg path {
-        stroke: #D6DCEC; 
-      }
     }
   }
 `

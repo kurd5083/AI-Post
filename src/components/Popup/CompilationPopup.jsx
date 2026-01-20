@@ -1,13 +1,18 @@
 import { useState } from "react";
 import styled from "styled-components";
-import arrow from "@/assets/arrow.svg";
-import BtnBase from "@/shared/BtnBase";
-import { usePopupStore } from "@/store/popupStore";
-import { useAvailableCategories } from "@/lib/channels/categories/useAvailableCategories";
+
+import ArrowIcon from "@/icons/ArrowIcon";
+
 import ModernLoading from "@/components/ModernLoading";
 import Checkbox from "@/shared/Checkbox";
+import BtnBase from "@/shared/BtnBase";
+
+import { useAvailableCategories } from "@/lib/channels/categories/useAvailableCategories";
 import { useApplyCategory } from "@/lib/channels/categories/useApplyCategory";
+
 import { useNotificationStore } from "@/store/notificationStore";
+import { usePopupStore } from "@/store/popupStore";
+
 
 const CompilationPopup = () => {
   const [selectedCategory, setSelectedCategory] = useState(null);
@@ -72,7 +77,7 @@ const CompilationPopup = () => {
                     )
                   }
                 >
-                  <img src={arrow} alt="arrow icon" />
+                  <ArrowIcon color="#D6DCEC" />
                 </CompilationOpen>
               </CompilationFooter>
             </CompilationItem>

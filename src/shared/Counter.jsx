@@ -1,6 +1,5 @@
-import { useState } from "react";
 import styled from "styled-components";
-import arrow from "@/assets/arrow.svg";
+import ArrowIcon from "@/icons/ArrowIcon";
 
 const Counter = ({ placeholder, value, onChange, disabled }) => {
   const handleChange = (e) => {
@@ -26,10 +25,10 @@ const Counter = ({ placeholder, value, onChange, disabled }) => {
       <Input type="text" placeholder={placeholder} value={value} onChange={handleChange} disabled={disabled}/>
       <ButtonsContainer>
         <CounterButton disabled={disabled} onClick={increment}>
-          <img src={arrow} alt="arrow icon" width={9} height={9} />
+          <ArrowIcon color="#D6DCEC"  width={9} height={9}/>
         </CounterButton>
         <CounterButton disabled={disabled} onClick={decrement}>
-          <img src={arrow} alt="arrow icon" width={9} height={9} />
+          <ArrowIcon color="#D6DCEC"  width={9} height={9}/>
         </CounterButton>
       </ButtonsContainer>
     </CounterWrapper>

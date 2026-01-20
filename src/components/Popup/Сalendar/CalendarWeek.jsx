@@ -1,7 +1,11 @@
 import styled from "styled-components";
-import arrow from "@/assets/arrow.svg";
-import { DAYS_OF_WEEK } from "@/data/calendarDatas";
+
+import ArrowIcon from "@/icons/ArrowIcon";
+
 import { formatRange } from "@/lib/generateWeek";
+
+import { DAYS_OF_WEEK } from "@/data/calendarDatas";
+
 import { useCalendarPopupStore } from "@/store/calendarPopupStore";
 
 const CalendarWeek = ({ currentWeek, startDate, endDate }) => {
@@ -11,7 +15,7 @@ const CalendarWeek = ({ currentWeek, startDate, endDate }) => {
     <>
       <Header>
         <NavButtonLeft onClick={() => changeWeek(-1)}>
-          <img src={arrow} alt="arrow icon" />
+          <ArrowIcon color="#D6DCEC" />
         </NavButtonLeft>
 
         <DateDisplay>
@@ -19,7 +23,7 @@ const CalendarWeek = ({ currentWeek, startDate, endDate }) => {
         </DateDisplay>
 
         <NavButton onClick={() => changeWeek(1)}>
-          <img src={arrow} alt="arrow icon" />
+          <ArrowIcon color="#D6DCEC" />
         </NavButton>
       </Header>
 

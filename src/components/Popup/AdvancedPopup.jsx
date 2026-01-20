@@ -1,10 +1,14 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
+
 import { advancedDatas } from "@/data/advancedDatas";
+
 import Checkbox from "@/shared/Checkbox";
-import { usePopupStore } from "@/store/popupStore";
+
 import { useChannelById } from "@/lib/channels/useChannelById";
 import { useUpdateChannelField } from "@/lib/channels/useUpdateChannelField";
+
+import { usePopupStore } from "@/store/popupStore";
 import { useNotificationStore } from "@/store/notificationStore";
 
 const AdvancedPopup = () => {

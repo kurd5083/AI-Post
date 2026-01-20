@@ -8,20 +8,18 @@ export const sendTestPost = async ({ title, summary, images, imagesUrls, url }) 
   images.forEach((image) => {
     formData.append("images", image);
   });
-
- if (imagesUrls && imagesUrls.length > 0) {
-  const fullUrls = imagesUrls.map(url => {
-    try {
-      const parsed = new URL(url);
-      return parsed.href;
-    } catch {
-      return url;
-    }
-  });
-
-  formData.append("imagesUrls", JSON.stringify(fullUrls));
-}
-
+  console.log(images)
+  if (imagesUrls && imagesUrls.length > 0) {
+    const cleanedUrls = imagesUrls.map((imgUrl) => {
+      try {
+        const parsed = new URL(imgUrl);
+        return parsed.pathname;
+      } catch {
+        return imgUrl.startsWith("/") ? imgUrl : `/${imgUrl}`;
+      }
+    });
+    formData.append("imagesUrls", JSON.stringify(cleanedUrls));
+  }
 
   const response = await apiClient.post("/channels/test-post", formData);
 

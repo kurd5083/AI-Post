@@ -1,11 +1,17 @@
-import { Link } from "react-router";
+import { useEffect } from "react";
 import styled from "styled-components";
+import { Link } from "react-router";
+
 import { sidebarDatas } from "@/data/sidebarDatas";
+
 import arrow_close from "@/assets/arrow-close.svg";
+
+import BtnBase from "@/shared/BtnBase";
+
+import { useUser } from "@/lib/user/useUser";
+
 import { usePopupStore } from "@/store/popupStore";
 import { useSidebarStore } from "@/store/sidebarStore";
-import { useUser } from "@/lib/user/useUser";
-import BtnBase from "@/shared/BtnBase";
 
 const Sidebar = () => {
   const { openPopup, closePopup } = usePopupStore()
@@ -17,6 +23,11 @@ const Sidebar = () => {
     hideSidebar,
     showSidebar
   } = useSidebarStore();
+
+  useEffect(() => {
+    activePage == 2 ? openPopup('create_post', "popup") : 
+    activePage == 7 && openPopup('profile', "popup")
+  }, [])
 
   return (
     <SidebarContainer $isSidebarVisible={isSidebarVisible}>
@@ -40,6 +51,7 @@ const Sidebar = () => {
                     setActivePage(item.id)
                   }}
                 >
+                  {console.log(activePage, item.id)}
                   {item.to ? (
                     <Link
                       to={item.to}
@@ -74,8 +86,9 @@ const Sidebar = () => {
           </SidebarFooterTop>
         <SidebarFooterBtn>
           <BtnBase
-            $padding="12px 24px"
+            $padding={isSidebarVisible ? "12px 24px" : "11px 26px"}
             $bg="#151F37"
+            $fs={!isSidebarVisible && "24px"}
             $color="#336CFF"
             onClick={() => openPopup("replenish", "popup")}
           >

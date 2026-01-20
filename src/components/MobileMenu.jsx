@@ -1,27 +1,32 @@
 import { useEffect } from "react";
-import { Link, useLocation } from "react-router";
-import { useMenuStore } from "@/store/menuStore";
 import styled from "styled-components";
+import { Link } from "react-router";
+
 import { sidebarDatas } from "@/data/sidebarDatas";
+
+import { useMenuStore } from "@/store/menuStore";
 import { useSidebarStore } from "@/store/sidebarStore";
 import { usePopupStore } from "@/store/popupStore";
 
 const MobileMenu = () => {
   const { openPopup, closePopup } = usePopupStore()
   const { menu, closeMenu } = useMenuStore();
-  const location = useLocation();
+  
+  useEffect(() => {
+    activePage == 2 ? openPopup('create_post', "popup") :
+      activePage == 7 && openPopup('profile', "popup")
+  }, [])
+
   const {
     activePage,
     setActivePage,
   } = useSidebarStore();
+
   const handleItemClick = (index) => {
     setActivePage(index);
     closeMenu();
   };
 
-  useEffect(() => {
-    closeMenu();
-  }, [location.pathname]);
 
   return (
     <MenuContainer $visible={menu}>
@@ -38,9 +43,9 @@ const MobileMenu = () => {
                   onClick={() => handleItemClick(item.id)}
                 >
                   {item.to ? (
-                    <Link 
-                    to={item.to}
-                     onClick={() => {
+                    <Link
+                      to={item.to}
+                      onClick={() => {
                         closePopup()
                       }}
                     >

@@ -10,7 +10,7 @@ const BtnBase = styled.button`
   color: ${({ $color }) => $color || "#336CFF"};
   background-color: ${({ $bg }) => $bg || "#1B243E"};
   font-weight: 700;
-  font-size: ${({ $fs }) => $fs || "#14px"};
+  font-size: ${({ $fs }) => $fs || "14px"};
   margin-top: ${({ $margin }) => $margin ? $margin : "0"}px;
   width: ${({ $width }) => $width || "fit-content"};
   border: ${({ $border, $bg }) => $border ? '2px solid #333E59' : `2px solid ${$bg}`};

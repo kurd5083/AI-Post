@@ -9,16 +9,18 @@ import { useLightboxStore } from "@/store/lightboxStore";
 import { useNotificationStore } from "@/store/notificationStore";
 import normalizeUrl from "@/lib/normalizeUrl";
 
-const Preview = ({ collapsed, onChange, testResult, view=true }) => {
+const Preview = ({ collapsed, onChange, testResult, view = true }) => {
   const { openLightbox } = useLightboxStore();
   const { mutate: sendTestPost, isPending: sendPending } = useSendTestPost();
   const { addNotification } = useNotificationStore();
   const { title, summary, url, images } = testResult || {};
+  const [localimagesUrls, setLocalimagesUrls] = useState([]);
   const [imagesUrls, setImagesUrls] = useState([]);
   const [localFiles, setLocalFiles] = useState([]);
 
   useEffect(() => {
     if (!images || !images.length) {
+      setLocalimagesUrls([]);
       setImagesUrls([]);
       setLocalFiles([]);
       return;
@@ -30,7 +32,8 @@ const Preview = ({ collapsed, onChange, testResult, view=true }) => {
     setLocalFiles(files);
 
     const objectUrls = files.map(file => URL.createObjectURL(file));
-    setImagesUrls([...urls, ...objectUrls]);
+    setImagesUrls([...urls]);
+    setLocalimagesUrls([...urls, ...objectUrls]);
 
     return () => {
       objectUrls.forEach(url => URL.revokeObjectURL(url));
@@ -38,15 +41,15 @@ const Preview = ({ collapsed, onChange, testResult, view=true }) => {
   }, [images]);
 
   const handleSend = () => {
-    if (!testResult || (!title && !summary && imagesUrls.length === 0 && localFiles.length === 0)) {
+    if (!testResult || (!!title && !!summary && imagesUrls.length === 0 && localFiles.length === 0)) {
       addNotification("Нет данных для отправки поста", "info");
       return;
     }
 
     sendTestPost(
       {
-        title: title || "Без названия",
-        summary: summary || "",
+        title: title,
+        summary: summary.replace(/<br\s*\/?>/gi, "").trim() || "",
         url: url,
         images: localFiles,
         imagesUrls: imagesUrls,
@@ -63,10 +66,10 @@ const Preview = ({ collapsed, onChange, testResult, view=true }) => {
       <PreviewContent>
         <PreviewHead>
           <HeadLeft>
-            <EyeIcon color="#336CFF" hoverColor="#336CFF" cursor="default"/>
+            <EyeIcon color="#336CFF" hoverColor="#336CFF" cursor="default" />
             Лайв превью
           </HeadLeft>
-          {view &&  <HeadArrow onClick={onChange} $collapsed={collapsed}><ArrowIcon color="#D6DCEC"/></HeadArrow>}
+          {view && <HeadArrow onClick={onChange} $collapsed={collapsed}><ArrowIcon color="#D6DCEC" /></HeadArrow>}
         </PreviewHead>
 
         {!collapsed && (
@@ -74,44 +77,49 @@ const Preview = ({ collapsed, onChange, testResult, view=true }) => {
             <PreviewInfo>
               <PreviewInfoBG src={PreviewBG} alt="bg" />
               <PreviewInfoContainer>
-                {imagesUrls.length > 0 && (
-                  <ImagesContainer>
-                    {imagesUrls.slice(0, 3).map((imgUrl, index) => {
-                      const isLast = index === 2 && imagesUrls.length > 3;
-                      const remaining = imagesUrls.length - 3;
+                {localimagesUrls.length > 0 && (
+                  <TgImages count={localimagesUrls.length}>
+                    {localimagesUrls.slice(0, 3).map((imgUrl, index) => {
+                      const isOverlay = index === 2 && localimagesUrls.length > 3;
+                      const remaining = localimagesUrls.length - 3;
 
                       return (
-                        <ImageWrapper
+                        <TgImage
                           key={index}
+                          className={`img-${index + 1}`}
                           onClick={() =>
-                            openLightbox({ images: imagesUrls, initialIndex: index })
+                            openLightbox({ images: localimagesUrls, initialIndex: index })
                           }
                         >
-                          <img src={imgUrl} alt={`image-${index}`} />
-                          {isLast && <Overlay>+{remaining}</Overlay>}
-                        </ImageWrapper>
+                          <img src={imgUrl} alt="" />
+                          {isOverlay && <Overlay>+{remaining}</Overlay>}
+                        </TgImage>
                       );
                     })}
-                  </ImagesContainer>
+                  </TgImages>
                 )}
                 <PreviewInfoContent>
-                  {title || summary || url ? (
+                  {title || summary || url || images?.length > 0 ? (
                     <>
-                      {title && 
-                        <PreviewInfoTitle>{title}<br /><br /></PreviewInfoTitle>
-                      }
-                      {summary && (
-                        <>
+                      {console.log(summary)}
+
+                      <PreviewInfoTitle>{!!title ? title : "Введите заголовок"}<br /><br /></PreviewInfoTitle>
+                      <>
                         <PreviewInfoText
-                          dangerouslySetInnerHTML={{ __html: summary }}
+                          dangerouslySetInnerHTML={{
+                            __html:
+                              !!summary && summary.replace(/<br\s*\/?>/gi, "").trim()
+                                ? summary
+                                : "Введите текст"
+                          }}
                         />
-                        </>
-                      )}
-                       {url && (
+
+                      </>
+                      {url && (
                         <>
-                        <br /><br />
-                        <PreviewInfoLinkIcon>🔗 </PreviewInfoLinkIcon>
-                        <PreviewInfoLink href={url} target="_blank" rel="noopener noreferrer">Источник</PreviewInfoLink>
+                          <br /><br />
+                          <PreviewInfoLinkIcon>🔗 </PreviewInfoLinkIcon>
+                          <PreviewInfoLink href={url} target="_blank" rel="noopener noreferrer">Источник</PreviewInfoLink>
                         </>
                       )}
                     </>
@@ -183,6 +191,7 @@ const PreviewInfo = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 0 20px;
 `;
 const PreviewInfoBG = styled.img`
   position: absolute;
@@ -192,37 +201,53 @@ const PreviewInfoBG = styled.img`
   object-fit: cover;
 `;
 const PreviewInfoContainer = styled.div`
-  position: relative;
-  width: calc(100% - 50px);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
-  z-index: 1;
-  @media(max-width: 1600px) {
-    width: calc(100% - 24px);
-  } 
-`;
-const ImagesContainer = styled.div`
-  display: grid;
-  gap: 8px;
-  margin-bottom: 4px;
   border-radius: 16px;
-  grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
-  
-  @media (max-width: 768px) {
-    grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
-  }
-`;
-const ImageWrapper = styled.div`
-  position: relative;
-  width: 100%;
-  aspect-ratio: 1 / 1;
-  max-width: 400px;
-  max-height: 400px;
-  border-radius: 12px;
   overflow: hidden;
+  position: relative;
+  z-index: 1;
+  background-color: #131C22;
+
+`;
+const TgImages = styled.div`
+  margin: 0 auto;
+  display: grid;
+  gap: 4px;
+  max-width: 400px;
+  overflow: hidden;
+
+  ${({ count }) => {
+    if (count === 1) {
+      return `
+        grid-template-columns: 1fr;
+        grid-template-rows: 240px;
+      `;
+    }
+
+    if (count === 2) {
+      return `
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: 180px;
+      `;
+    }
+
+    if (count === 3) {
+      return `
+        grid-template-columns: 2fr 1fr;
+        grid-template-rows: 120px 120px;
+      `;
+    }
+
+    return `
+      grid-template-columns: 2fr 1fr;
+      grid-template-rows: 120px 120px;
+    `;
+  }}
+`;
+
+const TgImage = styled.div`
+  position: relative;
   cursor: pointer;
+  overflow: hidden;
 
   img {
     width: 100%;
@@ -230,7 +255,23 @@ const ImageWrapper = styled.div`
     object-fit: cover;
     display: block;
   }
+
+  &.img-1 {
+    grid-row: ${({ className }) =>
+    className?.includes("img-1") ? "1 / span 2" : "auto"};
+  }
+
+  &.img-2 {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  &.img-3 {
+    grid-column: 2;
+    grid-row: 2;
+  }
 `;
+
 const Overlay = styled.div`
   position: absolute;
   inset: 0;
@@ -243,15 +284,14 @@ const Overlay = styled.div`
   justify-content: center;
 `;
 const PreviewInfoContent = styled.p`
+  margin: 0 auto;
   box-sizing: border-box;
   padding: 24px;
-  background-color: #131C22;
-  border-radius: 24px;
   font-size: 12px;
   line-height: 16px;
   font-weight: 600;
   scrollbar-width: none;
-  max-height: 300px;
+  max-width: 400px;
   width: 100%;
   overflow-y: auto;
 `;

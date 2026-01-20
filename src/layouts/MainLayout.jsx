@@ -217,7 +217,7 @@ const Main = styled.main`
   background-color: #131826;
   flex: 1;
   min-width: 0;
-  z-index: 1;
+  /* z-index: 1; */
   overflow-y: ${({ $blocked }) => ($blocked ? "clip" : "auto")};
   overflow-x: clip;
   scrollbar-width: none;

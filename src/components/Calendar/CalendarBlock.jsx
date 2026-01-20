@@ -1,6 +1,6 @@
 import { useState, useMemo, useEffect } from "react";
 import styled from "styled-components";
-import arrow from "@/assets/arrow.svg";
+import ArrowIcon from "@/icons/ArrowIcon";
 import { useCalendarStore } from "@/store/calendarStore";
 
 const weekDays = ["ПН", "ВТ", "СР", "ЧТ", "ПТ", "СБ", "ВСК"];
@@ -90,10 +90,10 @@ const CalendarBlock = () => {
 				<CalendarTitle>{monthTitle}</CalendarTitle>
 				<CalendarNav>
 					<CalendarNavBtn onClick={() => changeMonth(-1)}>
-						<img src={arrow} alt="arrow icon" />
+						<ArrowIcon color="#D6DCEC" />
 					</CalendarNavBtn>
 					<CalendarNavBtn onClick={() => changeMonth(1)}>
-						<img src={arrow} alt="arrow icon" />
+						<ArrowIcon color="#D6DCEC" />
 					</CalendarNavBtn>
 				</CalendarNav>
 			</CalendarHeader>
@@ -151,7 +151,7 @@ const CalendarNavBtn = styled.button`
   height: 40px;
   border-radius: 50%;
   background: #336cff;
-  &:first-child img { transform: rotate(180deg); }
+  &:first-child svg { transform: rotate(180deg); }
 `;
 const GridContainer = styled.div`
   overflow-x: auto;

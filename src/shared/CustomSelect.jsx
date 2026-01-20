@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
-import arrow from "@/assets/arrow.svg";
+
+import ArrowIcon from "@/icons/ArrowIcon";
 
 const CustomSelect = ({ options = [], value, onChange, placeholder = "Выберите значение", padding=true, border=true, width }) => {
   const [open, setOpen] = useState(false);
@@ -30,7 +31,9 @@ const CustomSelect = ({ options = [], value, onChange, placeholder = "Выбер
     <SelectWrapper ref={selectRef} $width={width}>
       <SelectHeader onClick={toggle} $border={border} $padding={padding}>
         <span>{selectedOption?.label || placeholder}</span>
-        <HeaderArrow src={arrow} alt="arrow" className={open ? "open" : ""} />
+        <HeaderArrow className={open ? "open" : ""}>
+          <ArrowIcon color="#D6DCEC" />
+        </HeaderArrow>
       </SelectHeader>
 
       {open && (
@@ -67,12 +70,10 @@ const SelectHeader = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 20px
+  gap: 20px;
 `;
 
-const HeaderArrow = styled.img`
-  width: 8px;
-  height: 16px;
+const HeaderArrow = styled.div`
   transition: transform 0.2s ease;
   transform: rotate(90deg);
 

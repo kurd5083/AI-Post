@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import ArrowIcon from "@/icons/ArrowIcon";
 import { settingsDatas } from "@/data/settingsDatas";
 import ToggleSwitch from "@/shared/ToggleSwitch";
@@ -260,6 +260,17 @@ const SettingsPopup = () => {
     </SettingsContainer>
   )
 }
+const fadeInUp = keyframes`
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+`;
+
 const SettingsContainer = styled.div`
   padding: 0 56px 30px;
   @media(max-width: 1600px) {
@@ -274,6 +285,8 @@ const PopupNav = styled.nav`
   display: flex;
   flex-direction: column;
   gap: 33px;
+   animation: ${fadeInUp} 0.3s ease forwards;
+
   &:first-child {
     margin-top: 0;
   }
@@ -293,6 +306,12 @@ const PopupContentItem = styled.li`
   padding: 24px 0;
   border-bottom: 2px solid #2E3954;
   cursor: pointer;
+  transition: transform 0.2s, background-color 0.2s, border-color 0.2s;
+
+  &:hover {
+    border-color: #D6DCEC;
+    transform: translateY(-2px);
+  }
 
   &:first-child {
     padding-top: 0;
@@ -322,6 +341,12 @@ const IconBac = styled.div`
 	height: 40px;
   border-radius: 8px;
 	background-color: ${({ $bg }) => $bg};
+  transition: transform 0.2s, box-shadow 0.2s;
+
+  &:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  }
 `
 const PopupContentInfo = styled.div`
   display: flex;

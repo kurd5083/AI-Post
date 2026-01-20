@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
-import arrow from "@/assets/arrow.svg";
+import ArrowIcon from "@/icons/ArrowIcon";
 
 const CustomSelect = ({
   options,
@@ -47,7 +47,9 @@ const CustomSelect = ({
           {selected?.icon && <img src={selected.icon} alt="icon" width={16} height={16} />}
           <span>{selected?.label || placeholder}</span>
         </HeaderLeft>
-        <HeaderArrow src={arrow} alt="arrow icon" className={open ? "open" : ""} />
+        <HeaderArrow className={open ? "open" : ""} >
+          <ArrowIcon color="#D6DCEC" />
+        </HeaderArrow>
       </SelectHeader>
 
       {open && (
@@ -85,9 +87,7 @@ const SelectHeader = styled.div`
   align-items: center;
   gap: 24px;
 `;
-const HeaderArrow = styled.img`
-  width: 8px;
-  height: 16px;
+const HeaderArrow = styled.div`
   transition: transform 0.2s ease;
   transform: rotate(90deg);
 

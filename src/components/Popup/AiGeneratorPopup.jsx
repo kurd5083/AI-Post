@@ -38,6 +38,7 @@ const AiGeneratorPopup = () => {
   const { popup, changeContent } = usePopupStore();
   const { userChannels } = useUserChannels();
   const [savingPosts, setSavingPosts] = useState({});
+  const [publishingPosts, setPublishingPosts] = useState({});
   const {
     posts,
     selectedPost,
@@ -254,6 +255,8 @@ const AiGeneratorPopup = () => {
     const postChannelId = channelId || usePostsStore.getState().channelMap[post.postId];
     if (!postChannelId) return addNotification("Выберите канал для публикации поста", "info");
 
+    setPublishingPosts(prev => ({ ...prev, [post.postId]: true }));
+
     const publish = (serverPostId) => {
       sendPost(
         { postId: serverPostId, channelId: postChannelId, channelTelegramId: telegramId },
@@ -263,6 +266,9 @@ const AiGeneratorPopup = () => {
             addNotification("Пост успешно опубликован", "success");
           },
           onError: (err) => addNotification(err.message || "Ошибка публикации поста", "error"),
+          onSettled: () => {
+            setPublishingPosts(prev => ({ ...prev, [post.postId]: false }));
+          }
         }
       );
     };
@@ -296,7 +302,10 @@ const AiGeneratorPopup = () => {
             publish(serverPostId);
           }
         },
-        onError: (err) => addNotification(err.message || "Ошибка публикации поста", "error"),
+        onError: (err) => {
+          addNotification(err.message || "Ошибка публикации поста", "error");
+          setPublishingPosts(prev => ({ ...prev, [post.postId]: false }));
+        },
       });
 
       return;
@@ -515,10 +524,8 @@ const AiGeneratorPopup = () => {
                     <EyeIcon />
                     <span>Лайв превью</span>
                   </ActionsAddBlock>
-
                 </ItemActionsAdd>
               </ActionsLeft>
-
               <ButtonsAll>
                 <ButtonsMainTop>
                   <BtnBase $padding="21px 22px" $color="#EF6284" $bg="#241E2D" onClick={() => handleRemovePost(post.postId)}>Отменить</BtnBase>
@@ -533,13 +540,22 @@ const AiGeneratorPopup = () => {
                     {savingPosts[post.postId] ? "Сохраняем..." : "Сохранить"}
                   </BtnBase>
                 </ButtonsMainTop>
-                <BtnBase $padding="21px 18px" $border $width="100%" $bg="transporent" $color="#6A7080" onClick={() => handlePublishNow(post)} disabled={isSendPending}>{isSendPending ? "Публикация..." : "Опубликовать сейчас"}</BtnBase>
+                <BtnBase
+                  $padding="21px 18px"
+                  $border
+                  $width="100%"
+                  $bg="transporent"
+                  $color="#6A7080"
+                  onClick={() => handlePublishNow(post)}
+                  disabled={publishingPosts[post.postId]}
+                >
+                  {publishingPosts[post.postId] ? "Публикация..." : "Опубликовать сейчас"}
+                </BtnBase>
               </ButtonsAll>
             </ItemActions>
           </ListItem>
         ))}
       </GeneratorList>
-
       <PreviewContainer>
         <Preview collapsed={collapsed} onChange={() => setCollapsed(!collapsed)} testResult={selectedPost} />
       </PreviewContainer>
