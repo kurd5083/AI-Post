@@ -23,15 +23,12 @@ export const useTestDriveStore = create((set, get) => ({
 
     try {
       const data = await testDrivePrompt({ promtManage: prompt, channelId }); 
-
-      clearInterval(interval);
       get().setProgress(channelId, 100);
       get().setResult(channelId, data);
       notify("Тест успешно выполнен", "success");
 
       setTimeout(() => get().resetProgress(channelId), 500);
     } catch (err) {
-      clearInterval(interval);
       get().setProgress(channelId, 0);
       notify(err?.message || "Ошибка при тестировании промпта", "error");
     } finally {

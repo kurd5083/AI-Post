@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import styled, { keyframes } from "styled-components";
 import ArrowIcon from "@/icons/ArrowIcon";
 import { settingsDatas } from "@/data/settingsDatas";
@@ -27,8 +27,6 @@ const SettingsPopup = () => {
   const { imageChannelPreset } = useGetChannelImagePreset(channelId);
   const { promptLibrary } = usePromptLibrary();
   const { globalPrompt } = useChannelGlobalPrompt(channelId);
-  const [localPrompt, setLocalPrompt] = useState("");
-  const [scheduleSettings, setScheduleSettings] = useState("");
   const { scheduleStatus } = useChannelScheduleStatus(channelId);
   const { channelInterval } = useChannelInterval(channelId);
   const today = new Date();
@@ -48,7 +46,10 @@ const SettingsPopup = () => {
   )).toISOString();
 
   const { events } = useCalendarEventsByRange(startISO, endISO);
-  const filteredEvents = events?.filter( event => event.channelId === channelId);
+  const filteredEvents = useMemo(
+    () => events?.filter(e => e.channelId === channelId) || [],
+    [events, channelId]
+  );
   const { addNotification } = useNotificationStore();
 
   const [localSwitches, setLocalSwitches] = useState({
@@ -57,28 +58,23 @@ const SettingsPopup = () => {
     auto_accepting: channel?.autoApprovalEnabled || false,
   });
 
-  useEffect(() => {
-    if (scheduleStatus?.scheduleEnabled) {
-      setScheduleSettings("Расписание");
-    } else if (channelInterval?.isEnabled) {
-      setScheduleSettings("Интервальное");
-    } else {
-      setScheduleSettings("");
-    }
-  }, [scheduleStatus, channelInterval]);
-  useEffect(() => {
-    if (!globalPrompt || !promptLibrary) return;
 
-    const foundIndex = promptLibrary.findIndex(
+  const scheduleSettings = useMemo(() => {
+    if (scheduleStatus?.scheduleEnabled) return "Расписание";
+    if (channelInterval?.isEnabled) return "Интервальное";
+    return "";
+  }, [scheduleStatus, channelInterval]);
+
+  const localPrompt = useMemo(() => {
+    if (!globalPrompt || !promptLibrary) return "";
+
+    const found = promptLibrary.find(
       item => item.prompt === globalPrompt.globalPromt
     );
 
-    if (foundIndex !== -1) {
-      setLocalPrompt(promptLibrary[foundIndex].title);
-    } else {
-      setLocalPrompt('Пользовательский стиль');
-    }
+    return found ? found.title : "Пользовательский стиль";
   }, [globalPrompt, promptLibrary]);
+  
 
   useEffect(() => {
     setLocalSwitches({

@@ -6,7 +6,6 @@ import { usePopupStore } from "@/store/popupStore";
 import { useNotificationStore } from "@/store/notificationStore";
 
 import normalizeUrl from "@/lib/normalizeUrl";
-import { useDeletePost } from "@/lib/posts/useDeletePost";
 import { useSendPostToChannel } from "@/lib/posts/useSendPostToChannel";
 import { useArchivePost } from "@/lib/posts/useArchivePost";
 
@@ -26,11 +25,18 @@ const CardPablish = ({ item, bg, selectedChannel }) => {
   const { changeContent } = usePopupStore();
   const { addNotification } = useNotificationStore();
 
-  const { mutate: deletePost, isPending: deletePending } = useDeletePost();
   const { mutate: sendPost, isPending: isSendPending } = useSendPostToChannel();
-  const { mutate: archivePost } = useArchivePost();
+  const { mutate: archivePost, isPending: archivePending } = useArchivePost();
 
   const handleEdit = () => {
+    const alreadyEditing = usePostsStore.getState().posts.some(
+      p => p.serverId === item.id
+    );
+
+    if (alreadyEditing) {
+      addNotification("Этот пост уже открыт для редактирования", "info");
+      return;
+    }
     addPost({
       postId: item.id,
       title: item.title,
@@ -154,7 +160,7 @@ const CardPablish = ({ item, bg, selectedChannel }) => {
               onDelete: () => archivePost(item.id),
             });
           }}
-          disabled={deletePending}>
+          disabled={archivePending}>
           <DelIcon />
         </CardButton>
         <CardButton

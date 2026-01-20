@@ -32,12 +32,13 @@ import { useAddPostImages } from "@/lib/posts/useAddPostImages";
 import normalizeUrl from "@/lib/normalizeUrl";
 
 const AiGeneratorPopup = () => {
+  const [savingPosts, setSavingPosts] = useState({});
+
   const { addNotification } = useNotificationStore();
   const { openLightbox } = useLightboxStore();
   const { user } = useUser();
   const { popup, changeContent } = usePopupStore();
   const { userChannels } = useUserChannels();
-  const [savingPosts, setSavingPosts] = useState({});
   const [publishingPosts, setPublishingPosts] = useState({});
   const {
     posts,
@@ -59,8 +60,6 @@ const AiGeneratorPopup = () => {
 
   const caretRanges = useRef({});
   const textRefs = useRef({});
-  const postIntervals = useRef({});
-  const imageIntervals = useRef({});
 
   const [collapsed, setCollapsed] = useState(false);
   const [emojiPostId, setEmojiPostId] = useState(null);
@@ -247,12 +246,14 @@ const AiGeneratorPopup = () => {
 
     caretRanges.current[postId] = range.cloneRange();
 
-    updatePost(postId, { summary: el.innerHTML, summary: el.innerHTML });
+    updatePost(postId, { summary: el.innerHTML });
   };
   const handlePublishNow = (post) => {
+    console.log(post, 'post') 
     if (!post.summary) return addNotification("Нельзя публиковать пустой пост", "info");
 
     const postChannelId = channelId || usePostsStore.getState().channelMap[post.postId];
+    console.log(postChannelId)
     if (!postChannelId) return addNotification("Выберите канал для публикации поста", "info");
 
     setPublishingPosts(prev => ({ ...prev, [post.postId]: true }));
@@ -262,7 +263,6 @@ const AiGeneratorPopup = () => {
         { postId: serverPostId, channelId: postChannelId, channelTelegramId: telegramId },
         {
           onSuccess: () => {
-            removePost(post.postId);
             addNotification("Пост успешно опубликован", "success");
           },
           onError: (err) => addNotification(err.message || "Ошибка публикации поста", "error"),
@@ -275,7 +275,6 @@ const AiGeneratorPopup = () => {
     if (!post.serverId) {
       const urlImages = post.images.filter(img => typeof img === "string");
       const localFiles = post.images.filter(img => img instanceof File);
-
       const payload = {
         title: post.title,
         text: post.text,
@@ -322,10 +321,20 @@ const AiGeneratorPopup = () => {
   };
 
   const handleRemovePost = (postId) => {
-    if (postIntervals.current[postId]) { clearInterval(postIntervals.current[postId]); delete postIntervals.current[postId]; }
-    if (imageIntervals.current[postId]) { clearInterval(imageIntervals.current[postId]); delete imageIntervals.current[postId]; }
+
+  if (posts.length > 1) {
     removePost(postId);
-  };
+  } else {
+    updatePost(postId, {
+      title: "",
+      summary: "",
+      text: "",
+      images: [],
+      imagesUrls: [],
+      url: "",
+    });
+  }
+};
 
   const formatText = command => {
     document.execCommand(command, false, null);
@@ -359,6 +368,7 @@ const AiGeneratorPopup = () => {
                     options={userChannels?.map(c => ({ id: c.id, label: c.name, avatar: c.avatarUrl }))}
                     value={usePostsStore.getState().channelMap[post.postId]}
                     onChange={(id) => usePostsStore.getState().setPostChannel(post.postId, id)}
+                    background="#222b43f6"
                   />
                 )}
               </HeadBlock>
@@ -374,7 +384,7 @@ const AiGeneratorPopup = () => {
                     if (!el) return;
                     textRefs.current[post.postId] = el;
 
-                    if (post.summary && el.innerHTML !== post.summary) {
+                    if (el.innerHTML !== post.summary) {
                       el.innerHTML = post.summary;
                     }
                   }}
@@ -882,6 +892,7 @@ const ButtonsMainTop = styled.div`
   } 
 `;
 const PreviewContainer = styled.div`
+  padding-bottom: 30px;
   grid-column:  4 / span 2;
   grid-row: 1 / span 2;
   @media(max-width: 1800px) {

@@ -129,7 +129,6 @@ export const usePostsStore = create((set, get) => ({
 
     try {
       const data = await generatePost(channelId);
-      clearInterval(interval);
       get().setPostProgress(postId, 100);
       get().updatePost(postId, {
         title: data.title || "",
@@ -141,7 +140,6 @@ export const usePostsStore = create((set, get) => ({
       setTimeout(() => get().resetPostProgress(postId), 1000);
       notify(data?.message || "Пост сгенерирован успешно", data?.error ? "error" : "success");
     } catch (err) {
-      clearInterval(interval);
       get().setPostProgress(postId, 0);
       get().resetPostProgress(postId);
       notify(err?.message || "Ошибка генерации поста", "error");
@@ -162,7 +160,6 @@ export const usePostsStore = create((set, get) => ({
 
     try {
       const data = await generateSimpleImage(prompt);
-      clearInterval(interval);
       if (!data?.imageUrls?.length) return notify("Не удалось получить изображение", "error");
 
       get().setImageProgress(postId, 100);
@@ -170,7 +167,6 @@ export const usePostsStore = create((set, get) => ({
       get().updatePost(postId, { images: [...(post.images || []), data.imageUrls[0]] });
       notify("Изображение успешно сгенерировано", "success");
     } catch (err) {
-      clearInterval(interval);
       get().setImageProgress(postId, 0);
       notify(err.message || "Ошибка генерации изображения", "error");
     }

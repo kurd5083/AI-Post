@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { useEffect, useState } from "react";
+import { useMemo, useCallback, useEffect } from "react";
 import EyeIcon from "@/icons/EyeIcon";
 import PreviewBG from "@/assets/ai-generator/PreviewBG.png";
 import ArrowIcon from "@/icons/ArrowIcon";
@@ -11,115 +11,124 @@ import normalizeUrl from "@/lib/normalizeUrl";
 
 const Preview = ({ collapsed, onChange, testResult, view = true }) => {
   const { openLightbox } = useLightboxStore();
-  const { mutate: sendTestPost, isPending: sendPending } = useSendTestPost();
+  const { mutate: sendTestPost, isPending } = useSendTestPost();
   const { addNotification } = useNotificationStore();
-  const { title, summary, url, images } = testResult || {};
-  const [localimagesUrls, setLocalimagesUrls] = useState([]);
-  const [imagesUrls, setImagesUrls] = useState([]);
-  const [localFiles, setLocalFiles] = useState([]);
 
-  useEffect(() => {
-    if (!images || !images.length) {
-      setLocalimagesUrls([]);
-      setImagesUrls([]);
-      setLocalFiles([]);
-      return;
+  const { title, summary, url, images } = testResult || {};
+
+  const { previewUrls, remoteUrls, files } = useMemo(() => {
+    if (!images?.length) {
+      return { previewUrls: [], remoteUrls: [], files: [] };
     }
 
-    const urls = images.filter(img => typeof img === "string").map(img => normalizeUrl(img));
-    const files = images.filter(img => img instanceof File || img instanceof Blob);
+    const preview = [];
+    const remote = [];
+    const filesArr = [];
 
-    setLocalFiles(files);
+    images.forEach(img => {
+      if (typeof img === "string") {
+        const normalized = normalizeUrl(img);
+        preview.push(normalized);
+        remote.push(normalized);
+      } else if (img instanceof File || img instanceof Blob) {
+        const url = URL.createObjectURL(img);
+        preview.push(url);
+        filesArr.push(img);
+      }
+    });
 
-    const objectUrls = files.map(file => URL.createObjectURL(file));
-    setImagesUrls([...urls]);
-    setLocalimagesUrls([...urls, ...objectUrls]);
-
-    return () => {
-      objectUrls.forEach(url => URL.revokeObjectURL(url));
-    };
+    return { previewUrls: preview, remoteUrls: remote, files: filesArr };
   }, [images]);
 
-  const handleSend = () => {
-    if (!testResult || (!!title && !!summary && imagesUrls.length === 0 && localFiles.length === 0)) {
+  useEffect(() => {
+    return () => {
+      previewUrls.forEach(url => url.startsWith("blob:") && URL.revokeObjectURL(url));
+    };
+  }, [previewUrls]);
+
+  const hasContent = Boolean(title || summary || url || previewUrls.length);
+
+  const handleSend = useCallback(() => {
+    if (!hasContent) {
       addNotification("Нет данных для отправки поста", "info");
       return;
     }
 
     sendTestPost(
       {
-        title: title,
-        summary: summary.replace(/<br\s*\/?>/gi, "").trim() || "",
-        url: url,
-        images: localFiles,
-        imagesUrls: imagesUrls,
+        title,
+        summary: summary?.replace(/<br\s*\/?>/gi, "").trim() || "",
+        url,
+        images: files,
+        imagesUrls: remoteUrls,
       },
       {
         onSuccess: () => addNotification("Пост отправлен в Telegram!", "success"),
         onError: () => addNotification("Ошибка отправки поста в Telegram", "error"),
       }
     );
-  };
+  }, [title, summary, url, files, remoteUrls, hasContent]);
 
   return (
-    <GeneratorPreview $collapsed={collapsed}>
-      <PreviewContent>
+    <GeneratorPreview>
+      <PreviewContent $bg={PreviewBG}>
         <PreviewHead>
           <HeadLeft>
-            <EyeIcon color="#336CFF" hoverColor="#336CFF" cursor="default" />
+            <EyeIcon color="#336CFF" />
             Лайв превью
           </HeadLeft>
-          {view && <HeadArrow onClick={onChange} $collapsed={collapsed}><ArrowIcon color="#D6DCEC" /></HeadArrow>}
+          {view && (
+            <HeadArrow onClick={onChange} $collapsed={collapsed}>
+              <ArrowIcon color="#D6DCEC" />
+            </HeadArrow>
+          )}
         </PreviewHead>
 
         {!collapsed && (
           <>
-            <PreviewInfo>
-              <PreviewInfoBG src={PreviewBG} alt="bg" />
+            <PreviewInfo $bg={PreviewBG}>
               <PreviewInfoContainer>
-                {localimagesUrls.length > 0 && (
-                  <TgImages count={localimagesUrls.length}>
-                    {localimagesUrls.slice(0, 3).map((imgUrl, index) => {
-                      const isOverlay = index === 2 && localimagesUrls.length > 3;
-                      const remaining = localimagesUrls.length - 3;
-
-                      return (
-                        <TgImage
-                          key={index}
-                          className={`img-${index + 1}`}
-                          onClick={() =>
-                            openLightbox({ images: localimagesUrls, initialIndex: index })
-                          }
-                        >
-                          <img src={imgUrl} alt="" />
-                          {isOverlay && <Overlay>+{remaining}</Overlay>}
-                        </TgImage>
-                      );
-                    })}
+                {!!previewUrls.length && (
+                  <TgImages count={previewUrls.length}>
+                    {previewUrls.slice(0, 3).map((src, i) => (
+                      <TgImage
+                        key={src}
+                        $count={previewUrls.length}
+                        className={`img-${i + 1}`}
+                        onClick={() =>
+                          openLightbox({ images: previewUrls, initialIndex: i })
+                        }
+                      >
+                        <img src={src} alt="" />
+                        {i === 2 && previewUrls.length > 3 && (
+                          <Overlay>+{previewUrls.length - 3}</Overlay>
+                        )}
+                      </TgImage>
+                    ))}
                   </TgImages>
                 )}
+
                 <PreviewInfoContent>
-                  {title || summary || url || images?.length > 0 ? (
+                  {hasContent ? (
                     <>
-                      {console.log(summary)}
+                      <PreviewInfoTitle>{title || "Введите заголовок"}</PreviewInfoTitle>
 
-                      <PreviewInfoTitle>{!!title ? title : "Введите заголовок"}<br /><br /></PreviewInfoTitle>
-                      <>
-                        <PreviewInfoText
-                          dangerouslySetInnerHTML={{
-                            __html:
-                              !!summary && summary.replace(/<br\s*\/?>/gi, "").trim()
-                                ? summary
-                                : "Введите текст"
-                          }}
-                        />
+                      <PreviewInfoText
+                        dangerouslySetInnerHTML={{
+                          __html:
+                            summary?.replace(/<br\s*\/?>/gi, "").trim()
+                              ? summary
+                              : "Введите текст",
+                        }}
+                      />
 
-                      </>
                       {url && (
                         <>
                           <br /><br />
                           <PreviewInfoLinkIcon>🔗 </PreviewInfoLinkIcon>
-                          <PreviewInfoLink href={url} target="_blank" rel="noopener noreferrer">Источник</PreviewInfoLink>
+                          <PreviewInfoLink href={url} target="_blank">
+                            Источник
+                          </PreviewInfoLink>
                         </>
                       )}
                     </>
@@ -131,9 +140,10 @@ const Preview = ({ collapsed, onChange, testResult, view = true }) => {
                 </PreviewInfoContent>
               </PreviewInfoContainer>
             </PreviewInfo>
-            <PreviewButton onClick={handleSend} disabled={sendPending}>
-              <TgIcon color="#336CFF" width="24" height="20" />
-              <p>{sendPending ? "Отправляем..." : "Отправить в Telegram"}</p>
+
+            <PreviewButton onClick={handleSend} disabled={isPending}>
+              <TgIcon color="#336CFF" />
+              <p>{isPending ? "Отправляем..." : "Отправить в Telegram"}</p>
             </PreviewButton>
           </>
         )}
@@ -186,23 +196,32 @@ const PreviewButton = styled.button`
   }
 `;
 const PreviewInfo = styled.div`
+  box-sizing: border-box;
   position: relative;
-  margin-top: 55px;
+  margin-top: 40px;
+  padding: 20px 20px;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0 20px;
+  
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    height: 100%;
+    background-image: ${({ $bg }) => `url(${$bg})`};
+    background-size: cover;
+    background-position: center;
+    border-radius: 24px;
+    z-index: 0;
+  }
 `;
-const PreviewInfoBG = styled.img`
-  position: absolute;
-  border-radius: 24px;
-  width: 100%;
-  height: calc(100% + 46px);
-  object-fit: cover;
-`;
+
 const PreviewInfoContainer = styled.div`
+  max-height: 600px;
   border-radius: 16px;
-  overflow: hidden;
+  overflow-y: auto;
+  scrollbar-width: none;
   position: relative;
   z-index: 1;
   background-color: #131C22;
@@ -219,14 +238,14 @@ const TgImages = styled.div`
     if (count === 1) {
       return `
         grid-template-columns: 1fr;
-        grid-template-rows: 240px;
+        grid-template-rows: 260px;
       `;
     }
 
     if (count === 2) {
       return `
-        grid-template-columns: 1fr 1fr;
-        grid-template-rows: 180px;
+        grid-template-columns: 1fr;
+        grid-template-rows: 220px 220px;
       `;
     }
 
@@ -256,19 +275,23 @@ const TgImage = styled.div`
     display: block;
   }
 
-  &.img-1 {
-    grid-row: ${({ className }) =>
-    className?.includes("img-1") ? "1 / span 2" : "auto"};
-  }
+  ${({ $count }) =>
+    $count >= 3 &&
+    `
+      &.img-1 {
+        grid-row: 1 / span 2;
+      }
 
-  &.img-2 {
-    grid-column: 2;
-    grid-row: 1;
-  }
+      &.img-2 {
+        grid-column: 2;
+        grid-row: 1;
+      }
 
-  &.img-3 {
-    grid-column: 2;
-    grid-row: 2;
+      &.img-3 {
+        grid-column: 2;
+        grid-row: 2;
+      }
+    `
   }
 `;
 
@@ -299,6 +322,7 @@ const PreviewInfoContent = styled.p`
 const PreviewInfoTitle = styled.h4`
   font-size: 16px;
   font-weight: 700;
+  margin-bottom: 14px;
 `;
 const PreviewInfoText = styled.span`
   scrollbar-width: none;
@@ -306,6 +330,7 @@ const PreviewInfoText = styled.span`
   word-break: break-word;
 `;
 const PreviewInfoLinkIcon = styled.span`
+
   font-size: 14px;
 `;
 const PreviewInfoLink = styled.a`

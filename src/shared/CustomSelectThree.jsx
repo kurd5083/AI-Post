@@ -3,7 +3,7 @@ import styled from "styled-components";
 import Checkbox from "@/shared/Checkbox";
 import ArrowIcon from "@/icons/ArrowIcon";
 
-const CustomSelectThree = ({ placeholder = 'Выберите канал', options = [], value = null, onChange, view = false }) => {
+const CustomSelectThree = ({ placeholder = 'Выберите канал', options = [], value = null, onChange, view = false, background="#222B438F" }) => {
   const [isOpen, setIsOpen] = useState(false);
   const ref = useRef(null);
 
@@ -38,7 +38,7 @@ const CustomSelectThree = ({ placeholder = 'Выберите канал', option
       </DropdownHeader>
 
       {isOpen && (
-        <DropdownList>
+        <DropdownList $background={background}>
           <DropdownContent>
             {options?.map((option) => (
               <DropdownItem key={option.id} onClick={() => toggleItem(option.id)}>
@@ -96,7 +96,7 @@ justify-content: center;
 
 const DropdownList = styled.div`
   position: absolute;
-  background: #222B438F;
+  background: ${({$background}) => $background};
   backdrop-filter: blur(20px);
   border-radius: 24px;
   margin-top: 20px;

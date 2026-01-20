@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import styled from "styled-components";
 
 import ToggleSwitch from "@/shared/ToggleSwitch";
@@ -37,17 +37,14 @@ const ScheduleContainer = () => {
   const [localIntervalEnabled, setLocalIntervalEnabled] = useState(false);
 
   useEffect(() => {
-    if (scheduleStatus) setLocalScheduleEnabled(scheduleStatus.scheduleEnabled);
-  }, [scheduleStatus]);
-
-  useEffect(() => {
-    if (channelInterval) setLocalIntervalEnabled(channelInterval.isEnabled);
-  }, [channelInterval]);
+    setLocalScheduleEnabled(scheduleStatus?.scheduleEnabled || false);
+    setLocalIntervalEnabled(channelInterval?.isEnabled || false);
+  }, [scheduleStatus, channelInterval]);
 
   const { mutate: toggleScheduleApi, isPending: schedulePending } = useToggleChannelSchedule(channelId);
   const { mutate: updateInterval, isPending: intervalPending } = useUpdateChannelInterval(channelId);
 
-  const toggleSchedule = () => {
+  const toggleSchedule = useCallback(() => {
     const nextSchedule = !localScheduleEnabled;
     const disableIntervalIfNeeded = localIntervalEnabled && nextSchedule;
 
@@ -71,9 +68,9 @@ const ScheduleContainer = () => {
         onError: (err) => addNotification(err.message || "Ошибка отключения интервала", "error"),
       });
     }
-  };
+  }, [localScheduleEnabled, localIntervalEnabled, toggleScheduleApi, updateInterval, addNotification]);
 
-  const toggleInterval = () => {
+  const toggleInterval = useCallback(() => {
     const nextInterval = !localIntervalEnabled;
     const disableScheduleIfNeeded = localScheduleEnabled && nextInterval;
 
@@ -97,7 +94,8 @@ const ScheduleContainer = () => {
         onError: (err) => addNotification(err.message || "Ошибка отключения расписания", "error"),
       });
     }
-  };
+  }, [localIntervalEnabled, localScheduleEnabled, updateInterval, toggleScheduleApi, addNotification]);
+
 
 
   return (
