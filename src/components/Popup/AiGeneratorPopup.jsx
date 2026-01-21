@@ -532,7 +532,7 @@ const AiGeneratorPopup = () => {
                   />
                   <ActionsAddBlock onClick={() => setSelectedPost(post)}>
                     <EyeIcon />
-                    <span>Лайв превью</span>
+                    {/* <span>Лайв превью</span> */}
                   </ActionsAddBlock>
                 </ItemActionsAdd>
               </ActionsLeft>
