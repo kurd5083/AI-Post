@@ -10,7 +10,7 @@ const MentionsCard = ({ item, bg }) => {
 		<MentionsCardItem $bg={bg}>
 			<MentionsCardItemHead>
 				<MentionsCardItemName>
-					<MentionsCardItemImg src={item.ava} alt={item.username} />
+					<MentionsCardItemImg src={item.ava} alt={item?.username} />
 					<p>{item.mentionType === "channel" ? `Канал ${item.channelId}` : item.mentionType}</p>
 				</MentionsCardItemName>
 				<MentionsCardItemTime>

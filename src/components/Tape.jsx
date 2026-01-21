@@ -284,9 +284,9 @@ const FilterWrapper = styled.div`
   @media (max-width: 1400px) {
     left: auto;
     top: auto;
-    max-height: 324px;
+    max-height: 350px;
     right: 160px;
-    bottom: 30px;
+    top: 105px;
     margin-left: 24px;
     width: auto;
   }
@@ -297,7 +297,7 @@ const FilterWrapper = styled.div`
     top: 160px;
     left: 24px;
     width: calc(100% - 48px);
-    max-height: 270px;
+    max-height: 290px;
   }
 `;
 const FilterTitle = styled.h3`

@@ -307,10 +307,10 @@ const StatisticsItem = styled.div`
   flex: 1;
   border: 2px solid #2E3954;
   border-radius: 32px;
-  padding: 40px 0 24px 40px;
+  padding: 40px 30px 24px 40px;
 `;
 const ItemLeft = styled.div`
-	min-width: 250px;
+	min-width: 230px;
 `;
 
 const ItemTitle = styled.h3`
@@ -395,7 +395,6 @@ text-transform: uppercase;
 	color: #6A7080;
 	font-size: 10px;
 	font-weight: 600;
-	padding-right: 20px;
 `;
 
 export default StatisticsTab

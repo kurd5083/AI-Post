@@ -227,7 +227,7 @@ const EmptyStat = styled.div`
     margin: 32px 24px;
   }
   @media (max-width: 480px) {
-    font-size: 12px;
+    font-size: 13px;
   }
 `;
 

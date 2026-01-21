@@ -343,7 +343,7 @@ const EmptyMentions = styled.div`
     margin: 24px 24px;
   }
   @media (max-width: 480px) {
-    font-size: 12px;
+    font-size: 13px;
   }
 `;
 
