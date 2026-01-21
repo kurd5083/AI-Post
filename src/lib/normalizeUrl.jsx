@@ -6,7 +6,7 @@ const normalizeUrl = (url) => {
     return url;
   }
 
-  const baseUrl = "http://77.37.65.40:3000";
+  const baseUrl = "https://aiposting.live";
 
   let path = url.startsWith("/") ? url.slice(1) : url;
 
