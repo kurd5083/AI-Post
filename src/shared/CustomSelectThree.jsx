@@ -3,14 +3,14 @@ import styled from "styled-components";
 import Checkbox from "@/shared/Checkbox";
 import ArrowIcon from "@/icons/ArrowIcon";
 
-const CustomSelectThree = ({ placeholder = 'Выберите канал', options = [], value = null, onChange, view = false, background="#222B438F" }) => {
+const CustomSelectThree = ({ placeholder = 'Выберите канал', options = [], value = null, onChange, view = false, background="#222B438F", width="220px", right="-20px" }) => {
   const [isOpen, setIsOpen] = useState(false);
   const ref = useRef(null);
 
   const toggleItem = (id) => {
-    onChange(id === value ? null : id);
-    setIsOpen(false);
-  };
+  onChange(id === value ? null : id);
+  setIsOpen(false);
+};
 
   const headerLabel = useMemo(() => {
     if (!value) return placeholder;
@@ -29,8 +29,11 @@ const CustomSelectThree = ({ placeholder = 'Выберите канал', option
   }, []);
 
   return (
-    <DropdownContainer ref={ref}>
-      <DropdownHeader onClick={() => setIsOpen((v) => !v)} $view={view}>
+    <DropdownContainer ref={ref} $width={width}>
+      <DropdownHeader onClick={(e) => {
+    e.stopPropagation(); // чтобы не дергалось дважды
+    setIsOpen(v => !v);
+  }} $view={view}>
         <HeaderText title={headerLabel}>{headerLabel}</HeaderText>
         <Arrow $open={isOpen}>
           <ArrowIcon color="#336CFF" hoverColor = "#336CFF" width={6} height={12}/>
@@ -38,7 +41,7 @@ const CustomSelectThree = ({ placeholder = 'Выберите канал', option
       </DropdownHeader>
 
       {isOpen && (
-        <DropdownList $background={background}>
+        <DropdownList $background={background} $right={right}>
           <DropdownContent>
             {options?.map((option) => (
               <DropdownItem key={option.id} onClick={() => toggleItem(option.id)}>
@@ -62,19 +65,16 @@ const CustomSelectThree = ({ placeholder = 'Выберите канал', option
 };
 
 const DropdownContainer = styled.div`
-  width: 220px;
+  width: ${({$width}) => $width};
   position: relative;
 `;
-
 const DropdownHeader = styled.div`
   display: flex;
   align-items: center;
   gap: 16px;
   justify-content: ${({$view}) => $view ? 'flex-end' : 'flex-start'};
-
   cursor: pointer;
 `;
-
 const HeaderText = styled.p`
   max-width: 180px;
   white-space: nowrap;
@@ -84,18 +84,17 @@ const HeaderText = styled.p`
   color: #336CFF;
   font-size: 14px;
 `;
-
 const Arrow = styled.div`
-display: flex;
-align-items: center;
-justify-content: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   transition: transform 0.3s ease;
   transform: rotate(90deg);
   ${({ $open }) => $open && `transform: rotate(270deg);`}
 `;
-
 const DropdownList = styled.div`
   position: absolute;
+  right: ${({$right}) => $right};
   background: ${({$background}) => $background};
   backdrop-filter: blur(20px);
   border-radius: 24px;
@@ -107,32 +106,27 @@ const DropdownList = styled.div`
   padding: 16px;
   z-index: 20;
 `;
-
 const DropdownContent = styled.div`
   display: flex;
   flex-direction: column;
   gap: 16px;
 `;
-
 const DropdownItem = styled.div`
   display: flex;
   align-items: center;
   cursor: pointer;
   justify-content: space-between;
 `;
-
 const ItemLeft = styled.div`
   display: flex;
   align-items: center;
   gap: 16px;
 `;
-
 const Avatar = styled.img`
   width: 24px;
   height: 24px;
   border-radius: 50%;
 `;
-
 const ItemText = styled.p`
   max-width: 100px;
   white-space: nowrap;

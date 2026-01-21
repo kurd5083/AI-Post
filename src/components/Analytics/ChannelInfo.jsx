@@ -8,8 +8,9 @@ const ChannelInfo = () => {
 			<ChannelHeader>
 				<ChannelAvatar src="" alt="" />
 				<div>
-					<ChannelUsername>@antropia_gaming</ChannelUsername>
 					<ChannelName>Antropia Gaming</ChannelName>
+					<ChannelUsername>@antropia_gaming</ChannelUsername>
+
 					<BtnBase $bg="#336CFF" $color="#FFFFFF" $padding="17px 40px">Отслеживать канал</BtnBase>
 				</div>
 			</ChannelHeader>
@@ -17,7 +18,7 @@ const ChannelInfo = () => {
 				<DescriptionTitle>Описание</DescriptionTitle>
 				<DescriptionText>
 					Канал об дизайне, трендах и реализации самых заветных идей, а также, внутрянка кухни.
-
+					<br/><br/>
 					Подписывайтесь и отслеживайте канал!
 				</DescriptionText>
 			</ChannelDescription>
@@ -29,13 +30,13 @@ const ChannelInfoContainer = styled.div`
 	margin-top: 40px;
 	display: grid;
 	grid-template-columns: 1fr 1fr;
-  padding: 0 56px 30px;
+  padding: 0 56px 40px;
 
   @media(max-width: 1600px) { 
-    padding: 0 32px 30px 
+    padding: 0 32px 40px 
 	}	
   @media(max-width: 768px) { 
-    padding: 0 24px 30px
+    padding: 0 24px 40px
   }
 `
 const ChannelHeader = styled.div`
@@ -50,16 +51,16 @@ const ChannelAvatar = styled.img`
   height: 144px;
   border-radius: 32px;
 `
-const ChannelUsername = styled.p`
-	font-size: 14px;
-  font-weight: 700;
-	margin-bottom: 10px;
-	color: #6A7080;
-`
 const ChannelName = styled.h2`
   font-size: 32px;
   font-weight: 700;
-  margin-bottom: 32px;
+  margin-bottom: 10px;
+`
+const ChannelUsername = styled.p`
+	font-size: 14px;
+  font-weight: 700;
+	margin-bottom: 32px;
+	color: #6A7080;
 `
 const ChannelDescription = styled.div`
   display: flex;

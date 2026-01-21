@@ -39,7 +39,7 @@ const TapeList = ({ forceHorizontal = false, padding, newsData, pending }) => {
     const swiper = swiperRef.current;
     if (!swiper) return;
 
-    swiper.params.speed = isHovered ? 300 : 2000;
+    swiper.params.speed = isHovered ? 300 : 3000;
   }, [isHovered]);
 
   const direction = forceHorizontal ? "horizontal" : (isSwipe ? "horizontal" : "vertical");
@@ -85,7 +85,7 @@ const TapeList = ({ forceHorizontal = false, padding, newsData, pending }) => {
         <ModernLoading text="Загрузка новостей..." />
       ) : newsData && newsData.length > 0 ? (
         <TapeContainer
-          speed={2000}
+          speed={3000}
           onSwiper={(swiper) => (swiperRef.current = swiper)}
           spaceBetween={16}
           direction={direction}

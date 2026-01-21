@@ -37,7 +37,7 @@ const Analytics = () => {
         <YourChannels />
         <AnalyticsTitle>Отслеживаемые каналы</AnalyticsTitle>
         <MonitoredChannels />
-        <AnalyticsTitleBig>Отслеживаемые каналы</AnalyticsTitleBig>
+        <AnalyticsTitleBig>Все категории</AnalyticsTitleBig>
         <AnalyticsCategories>
           {categoriesData.map((column, colIndex) => (
             <AnalyticsCategory key={colIndex}>

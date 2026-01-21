@@ -1,13 +1,17 @@
 import { useState } from "react";
 import styled from "styled-components";
+
 import fire from "@/assets/tape/fire.svg";
-import filter from "@/assets/tape/filter.svg";
+import FilterIcon from "@/icons/FilterIcon";
+
 import TapeList from "@/components/TapeList";
 import InputPlus from "@/shared/InputPlus";
 import BlocksItems from "@/shared/BlocksItems";
 import CustomSelectSec from "@/shared/CustomSelectSec";
 import BtnBase from "@/shared/BtnBase";
+
 import { useNews } from "@/lib/news/useNews";
+
 import { useNotificationStore } from "@/store/notificationStore"; 
 
 const Tape = () => {
@@ -67,7 +71,7 @@ const Tape = () => {
           <mark>Лайв</mark> лента
         </TapeTitle>
         <TapeBtn onClick={handleFilterClick}>
-          <img src={filter} alt="filter icon" />
+          <FilterIcon color="#D6DCEC"/>
           Фильтр
         </TapeBtn>
       </TapeHead>

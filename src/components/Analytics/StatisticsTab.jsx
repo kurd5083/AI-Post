@@ -4,67 +4,68 @@ import styled from "styled-components";
 import useFadeOnScroll from "@/lib/useFadeOnScroll";
 
 const statisticsData = [
-	{
-		title: "Подписки / Отписки за 24 часа",
-		mainValue: "+ 44.490",
-		mainSubValue: "Сегодня",
-		details: [
-			{ value: "- 500", label: "За неделю" },
-			{ value: "- 2.257", label: "За месяц" }
-		],
-		points: [0, 60, 40, 100]
-	},
-	{
-		title: "Средний охват 1 публикации",
-		mainValue: "209.961",
-		mainSubValue: null,
-		details: [
-			{ value: "7%", label: "ERR" },
-			{ value: "6.5%", label: "ERR 24" }
-		],
-		points: [60, 30, 80, 20]
-	},
-	{
-		title: "Комментарии / Лайки за 24 часа",
-		mainValue: "+ 12.345",
-		mainSubValue: "Сегодня",
-		details: [
-			{ value: "- 120", label: "За неделю" },
-			{ value: "- 1.050", label: "За месяц" }
-		],
-		points: [60, 30, 80, 20]
-	},
-	{
-		title: "Просмотры видео",
-		mainValue: "98.456",
-		mainSubValue: null,
-		details: [
-			{ value: "+ 5.678", label: "За неделю" },
-			{ value: "+ 21.234", label: "За месяц" }
-		],
-		points: [60, 30, 80, 20]
-	},
-	{
-		title: "Комментарии / Лайки за 24 часа",
-		mainValue: "+ 12.345",
-		mainSubValue: "Сегодня",
-		details: [
-			{ value: "- 120", label: "За неделю" },
-			{ value: "- 1.050", label: "За месяц" }
-		],
-		points: [60, 30, 80, 20]
-	},
-	{
-		title: "Просмотры видео",
-		mainValue: "98.456",
-		mainSubValue: null,
-		details: [
-			{ value: "+ 5.678", label: "За неделю" },
-			{ value: "+ 21.234", label: "За месяц" }
-		],
-		points: [60, 30, 80, 20]
-	}
+  {
+    title: "Новые подписчики / отписки за 24 часа",
+    mainValue: "+ 3.421",
+    mainSubValue: "Сегодня",
+    details: [
+      { value: "- 150", label: "За неделю" },
+      { value: "+ 1.200", label: "За месяц" }
+    ],
+    points: [0, 20, 35, 25, 50, 40, 70]
+  },
+  {
+    title: "Средний охват публикации",
+    mainValue: "15.342",
+    mainSubValue: null,
+    details: [
+      { value: "+ 5%", label: "Рост за неделю" },
+      { value: "+ 12%", label: "Рост за месяц" }
+    ],
+    points: [60, 50, 70, 55, 80, 60, 90]
+  },
+  {
+    title: "Лайки / комментарии за 24 часа",
+    mainValue: "+ 7.890",
+    mainSubValue: "Сегодня",
+    details: [
+      { value: "- 200", label: "За неделю" },
+      { value: "+ 1.500", label: "За месяц" }
+    ],
+    points: [40, 50, 60, 70, 65, 80, 90]
+  },
+  {
+    title: "Просмотры видео",
+    mainValue: "123.456",
+    mainSubValue: null,
+    details: [
+      { value: "+ 4.321", label: "За неделю" },
+      { value: "+ 15.000", label: "За месяц" }
+    ],
+    points: [50, 60, 80, 90, 70, 85, 100]
+  },
+  {
+    title: "Клики по ссылкам",
+    mainValue: "5.678",
+    mainSubValue: "Сегодня",
+    details: [
+      { value: "- 100", label: "За неделю" },
+      { value: "+ 500", label: "За месяц" }
+    ],
+    points: [20, 30, 25, 40, 50, 45, 60]
+  },
+  {
+    title: "Конверсия из просмотров в подписку",
+    mainValue: "8,7%",
+    mainSubValue: null,
+    details: [
+      { value: "+ 0,5%", label: "За неделю" },
+      { value: "+ 1,2%", label: "За месяц" }
+    ],
+    points: [50, 55, 60, 65, 60, 70, 75] 
+  }
 ];
+
 
 const months = ["Январь", "Февраль", "Март", "Апрель"];
 
@@ -72,8 +73,9 @@ const StatisticsTab = () => {
 	const [containerWidth, setContainerWidth] = useState(0);
 
 	const containerRef = useRef();
+	const svgRefs = useRef([]);
 	const { fadeVisible, ref } = useFadeOnScroll(20);
-
+	const [hoverData, setHoverData] = useState({ index: null, x: 0, y: 0, value: 0 });
 	useEffect(() => {
 		if (!containerRef.current) return;
 
@@ -96,11 +98,10 @@ const StatisticsTab = () => {
 	}, []);
 
 	const makeSmoothBezierPath = (values, height) => {
-		const width = 200;
+		const width = 300;
 		const step = width / (values.length - 1);
 
-		const maxValue = Math.max(...values);
-		const pts = values.map((v, i) => [i * step, height - (v / maxValue) * height]);
+		const pts = values.map((v, i) => [i * step, height - (v / 100) * height]);
 
 		if (pts.length < 2) return "";
 
@@ -116,7 +117,29 @@ const StatisticsTab = () => {
 		}
 		return d;
 	};
+	const handleMouseMove = (e, points, svg, chartIndex) => {
+		if (!svg) return;
 
+		const rect = svg.getBoundingClientRect();
+		const x = e.clientX - rect.left;
+
+		const step = 300 / (points.length - 1);
+		const index = Math.round(x / step);
+		const clampedIndex = Math.max(0, Math.min(points.length - 1, index));
+
+		const svgHeight = 180;
+		const maxScale = 100;
+		const y = svgHeight - (points[clampedIndex] / maxScale) * svgHeight;
+		
+		setHoverData({
+			index: clampedIndex,
+			chartIndex,
+			x: clampedIndex * step,
+			y,
+			value: points[clampedIndex],
+		});
+	};
+	const handleMouseLeave = () => setHoverData({ index: null, x: 0, y: 0, value: 0 });
 	return (
 		<StatisticsContainer
 			ref={(el) => {
@@ -127,62 +150,109 @@ const StatisticsTab = () => {
 			$containerWidth={containerWidth}
 		>
 			{statisticsData.map((item, index) => (
-				<StatisticsItem key={index}>
-					<ItemTitle>{item.title}</ItemTitle>
-					<StatsCardMainValue>
-						{item.mainValue}
-						{item.mainSubValue && <span>{item.mainSubValue}</span>}
-					</StatsCardMainValue>
-					<StatsCardDetails>
-						{item.details.map((detail, i) => (
-							<StatsCardDetailItem key={i}>
-								{detail.value} <span>{detail.label}</span>
-							</StatsCardDetailItem>
-						))}
-					</StatsCardDetails>
-					<StatsChart>
-						<StatsChartLine>
-							<svg viewBox="0 0 200 100" preserveAspectRatio="none">
-								<defs>
-									<linearGradient id={`fadeStroke-${index}`} x1="0" x2="1" y1="0" y2="0">
-										<stop offset="0%" stopColor="#1C243800" />
-										<stop offset="50%" stopColor="#6A7080" />
-										<stop offset="100%" stopColor="#1C243800" />
-									</linearGradient>
-								</defs>
-								<path
-									d={makeSmoothBezierPath(item.points, 100)}
-									stroke={`url(#fadeStroke-${index})`}
-									strokeWidth="2"
-									fill="none"
-									strokeLinecap="round"
-									strokeLinejoin="round"
-								/>
-							</svg>
-						</StatsChartLine>
 
-						<StatsChartGradient>
-							<svg viewBox="0 0 200 100" preserveAspectRatio="none">
-								<defs>
-									<linearGradient id={`gradientFill-${index}`} x1="0" x2="0" y1="0" y2="1">
-										<stop offset="0%" stopColor="#283046" />
-										<stop offset="100%" stopColor="#1C243800" />
-									</linearGradient>
-								</defs>
-								<path
-									d={`${makeSmoothBezierPath(item.points, 100)} L200,100 L0,100 Z`}
-									fill={`url(#gradientFill-${index})`}
-								/>
-							</svg>
-						</StatsChartGradient>
-					</StatsChart>
-					<StatsData>
-						{months.map((month, i) => (
-							<span key={i} style={{ left: `${(i / (months.length - 1)) * 100}%` }}>
-								{month}
-							</span>
-						))}
-					</StatsData>
+				<StatisticsItem key={index}>
+					<ItemLeft>
+						<ItemTitle>{item.title}</ItemTitle>
+						<StatsCardMainValue>
+							{item.mainValue}
+							{item.mainSubValue && <span>{item.mainSubValue}</span>}
+						</StatsCardMainValue>
+						<StatsCardDetails>
+							{item.details.map((detail, i) => (
+								<StatsCardDetailItem key={i}>
+									{detail.value} <span>{detail.label}</span>
+								</StatsCardDetailItem>
+							))}
+						</StatsCardDetails>
+					</ItemLeft>
+					<StatsChartContainer>
+						<StatsYAxis>
+							{[100, 75, 50, 25, 0].map((val, i) => (
+								<span key={i}>
+									{val}
+								</span>
+							))}
+						</StatsYAxis>
+						<StatsChart onMouseMove={(e) => handleMouseMove(e, item.points, svgRefs.current[index], index)}
+							onMouseLeave={handleMouseLeave}	>
+							<StatsChartLine>
+								<svg
+									ref={(el) => (svgRefs.current[index] = el)}
+									viewBox="-10 -20 325 280"
+									preserveAspectRatio="none"
+								>
+									<defs>
+										<linearGradient id={`fadeStroke-${index}`} x1="0" x2="1" y1="0" y2="0">
+											<stop offset="0%" stopColor="#94b2ffc3" />
+											<stop offset="50%" stopColor="#336dffd8" />
+											<stop offset="100%" stopColor="#336dffac" />
+										</linearGradient>
+									</defs>
+									<path
+										d={makeSmoothBezierPath(item.points, 180)}
+										stroke={`url(#fadeStroke-${index})`}
+										strokeWidth="3"
+										fill="none"
+									/>
+
+									{hoverData.index !== null && hoverData.chartIndex === index && (
+										<g>
+											<circle
+												cx={hoverData.x}
+												cy={hoverData.y}
+												r="6"
+												fill="#336CFF"
+												stroke="#FFFFFF"
+												strokeWidth="3"
+											/>
+											<text
+												x={hoverData.x}
+												y={hoverData.y - 10}
+												textAnchor="middle"
+												fontWeight={600}
+												fontSize="14"
+												fill="#FFF"
+											>
+												{hoverData.value}
+											</text>
+											<line
+												x1={hoverData.x}
+												y1={hoverData.y}
+												x2={hoverData.x}
+												y2={185}
+												stroke="#FFFFFF"
+												strokeWidth="1"
+												strokeDasharray="4 2"
+											/>
+										</g>
+									)}
+								</svg>
+							</StatsChartLine>
+
+							<StatsChartGradient>
+								<svg viewBox="-10 0 325 170" preserveAspectRatio="none">
+									<defs>
+										<linearGradient id={`gradientFill-${index}`} x1="0" x2="0" y1="0" y2="1">
+											<stop offset="0%" stopColor="#193169" />
+											<stop offset="100%" stopColor="#13192ac7" />
+										</linearGradient>
+									</defs>
+									<path
+										d={`${makeSmoothBezierPath(item.points, 180)} L300,170 L0,170 Z`}
+										fill={`url(#gradientFill-${index})`}
+									/>
+								</svg>
+							</StatsChartGradient>
+						</StatsChart>
+						<StatsData>
+							{months.map((month, i) => (
+								<span key={i} style={{ left: `${(i / (months.length - 1)) * 100}%` }}>
+									{month}
+								</span>
+							))}
+						</StatsData>
+					</StatsChartContainer>
 				</StatisticsItem>
 			))}
 		</StatisticsContainer>
@@ -229,13 +299,20 @@ const StatisticsContainer = styled.div`
   `}
 `;
 const StatisticsItem = styled.div`
-position: relative;
+	display: flex;
+	justify-content: space-between;
+	align-items: flex-end;
+	gap: 30px;
+	position: relative;
   flex: 1;
   border: 2px solid #2E3954;
   border-radius: 32px;
-  padding: 40px 0 40px 40px;
-  min-width: 500px;
+  padding: 40px 0 24px 40px;
 `;
+const ItemLeft = styled.div`
+	min-width: 250px;
+`;
+
 const ItemTitle = styled.h3`
   font-size: 14px;
   font-weight: 700;
@@ -247,6 +324,7 @@ const StatsCardMainValue = styled.p`
   gap: 8px;
   font-size: 36px;
   font-weight: 800;
+
   span {
     font-size: 14px;
     font-weight: 600;
@@ -269,29 +347,55 @@ const StatsCardDetailItem = styled.p`
     color: #6A7080;
   }
 `;
+const StatsChartContainer = styled.div`
+	display: grid;
+	align-items: end;
+	justify-items: start;
+	grid-template-columns: 30px 1fr;
+  grid-template-rows: 180px 30px;
+`;
+const StatsYAxis = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+	grid-column:  1;
+  grid-row: 1;
 
+  span {
+    font-size: 10px;
+    font-weight: 600;
+    color: #6A7080;
+  }
+`;
 const StatsChart = styled.div`
-  position: absolute;
-	bottom: 40px;
-	right: 0;
-  width: 350px;
+	grid-column:  2;
+  grid-row: 1;
+  width: 300px;
+	height: 200px;
 `;
 const StatsChartLine = styled.div`
-
+margin-right: -15px;
+ path {
+    filter: drop-shadow(0 0 6px #336dffae);
+  }
 `;
 const StatsChartGradient = styled.div`
-	margin-top: -150px;
+	margin-right: -15px;
+	margin-top: -240px;
 `;
 const StatsData = styled.div`
-display: flex;
-  position: absolute;
-	bottom: 10px;
-	right: 0;
-  width: 350px;
+text-transform: uppercase;
+	box-sizing: border-box;
+	grid-column:  2;
+  grid-row: 2;
+	display: flex;
+	justify-content: space-between;
+  width: 300px;
 	color: #6A7080;
 	font-size: 10px;
 	font-weight: 600;
-	gap: 48px;
+	padding-right: 20px;
 `;
 
 export default StatisticsTab

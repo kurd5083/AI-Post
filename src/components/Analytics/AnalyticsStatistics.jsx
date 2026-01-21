@@ -67,7 +67,7 @@ const StatisticsList = styled(Swiper)`
   display: flex;
   justify-content: space-between;
   gap: 16px;
-  margin-top: 32px;
+  margin-top: 52px;
   padding: 0 56px;
 
   @media(max-width: 1600px) { 
