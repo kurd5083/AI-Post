@@ -132,12 +132,12 @@ const TapeList = ({ forceHorizontal = false, padding, newsData, pending }) => {
                 </TapeTime>
               </TapeItemContent>
               <TapePostImg
-                src={news.images?.[0] ? `https://aiposting.live/${news.images[0]}` : news_stub}
+                src={news.images?.[0] ? `https://aiposting.live/api/v1/${news.images[0]}` : news_stub}
                 alt="post img"
                 $forceHorizontal={forceHorizontal}
                 onClick={() =>
                   openLightbox({
-                    images: news.images?.length ? news.images.map(img => `https://aiposting.live/${img}`) : [news_stub],
+                    images: news.images?.length ? news.images.map(img => `https://aiposting.live/api/v1/${img}`) : [news_stub],
                     initialIndex: 0,
                   })
                 }

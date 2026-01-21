@@ -39,10 +39,10 @@ const NewsDetail = () => {
 								<p>{news?.sourceName}</p>
 							</PostHead>
 							<NewsImgMobile
-								src={`https://aiposting.live/${news?.images[0]}`}
+								src={`https://aiposting.live/api/v1/${news?.images[0]}`}
 								alt={news?.title}
 								onClick={() => openLightbox({
-									images: news?.images?.map(img => `https://aiposting.live/${img}`) || [news_stub],
+									images: news?.images?.map(img => `https://aiposting.live/api/v1/${img}`) || [news_stub],
 									initialIndex: 0
 								})}
 							/>
@@ -79,10 +79,10 @@ const NewsDetail = () => {
 							</PostFooter>
 						</PostLeft>
 						<NewsImg
-							src={news?.images && news?.images[0] ? `https://aiposting.live/${news?.images[0]}` : news_stub}
+							src={news?.images && news?.images[0] ? `https://aiposting.live/api/v1/${news?.images[0]}` : news_stub}
 							alt={news?.title}
 							onClick={() => openLightbox({
-								images: news?.images?.map(img => `https://aiposting.live/${img}`) || [news_stub],
+								images: news?.images?.map(img => `https://aiposting.live/api/v1/${img}`) || [news_stub],
 								initialIndex: 0
 							})}
 						/>
