@@ -92,7 +92,7 @@ const CalendarPostsList = ({ posts }) => {
             <Meta>
               <MetaItem><strong>Канал:</strong> {post.channelId}</MetaItem>
               <MetaItem>
-                <strong>Запланировано:</strong>
+                <strong>{post.status == "COMPLETED" ? "Опубликованно: " : "Запланировано: "}</strong>
                 {(() => {
                   const d = new Date(post.scheduledAt);
                   const day = String(d.getUTCDate()).padStart(2, "0");
@@ -106,41 +106,49 @@ const CalendarPostsList = ({ posts }) => {
             </Meta>
           </Content>
           <ButtonsContainer>
-            <BtnBase
-              $padding="16px 24px"
-              $border
-              $width="100%"
-              $bg="transparent"
-              $color="#D6DCEC"
-              onClick={() => handlePublishNow(post)}
-              disabled={publishingPosts[post.postId]}
-            >
-              {publishingPosts[post.postId] ? "Публикация..." : "Опубликовать сейчас"}
-            </BtnBase>
+            {post.status == "COMPLETED" ? (
+              <CardPublish>Опубликованно</CardPublish>
+            ) : (
+              <BtnBase
+                $padding="16px 24px"
+                $border
+                $width="100%"
+                $bg="transparent"
+                $color="#D6DCEC"
+                onClick={() => handlePublishNow(post)}
+                disabled={publishingPosts[post.postId]}
+              >
+                {publishingPosts[post.postId] ? "Публикация..." : "Опубликовать сейчас"}
+              </BtnBase>
+            )}
             <Buttons>
               <ButtonEye onClick={() => handleEye(post)}>
                 <EyeIcon />
               </ButtonEye>
-              <ButtonEdit
-                onClick={(e) => {
-                  e.stopPropagation();
-                  changeContent("update_calendar_event", "popup_window", { event: post, channelId: post.channelId });
-                }}
-              >
-                <TimeIcon />
-              </ButtonEdit>
-              <DeleteButton
-                onClick={(e) => {
-                  e.stopPropagation();
-                  changeContent("delete_confirm", "popup_window", {
-                    itemName: post.title,
-                    onDelete: () => handleDelete(post),
-                  });
-                }}
-                disabled={deletePending}
-              >
-                <DelIcon />
-              </DeleteButton>
+              {post.status !== "COMPLETED" && (
+                <>
+                  <ButtonEdit
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      changeContent("update_calendar_event", "popup_window", { event: post, channelId: post.channelId });
+                    }}
+                  >
+                    <TimeIcon />
+                  </ButtonEdit>
+                  <DeleteButton
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      changeContent("delete_confirm", "popup_window", {
+                        itemName: post.title,
+                        onDelete: () => handleDelete(post),
+                      });
+                    }}
+                    disabled={deletePending}
+                  >
+                    <DelIcon />
+                  </DeleteButton>
+                </>
+              )}
             </Buttons>
           </ButtonsContainer>
         </PostItem>
@@ -214,6 +222,11 @@ const ButtonsContainer = styled.div`
   flex-direction: column;
   align-items: flex-end;
   gap: 10px;
+`;
+const CardPublish = styled.p`
+  font-weight: 700;
+  font-size: 14px;
+  color: #336CFF;
 `;
 const Buttons = styled.div`
   display: flex;

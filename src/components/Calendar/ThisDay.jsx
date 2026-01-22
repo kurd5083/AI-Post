@@ -159,16 +159,17 @@ const ThisDay = ({ posts, eventsPending }) => {
                     <AvaPlug width="32px" height="32px" />
                     <CardName>{item.channel.name}</CardName>
                   </CardAuthor>
-                  <CardEdit
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      openPopup("update_calendar_event", "popup_window", { event: item, channelId: item.channelId });
-                    }}
-                  >
-                    Изменить
-                  </CardEdit>
+                  {item.status !== "COMPLETED" && (
+                    <CardEdit
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        openPopup("update_calendar_event", "popup_window", { event: item, channelId: item.channelId });
+                      }}
+                    >
+                      Изменить
+                    </CardEdit>
+                  )}
                 </CardHeader>
-
                 {item.post?.images[0] && (
                   <CardImage
                     src={normalizeUrl(item.post?.images[0])}
@@ -191,15 +192,21 @@ const ThisDay = ({ posts, eventsPending }) => {
 
                 <CardFooter>
                   <CardTime>{formatUTCTime(item.scheduledAt)}</CardTime>
-                  {item.status !== "COMPLETED" &&
-                    <CardPublish
-                      onClick={() => handlePublishNow(item)}
-                      disabled={publishingPosts[item.id]}
-                    >
-                      {publishingPosts[item.id] ? "Публикация..." : "Опубликовать"}
-                    </CardPublish>
-                  }
-                  
+                  <CardPublish
+                    disabled={publishingPosts[item.id] || item.status === "COMPLETED"}
+                    onClick={() => {
+                      if (publishingPosts[item.id] || item.status === "COMPLETED") return;
+                      handlePublishNow(item);
+                    }}
+                    $publish={item.status === "COMPLETED"}
+                  >
+                    {item.status === "COMPLETED"
+                      ? "Опубликовано"
+                      : publishingPosts[item.id]
+                        ? "Публикация..."
+                        : "Опубликовать"}
+                  </CardPublish>
+
                 </CardFooter>
               </Card>
             ))
@@ -358,7 +365,7 @@ const CardPublish = styled.p`
   font-weight: 700;
   font-size: 14px;
   color: #336CFF;
-	cursor: pointer;
+	cursor: ${({$publish}) => $publish ? "defoult" : "pointer"} ;
 `;
 const EmptyCalendar = styled.p`
   text-align: center;
