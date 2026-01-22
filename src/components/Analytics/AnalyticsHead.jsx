@@ -17,7 +17,7 @@ const AnalyticsHead = () => {
 			<Arrow onClick={() => navigate(-1)}>
 				<PopupArrow><ArrowIcon width={8} height={16} /></PopupArrow>Назад
 			</Arrow>
-			<HeadUl>
+			{/* <HeadUl>
 				<HeadLi $active={active === 0} onClick={() => setActive(0)}>
 					<EyeIcon color={active === 0 ? "#336CFF" : "#6A7080"} hoverColor={active === 0 ? "#336CFF" : "#6A7080"} width={18} height={13} />
 					Охваты
@@ -34,7 +34,7 @@ const AnalyticsHead = () => {
 					<SpeakerIcon color={active === 3 ? "#336CFF" : "#6A7080"} hoverColor={active === 3 ? "#336CFF" : "#6A7080"} width={16} height={14} />
 					Публикации
 				</HeadLi>
-			</HeadUl>
+			</HeadUl> */}
 			<div></div>
 		</Head>
 	)

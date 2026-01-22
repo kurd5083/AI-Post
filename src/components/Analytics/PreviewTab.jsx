@@ -2,48 +2,70 @@ import { useRef, useState, useEffect } from "react";
 import styled from "styled-components";
 
 import users from "@/assets/users.svg";
-import TimeIcon from "@/icons/TimeIcon";
-import EyeIcon from "@/icons/EyeIcon";
 import pointLine from "@/assets/point-line.svg";
+import list from "@/assets/list.svg";
+import tape from "@/assets/tape.svg";
 import ArrowIcon from "@/icons/ArrowIcon";
+import EyeIcon from "@/icons/EyeIcon";
+import TimeIcon from "@/icons/TimeIcon";
 
-import BtnBase from "@/shared/BtnBase";
+import CustomSelectThree from "@/shared/CustomSelectThree";
 
 import useFadeOnScroll from "@/lib/useFadeOnScroll";
 
 const mentions = [
-	{
-		id: 1,
-		name: "Antropia Digital",
-		audience: "5.092.302",
-		avatar: "",
-		date: "15 янв, 16:47",
-		action: "Упомянул канал"
-	},
-	{
-		id: 2,
-		name: "Design Trends",
-		audience: "2.281.930",
-		avatar: "",
-		date: "14 янв, 12:20",
-		action: "Упомянул канал"
-	},
-	{
-		id: 3,
-		name: "ArtLab Studio",
-		audience: "890.412",
-		avatar: "",
-		date: "13 янв, 19:03",
-		action: "Упоминание"
-	},
-	{
-		id: 4,
-		name: "Digital News",
-		audience: "1.044.880",
-		avatar: "",
-		date: "12 янв, 09:57",
-		action: "Упомянул канал"
-	}
+  {
+    id: 1,
+    name: "Antropia Digital",
+    audience: "5.092.302",
+    avatar: "",
+    time: "2 часа назад",
+    action: "Упомянул канал",
+    title: "Новые тренды в цифровом маркетинге",
+    text: "Обзор ключевых изменений в маркетинговых стратегиях для соцсетей и рекламы.",
+    views: "12.3k",
+    comments: "34",
+		channel: '@Antropia_Gaming'
+  },
+  {
+    id: 2,
+    name: "Design Trends",
+    audience: "2.281.930",
+    avatar: "",
+    time: "2 часа назад",
+    action: "Упомянул канал",
+    title: "Мобильный UI 2025",
+    text: "Разбор трендов в визуальном стиле и UX обработке действий.",
+    views: "8.1k",
+    comments: "21",
+		channel: '@Antropia_Gaming'
+  },
+  {
+    id: 3,
+    name: "ArtLab Studio",
+    audience: "890.412",
+    avatar: "",
+    time: "2 часа назад",
+    action: "Упоминание",
+    title: "AI в сценографии",
+    text: "Как Midjourney и Stable Diffusion уже меняют индустрию театра.",
+    views: "4.7k",
+    comments: "12",
+		channel: '@Antropia_Gaming'
+  },
+  {
+    id: 4,
+    name: "Digital News",
+    audience: "1.044.880",
+    avatar: "",
+    time: "2 часа назад",
+    action: "Упомянул канал",
+    title: "IT события недели",
+    text: "Главные новости IT-индустрии за последнюю неделю: релизы, обновления и аналитика.",
+    views: "9.2k",
+    comments: "18",
+		channel: '@Antropia_Gaming'
+  }
 ];
 const posts = [
 	{
@@ -90,6 +112,7 @@ const posts = [
 const PreviewTab = () => {
 	const { fadeVisible: fadeMentions, ref: fadeMentionsRef } = useFadeOnScroll(20);
 	const { fadeVisible: fadePosts, ref: fadePostsRef } = useFadeOnScroll(20);
+	const [viewMode, setViewMode] = useState("List");
 
 	const mentionsRef = useRef();
 	const postsRef = useRef();
@@ -111,13 +134,28 @@ const PreviewTab = () => {
 		window.addEventListener("resize", updateWidths);
 		return () => window.removeEventListener("resize", updateWidths);
 	}, []);
-
+	const handleChange = (newValue) => {
+    if (!newValue) return;
+    setViewMode(newValue);
+  };
 	return (
 		<PreviewContainer>
 			<div>
 				<MentionsHeader>
 					<PreviewTitle>Лента упоминаний</PreviewTitle>
-					<BtnBase $bg="#192537" $color="#5ABAFF">Фильтрация</BtnBase>
+					<FilterBlock>
+						<img src={viewMode === 'List' ? list : tape} alt="view icon" />
+						<CustomSelectThree
+							options={[
+								{ id: 'List', label: 'Список' },
+								{ id: 'Tape', label: 'Лента' },
+							]}
+							value={viewMode}
+							onChange={handleChange}
+							width="min-content"
+							right="-20px"
+						/>
+					</FilterBlock>
 				</MentionsHeader>
 				<PreviewDescription>
 					Просмотрите ленту, где указаны каналы, которые вас упомянули
@@ -131,7 +169,8 @@ const PreviewTab = () => {
 					$containerWidth={mentionsWidth}
 				>
 					{mentions.map(m => (
-						<MentionCard key={m.id}>
+						viewMode === 'List' ? (
+							<MentionCard key={m.id}>
 							<MentionsCardChannelInfo>
 								<ChannelAva src={m.avatar} alt="" />
 								<ChannelInfoContainer>
@@ -149,6 +188,24 @@ const PreviewTab = () => {
 								</MentionsCardTimestamp>
 							</MentionsCardMeta>
 						</MentionCard>
+						) : (
+							<PostsCard key={m.id}>
+								<PostHead>
+									<PostChannelAva src={m.avatar} />
+									<PostChannelName>{m.author}</PostChannelName>
+									<PostTime><TimeIcon color="#6A7080" />{m.time}</PostTime>
+								</PostHead>
+								<PostTitle>{m.title}</PostTitle>
+								<PostText>{m.text}<br/>В <span>{m.channel}</span></PostText>
+								<PostFooter>
+									<PostFooterParams>
+										<p><EyeIcon color="#336CFF" hoverColor="#336CFF" width={20} height={20} cursor="default" /> {m.views}</p>
+										<p><img src={pointLine} alt="" /> {m.comments}</p>
+									</PostFooterParams>
+									<MentionsCardMentionFrom>{m.action}</MentionsCardMentionFrom>
+								</PostFooter>
+							</PostsCard>
+						)
 					))}
 				</MentionsList>
 			</div>
@@ -164,24 +221,25 @@ const PreviewTab = () => {
 					$containerWidth={postsWidth}
 				>
 					{posts.map(p => (
-						<PostsCard key={p.id}>
-							<PostHead>
-								<PostChannelAva src={p.avatar} />
-								<PostChannelName>{p.author}</PostChannelName>
-								<PostTime><TimeIcon color="#6A7080" />{p.time}</PostTime>
-							</PostHead>
-							<PostTitle>{p.title}</PostTitle>
-							<PostText>{p.text}</PostText>
-							<PostFooter>
-								<PostFooterParams>
-									<p><EyeIcon color="#336CFF" hoverColor="#336CFF" width={20} height={20} cursor="default" /> {p.views}</p>
-									<p><img src={pointLine} alt="" /> {p.comments}</p>
-								</PostFooterParams>
-								<PostArrow>
-									<ArrowIcon color="#6A7080" hoverColor="#6A7080" />
-								</PostArrow>
-							</PostFooter>
-						</PostsCard>
+							<PostsCard key={p.id}>
+								<PostHead>
+									<PostChannelAva src={p.avatar} />
+									<PostChannelName>{p.author}</PostChannelName>
+									<PostTime><TimeIcon color="#6A7080" />{p.time}</PostTime>
+								</PostHead>
+								<PostTitle>{p.title}</PostTitle>
+								<PostText>{p.text}</PostText>
+								<PostFooter>
+									<PostFooterParams>
+										<p><EyeIcon color="#336CFF" hoverColor="#336CFF" width={20} height={20} cursor="default" /> {p.views}</p>
+										<p><img src={pointLine} alt="" /> {p.comments}</p>
+									</PostFooterParams>
+									<PostArrow>
+										<ArrowIcon color="#6A7080" hoverColor="#6A7080" />
+									</PostArrow>
+								</PostFooter>
+							</PostsCard>
+					
 					))}
 				</PostsList>
 			</div>
@@ -193,13 +251,13 @@ const PreviewContainer = styled.div`
 	grid-template-columns: 1fr 1fr;
   margin-top: 40px;
   gap: 64px;
-  padding: 0 56px 30px;
+  padding: 0 56px;
 
   @media(max-width: 1600px) { 
-    padding: 0 32px 30px 
+    padding: 0 32px 
   }	
   @media(max-width: 768px) { 
-    padding: 0 24px 30px
+    padding: 0 24px
   }
 `;
 
@@ -213,6 +271,15 @@ const PreviewTitle = styled.h3`
 	font-size: 24px;
 	font-weight: 700;
 `;
+const FilterBlock = styled.div` 
+	display: flex;
+	align-items: center;
+	gap: 16px;
+  padding: 16px;
+  border-radius: 8px;
+  background-color: #1A1F2D;
+`;
+
 const PreviewDescription = styled.p`
 	max-width: 370px;
 	margin-top: 6px;
@@ -222,14 +289,15 @@ const PreviewDescription = styled.p`
 	font-weight: 600;
 `;
 const MentionsList = styled.div`
+	box-sizing: border-box;
 	display: flex;
 	flex-direction: column;
 	gap: 18px;
-	margin-top: 40px;
-	max-height: 300px;
+	margin-top: 20px;
+	max-height: 330px;
 	overflow-y: auto;
   scrollbar-width: none;
-
+	padding-bottom: 30px;
 
 	${({ $forceHorizontal, $fadeVisible, $containerWidth }) =>
 		!$forceHorizontal &&
@@ -310,6 +378,7 @@ const MentionsCardTimestamp = styled.p`
 	color: #6A7080;
 `;
 const PostsList = styled.div`
+	box-sizing: border-box;
 	display: flex;
 	flex-direction: column;
 	gap: 18px;
@@ -317,6 +386,7 @@ const PostsList = styled.div`
 	max-height: 330px;
 	overflow-y: auto;
   scrollbar-width: none;
+	padding-bottom: 30px;
 
 	${({ $forceHorizontal, $fadeVisible, $containerWidth }) =>
 		!$forceHorizontal &&
@@ -382,7 +452,16 @@ const PostText = styled.p`
 	font-weight: 600;
 	line-height: 20px;
 	color: #6A7080;
+	span {
+		color: #336CFF;
+	}
 `;
+const PostChannel = styled.span`
+	font-size: 14px;
+	font-weight: 600;
+	line-height: 20px;
+`;
+
 const PostFooter = styled.div`
 	display: flex;
 	justify-content: space-between;

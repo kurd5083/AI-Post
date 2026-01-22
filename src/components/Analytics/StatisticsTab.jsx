@@ -1,6 +1,8 @@
 import { useRef, useState, useEffect } from "react";
 import styled from "styled-components";
 
+import BtnBase from "@/shared/BtnBase";
+
 import useFadeOnScroll from "@/lib/useFadeOnScroll";
 
 const statisticsData = [
@@ -66,7 +68,6 @@ const statisticsData = [
   }
 ];
 
-
 const months = ["Январь", "Февраль", "Март", "Апрель"];
 
 const StatisticsTab = () => {
@@ -127,7 +128,7 @@ const StatisticsTab = () => {
 		const index = Math.round(x / step);
 		const clampedIndex = Math.max(0, Math.min(points.length - 1, index));
 
-		const svgHeight = 180;
+		const svgHeight = 160;
 		const maxScale = 100;
 		const y = svgHeight - (points[clampedIndex] / maxScale) * svgHeight;
 		
@@ -140,6 +141,17 @@ const StatisticsTab = () => {
 		});
 	};
 	const handleMouseLeave = () => setHoverData({ index: null, x: 0, y: 0, value: 0 });
+	const getTooltipY = (y) => {
+		const topPadding = 18;
+		const bottomPadding = 18;
+		const height = 160;
+
+		if (y < topPadding) return y + 20;
+		if (y > height - bottomPadding) return y - 20;
+
+		return y - 10;
+	};
+
 	return (
 		<StatisticsContainer
 			ref={(el) => {
@@ -150,8 +162,10 @@ const StatisticsTab = () => {
 			$containerWidth={containerWidth}
 		>
 			{statisticsData.map((item, index) => (
-
 				<StatisticsItem key={index}>
+					<ButtonMore>
+						<BtnBase $color="#336CFF" $bg="#161F37" $padding="12px 24px">Подробнее</BtnBase>
+					</ButtonMore>
 					<ItemLeft>
 						<ItemTitle>{item.title}</ItemTitle>
 						<StatsCardMainValue>
@@ -179,7 +193,7 @@ const StatisticsTab = () => {
 							<StatsChartLine>
 								<svg
 									ref={(el) => (svgRefs.current[index] = el)}
-									viewBox="-10 -20 325 280"
+									viewBox="-10 0 325 160"
 									preserveAspectRatio="none"
 								>
 									<defs>
@@ -190,7 +204,7 @@ const StatisticsTab = () => {
 										</linearGradient>
 									</defs>
 									<path
-										d={makeSmoothBezierPath(item.points, 180)}
+										d={makeSmoothBezierPath(item.points, 160)}
 										stroke={`url(#fadeStroke-${index})`}
 										strokeWidth="3"
 										fill="none"
@@ -208,7 +222,7 @@ const StatisticsTab = () => {
 											/>
 											<text
 												x={hoverData.x}
-												y={hoverData.y - 10}
+												y={getTooltipY(hoverData.y)}
 												textAnchor="middle"
 												fontWeight={600}
 												fontSize="14"
@@ -231,7 +245,7 @@ const StatisticsTab = () => {
 							</StatsChartLine>
 
 							<StatsChartGradient>
-								<svg viewBox="-10 0 325 170" preserveAspectRatio="none">
+								<svg viewBox="-10 0 325 160" preserveAspectRatio="none">
 									<defs>
 										<linearGradient id={`gradientFill-${index}`} x1="0" x2="0" y1="0" y2="1">
 											<stop offset="0%" stopColor="#193169" />
@@ -239,7 +253,7 @@ const StatisticsTab = () => {
 										</linearGradient>
 									</defs>
 									<path
-										d={`${makeSmoothBezierPath(item.points, 180)} L300,170 L0,170 Z`}
+										d={`${makeSmoothBezierPath(item.points, 160)} L300,150 L0,150 Z`}
 										fill={`url(#gradientFill-${index})`}
 									/>
 								</svg>
@@ -309,6 +323,11 @@ const StatisticsItem = styled.div`
   border-radius: 32px;
   padding: 40px 30px 24px 40px;
 `;
+const ButtonMore = styled.div`
+	position: absolute;
+	right: 24px;
+	top: 24px;
+`;
 const ItemLeft = styled.div`
 	min-width: 230px;
 `;
@@ -352,7 +371,7 @@ const StatsChartContainer = styled.div`
 	align-items: end;
 	justify-items: start;
 	grid-template-columns: 30px 1fr;
-  grid-template-rows: 180px 30px;
+  grid-template-rows: 160px 30px;
 `;
 const StatsYAxis = styled.div`
   display: flex;
@@ -372,20 +391,20 @@ const StatsChart = styled.div`
 	grid-column:  2;
   grid-row: 1;
   width: 300px;
-	height: 200px;
+	height: 160px;
 `;
 const StatsChartLine = styled.div`
-margin-right: -15px;
- path {
+	margin-right: -15px;
+ 	path {
     filter: drop-shadow(0 0 6px #336dffae);
   }
 `;
 const StatsChartGradient = styled.div`
 	margin-right: -15px;
-	margin-top: -240px;
+	margin-top: -140px;
 `;
 const StatsData = styled.div`
-text-transform: uppercase;
+	text-transform: uppercase;
 	box-sizing: border-box;
 	grid-column:  2;
   grid-row: 2;

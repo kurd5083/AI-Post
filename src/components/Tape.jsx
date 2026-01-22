@@ -9,10 +9,12 @@ import InputPlus from "@/shared/InputPlus";
 import BlocksItems from "@/shared/BlocksItems";
 import CustomSelectSec from "@/shared/CustomSelectSec";
 import BtnBase from "@/shared/BtnBase";
+import Counter from "@/shared/Counter";
 
 import { useNews } from "@/lib/news/useNews";
-
-import { useNotificationStore } from "@/store/notificationStore"; 
+import { useNotificationStore } from "@/store/notificationStore";
+import { useCreatePersonalNewsFeed } from "@/lib/news/usePersonalNewsFeed";
+import { useGetPersonalNewsFeedId } from "@/lib/news/useGetPersonalNewsFeedId";
 
 const Tape = () => {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
@@ -25,6 +27,16 @@ const Tape = () => {
   const [priorityWords, setPriorityWords] = useState([]);
   const [language, setLanguage] = useState(filters.language || "ru");
 
+  const [feedName, setFeedName] = useState('');
+  const [feedDescription, setFeedDescription] = useState('');
+  const [updateInterval, setUpdateInterval] = useState(60);
+
+  const [categories, setCategories] = useState([]);
+  const [categoryInput, setCategoryInput] = useState("");
+
+  const { mutate: createFeed, isPending: feedPending } = useCreatePersonalNewsFeed();
+  const { newsFeed, newsFeedsLoading } = useGetPersonalNewsFeedId(2);
+  console.log(newsFeed, 'newsFeed')
   const { addNotification } = useNotificationStore();
 
   const handleFilterClick = () => {
@@ -32,15 +44,37 @@ const Tape = () => {
   };
 
   const handleSave = () => {
-    setFilters({
-      stopWords: stopWords.join(","),
-      priorityWords: priorityWords.join(","),
-      language,
-      page: '1',
-      limit: '10',
-    });
-    addNotification("Фильтры применены", "success");
-    setIsFilterOpen(false);
+    if (!feedName.trim()) return addNotification("Введите название ленты", "info");
+    if (categories.length === 0) return addNotification("Добавьте хотя бы одну категорию", "info");
+    const payload = {
+      name: feedName,
+      categories,
+      sourceIds: [],
+      customSources: [],
+      updateIntervalMinutes: updateInterval,
+      isEnabled: true,
+      description: feedDescription,
+    };
+    
+    createFeed(payload,
+      {
+        onSuccess: () => {
+          setFilters({
+            stopWords: stopWords.join(","),
+            priorityWords: priorityWords.join(","),
+            language,
+            page: "1",
+            limit: "10",
+          });
+
+          addNotification("Лента создана", "success");
+          setIsFilterOpen(false);
+        },
+        onError: (err) => {
+          addNotification(err.message || "Ошибка создания ленты", "error");
+        },
+      }
+    );
   };
   const handleAddStopWord = () => {
     if (!stopWord.trim()) return;
@@ -63,6 +97,13 @@ const Tape = () => {
     addNotification(`Приоритетное слово "${priorityWord}" добавлено`, "success");
     setPriorityWord("");
   };
+  const handleAddCategory = () => {
+    if (!categoryInput.trim()) return;
+    if (categories.includes(categoryInput)) return addNotification("Категория уже добавлена", "info");
+    setCategories(prev => [...prev, categoryInput]);
+    addNotification(`Категория "${categoryInput}" добавлена`, "success");
+    setCategoryInput("");
+  };
   return (
     <TapeContainer>
       <TapeHead>
@@ -71,7 +112,7 @@ const Tape = () => {
           <mark>Лайв</mark> лента
         </TapeTitle>
         <TapeBtn onClick={handleFilterClick}>
-          <FilterIcon color="#D6DCEC"/>
+          <FilterIcon color="#D6DCEC" />
           Фильтр
         </TapeBtn>
       </TapeHead>
@@ -88,7 +129,7 @@ const Tape = () => {
             padding="24px"
           />
           <FilterKey>
-             <InputPlus
+            <InputPlus
               title="Стоп-слова"
               placeholder="Ключевое слово"
               bg="#2B243C"
@@ -97,7 +138,7 @@ const Tape = () => {
               padding="16px"
               value={stopWord}
               onChange={setStopWord}
-              onSubmit={handleAddStopWord} 
+              onSubmit={handleAddStopWord}
             />
             {stopWords.length === 0 ? (
               <EmptyText>Стоп-слова не добавлены</EmptyText>
@@ -114,7 +155,7 @@ const Tape = () => {
 
           </FilterKey>
           <FilterKey>
-             <InputPlus
+            <InputPlus
               title="Приоритетные слова"
               placeholder="Ключевое слово"
               bg="#2B243C"
@@ -128,7 +169,7 @@ const Tape = () => {
             {priorityWords.length === 0 ? (
               <EmptyText>Приоритетные слова не добавлены</EmptyText>
             ) : (
-             <BlocksItems
+              <BlocksItems
                 items={priorityWords.map((word, index) => ({ id: index, value: word }))}
                 color="#EF6284"
                 onRemove={(id) => {
@@ -137,15 +178,55 @@ const Tape = () => {
                 }}
               />
             )}
-            
+
+          </FilterKey>
+          <CreateFolderTitle>Название ленты</CreateFolderTitle>
+          <CreateFolderInput
+            type="text"
+            placeholder="Введите название ленты"
+            value={feedName}
+            onChange={(e) => setFeedName(e.target.value)}
+          />
+          <CreateFolderTitle>Описание ленты</CreateFolderTitle>
+          <CreateFolderInput
+            type="text"
+            placeholder="Введите описание ленты"
+            value={feedDescription}
+            onChange={(e) => setFeedDescription(e.target.value)}
+          />
+
+          <CreateFolderTitle>Интервал обновления (мин.)</CreateFolderTitle>
+          <Counter placeholder="Количество" value={updateInterval} onChange={setUpdateInterval} />
+          <FilterKey>
+            <InputPlus
+              title="Категории"
+              placeholder="Добавить категорию"
+              bg="#2B243C"
+              color="#FF55AD"
+              fs="16px"
+              padding="16px"
+              value={categoryInput}
+              onChange={setCategoryInput}
+              onSubmit={handleAddCategory}
+            />
+            {categories.length === 0 ? (
+              <EmptyText>Категории не добавлены</EmptyText>
+            ) : (
+              <BlocksItems
+                items={categories.map((cat, index) => ({ id: index, value: cat }))}
+                color="#EF6284"
+                onRemove={(id) => setCategories(prev => prev.filter((_, i) => i !== id))}
+              />
+            )}
           </FilterKey>
           <BtnBase
             $color="#D6DCEC"
             $bg="#336CFF"
             $margin="40"
             onClick={handleSave}
+            disabled={feedPending}
           >
-            Применить
+            {feedPending ? "Сохраняем..." : "Применить"}
           </BtnBase>
         </FilterWrapper>
       )}
@@ -320,5 +401,25 @@ const EmptyText = styled.p`
   color: #6A7080;
   margin-top: 32px;
 `;
-
+const CreateFolderTitle = styled.h2`
+  text-transform: uppercase;
+  color: #6a7080;
+  font-size: 12px;
+  font-weight: 700;
+  margin: 48px 0 26px;
+  border: none;
+`;
+const CreateFolderInput = styled.input`
+  background-color: transparent;
+  width: 100%;
+  color: #d6dcec;
+  font-size: 16px;
+  font-weight: 700;
+  padding-bottom: 24px;
+  border: none;
+  border-bottom: 2px solid #2e3954;
+  &::placeholder {
+    color: #d6dcec;
+  }
+`;
 export default Tape;

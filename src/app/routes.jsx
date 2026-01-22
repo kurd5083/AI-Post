@@ -25,7 +25,7 @@ export const router = createBrowserRouter([
     },
     {
         path: '/analytics', 
-        element: <MainLayout />,
+        element: <OtherLayout />,
         children: [
             { path: ':slug', element: <AnalyticsChannels /> }, 
         ],

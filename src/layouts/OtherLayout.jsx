@@ -21,7 +21,7 @@ import { useTelegramBotLink } from "@/lib/user/useTelegramBotLink";
 import { useAuthEmail } from "@/lib/user/useAuthEmail";
 
 const OtherLayout = () => {
-  const { popup, closePopup } = usePopupStore();
+  const { popup, closePopup, openPopup } = usePopupStore();
   const { isOpen } = useLightboxStore();
   const isAuthenticated = useAuthStore(s => s.isAuthenticated);
   const isInitialized = useAuthStore(s => s.isInitialized);
@@ -40,53 +40,59 @@ const OtherLayout = () => {
   const [error, setError] = useState('');
 
   useEffect(() => {
-      init();
-    }, [init]);
-  
-    useEffect(() => {
-      closePopup();
-    }, [location.pathname, token, isAuthenticated]);
-  
-    if (!isInitialized) {
-      return <p>Загрузка...</p>;
+    init();
+  }, [init]);
+
+  // useEffect(() => {
+  //   closePopup();
+  // }, [location.pathname, token, isAuthenticated]);
+  useEffect(() => {
+    if (location.state?.openPostPopup && location.state?.postId) {
+      openPopup('create_post', 'popup');
+      window.history.replaceState({}, document.title);
     }
+  }, [location.state?.openPostPopup, location.state?.postId, openPopup]);
 
-    const handleSubmit = async (e) => {
-      e.preventDefault();
-      setError('');
+  if (!isInitialized) {
+    return <p>Загрузка...</p>;
+  }
 
-      try {
-        if (authMode === 'register') {
-          if (!formData.email || !formData.password || !formData.firstName || !formData.lastName) {
-            setError('Заполните все поля');
-            return;
-          }
-          await register(formData);
-          setFormData({ email: '', password: '', firstName: '', lastName: '' });
-        } else {
-          if (!formData.email || !formData.password) {
-            setError('Заполните email и пароль');
-            return;
-          }
-          await login({ email: formData.email, password: formData.password });
-          setFormData({ email: '', password: '', firstName: '', lastName: '' });
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError('');
+
+    try {
+      if (authMode === 'register') {
+        if (!formData.email || !formData.password || !formData.firstName || !formData.lastName) {
+          setError('Заполните все поля');
+          return;
         }
-      } catch (err) {
-        setError(err.message || (authMode === 'register' ? 'Ошибка регистрации' : 'Ошибка входа'));
+        await register(formData);
+        setFormData({ email: '', password: '', firstName: '', lastName: '' });
+      } else {
+        if (!formData.email || !formData.password) {
+          setError('Заполните email и пароль');
+          return;
+        }
+        await login({ email: formData.email, password: formData.password });
+        setFormData({ email: '', password: '', firstName: '', lastName: '' });
       }
-    };
+    } catch (err) {
+      setError(err.message || (authMode === 'register' ? 'Ошибка регистрации' : 'Ошибка входа'));
+    }
+  };
 
   return (
     <OtherContainer>
-      <Sidebar/>
+      <Sidebar />
       <Main $blocked={!isAuthenticated || popup?.status}>
-        <Header/>
+        <Header />
         {!isAuthenticated ? (
           <AuthOverlay>
             <AuthFormContainer>
               <AuthTabs>
-                <AuthTab 
-                  $active={authMode === 'login'} 
+                <AuthTab
+                  $active={authMode === 'login'}
                   onClick={() => {
                     setAuthMode('login');
                     setError('');
@@ -94,8 +100,8 @@ const OtherLayout = () => {
                 >
                   Вход
                 </AuthTab>
-                <AuthTab 
-                  $active={authMode === 'register'} 
+                <AuthTab
+                  $active={authMode === 'register'}
                   onClick={() => {
                     setAuthMode('register');
                     setError('');
@@ -134,7 +140,7 @@ const OtherLayout = () => {
                   value={formData.password}
                   onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                 />
-                
+
                 {error && <AuthError>{error}</AuthError>}
 
                 <BtnBase
@@ -146,7 +152,7 @@ const OtherLayout = () => {
                   $fs="16px"
                   disabled={isRegistering || isLoggingIn}
                 >
-                  {authMode === 'register' 
+                  {authMode === 'register'
                     ? (isRegistering ? 'Регистрация...' : 'Зарегистрироваться')
                     : (isLoggingIn ? 'Вход...' : 'Войти')
                   }
@@ -185,7 +191,7 @@ const OtherLayout = () => {
             : <Popup content={popup.content} />
         )}
         {isOpen && <Lightbox />}
-        <Notification/>
+        <Notification />
       </Main>
     </OtherContainer>
   )

@@ -109,12 +109,18 @@ const TableGroups = () => {
               </p>
             </TableCell>
             <TableCell>
-              <TableCellStatus onClick={() => openPopup("premoderation", "popup", { channelId: channel.id, filter: "premoderation" })}>
-                <Status>
-                  {pendingCounts[channel.id] || 0}
-                </Status>
-                {isSmall ? 'Премодерация' : 'Премодерация постов'}
-              </TableCellStatus>
+              {channel?.workMode === "PREMODERATION" ? (
+                <TableCellStatus onClick={() => openPopup("premoderation", "popup", { channelId: channel.id, filter: "premoderation" })}>
+                  <Status>
+                    {pendingCounts[channel.id] || 0}
+                  </Status>
+                  {isSmall ? 'Премодерация' : 'Премодерация постов'}
+                </TableCellStatus>
+              ) : (
+                <TableCellStatus onClick={() => openPopup("calendar", "popup", { channelId: channel.id })}>
+                  Календарь
+                </TableCellStatus>
+              )}
             </TableCell>
             <TableCell >
               <p>
@@ -139,7 +145,7 @@ const TableGroups = () => {
                   }}
                   title="Удалить"
                 >
-                  <DelIcon/>
+                  <DelIcon />
                 </ButtonDel>
               </ButtonsWrap>
             </TableCell>

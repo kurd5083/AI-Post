@@ -141,7 +141,11 @@ export const usePostsStore = create((set, get) => ({
         images: data.images || [],
       });
       setTimeout(() => get().resetPostProgress(postId), 1000);
-      notify(data?.message || "Пост сгенерирован успешно", data?.error ? "error" : "success");
+      if (data?.error) {
+        notify("Ошибка при генерации поста", "error");
+      } else {
+        notify(data?.message || "Пост сгенерирован успешно", "success");
+      }
     } catch (err) {
       clearInterval(interval);
       get().setPostProgress(postId, 0);

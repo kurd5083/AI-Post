@@ -139,7 +139,7 @@ const CardPablish = ({ item, bg, selectedChannel }) => {
           $padding="16px 12px"
           $border
           $width="100%"
-          $bg="transporent"
+          $bg="transparent"
           $color="#D6DCEC"
           onClick={handlePublishNow}
           disabled={isSendPending}
@@ -201,7 +201,7 @@ const CardPablishItem = styled.div`
   padding: 20px;
   border: 2px solid ${({ $bg }) => $bg ? '#181F30' : '#1F273B'};
   border-radius: 24px;
-  background-color: ${({ $bg }) => $bg ? '#181F30' : 'transporent'};
+  background-color: ${({ $bg }) => $bg ? '#181F30' : 'transparent'};
 
   &:hover {
     background-color: #181F30;

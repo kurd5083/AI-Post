@@ -4,6 +4,7 @@ import EmojiPicker from "emoji-picker-react";
 
 import create from "@/assets/create.svg";
 
+import ImageIcon from "@/icons/ImageIcon";
 import PaperIcon from "@/icons/PaperIcon";
 import SmileyIcon from "@/icons/SmileyIcon";
 import FatIcon from "@/icons/FatIcon";
@@ -17,6 +18,8 @@ import BtnBase from "@/shared/BtnBase";
 import AiGeneratorIcon from "@/icons/AiGeneratorIcon";
 import Preview from "@/components/Preview";
 import CustomSelectThree from "@/shared/CustomSelectThree";
+import MediaPopup from "@/components/MediaPopup";
+
 
 import { useCreatePost } from "@/lib/posts/useCreatePost";
 import { usePopupStore } from "@/store/popupStore";
@@ -63,6 +66,7 @@ const AiGeneratorPopup = () => {
 
   const [collapsed, setCollapsed] = useState(false);
   const [emojiPostId, setEmojiPostId] = useState(null);
+  const [mediaPopupId, setMediaPopupId] = useState(null);
 
   const { mutate: createPostMutation, isPending: createPostPending } = useCreatePost();
   const { mutate: sendPost, isPending: isSendPending } = useSendPostToChannel();
@@ -353,8 +357,8 @@ const AiGeneratorPopup = () => {
         <BtnBase $padding="21px 24px" onClick={() => addPost()}>+ Добавить пост</BtnBase>
       </AddPostButton>
       <GeneratorList>
-        {posts.map(post => (
-          <ListItem key={post.postId}>
+        {posts.map((post, index) => (
+          <ListItem key={post.postId} style={{ zIndex: 1000 - index }}>
             <ItemHead>
               <HeadBlock>
                 <HeadTitle
@@ -462,18 +466,29 @@ const AiGeneratorPopup = () => {
             <ItemActions>
               <ActionsLeft>
                 <ItemAI>
-                  <BtnBase $padding="0" $color="#336CFF" $bg="transporent" onClick={() => generatePostWithAI(post.postId, channelId || getPostChannel(post.postId))}>
+                  <BtnBase $padding="0" $color="#336CFF" $bg="transparent" onClick={() => generatePostWithAI(post.postId, channelId || getPostChannel(post.postId))}>
                     <AiGeneratorIcon color="#336CFF" />
                     {postProgress[post.postId] != null && postProgress[post.postId] < 100 ? `Генерация с AI... ${postProgress[post.postId]}%` : "Написать с AI"}
                   </BtnBase>
 
-                  <BtnBase $padding="0" $color="#FF7F48" $bg="transporent" onClick={() => generateImageWithAI(post.postId, post.summary)}>
+                  <BtnBase $padding="0" $color="#FF7F48" $bg="transparent" onClick={() => generateImageWithAI(post.postId, post.summary)}>
                     <img src={create} alt="create icon" />
                     {imageProgress[post.postId] != null && imageProgress[post.postId] < 100 ? `Генерация фото с AI... ${imageProgress[post.postId]}%` : "Создать фото с AI"}
                   </BtnBase>
                 </ItemAI>
 
                 <ItemActionsAdd>
+                  <div>
+                    <ImageIcon
+                      color="#6A7080"
+                      hoverColor="#FFFFFF"
+                      onClick={() => setMediaPopupId(prev => prev === post.postId ? null : post.postId)}
+                    />
+                      {mediaPopupId === post.postId && (
+                        <MediaPopup/>
+                      )}
+                  </div>
+                  
                   <input type="file" accept="image/*" multiple style={{ display: "none" }} id={`file-input-${post.postId}`} onChange={e => { if (e.target.files?.length) handleAddImages(post.postId, e.target.files); }} />
                   <PaperIcon
                     color="#6A7080"
@@ -532,14 +547,13 @@ const AiGeneratorPopup = () => {
                   />
                   <ActionsAddBlock onClick={() => setSelectedPost(post)}>
                     <EyeIcon />
-                    {/* <span>Лайв превью</span> */}
                   </ActionsAddBlock>
                 </ItemActionsAdd>
               </ActionsLeft>
               <ButtonsAll>
                 <ButtonsMainTop>
                   <BtnBase $padding="21px 22px" $color="#EF6284" $bg="#241E2D" onClick={() => handleRemovePost(post.postId)}>Отменить</BtnBase>
-                  <BtnBase $padding="21px 22px" $border $bg="transporent" $color="#6A7080" onClick={() => changeContent("change_time", "popup_window", { postId: post.postId })}>Изменить время</BtnBase>
+                  <BtnBase $padding="21px 22px" $border $bg="transparent" $color="#6A7080" onClick={() => changeContent("change_time", "popup_window", { postId: post.postId })}>Изменить время</BtnBase>
                   <BtnBase
                     $padding="21px 22px"
                     $color="#336CFF"
@@ -554,7 +568,7 @@ const AiGeneratorPopup = () => {
                   $padding="21px 18px"
                   $border
                   $width="100%"
-                  $bg="transporent"
+                  $bg="transparent"
                   $color="#6A7080"
                   onClick={() => handlePublishNow(post)}
                   disabled={publishingPosts[post.postId]}
@@ -640,7 +654,6 @@ const AddPostButton = styled.div`
 `;
 
 const GeneratorList = styled.div`
-  position: relative;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
@@ -650,15 +663,18 @@ const GeneratorList = styled.div`
   overflow-y: auto;
   scrollbar-width: none;
   max-height: calc(100dvh - 285px);
-  min-height: 650px;
+  min-height: calc(100dvh - 285px);
   height: 100%;
-  
+
   @media(max-width: 2000px) {
     gap: 160px;
   } 
   @media(max-width: 1800px) {
     grid-column: 1 /span 5;
     grid-row: 3;
+  }
+  @media(max-width: 1400px) {
+    min-height: 650px;
   }
   @media(max-width: 768px) {
     grid-row: 4;
@@ -673,6 +689,7 @@ const ListItem = styled.div`
   border-radius: 24px;
   border: 2px solid #252D43;
   animation: ${fadeIn} 0.3s ease forwards;
+
   @media(max-width: 480px) {
     padding: 16px;
   } 
@@ -682,7 +699,6 @@ const ItemHead = styled.div`
   align-items: flex-start;
   justify-content: space-between;
   gap: 20px;
-
 `
 const HeadBlock = styled.div`
   display: flex;
@@ -695,7 +711,6 @@ const HeadProgress = styled.p`
   font-size: 14px;
   font-weight: 600;
 `
-
 const HeadTitle = styled.input`
   font-size: 24px;
   font-weight: 700;
@@ -914,4 +929,5 @@ const UrlText = styled.div`
     text-decoration: none;
   }
 `;
+
 export default AiGeneratorPopup;

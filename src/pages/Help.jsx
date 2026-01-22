@@ -165,7 +165,7 @@ const Icon = styled.div`
   width: 40px;
   height: 40px;
   flex-shrink: 0;
-  background-color: ${(props) => (props.open ? "#333E59" : "transporent")};
+  background-color: ${(props) => (props.open ? "#333E59" : "transparent")};
   border: 2px solid ${(props) => (props.open ? "transparent" : "#333E59")};
   transition: transform 0.3s ease;
   transform: rotate(${(props) => (props.open ? "270deg" : "90deg")});

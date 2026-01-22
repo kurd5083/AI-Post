@@ -93,6 +93,7 @@ const MonitoredChannels = () => {
 		</MonitoredChannelsSwiper>
 	)
 }
+
 const MonitoredChannelsSwiper = styled.div`
   display: flex;
   align-items: center;
@@ -176,7 +177,6 @@ const MonitoredChannelsQuantity = styled.p`
   font-size: 14px;
   font-weight: 700;
 `
-
 const EmptyMonitoredChannels = styled.div`
   box-sizing: border-box;
   text-align: center;

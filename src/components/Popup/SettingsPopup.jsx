@@ -15,8 +15,20 @@ import { useGetChannelImagePreset } from "@/lib/channels/image-generation/useGet
 import { usePromptLibrary } from "@/lib/channels/usePromptLibrary";
 import { useChannelGlobalPrompt } from "@/lib/channels/global-prompt/useChannelGlobalPrompt";
 import { useChannelScheduleStatus } from "@/lib/channels/schedule/useChannelScheduleStatus";
+import { useChannelSchedule } from "@/lib/channels/schedule/useChannelSchedule";
+
 import { useChannelInterval } from "@/lib/channels/useChannelInterval";
 import { useCalendarEventsByRange } from "@/lib/calendar/useCalendarEventsByRange";
+
+const DAYS = [
+  { label: "Пн", value: "MONDAY" },
+  { label: "Вт", value: "TUESDAY" },
+  { label: "Ср", value: "WEDNESDAY" },
+  { label: "Чт", value: "THURSDAY" },
+  { label: "Пт", value: "FRIDAY" },
+  { label: "Сб", value: "SATURDAY" },
+  { label: "Вс", value: "SUNDAY" },
+];
 
 const SettingsPopup = () => {
   const { changeContent, popup } = usePopupStore();
@@ -28,6 +40,7 @@ const SettingsPopup = () => {
   const { promptLibrary } = usePromptLibrary();
   const { globalPrompt } = useChannelGlobalPrompt(channelId);
   const { scheduleStatus } = useChannelScheduleStatus(channelId);
+  const { channelSchedule } = useChannelSchedule(channelId);
   const { channelInterval } = useChannelInterval(channelId);
   const today = new Date();
 
@@ -58,12 +71,21 @@ const SettingsPopup = () => {
     auto_accepting: channel?.autoApprovalEnabled || false,
   });
 
-
   const scheduleSettings = useMemo(() => {
-    if (scheduleStatus?.scheduleEnabled) return "Расписание";
-    if (channelInterval?.isEnabled) return "Интервальное";
-    return "";
-  }, [scheduleStatus, channelInterval]);
+    if (!scheduleStatus?.scheduleEnabled) {
+      return "Расписание выключено";
+    }
+
+    const days =
+      channelSchedule?.postDays
+        ?.map(day => DAYS.find(d => d.value === day)?.label)
+        ?.join(", ") || "";
+
+    const times =
+      channelSchedule?.publicationTimes?.join(", ") || "";
+
+    return `${days} • ${times}`;
+  }, [scheduleStatus, channelSchedule]);
 
   const localPrompt = useMemo(() => {
     if (!globalPrompt || !promptLibrary) return "";

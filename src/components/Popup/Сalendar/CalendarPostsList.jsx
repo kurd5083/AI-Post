@@ -110,7 +110,7 @@ const CalendarPostsList = ({ posts }) => {
               $padding="16px 24px"
               $border
               $width="100%"
-              $bg="transporent"
+              $bg="transparent"
               $color="#D6DCEC"
               onClick={() => handlePublishNow(post)}
               disabled={publishingPosts[post.postId]}

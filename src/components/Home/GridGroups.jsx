@@ -28,7 +28,7 @@ const GridGroups = () => {
   const { mutate: updateAvatar } = useUpdateUserAvatar();
   const { mutate: upload, isPending } = useUploadMedia();
   const [pendingCounts, setPendingCounts] = useState({});
-  
+
   useEffect(() => {
     if (!channels) return;
 
@@ -119,12 +119,22 @@ const GridGroups = () => {
             {channel?.workMode === "PREMODERATION" && "Предмодерация"}
             {channel?.workMode === "AUTOPOSTING" && "Автопостинг"}
           </p>
-          <GridStatus onClick={() => openPopup("premoderation", "popup", { channelId: channel.id, filter: "premoderation" })}>
-            <Status>
-                  {pendingCounts[channel.id] || 0}
-                </Status>
-            Премодерация
-          </GridStatus>
+          {channel?.workMode === "PREMODERATION" ? (
+            <GridStatus
+              onClick={() =>
+                openPopup("premoderation", "popup", { channelId: channel.id, filter: "premoderation" })
+              }
+            >
+            <Status>{pendingCounts[channel.id] || 0}</Status>
+              Премодерация
+            </GridStatus>
+          ) : (
+            <GridStatus onClick={() => {
+              openPopup("calendar", "popup", { channelId: channel.id })
+            }}>
+              Календарь
+            </GridStatus>
+          )}
           <ButtonsWrap>
             <ButtonDir onClick={() => openPopup("move_channel", "popup_window", { channelId: channel.id })} title="Перейти">
               <DirIcon />
@@ -142,7 +152,7 @@ const GridGroups = () => {
               }}
               title="Удалить"
             >
-              <DelIcon/>
+              <DelIcon />
             </ButtonDel>
           </ButtonsWrap>
         </GridItem>

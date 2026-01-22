@@ -19,6 +19,11 @@ const AnalyticsChannels = () => {
 
   const changeContent = (tab) => setActiveTab(tab);
 
+  const handleChange = (newValue) => {
+    if (!newValue) return;
+    setSelectedFilter(newValue);
+  };
+
   return (
     <AnalyticsContainer>
       <AnalyticsHead />
@@ -63,7 +68,7 @@ const AnalyticsChannels = () => {
               { id: '48h', label: '48 часов' },
             ]}
             value={selectedFilter}
-            onChange={setSelectedFilter}
+            onChange={handleChange}
             width="min-content"
             right="-20px"
           />

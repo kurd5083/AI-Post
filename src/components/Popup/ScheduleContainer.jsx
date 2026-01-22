@@ -4,12 +4,9 @@ import styled from "styled-components";
 import ToggleSwitch from "@/shared/ToggleSwitch";
 
 import SchedulePopup from "@/components/Popup/SchedulePopup";
-import ScheduleIntervalPopup from "@/components/Popup/ScheduleIntervalPopup";
 
 import { useChannelScheduleStatus } from "@/lib/channels/schedule/useChannelScheduleStatus";
 import { useToggleChannelSchedule } from "@/lib/channels/schedule/useToggleChannelSchedule";
-import { useChannelInterval } from "@/lib/channels/useChannelInterval";
-import { useUpdateChannelInterval } from "@/lib/channels/useUpdateChannelInterval";
 
 import { useNotificationStore } from "@/store/notificationStore";
 
@@ -31,72 +28,33 @@ const ScheduleContainer = () => {
   const { addNotification } = useNotificationStore();
 
   const { scheduleStatus } = useChannelScheduleStatus(channelId);
-  const { channelInterval } = useChannelInterval(channelId);
 
   const [localScheduleEnabled, setLocalScheduleEnabled] = useState(false);
-  const [localIntervalEnabled, setLocalIntervalEnabled] = useState(false);
 
   useEffect(() => {
     setLocalScheduleEnabled(scheduleStatus?.scheduleEnabled || false);
-    setLocalIntervalEnabled(channelInterval?.isEnabled || false);
-  }, [scheduleStatus, channelInterval]);
+  }, [scheduleStatus]);
 
   const { mutate: toggleScheduleApi, isPending: schedulePending } = useToggleChannelSchedule(channelId);
-  const { mutate: updateInterval, isPending: intervalPending } = useUpdateChannelInterval(channelId);
 
   const toggleSchedule = useCallback(() => {
     const nextSchedule = !localScheduleEnabled;
-    const disableIntervalIfNeeded = localIntervalEnabled && nextSchedule;
 
     toggleScheduleApi(undefined, {
       onSuccess: () => {
         setLocalScheduleEnabled(nextSchedule);
+
         addNotification(
-          nextSchedule ? "Публикация по расписанию включена" : "Публикация по расписанию выключена",
+          nextSchedule
+            ? "Публикация по расписанию включена"
+            : "Публикация по расписанию выключена",
           nextSchedule ? "success" : "error"
         );
-
-        if (disableIntervalIfNeeded) {
-          setLocalIntervalEnabled(false);
-        }
       },
-      onError: (err) => addNotification(err.message || "Ошибка переключения расписания", "error"),
+      onError: (err) =>
+        addNotification(err.message || "Ошибка переключения расписания", "error"),
     });
-
-    if (disableIntervalIfNeeded) {
-      updateInterval({ isEnabled: false }, {
-        onError: (err) => addNotification(err.message || "Ошибка отключения интервала", "error"),
-      });
-    }
-  }, [localScheduleEnabled, localIntervalEnabled, toggleScheduleApi, updateInterval, addNotification]);
-
-  const toggleInterval = useCallback(() => {
-    const nextInterval = !localIntervalEnabled;
-    const disableScheduleIfNeeded = localScheduleEnabled && nextInterval;
-
-    updateInterval({ isEnabled: nextInterval }, {
-      onSuccess: () => {
-        setLocalIntervalEnabled(nextInterval);
-        addNotification(
-          nextInterval ? "Интервальная публикация включена" : "Интервальная публикация выключена",
-          nextInterval ? "success" : "error"
-        );
-
-        if (disableScheduleIfNeeded) {
-          setLocalScheduleEnabled(false);
-        }
-      },
-      onError: (err) => addNotification(err.message || "Ошибка переключения интервала", "error"),
-    });
-
-    if (disableScheduleIfNeeded) {
-      toggleScheduleApi(undefined, {
-        onError: (err) => addNotification(err.message || "Ошибка отключения расписания", "error"),
-      });
-    }
-  }, [localIntervalEnabled, localScheduleEnabled, updateInterval, toggleScheduleApi, addNotification]);
-
-
+  }, [localScheduleEnabled, toggleScheduleApi, addNotification]);
 
   return (
     <ScheduleContent>
@@ -105,34 +63,13 @@ const ScheduleContainer = () => {
           bg="#262A2D"
           checked={localScheduleEnabled}
           onChange={toggleSchedule}
-          disabled={schedulePending || localIntervalEnabled}
+          disabled={schedulePending}
         />
         <ScheduleTitle>
           Включить публикацию по<br /> расписанию для канала
         </ScheduleTitle>
       </ScheduleViews>
-
-      <ScheduleViews>
-        <ToggleSwitch
-          bg="#262A2D"
-          checked={localIntervalEnabled}
-          onChange={toggleInterval}
-          disabled={intervalPending || localScheduleEnabled}
-        />
-        <ScheduleTitle>
-          Активировать интервальную<br /> публикацию
-        </ScheduleTitle>
-      </ScheduleViews>
-
       {localScheduleEnabled && <SchedulePopup channelId={channelId} DAYS={DAYS} />}
-      {localIntervalEnabled && (
-        <ScheduleIntervalPopup
-          channelInterval={channelInterval}
-          updateInterval={updateInterval}
-          intervalPending={intervalPending}
-          DAYS={DAYS}
-        />
-      )}
     </ScheduleContent>
   );
 };

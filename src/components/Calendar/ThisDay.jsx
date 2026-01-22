@@ -191,12 +191,15 @@ const ThisDay = ({ posts, eventsPending }) => {
 
                 <CardFooter>
                   <CardTime>{formatUTCTime(item.scheduledAt)}</CardTime>
-                  <CardPublish
-                    onClick={() => handlePublishNow(item)}
-                    disabled={publishingPosts[item.id]}
-                  >
-                    {publishingPosts[item.id] ? "Публикация..." : "Опубликовать"}
-                  </CardPublish>
+                  {item.status !== "COMPLETED" &&
+                    <CardPublish
+                      onClick={() => handlePublishNow(item)}
+                      disabled={publishingPosts[item.id]}
+                    >
+                      {publishingPosts[item.id] ? "Публикация..." : "Опубликовать"}
+                    </CardPublish>
+                  }
+                  
                 </CardFooter>
               </Card>
             ))
@@ -272,7 +275,7 @@ const Grid = styled.div`
     grid-template-columns: 1fr;
   }
 
-	&::after {
+	/* &::after {
     content: '';
     position: fixed;
     bottom: 0;
@@ -288,7 +291,7 @@ const Grid = styled.div`
     @media(max-width: 1400px) {
         display: none;
     }
-  }
+  } */
 `;
 const Card = styled.div`
   display: flex;

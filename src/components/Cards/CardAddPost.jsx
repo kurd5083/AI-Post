@@ -158,7 +158,7 @@ const CardAddPost = ({ item, bg, selectedChannel }) => {
         <BtnBase
           $padding="16px 24px"
           $width="100%"
-          $bg="transporent"
+          $bg="transparent"
           $color="#D6DCEC"
           $border={true}
           onClick={() => handleSave(item.id)}
@@ -193,7 +193,7 @@ const CardAddItem = styled.div`
   padding: 20px;
   border: 2px solid ${({ $bg }) => $bg ? '#181F30' : '#1F273B'};
   border-radius: 24px;
-  background-color: ${({ $bg }) => $bg ? '#181F30' : 'transporent'};
+  background-color: ${({ $bg }) => $bg ? '#181F30' : 'transparent'};
 
   &:hover {
     background-color: #181F30;

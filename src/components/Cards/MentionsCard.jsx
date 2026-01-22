@@ -47,7 +47,7 @@ const MentionsCardItem = styled.div`
   padding: 20px;
   border: 2px solid ${({ $bg }) => $bg ? '#181F30' : '#1F273B'};
   border-radius: 24px;
-  background-color: ${({ $bg }) => $bg ? '#181F30' : 'transporent'};
+  background-color: ${({ $bg }) => $bg ? '#181F30' : 'transparent'};
 
   &:hover {
     background-color: #181F30;
