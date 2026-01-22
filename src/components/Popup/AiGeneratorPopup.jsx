@@ -485,7 +485,7 @@ const AiGeneratorPopup = () => {
                       onClick={() => setMediaPopupId(prev => prev === post.postId ? null : post.postId)}
                     />
                       {mediaPopupId === post.postId && (
-                        <MediaPopup/>
+                        <MediaPopup postId={post.postId}/>
                       )}
                   </div>
                   

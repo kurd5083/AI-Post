@@ -8,12 +8,19 @@ import ModernLoading from "@/components/ModernLoading";
 
 import { useGetMediaLibrary } from "@/lib/mediaLibrary/useGetMediaLibrary";
 
-const MediaPopup = () => {
-	const { mediaItems, mediaLoading } = useGetMediaLibrary();
-	
+import { usePostsStore } from "@/store/postsStore";
+
+const MediaPopup = ({postId}) => {
 	const [activeTab, setActiveTab] = useState("photo");
 
-	console.log(mediaItems)
+	const { mediaItems } = useGetMediaLibrary();
+	const { addImages } = usePostsStore();
+	
+	const handleAddImage = (url) => {
+		if (!postId) return;
+		addImages(postId, [url]);
+	};
+
 	return (
 		<MediaContainer>
 			<MediaNav>
@@ -33,7 +40,11 @@ const MediaPopup = () => {
 					<MediaText>ПОПУЛЯРНОЕ</MediaText>
 					<MediaGrid>
 						{mediaItems?.items?.map(item => (
-							<MediaItem src={item.url} />
+							<MediaItem
+								key={item.url}
+								src={item.url}
+								onClick={() => handleAddImage(item.url)}
+								/>
 						))}
 					</MediaGrid>
 				</>
@@ -93,7 +104,13 @@ const MediaItem = styled.img`
   width: 100%;
   aspect-ratio: 1;
   border-radius: 8px;
-	object-fit: cover;
+  object-fit: cover;
+  cursor: pointer;
+  transition: transform .12s ease;
+
+  &:hover {
+    transform: scale(1.05);
+  }
 `;
 const EmptyText = styled.p`
 	display: flex;
