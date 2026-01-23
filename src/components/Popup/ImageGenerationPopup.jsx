@@ -68,7 +68,7 @@ const ImageGenerationPopup = () => {
             alt="icon style"
             onClick={() =>
               openLightbox({
-                images: [normalizeUrl(item.imageUrl)],
+                images: [item.imageUrl],
                 initialIndex: 0,
               })
             }

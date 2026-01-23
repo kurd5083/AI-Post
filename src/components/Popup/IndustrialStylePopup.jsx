@@ -104,13 +104,11 @@ const IndustrialStylePopup = () => {
           <BtnBase onClick={() => changeContent("industrial_library")} $color="#D6DCEC" $bg="#2B89ED">Библиотека промптов</BtnBase>
           <IndustrialStyleTitle>Промпт</IndustrialStyleTitle>
           <IndustrialStyleInfo>
-            <div>
               <textarea
                 placeholder="Введите промпт..."
                 value={localPrompt}
                 onChange={(e) => handlePromptChange(e)}
               ></textarea>
-            </div>
         
             <button
               disabled={!localPrompt?.trim() || testProgress > 0}
@@ -225,34 +223,31 @@ const IndustrialStyleDesc = styled.p`
 const IndustrialStyleInfo = styled.div`
   position: relative;
   max-width: 470px;
+  background-color: #1C2336;
+  box-sizing: border-box;
+  padding: 24px;
+  border-radius: 24px;
+  height: 270px;
 
-  div {
-    background-color: #1C2336;
-    box-sizing: border-box;
-    padding: 24px;
-    border-radius: 24px;
-    height: 270px;
-		@media (max-width: 768px) {
-			width: 100%;
-		}
-  }
+  @media (max-width: 768px) {
+		width: 100%;
+	}
+
   textarea {
     background-color: #1C2336;
     border: none;
     outline: none;
     color: #6A7080;
     resize: none;
+    padding: 0;
     width: 100%;
     font-size: 14px;
     line-height: 24px;
     font-weight: 600;
     scrollbar-width: none;
-    height: calc(100% - 70px);
+    height: calc(100% - 44px);
   }
   button {
-    position: absolute;
-    bottom: 32px;
-    left: 32px;
     padding: 10px 24px 12px;
     font-size: 14px;
     font-weight: 700;

@@ -192,21 +192,19 @@ const ThisDay = ({ posts, eventsPending }) => {
 
                 <CardFooter>
                   <CardTime>{formatUTCTime(item.scheduledAt)}</CardTime>
-                  <CardPublish
-                    disabled={publishingPosts[item.id] || item.status === "COMPLETED"}
-                    onClick={() => {
-                      if (publishingPosts[item.id] || item.status === "COMPLETED") return;
-                      handlePublishNow(item);
-                    }}
-                    $publish={item.status === "COMPLETED"}
-                  >
-                    {item.status === "COMPLETED"
-                      ? "Опубликовано"
-                      : publishingPosts[item.id]
-                        ? "Публикация..."
-                        : "Опубликовать"}
-                  </CardPublish>
-
+                  {item.status === "COMPLETED" ? (
+                    <CardPublish $done>Опубликовано</CardPublish>
+                  ) : (
+                    <CardPublish
+                      disabled={publishingPosts[item.id] || item.status === "COMPLETED"}
+                      onClick={() => {
+                        if (publishingPosts[item.id] || item.status === "COMPLETED") return;
+                        handlePublishNow(item);
+                      }}
+                    >
+                      {publishingPosts[item.id] ? "Публикация..." : "Опубликовать"}
+                    </CardPublish>
+                  )}
                 </CardFooter>
               </Card>
             ))
@@ -362,10 +360,25 @@ const CardTime = styled.p`
   color: #336CFF;
 `;
 const CardPublish = styled.p`
-  font-weight: 700;
   font-size: 14px;
-  color: #336CFF;
-	cursor: ${({$publish}) => $publish ? "defoult" : "pointer"} ;
+  font-weight: 800;
+
+  color: ${({ $disabled, $done }) =>
+    $done ? "#6A7080" : $disabled ? "#6A7080" : "#336CFF"};
+
+  cursor: ${({ $disabled, $done }) =>
+    $disabled || $done ? "default" : "pointer"};
+
+  opacity: ${({ $disabled }) => ($disabled ? 0.5 : 1)};
+
+  pointer-events: ${({ $disabled, $done }) =>
+    $disabled || $done ? "none" : "auto"};
+
+  transition: 0.2s;
+
+  &:hover {
+    text-decoration: underline;
+  }
 `;
 const EmptyCalendar = styled.p`
   text-align: center;

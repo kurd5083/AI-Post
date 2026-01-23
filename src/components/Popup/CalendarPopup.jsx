@@ -1,7 +1,5 @@
 import styled from "styled-components";
-import { useState, useEffect } from "react";
-import { generateWeek } from "@/lib/generateWeek";
-
+import { useMemo } from "react";
 import CalendarHeader from "@/components/Popup/Сalendar/CalendarHeader";
 import CalendarWeek from "@/components/Popup/Сalendar/CalendarWeek";
 import CalendarFooter from "@/components/Popup/Сalendar/CalendarFooter";
@@ -29,7 +27,10 @@ const CalendarPopup = () => {
     endDate.toISOString()
   );
 
-  const filteredEvents = events.filter((event) => event.channelId === channelId);
+  const filteredEvents = useMemo(
+    () => events.filter(event => event.channelId === channelId),
+    [events, channelId]
+  );
 
   return (
     <CalendarContent>

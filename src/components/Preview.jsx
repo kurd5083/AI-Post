@@ -216,22 +216,20 @@ const PreviewInfo = styled.div`
     z-index: 0;
   }
 `;
-
 const PreviewInfoContainer = styled.div`
-  max-height: 600px;
+  max-height: 500px;
   border-radius: 16px;
   overflow-y: auto;
   scrollbar-width: none;
   position: relative;
   z-index: 1;
   background-color: #131C22;
-
 `;
 const TgImages = styled.div`
   margin: 0 auto;
   display: grid;
   gap: 4px;
-  max-width: 400px;
+  max-width: 500px;
   overflow: hidden;
 
   ${({ count }) => {
@@ -314,7 +312,7 @@ const PreviewInfoContent = styled.p`
   line-height: 16px;
   font-weight: 600;
   scrollbar-width: none;
-  max-width: 400px;
+  max-width: 500px;
   width: 100%;
   overflow-y: auto;
 `;

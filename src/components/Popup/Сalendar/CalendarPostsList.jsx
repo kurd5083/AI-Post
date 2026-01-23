@@ -8,8 +8,9 @@ import EyeIcon from "@/icons/EyeIcon";
 import DelIcon from "@/icons/DelIcon";
 import TimeIcon from "@/icons/TimeIcon";
 
-import BtnBase from "@/shared/BtnBase";
+import normalizeUrl from "@/lib/normalizeUrl";
 
+import { useLightboxStore } from "@/store/lightboxStore";
 import { usePopupStore } from "@/store/popupStore"
 import { useNotificationStore } from "@/store/notificationStore";
 
@@ -18,6 +19,7 @@ import { getPostsById } from "@/api/posts/getPostsById";
 const CalendarPostsList = ({ posts }) => {
   const [publishingPosts, setPublishingPosts] = useState({});
 
+  const { openLightbox } = useLightboxStore();
   const { popup, changeContent } = usePopupStore();
   const telegramId = popup?.data?.telegramId;
 
@@ -80,77 +82,101 @@ const CalendarPostsList = ({ posts }) => {
       }
     );
   };
-
   return (
     <ListContainer>
       {posts.map((post) => (
         <PostItem key={post.id}>
-          <Time>{formatTime(post.scheduledAt)}</Time>
+          <PostHead>
+            <Time>{formatTime(post.scheduledAt)}</Time>
+            {post.status === "COMPLETED" ? (
+              <CardPublish $done>Опубликовано</CardPublish>
+            ) : (
+              <CardPublish
+                $disabled={publishingPosts[post.postId]}
+                onClick={() => {
+                  if (publishingPosts[post.postId]) return;
+                  handlePublishNow(post);
+                }}
+              >
+                {publishingPosts[post.postId] ? "Публикация..." : "Опубликовать"}
+              </CardPublish>
+            )}
+
+          </PostHead>
           <Content>
             <Title>{post.title}</Title>
-            <Description>{post.description}</Description>
-            <Meta>
-              <MetaItem><strong>Канал:</strong> {post.channelId}</MetaItem>
-              <MetaItem>
-                <strong>{post.status == "COMPLETED" ? "Опубликованно: " : "Запланировано: "}</strong>
-                {(() => {
-                  const d = new Date(post.scheduledAt);
-                  const day = String(d.getUTCDate()).padStart(2, "0");
-                  const month = String(d.getUTCMonth() + 1).padStart(2, "0");
-                  const year = d.getUTCFullYear();
-                  const hours = String(d.getUTCHours()).padStart(2, "0");
-                  const minutes = String(d.getUTCMinutes()).padStart(2, "0");
-                  return `${day}.${month}.${year} ${hours}:${minutes}`;
-                })()}
-              </MetaItem>
-            </Meta>
-          </Content>
-          <ButtonsContainer>
-            {post.status == "COMPLETED" ? (
-              <CardPublish>Опубликованно</CardPublish>
-            ) : (
-              <BtnBase
-                $padding="16px 24px"
-                $border
-                $width="100%"
-                $bg="transparent"
-                $color="#D6DCEC"
-                onClick={() => handlePublishNow(post)}
-                disabled={publishingPosts[post.postId]}
-              >
-                {publishingPosts[post.postId] ? "Публикация..." : "Опубликовать сейчас"}
-              </BtnBase>
+
+            {post.post?.summary && (
+              <Description>{post.post.summary}</Description>
             )}
-            <Buttons>
-              <ButtonEye onClick={() => handleEye(post)}>
-                <EyeIcon />
-              </ButtonEye>
-              {post.status !== "COMPLETED" && (
-                <>
-                  <ButtonEdit
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      changeContent("update_calendar_event", "popup_window", { event: post, channelId: post.channelId });
-                    }}
-                  >
-                    <TimeIcon />
-                  </ButtonEdit>
-                  <DeleteButton
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      changeContent("delete_confirm", "popup_window", {
-                        itemName: post.title,
-                        onDelete: () => handleDelete(post),
-                      });
-                    }}
-                    disabled={deletePending}
-                  >
-                    <DelIcon />
-                  </DeleteButton>
-                </>
-              )}
-            </Buttons>
-          </ButtonsContainer>
+            {post.post?.images?.length > 0 && (() => {
+              const images = post.post.images;
+              const visibleImages = images.slice(0, 3);
+              const extraCount = images.length - 3;
+
+              return (
+                <ImagesRow>
+                  {visibleImages.map((img, i) => {
+                    const isLastVisible = i === 2 && extraCount > 0;
+
+                    return (
+                      <PostImageWrapper
+                        key={i}
+                        onClick={() =>
+                          openLightbox({ images, initialIndex: i })
+                        }
+                      >
+                        <PostImage src={normalizeUrl(img)} />
+
+                        {isLastVisible && (
+                          <Overlay>+{extraCount}</Overlay>
+                        )}
+                      </PostImageWrapper>
+                    );
+                  })}
+                </ImagesRow>
+              );
+            })()}
+            <PostFooter>
+              <Meta>
+                <MetaItem><strong>Канал:</strong> {post.channelId}</MetaItem>
+                <MetaItem>
+                  <strong>{post.status === "COMPLETED" ? "Опубликовано: " : "Запланировано: "}</strong>
+                  {formatTime(post.scheduledAt)}
+                </MetaItem>
+              </Meta>
+              <Buttons>
+                <ButtonEye onClick={() => handleEye(post)}>
+                  <EyeIcon />
+                </ButtonEye>
+
+                {post.status !== "COMPLETED" && (
+                  <>
+                    <ButtonEdit
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        changeContent("update_calendar_event", "popup_window", { event: post, channelId: post.channelId });
+                      }}
+                    >
+                      <TimeIcon />
+                    </ButtonEdit>
+
+                    <DeleteButton
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        changeContent("delete_confirm", "popup_window", {
+                          itemName: post.title,
+                          onDelete: () => handleDelete(post),
+                        });
+                      }}
+                    >
+                      <DelIcon />
+                    </DeleteButton>
+                  </>
+                )}
+              </Buttons>
+            </PostFooter>
+          </Content>
         </PostItem>
       ))}
     </ListContainer>
@@ -158,76 +184,169 @@ const CalendarPostsList = ({ posts }) => {
 };
 
 const ListContainer = styled.div`
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  padding: 0 56px;
   gap: 16px;
   margin-top: 24px;
-  padding: 0 56px;
-  @media(max-width: 1600px) { padding: 0 32px }
-  @media(max-width: 768px) { padding: 0 24px }
+
+  @media (max-width: 1600px) {
+    grid-template-columns: repeat(2, 1fr);
+    padding: 0 32px;
+  }
+  @media (max-width: 1400px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  @media (max-width: 991px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  @media (max-width: 768px) {
+    padding: 0 24px;
+    grid-template-columns: 1fr;
+  }
 `;
 const PostItem = styled.div`
   display: flex;
-  align-items: flex-start;
+  flex-direction: column;
   justify-content: space-between;
-  gap: 16px;
-  padding: 16px;
-  border-radius: 12px;
-  border: 2px solid #2F3953;
-  transition: all 0.2s;
-  @media (max-width: 768px) {
-    flex-direction: column;
-  }
+  gap: 24px;
+
+  padding: 22px 24px;
+
+  background: linear-gradient(145deg, #1b2233, #171d2b);
+  border: 1px solid #2f3953;
+  border-radius: 18px;
+
+  transition: all 0.25s ease;
 
   &:hover {
-    transform: translateY(-4px);
+    border-color: #ac60fd55;
+    box-shadow: 0 10px 32px rgba(0,0,0,0.45);
+    transform: translateY(-2px);
+  }
+
+  @media (max-width: 900px) {
+    grid-template-columns: 1fr;
   }
 `;
+
+const PostHead = styled.div`
+  display: flex;
+  justify-content: space-between;
+  gap: 24px;
+`;
 const Time = styled.div`
-  font-size: 16px;
-  font-weight: 700;
+  font-size: 18px;
+  font-weight: 800;
   color: #ac60fd;
-  width: 70px;
-  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: rgba(172,96,253,0.08);
+  border-radius: 12px;
+  height: 48px;
+  padding: 0 20px;
+`;
+const CardPublish = styled.p`
+  font-size: 14px;
+  font-weight: 800;
+
+  color: ${({ $disabled, $done }) =>
+    $done ? "#6A7080" : $disabled ? "#6A7080" : "#ac60fd"};
+
+  cursor: ${({ $disabled, $done }) =>
+    $disabled || $done ? "default" : "pointer"};
+
+  opacity: ${({ $disabled }) => ($disabled ? 0.5 : 1)};
+
+  pointer-events: ${({ $disabled, $done }) =>
+    $disabled || $done ? "none" : "auto"};
+
+  transition: 0.2s;
+
+  &:hover {
+    text-decoration: underline;
+  }
 `;
 const Content = styled.div`
-  flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 14px;
 `;
 const Title = styled.div`
-  font-size: 16px;
+  font-size: 17px;
   font-weight: 700;
   color: #ffffff;
 `;
 const Description = styled.div`
   font-size: 14px;
-  color: #a0a0b8;
+  line-height: 20px;
+  color: #9ca3af;
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+`;
+const ImagesRow = styled.div`
+  display: flex;
+  gap: 8px;
+`;
+
+const PostImageWrapper = styled.div`
+  position: relative;
+  overflow: hidden;
+  width: 48px;
+  height: 48px;
+  border-radius: 10px;
+  cursor: pointer;
+`;
+const PostImage = styled.img`
+  width: 48px;
+  height: 48px;
+  object-fit: cover;
+
+  transition: 0.2s;
+
+  &:hover {
+    transform: scale(1.06);
+  }
+`;
+const Overlay = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.5);
+  color: #fff;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;
 const Meta = styled.div`
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
-  font-size: 12px;
-  color: #c0c0d0;
+  gap: 6px;
+`;
+const PostFooter = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 24px;
 `;
 const MetaItem = styled.div`
-  background-color: #2a2b4f;
-  padding: 4px 8px;
-  border-radius: 6px;
+  background: #222a3d;
+  padding: 6px 10px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #b6bdd0;
 `;
-const ButtonsContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 10px;
-`;
-const CardPublish = styled.p`
-  font-weight: 700;
-  font-size: 14px;
-  color: #336CFF;
-`;
+
 const Buttons = styled.div`
   display: flex;
   align-items: center;
@@ -268,11 +387,5 @@ const DeleteButton = styled(BaseButton)`
     transform: scale(1.1);    
   }
 `
-const EmptyText = styled.div`
-  font-size: 16px;
-  font-weight: 700;
-  color: #6a7080;
-  margin-top: 24px;
-`;
 
 export default CalendarPostsList;
