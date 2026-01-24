@@ -25,7 +25,7 @@ const mentions = [
     text: "Обзор ключевых изменений в маркетинговых стратегиях для соцсетей и рекламы.",
     views: "12.3k",
     comments: "34",
-		channel: '@Antropia_Gaming'
+	channel: '@Antropia_Gaming'
   },
   {
     id: 2,

@@ -28,6 +28,8 @@ const OtherLayout = () => {
   const token = useAuthStore(s => s.token);
   const init = useAuthStore(state => state.init);
   const { botLinkData } = useTelegramBotLink();
+  console.log(botLinkData, 'botLinkData')
+
   const { register, login, isRegistering, isLoggingIn } = useAuthEmail();
   const location = useLocation();
   const [authMode, setAuthMode] = useState('login'); // 'login' or 'register'
@@ -164,7 +166,6 @@ const OtherLayout = () => {
                 <AuthDividerText>или</AuthDividerText>
                 <AuthDividerLine />
               </AuthDivider>
-
               <BtnBase
                 $padding="12px 24px"
                 $bg="#336CFF"

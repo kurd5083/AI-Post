@@ -1,10 +1,13 @@
 import { useState } from "react";
 import styled from "styled-components";
-import { usePopupStore } from "@/store/popupStore";
+
 import CheckboxText from "@/shared/CheckboxText";
 import CustomSelect from "@/shared/CustomSelect";
 import BtnBase from "@/shared/BtnBase";
+
 import { useCreateChannelInviteLink } from "@/lib/channels/invite-link/useCreateChannelInviteLink";
+
+import { usePopupStore } from "@/store/popupStore";
 import { useNotificationStore } from "@/store/notificationStore";
 
 const LinkGenerationPopup = () => {

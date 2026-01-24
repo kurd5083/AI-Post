@@ -63,22 +63,29 @@ const Media = () => {
   const handleAddToPost = (item) => {
     if (addingIds.includes(item.id)) return;
 
-    setAddingIds(prev => [...prev, item.id]);
+     openPopup("select_post", "popup_window", {
+    onSave: (postId) => {
+      if (!postId) return;
 
-    addImages(
-      { postId: 823, images: [], imageNames: [item.url] },
-      {
-        onSuccess: () => {
-          addNotification(`Изображение ${item.originalName} добавлено к посту`, "success");
-        },
-        onError: (err) => {
-          addNotification(err?.message || "Ошибка добавления изображения", "error");
-        },
-        onSettled: () => {
-          setAddingIds(prev => prev.filter(id => id !== item.id));
+      setAddingIds(prev => [...prev, item.id]);
+
+      addImages(
+        { postId: postId, images: [], imageUrl: [item.url] },
+        {
+          onSuccess: () => {
+            addNotification(`Изображение ${item.originalName} добавлено к посту`, "success");
+          },
+          onError: (err) => {
+            addNotification(err?.message || "Ошибка добавления изображения", "error");
+          },
+          onSettled: () => {
+            setAddingIds(prev => prev.filter(id => id !== item.id));
+          }
         }
-      }
-    );
+      );
+    },
+    loading: addingPending
+  });
   };
   return (
     <MediaContainer>

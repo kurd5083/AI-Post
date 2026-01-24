@@ -1,13 +1,17 @@
-import styled from "styled-components";
 import { useMemo, useCallback, useEffect } from "react";
+import styled from "styled-components";
+
 import EyeIcon from "@/icons/EyeIcon";
 import PreviewBG from "@/assets/ai-generator/PreviewBG.png";
 import ArrowIcon from "@/icons/ArrowIcon";
 import TgIcon from "@/icons/TgIcon";
+
 import { useSendTestPost } from "@/lib/posts/useSendTestPost";
+import normalizeUrl from "@/lib/normalizeUrl";
+import getCleanSummaryForServer from "@/lib/getCleanSummaryForServer";
+
 import { useLightboxStore } from "@/store/lightboxStore";
 import { useNotificationStore } from "@/store/notificationStore";
-import normalizeUrl from "@/lib/normalizeUrl";
 
 const Preview = ({ collapsed, onChange, testResult, view = true }) => {
   const { openLightbox } = useLightboxStore();
@@ -55,18 +59,19 @@ const Preview = ({ collapsed, onChange, testResult, view = true }) => {
     }
 
     sendTestPost(
-      {
-        title,
-        summary: summary?.replace(/<br\s*\/?>/gi, "").trim() || "",
-        url,
-        images: files,
-        imagesUrls: remoteUrls,
-      },
-      {
-        onSuccess: () => addNotification("Пост отправлен в Telegram!", "success"),
-        onError: () => addNotification("Ошибка отправки поста в Telegram", "error"),
-      }
-    );
+    {
+      title,
+      summary: getCleanSummaryForServer(summary),
+      url,
+      images: files,
+      imagesUrls: remoteUrls,
+    },
+    {
+      onSuccess: () => addNotification("Пост отправлен в Telegram!", "success"),
+      onError: () => addNotification("Ошибка отправки поста в Telegram", "error"),
+    }
+  );
+
   }, [title, summary, url, files, remoteUrls, hasContent]);
 
   return (

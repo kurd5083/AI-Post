@@ -1,18 +1,22 @@
 import { useState, useEffect } from "react";
 import styled from "styled-components";
-import { usePopupStore } from "@/store/popupStore"
+
 import Drag from "@/shared/Drag";
 import BtnBase from "@/shared/BtnBase";
+
+import Preview from "@/components/Preview";
+import ModernLoading from "@/components/ModernLoading";
+
 import { useChannelGlobalPrompt } from "@/lib/channels/global-prompt/useChannelGlobalPrompt";
 import { useGetChannelCreativity } from "@/lib/channels/creativity/useGetChannelCreativity";
 import { useGetChannelCaption } from "@/lib/channels/caption/useGetChannelCaption";
 import { useUpdateChannelGlobalPrompt } from "@/lib/channels/global-prompt/useUpdateChannelGlobalPrompt";
 import { useUpdateChannelCreativity } from "@/lib/channels/creativity/useUpdateChannelCreativity";
 import { useUpdateChannelCaption } from "@/lib/channels/caption/useUpdateChannelCaption";
-import Preview from "@/components/Preview";
+
 import { useNotificationStore } from "@/store/notificationStore";
 import { useTestDriveStore } from "@/store/useTestDriveStore";
-import ModernLoading from "@/components/ModernLoading";
+import { usePopupStore } from "@/store/popupStore"
 
 const IndustrialStylePopup = () => {
   const { popup, changeContent } = usePopupStore();

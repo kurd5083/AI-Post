@@ -30,6 +30,7 @@ const MainLayout = () => {
   const token = useAuthStore(s => s.token);
   const init = useAuthStore(state => state.init);
   const { botLinkData } = useTelegramBotLink();
+  console.log(botLinkData, 'botLinkData')
   const { register, login, isRegistering, isLoggingIn } = useAuthEmail();
   const location = useLocation();
   const [authMode, setAuthMode] = useState('login');

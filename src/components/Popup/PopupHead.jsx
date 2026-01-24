@@ -17,10 +17,10 @@ const PopupHead = () => {
     <>
       {popup.content !== 'notifications' && popup.content !== 'replenish' && popup.content !== 'upload_media' && popup.content !== 'profile' && popup.content !== 'create_post' && (
         <PopupListInfo>
-          {popup.content != 'settings' && popup.previousPage?.length !== 0 && 
-          <PopupArrow onClick={goBack}> 
-            <ArrowIcon width={8} height={16}/>
-          </PopupArrow>
+          {popup.content != 'settings' && popup.previousPage?.length !== 0 &&
+            <PopupArrow onClick={goBack}>
+              <ArrowIcon width={8} height={16} />
+            </PopupArrow>
           }
           {channel?.avatarUrl ? (
             <PopupListAva src={channel?.avatarUrl} alt="ava icon" width={48} height={48} />
@@ -35,34 +35,37 @@ const PopupHead = () => {
       )}
       {popup.content !== 'profile' && popup.content !== 'create_post' && (
         <PopupListHead>
-          <PopupListHeadContent>
-            {popup.content == 'settings' ? (
-              <>
-                <IconSettingsMain src={setting} alt="setting icon" width={48} height={48} />
-                <h2>Настройки</h2>
-              </>
-            ) : (
-              <>
-                {foundItem.extra && (
-                  <IconBac $bg={foundItem.extra.background}>
-                    {foundItem.extra.image ? (
-                      <IconSettings src={foundItem.extra.image} alt={`${foundItem.key} icon`} />
-                    ) : (
-                      <>
-                        {foundItem.extra.svg}
-                      </>
-                    )}
-                  </IconBac>
+            <PopupListHeadContent>
+              {popup.content == 'settings' ? (
+                <>
+                  <IconSettingsMain src={setting} alt="setting icon" width={48} height={48} />
+                  <h2>Настройки</h2>
+                </>
+              ) : (
+                <>
+          {popup.content !== 'subscriber_growth' && (
+
+                  foundItem.extra && (
+                    <IconBac $bg={foundItem.extra.background}>
+                      {foundItem.extra.image ? (
+                        <IconSettings src={foundItem.extra.image} alt={`${foundItem.key} icon`} />
+                      ) : (
+                        <>
+                          {foundItem.extra.svg}
+                        </>
+                      )}
+                    </IconBac>
+                  )
                 )}
-                <PopupTitle>
-                  <h2>{popup.content !== 'compilation_upload' ? (popup.name || foundItem.name) : popup.data.name}</h2>
-                  {(popup.content !== 'compilation_upload' ? popup.text : popup.data.text) && (
-                    <p>{popup.content !== 'compilation_upload' ? popup.text : popup.data.text}</p>
-                  )}
-                </PopupTitle>
-              </>
-            )}
-          </PopupListHeadContent>
+                  <PopupTitle>
+                    <h2>{popup.content !== 'compilation_upload' ? (popup.name || foundItem.name) : popup.data.name}</h2>
+                    {(popup.content !== 'compilation_upload' ? popup.text : popup.data.text) && (
+                      <p>{popup.content !== 'compilation_upload' ? popup.text : popup.data.text}</p>
+                    )}
+                  </PopupTitle>
+                </>
+              )}
+            </PopupListHeadContent>
           <PopupListHeadBtn $absolute={popup.content === 'replenish' || popup.content === 'upload_media' || popup.content === 'notifications'} onClick={() => closePopup()}>
             <CloseIcon color="#336CFF" />
             <span>Закрыть окно</span>

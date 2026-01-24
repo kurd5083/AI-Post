@@ -1,9 +1,13 @@
 import { useState } from "react";
 import styled from "styled-components";
+
 import my_team from "@/assets/popup/my-team.svg";
+
 import BtnBase from "@/shared/BtnBase";
-import { usePopupStore } from "@/store/popupStore"
+
 import { useInviteLink } from "@/lib/channels/my-team/useInviteLink";
+
+import { usePopupStore } from "@/store/popupStore"
 
 const MyTeamAddPopup = () => {
   const { popup } = usePopupStore();

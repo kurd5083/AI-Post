@@ -4,6 +4,7 @@ import CreateFolderPopup from "@/components/PopupWindow/CreateFolderPopup";
 import MoveChannelPopup from "@/components/PopupWindow/MoveChannelPopup";
 import DeleteConfirmPopup from "@/components/PopupWindow/DeleteConfirmPopup";
 import SelectChannelsPopup from "@/components/PopupWindow/SelectChannelsPopup";
+import SelectPostsPopup from "@/components/PopupWindow/SelectPostsPopup";
 import ChangeTimePopup from "@/components/PopupWindow/ChangeTimePopup";
 import EnterLinkPopup from "@/components/PopupWindow/EnterLinkPopup";
 import UpdateCalendarEventPopup from "@/components/PopupWindow/UpdateCalendarEventPopup";
@@ -22,6 +23,8 @@ const PopupWindow = () => {
                     <DeleteConfirmPopup />
                 ) : popup.content == 'select_channel' ?(
                     <SelectChannelsPopup />
+                ) : popup.content == 'select_post' ?(
+                    <SelectPostsPopup />
                 ) : popup.content == 'change_time' ?(
                     <ChangeTimePopup />
                 ) : popup.content == 'change_time_card' ?(

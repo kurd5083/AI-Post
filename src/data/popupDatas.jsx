@@ -250,4 +250,12 @@ export const popupDatas = [
             svg: <EyeIcon color="#336CFF" hoverColor="#336CFF" width={24} height={24}  cursor="default"/>
         }
     },
+    {
+        key: "subscriber_growth",
+        name: "Рост количества подписчиков",
+    },
+    {
+        key: "dynamics_posts",
+        name: "Динамика постов в канале",
+    },
 ]

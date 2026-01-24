@@ -5,7 +5,7 @@ export const useAddPostImagesMedia = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ postId, images, imageNames }) => addPostImagesMedia(postId, { images, imageNames }),
+    mutationFn: ({ postId, images, imageUrl }) => addPostImagesMedia(postId, { images, imageUrl }),
     onSuccess: (data) => {
       queryClient.invalidateQueries(["posts", "images"]);
     },

@@ -5,26 +5,30 @@ import BtnBase from "@/shared/BtnBase";
 
 import useFadeOnScroll from "@/lib/useFadeOnScroll";
 
+import { usePopupStore } from "@/store/popupStore"
+
 const statisticsData = [
   {
-    title: "Новые подписчики / отписки за 24 часа",
+    title: "Рост количества подписчиков",
     mainValue: "+ 3.421",
     mainSubValue: "Сегодня",
     details: [
       { value: "- 150", label: "За неделю" },
       { value: "+ 1.200", label: "За месяц" }
     ],
-    points: [0, 20, 35, 25, 50, 40, 70]
+    points: [0, 20, 35, 25, 50, 40, 70],
+		content: 'subscriber_growth'
   },
   {
-    title: "Средний охват публикации",
+    title: "Динамика постов в канале",
     mainValue: "15.342",
     mainSubValue: null,
     details: [
       { value: "+ 5%", label: "Рост за неделю" },
       { value: "+ 12%", label: "Рост за месяц" }
     ],
-    points: [60, 50, 70, 55, 80, 60, 90]
+    points: [60, 50, 70, 55, 80, 60, 90],
+		content: 'dynamics_posts'
   },
   {
     title: "Лайки / комментарии за 24 часа",
@@ -34,7 +38,8 @@ const statisticsData = [
       { value: "- 200", label: "За неделю" },
       { value: "+ 1.500", label: "За месяц" }
     ],
-    points: [40, 50, 60, 70, 65, 80, 90]
+    points: [40, 50, 60, 70, 65, 80, 90],
+		content: 'subscriber_growth'
   },
   {
     title: "Просмотры видео",
@@ -44,7 +49,8 @@ const statisticsData = [
       { value: "+ 4.321", label: "За неделю" },
       { value: "+ 15.000", label: "За месяц" }
     ],
-    points: [50, 60, 80, 90, 70, 85, 100]
+    points: [50, 60, 80, 90, 70, 85, 100],
+		content: 'subscriber_growth'
   },
   {
     title: "Клики по ссылкам",
@@ -54,7 +60,8 @@ const statisticsData = [
       { value: "- 100", label: "За неделю" },
       { value: "+ 500", label: "За месяц" }
     ],
-    points: [20, 30, 25, 40, 50, 45, 60]
+    points: [20, 30, 25, 40, 50, 45, 60],
+		content: 'subscriber_growth'
   },
   {
     title: "Конверсия из просмотров в подписку",
@@ -64,13 +71,15 @@ const statisticsData = [
       { value: "+ 0,5%", label: "За неделю" },
       { value: "+ 1,2%", label: "За месяц" }
     ],
-    points: [50, 55, 60, 65, 60, 70, 75] 
+    points: [50, 55, 60, 65, 60, 70, 75] ,
+		content: 'subscriber_growth'
   }
 ];
 
 const months = ["Январь", "Февраль", "Март", "Апрель"];
 
 const StatisticsTab = () => {
+	const { openPopup } = usePopupStore();
 	const [containerWidth, setContainerWidth] = useState(0);
 
 	const containerRef = useRef();
@@ -164,7 +173,7 @@ const StatisticsTab = () => {
 			{statisticsData.map((item, index) => (
 				<StatisticsItem key={index}>
 					<ButtonMore>
-						<BtnBase $color="#336CFF" $bg="#161F37" $padding="12px 24px">Подробнее</BtnBase>
+						<BtnBase $color="#336CFF" $bg="#161F37" $padding="12px 24px" onClick={() => openPopup(item.content, "popup")} >Подробнее</BtnBase>
 					</ButtonMore>
 					<ItemLeft>
 						<ItemTitle>{item.title}</ItemTitle>
@@ -327,9 +336,11 @@ const ButtonMore = styled.div`
 	position: absolute;
 	right: 24px;
 	top: 24px;
+	z-index: 10;
 `;
 const ItemLeft = styled.div`
 	min-width: 230px;
+	height: 100%;
 `;
 
 const ItemTitle = styled.h3`

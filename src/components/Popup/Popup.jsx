@@ -30,6 +30,8 @@ import AiGeneratorPopup from "@/components/Popup/AiGeneratorPopup";
 import MyOrdersPopup from "@/components/Popup/MyOrdersPopup";
 import AddPostPopup from "@/components/Popup/AddPostPopup";
 import LivePreviewPopup from "@/components/Popup/LivePreviewPopup";
+import SubscriberGrowthPopup from "@/components/Popup/Analytics/SubscriberGrowthPopup";
+import DynamicsPostsPopup from "@/components/Popup/Analytics/DynamicsPostsPopup";
 
 const Popup = () => {
     const { popup } = usePopupStore()
@@ -104,7 +106,11 @@ const Popup = () => {
                 <AddPostPopup/>
             ) : popup.content == 'live_preview_popup' ? (
                 <LivePreviewPopup/>
-            ): (
+            ) : popup.content == 'subscriber_growth' ? (
+                <SubscriberGrowthPopup/>
+            ) : popup.content == 'dynamics_posts' ? (
+                <DynamicsPostsPopup/>
+            ) : (
                 null
             )}
             

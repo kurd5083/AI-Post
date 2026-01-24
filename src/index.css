@@ -62,3 +62,49 @@ mark {
 .picker-wrapper {
   width: 100%;
 }
+.styled-code {
+  background-color: #2b1a40;
+  color: #c3aaff;    
+  padding: 2px 4px;
+  border-radius: 4px;
+  display: inline-block;
+  white-space: pre-wrap;
+}
+.styled-quote {
+  display: inline-block;
+  border-left: 5px solid rgb(0, 200, 255);
+  margin: 0;
+  padding: 0 10px;
+  color: #D6DCEC;
+  font-style: italic;
+  background-color: rgba(0, 200, 255, 0.199);
+  border-radius: 3px;
+}
+.styled-spoiler {
+  position: relative;
+  display: inline-block;
+  padding: 0 4px;
+  border-radius: 6px;
+  cursor: pointer;
+  user-select: none;
+  color: transparent;
+  background-color: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.15);
+  font-size: 0.9em;
+  line-height: 1.2;
+  font-weight: 500;
+  overflow: hidden;
+  position: relative;
+}
+
+.styled-spoiler::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(rgba(255,255,255,0.03) 1px, transparent 1px);
+  background-size: 4px 4px;
+  border-radius: inherit;
+  pointer-events: none;
+}

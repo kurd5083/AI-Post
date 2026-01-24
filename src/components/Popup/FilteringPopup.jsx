@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import styled from "styled-components";
 import InputPlus from "@/shared/InputPlus";
 import BlocksItems from "@/shared/BlocksItems";
@@ -13,86 +13,87 @@ import { useNotificationStore } from "@/store/notificationStore";
 const FilteringPopup = () => {
   const { popup } = usePopupStore();
   const channelId = popup?.data?.channelId;
+
   const { channel } = useChannelById(channelId);
   const { addNotification } = useNotificationStore();
 
   const [keyword, setKeyword] = useState("");
   const [stopWord, setStopWord] = useState("");
 
-  const [localKeywords, setLocalKeywords] = useState([]);
-  const [localStopWords, setLocalStopWords] = useState([]);
+  const keywords = channel?.keywords ?? [];
+  const stopWords = channel?.stopWords ?? [];
 
   const { mutate: addKeyword } = useAddChannelKeyword();
   const { mutate: removeKeyword } = useRemoveChannelKeyword();
   const { mutate: addStopWord } = useAddChannelStopWord();
   const { mutate: removeStopWord } = useRemoveChannelStopWord();
 
-  useEffect(() => {
-    if (!channel) return;
-    setLocalKeywords(channel.keywords ?? []);
-    setLocalStopWords(channel.stopWords ?? []);
-  }, [channel]);
-
-  // Добавление ключевого слова с отправкой на сервер
   const handleAddKeyword = (k) => {
-    if (!k.trim() || localKeywords.includes(k)) return;
+    const trimmed = k.trim();
+    if (!trimmed || keywords.includes(trimmed)) return;
 
     addKeyword(
-      { channelId, keyword: k },
+      { channelId, keyword: trimmed },
       {
-        onSuccess: () => {
-          setLocalKeywords(prev => [...prev, k]);
-          addNotification(`Ключевое слово "${k}" добавлено`, "success");
-        },
+        onSuccess: () =>
+          addNotification(`Ключевое слово "${trimmed}" добавлено`, "success"),
         onError: (err) =>
-          addNotification(err?.message || "Недостаточно прав для добавления ключевого слова", "error"),
+          addNotification(
+            err?.message || "Недостаточно прав для добавления ключевого слова",
+            "error"
+          ),
       }
     );
   };
 
-  // Удаление ключевого слова
   const handleRemoveKeyword = (k) => {
+    const trimmed = k.trim();
+
     removeKeyword(
-      { channelId, keyword: k },
+      { channelId, keyword: trimmed },
       {
-        onSuccess: () => {
-          setLocalKeywords(prev => prev.filter(item => item !== k));
-          addNotification(`Ключевое слово "${k}" удалено`, "delete");
-        },
+        onSuccess: () =>
+          addNotification(`Ключевое слово "${trimmed}" удалено`, "delete"),
         onError: (err) =>
-          addNotification(err?.message || "Недостаточно прав для удаления ключевого слова", "error"),
+          addNotification(
+            err?.message || "Недостаточно прав для удаления ключевого слова",
+            "error"
+          ),
       }
     );
   };
 
-  // Добавление стоп-слова
   const handleAddStopWord = (w) => {
-    if (!w.trim() || localStopWords.includes(w)) return;
+    const trimmed = w.trim();
+    if (!trimmed || stopWords.includes(trimmed)) return;
 
     addStopWord(
-      { channelId, stopWord: w },
+      { channelId, stopWord: trimmed },
       {
-        onSuccess: () => {
-          setLocalStopWords(prev => [...prev, w]);
-          addNotification(`Стоп-слово "${w}" добавлено`, "success");
-        },
+        onSuccess: () =>
+          addNotification(`Стоп-слово "${trimmed}" добавлено`, "success"),
         onError: (err) =>
-          addNotification(err?.message || "Недостаточно прав для добавления стоп-слова", "error"),
+          addNotification(
+            err?.message || "Недостаточно прав для добавления стоп-слова",
+            "error"
+          ),
       }
     );
   };
 
-  // Удаление стоп-слова
   const handleRemoveStopWord = (w) => {
+    const trimmed = w.trim();
+
     removeStopWord(
-      { channelId, stopWord: w },
+      { channelId, stopWord: trimmed },
       {
-        onSuccess: () => {
-          setLocalStopWords(prev => prev.filter(item => item !== w));
-          addNotification(`Стоп-слово "${w}" удалено`, "delete");
-        },
+        onSuccess: () =>
+          addNotification(`Стоп-слово "${trimmed}" удалено`, "delete"),
         onError: (err) =>
-          addNotification(err?.message || "Недостаточно прав для удаления стоп-слова", "error"),
+          addNotification(
+            err?.message || "Недостаточно прав для удаления стоп-слова",
+            "error"
+          ),
       }
     );
   };
@@ -102,7 +103,7 @@ const FilteringPopup = () => {
       <FilteringText>
         Добавьте ключевые слова для фильтрации новостей по заголовкам, или<br />
         оставьте список пустым, чтобы получать все новости. <mark>В Telegram-каналах <br />
-        и группах/пабликах VK</mark> поиск осуществляется по всему содержанию.
+          и группах/пабликах VK</mark> поиск осуществляется по всему содержанию.
       </FilteringText>
 
       <FilteringKey>
@@ -119,11 +120,11 @@ const FilteringPopup = () => {
           }}
         />
 
-        {localKeywords.length === 0 ? (
+        {keywords.length === 0 ? (
           <EmptyText>Ключевые слова не добавлены</EmptyText>
         ) : (
           <BlocksItems
-            items={localKeywords.map(k => ({ value: k }))}
+            items={keywords.map(k => ({ value: k }))}
             color="#EF6284"
             onRemove={handleRemoveKeyword}
           />
@@ -150,11 +151,11 @@ const FilteringPopup = () => {
           }}
         />
 
-        {localStopWords.length === 0 ? (
+        {stopWords.length === 0 ? (
           <EmptyText>Стоп слова не добавлены</EmptyText>
         ) : (
           <BlocksItems
-            items={localStopWords.map(w => ({ value: w }))}
+            items={stopWords.map(w => ({ value: w }))}
             color="#EF6284"
             onRemove={handleRemoveStopWord}
           />

@@ -1,14 +1,17 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
+
 import Checkbox from "@/shared/Checkbox";
+import ModernLoading from "@/components/ModernLoading";
+
 import { useImagePresets } from "@/lib/channels/image-generation/useImagePresets";
 import { useGetChannelImagePreset } from "@/lib/channels/image-generation/useGetChannelImagePreset";
 import { useUpdateChannelImagePreset } from "@/lib/channels/image-generation/useUpdateChannelImagePreset";
-import { usePopupStore } from "@/store/popupStore";
-import ModernLoading from "@/components/ModernLoading";
-import { useNotificationStore } from "@/store/notificationStore";
-import { useLightboxStore } from "@/store/lightboxStore";
 import normalizeUrl from "@/lib/normalizeUrl";
+
+import { usePopupStore } from "@/store/popupStore";
+import { useLightboxStore } from "@/store/lightboxStore";
+import { useNotificationStore } from "@/store/notificationStore";
 
 const ImageGenerationPopup = () => {
   const { popup } = usePopupStore();
