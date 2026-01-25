@@ -5,8 +5,6 @@ stages:
 build:
   stage: build
   image: node:18
-  #tags:
-  #  - docker-vps40
   cache:
     paths:
       - node_modules/
@@ -24,8 +22,6 @@ build:
 deploy:
   stage: deploy
   image: alpine:latest
-  # tags:
-  #  - docker-vps40
   dependencies:
     - build
   before_script:
@@ -33,11 +29,10 @@ deploy:
     - mkdir -p ~/.ssh
     - echo "$SSH_PRIVATE_KEY" | tr -d '\r' > ~/.ssh/id_ed25519
     - chmod 600 ~/.ssh/id_ed25519
+    - eval "$(ssh-agent -s)"
+    - ssh-add ~/.ssh/id_ed25519
     - ssh-keyscan -H "$DEPLOY_HOST" >> ~/.ssh/known_hosts
   script:
-    - echo "Listing files in deploy job for debug:"
-    - ls -la
-    - '[ -d dist ] || { echo "ERROR: dist folder not found!"; exit 1; }'
     - echo "Starting rsync..."
     - rsync -avz --delete dist/ "$DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATH"
     - echo "Deployment finished successfully!"
