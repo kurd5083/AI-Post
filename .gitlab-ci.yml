@@ -25,14 +25,12 @@ deploy:
   dependencies:
     - build
   before_script:
-    - apk add --no-cache openssh rsync bash
-    - mkdir -p ~/.ssh
-    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' > ~/.ssh/id_ed25519
-    - chmod 600 ~/.ssh/id_ed25519
-    - ssh-keyscan -H "$DEPLOY_HOST" >> ~/.ssh/known_hosts
-    # Проверяем, что ssh работает
-    - echo "Testing SSH connection..."
-    - ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no "$DEPLOY_USER@$DEPLOY_HOST" "echo SUCCESS"
+  - mkdir -p ~/.ssh
+  - echo "$SSH_PRIVATE_KEY" | tr -d '\r' > ~/.ssh/id_ed25519
+  - chmod 600 ~/.ssh/id_ed25519
+  - ssh-keyscan -H "$DEPLOY_HOST" >> ~/.ssh/known_hosts
+  - ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no "$DEPLOY_USER@$DEPLOY_HOST" "echo SUCCESS"
+
   script:
     - echo "Starting rsync..."
     - rsync -avz -e "ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no" --delete dist/ "$DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATH"
