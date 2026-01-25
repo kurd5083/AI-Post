@@ -26,15 +26,17 @@ deploy:
     - build
   before_script:
     - apk add --no-cache openssh rsync bash
+    # Создаем директорию для ключей
     - mkdir -p ~/.ssh
+    # Кладем приватный ключ из переменной GitLab
     - echo "$SSH_PRIVATE_KEY" | tr -d '\r' > ~/.ssh/id_ed25519
     - chmod 600 ~/.ssh/id_ed25519
-    - eval "$(ssh-agent -s)"
-    - ssh-add ~/.ssh/id_ed25519
+    # Добавляем сервер в known_hosts, чтобы не спрашивал подтверждение
     - ssh-keyscan -H "$DEPLOY_HOST" >> ~/.ssh/known_hosts
   script:
     - echo "Starting rsync..."
-    - rsync -avz --delete dist/ "$DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATH"
+    # rsync с явным указанием ключа
+    - rsync -avz -e "ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no" --delete dist/ "$DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATH"
     - echo "Deployment finished successfully!"
   only:
     - main
