@@ -21,7 +21,7 @@ build:
 
 deploy:
   stage: deploy
-  image: alpine:latest
+  image: ubuntu:latest
   dependencies:
     - build
   before_script:
