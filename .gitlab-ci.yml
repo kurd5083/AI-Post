@@ -32,6 +32,7 @@ deploy:
     - ssh-keyscan -H "$DEPLOY_HOST" >> ~/.ssh/known_hosts
   script:
     - echo "Starting rsync..."
-    - rsync -avz -e "ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no" --delete --rsync-path="rsync" dist/ "$DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATH"
+    - rsync -avz -e "ssh -vvv -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no" --delete dist/ "$DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATH"
+
   only:
     - main
