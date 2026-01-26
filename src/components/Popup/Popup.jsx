@@ -33,6 +33,7 @@ import LivePreviewPopup from "@/components/Popup/LivePreviewPopup";
 import SubscriberGrowthPopup from "@/components/Popup/Analytics/SubscriberGrowthPopup";
 import DynamicsPostsPopup from "@/components/Popup/Analytics/DynamicsPostsPopup";
 import AverageCoveragePopup from "@/components/Popup/Analytics/AverageCoveragePopup";
+import NumberPublicationsPopup from "@/components/Popup/Analytics/NumberPublicationsPopup";
 
 const Popup = () => {
     const { popup } = usePopupStore()
@@ -113,6 +114,8 @@ const Popup = () => {
                 <DynamicsPostsPopup/>
             ) : popup.content == 'average_coverage' ? (
                 <AverageCoveragePopup/>
+            ) : popup.content == 'number_publications' ? (
+                <NumberPublicationsPopup/>
             ) : (
                 null
             )}

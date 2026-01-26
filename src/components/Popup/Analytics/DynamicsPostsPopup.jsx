@@ -1,6 +1,9 @@
 import { useState } from "react";
 import styled from "styled-components";
 
+import pointLine from "@/assets/point-line.svg";
+import EyeIcon from "@/icons/EyeIcon";
+
 import BtnBase from "@/shared/BtnBase";
 import CustomSelect from "@/shared/CustomSelect";
 
@@ -11,6 +14,7 @@ const dynamics = [
     id: 1,
     postId: 4561224,
     views: "1.5k",
+    sent: "14",
     date: "19 Января, 19:35",
     stats: [
       { hour: 1, percent: 35.8, value: 305.53 },
@@ -24,6 +28,35 @@ const dynamics = [
     id: 2,
     postId: 4561225,
     views: "2.3k",
+    sent: "14",
+    date: "18 Января, 18:10",
+    stats: [
+      { hour: 1, percent: 22.4, value: 150.1 },
+      { hour: 2, percent: 44.7, value: 380.3 },
+      { hour: 3, percent: 61.2, value: 590.2 },
+      { hour: 4, percent: 72.5, value: 810.7 },
+      { hour: 5, percent: 85.3, value: 1020.4 },
+    ],
+  },
+  {
+    id: 2,
+    postId: 4561225,
+    views: "2.3k",
+    sent: "14",
+    date: "18 Января, 18:10",
+    stats: [
+      { hour: 1, percent: 22.4, value: 150.1 },
+      { hour: 2, percent: 44.7, value: 380.3 },
+      { hour: 3, percent: 61.2, value: 590.2 },
+      { hour: 4, percent: 72.5, value: 810.7 },
+      { hour: 5, percent: 85.3, value: 1020.4 },
+    ],
+  },
+  {
+    id: 2,
+    postId: 4561225,
+    views: "2.3k",
+    sent: "14",
     date: "18 Января, 18:10",
     stats: [
       { hour: 1, percent: 22.4, value: 150.1 },
@@ -69,7 +102,6 @@ const DynamicsPostsPopup = ({ data }) => {
             <col />
             <col />
             <col />
-            <col />
           </colgroup>
           <thead>
             <tr>
@@ -79,28 +111,35 @@ const DynamicsPostsPopup = ({ data }) => {
             </tr>
           </thead>
           <tbody>
-  {dynamics.map((dynamic) => (
-    <tr key={dynamic.id}>
-      <TableCell>
-        <div>
-          <strong>Пост #{dynamic.postId}</strong> &nbsp; {dynamic.views}
-          <br />
-          {dynamic.date}
-        </div>
-      </TableCell>
+            {dynamics.map((dynamic) => (
+              <tr key={dynamic.id}>
+                <TableCell>
+                  <CellDate>
+                    <DateName>Пост #{dynamic.postId}</DateName> 
+                    <DateViews>
+                      <EyeIcon color="#336CFF" hoverColor="#336CFF" width={16} height={13} cursor="default" />
+                      {dynamic.views}
+                    </DateViews>
+                    <Date>{dynamic.date}</Date> 
+                    <DateSent><img src={pointLine} alt="" />{dynamic.sent}</DateSent>
+                  </CellDate>
+                </TableCell>
 
-      <TableCell />
+                <TableCell />
 
-      <TableCell>
-        {dynamic.stats.map((s) => (
-          <div key={s.hour}>
-            {s.hour} час — {s.percent}% ({s.value})
-          </div>
-        ))}
-      </TableCell>
-    </tr>
-  ))}
-</tbody>
+                <TableCell>
+                  <CellStatistics>
+                    {dynamic.stats.map((s) => (
+                      <CellStatisticsContaoner key={s.hour}>
+                        <p>{s.hour} час</p>
+                        <span>{s.percent}% ({s.value})</span>
+                      </CellStatisticsContaoner>
+                    ))}
+                  </CellStatistics>
+                </TableCell>
+              </tr>
+            ))}
+          </tbody>
         </Table>
         {/* // ) : (
                 // <EmptyLink>В канале пока нет ссылок</EmptyLink>
@@ -164,8 +203,11 @@ const Table = styled.table`
   border-collapse: separate;
   table-layout: fixed;
 
-  & colgroup col:nth-child(4) {
-    width: 100px;
+  & colgroup col:nth-child(1) {
+    width: 300px;
+  }
+  & colgroup col:nth-child(2) {
+    width: 150px;
   }
 `;
 const HeaderCell = styled.th`
@@ -185,6 +227,54 @@ const TableCell = styled.td`
   font-size: 14px;
   font-weight: 700;
 `;
-
+const CellDate = styled.div`
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px 48px;
+  font-size: 14px;
+`;
+const DateName = styled.p`
+  color: #D6DCEC;
+  font-weight: 700;
+  grid-column: 1;
+  grid-row: 1;
+`;
+const Date = styled.p`
+  grid-column: 1;
+  grid-row: 2;
+`;
+const DateViews = styled.span`
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #D6DCEC;
+  font-weight: 700;
+  grid-column: 2;
+  grid-row: 1;
+`;
+const DateSent = styled.span`
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #D6DCEC;
+  font-weight: 700;
+  grid-column: 2;
+  grid-row: 2;
+`;
+const CellStatistics = styled.div`
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 40px;
+`;
+const CellStatisticsContaoner = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 14px;
+  p {
+    font-weight: 700;
+    color: #D6DCEC;
+  }
+`;
 
 export default DynamicsPostsPopup

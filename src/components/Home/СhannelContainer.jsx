@@ -1,12 +1,16 @@
 import styled from 'styled-components';
-import useFadeOnScroll from "@/lib/useFadeOnScroll";
+// import useFadeOnScroll from "@/lib/useFadeOnScroll";
 
 const СhannelContainer = ({ children }) => {
-  const { fadeVisible, ref } = useFadeOnScroll(20);
+  // const { fadeVisible, ref } = useFadeOnScroll(20);
 
   return (
-    <TableContainer $fadeVisible={fadeVisible}>
-      <TableWrapper ref={ref}>
+    <TableContainer 
+    // $fadeVisible={fadeVisible}
+    >
+      <TableWrapper 
+      // ref={ref}
+      >
         {children}
       </TableWrapper>
     </TableContainer>

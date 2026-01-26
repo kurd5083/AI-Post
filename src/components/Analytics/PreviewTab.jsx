@@ -11,7 +11,7 @@ import TimeIcon from "@/icons/TimeIcon";
 
 import CustomSelectThree from "@/shared/CustomSelectThree";
 
-import useFadeOnScroll from "@/lib/useFadeOnScroll";
+// import useFadeOnScroll from "@/lib/useFadeOnScroll";	
 
 const mentions = [
   {
@@ -38,7 +38,7 @@ const mentions = [
     text: "Разбор трендов в визуальном стиле и UX обработке действий.",
     views: "8.1k",
     comments: "21",
-		channel: '@Antropia_Gaming'
+	channel: '@Antropia_Gaming'
   },
   {
     id: 3,
@@ -51,7 +51,7 @@ const mentions = [
     text: "Как Midjourney и Stable Diffusion уже меняют индустрию театра.",
     views: "4.7k",
     comments: "12",
-		channel: '@Antropia_Gaming'
+	channel: '@Antropia_Gaming'
   },
   {
     id: 4,
@@ -64,7 +64,7 @@ const mentions = [
     text: "Главные новости IT-индустрии за последнюю неделю: релизы, обновления и аналитика.",
     views: "9.2k",
     comments: "18",
-		channel: '@Antropia_Gaming'
+	channel: '@Antropia_Gaming'
   }
 ];
 const posts = [
@@ -110,30 +110,30 @@ const posts = [
 	},
 ];
 const PreviewTab = () => {
-	const { fadeVisible: fadeMentions, ref: fadeMentionsRef } = useFadeOnScroll(20);
-	const { fadeVisible: fadePosts, ref: fadePostsRef } = useFadeOnScroll(20);
+	// const { fadeVisible: fadeMentions, ref: fadeMentionsRef } = useFadeOnScroll(20);
+	// const { fadeVisible: fadePosts, ref: fadePostsRef } = useFadeOnScroll(20);
 	const [viewMode, setViewMode] = useState("List");
 
-	const mentionsRef = useRef();
-	const postsRef = useRef();
+	// const mentionsRef = useRef();
+	// const postsRef = useRef();
 
-	const [mentionsWidth, setMentionsWidth] = useState(0);
-	const [postsWidth, setPostsWidth] = useState(0);
+	// const [mentionsWidth, setMentionsWidth] = useState(0);
+	// const [postsWidth, setPostsWidth] = useState(0);
 
-	useEffect(() => {
-		const updateWidths = () => {
-			if (mentionsRef.current) {
-				setMentionsWidth(mentionsRef.current.offsetWidth);
-			}
-			if (postsRef.current) {
-				setPostsWidth(postsRef.current.offsetWidth);
-			}
-		};
+	// useEffect(() => {
+	// 	const updateWidths = () => {
+	// 		if (mentionsRef.current) {
+	// 			setMentionsWidth(mentionsRef.current.offsetWidth);
+	// 		}
+	// 		if (postsRef.current) {
+	// 			setPostsWidth(postsRef.current.offsetWidth);
+	// 		}
+	// 	};
 
-		updateWidths();
-		window.addEventListener("resize", updateWidths);
-		return () => window.removeEventListener("resize", updateWidths);
-	}, []);
+	// 	updateWidths();
+	// 	window.addEventListener("resize", updateWidths);
+	// 	return () => window.removeEventListener("resize", updateWidths);
+	// }, []);
 	const handleChange = (newValue) => {
 		if (!newValue) return;
 		setViewMode(newValue);
@@ -161,12 +161,12 @@ const PreviewTab = () => {
 					Просмотрите ленту, где указаны каналы, которые вас упомянули
 				</PreviewDescription>
 				<MentionsList
-					ref={el => {
-						mentionsRef.current = el;
-						if (fadeMentionsRef) fadeMentionsRef.current = el;
-					}}
-					$fadeVisible={fadeMentions}
-					$containerWidth={mentionsWidth}
+					// ref={el => {
+					// 	mentionsRef.current = el;
+					// 	if (fadeMentionsRef) fadeMentionsRef.current = el;
+					// }}
+					// $fadeVisible={fadeMentions}
+					// $containerWidth={mentionsWidth}
 				>
 					{mentions.map(m => (
 						viewMode === 'List' ? (
@@ -213,12 +213,12 @@ const PreviewTab = () => {
 				<PreviewTitle>Посты канала</PreviewTitle>
 				<PreviewDescription>Лента с постами и статистикой отслеживаемого вами канала</PreviewDescription>
 				<PostsList
-					ref={el => {
-						postsRef.current = el;
-						if (fadePostsRef) fadePostsRef.current = el;
-					}}
-					$fadeVisible={fadePosts}
-					$containerWidth={postsWidth}
+					// ref={el => {
+					// 	postsRef.current = el;
+					// 	if (fadePostsRef) fadePostsRef.current = el;
+					// }}
+					// $fadeVisible={fadePosts}
+					// $containerWidth={postsWidth}
 				>
 					{posts.map(p => (
 							<PostsCard key={p.id}>
@@ -299,7 +299,7 @@ const MentionsList = styled.div`
   scrollbar-width: none;
 	padding-bottom: 30px;
 
-	${({ $forceHorizontal, $fadeVisible, $containerWidth }) =>
+	/* ${({ $forceHorizontal, $fadeVisible, $containerWidth }) =>
 		!$forceHorizontal &&
 		`
       &::after {
@@ -320,7 +320,7 @@ const MentionsList = styled.div`
           display: none;
         }
       }
-  `}
+  `} */
 `;
 const MentionCard = styled.div`
 	display: flex;
@@ -388,7 +388,7 @@ const PostsList = styled.div`
   scrollbar-width: none;
 	padding-bottom: 30px;
 
-	${({ $forceHorizontal, $fadeVisible, $containerWidth }) =>
+	/* ${({ $forceHorizontal, $fadeVisible, $containerWidth }) =>
 		!$forceHorizontal &&
 		`
       &::after {
@@ -409,7 +409,7 @@ const PostsList = styled.div`
           display: none;
         }
       }
-  `}
+  `} */
 `
 const PostsCard = styled.div`
 	display: flex;

@@ -3,7 +3,7 @@ import styled from "styled-components";
 
 import BtnBase from "@/shared/BtnBase";
 
-import useFadeOnScroll from "@/lib/useFadeOnScroll";
+// import useFadeOnScroll from "@/lib/useFadeOnScroll";
 
 import { usePopupStore } from "@/store/popupStore"
 
@@ -42,7 +42,7 @@ const statisticsData = [
 	content: 'average_coverage'
   },
   {
-    title: "Просмотры видео",
+    title: "Количество публикаций",
     mainValue: "123.456",
     mainSubValue: null,
     details: [
@@ -50,62 +50,40 @@ const statisticsData = [
       { value: "+ 15.000", label: "За месяц" }
     ],
     points: [50, 60, 80, 90, 70, 85, 100],
-		content: 'subscriber_growth'
+	content: 'number_publications'
   },
-  {
-    title: "Клики по ссылкам",
-    mainValue: "5.678",
-    mainSubValue: "Сегодня",
-    details: [
-      { value: "- 100", label: "За неделю" },
-      { value: "+ 500", label: "За месяц" }
-    ],
-    points: [20, 30, 25, 40, 50, 45, 60],
-		content: 'subscriber_growth'
-  },
-  {
-    title: "Конверсия из просмотров в подписку",
-    mainValue: "8,7%",
-    mainSubValue: null,
-    details: [
-      { value: "+ 0,5%", label: "За неделю" },
-      { value: "+ 1,2%", label: "За месяц" }
-    ],
-    points: [50, 55, 60, 65, 60, 70, 75] ,
-		content: 'subscriber_growth'
-  }
 ];
 
 const months = ["Январь", "Февраль", "Март", "Апрель"];
 
 const StatisticsTab = () => {
 	const { openPopup } = usePopupStore();
-	const [containerWidth, setContainerWidth] = useState(0);
+	// const [containerWidth, setContainerWidth] = useState(0);
 
-	const containerRef = useRef();
+	// const containerRef = useRef();
 	const svgRefs = useRef([]);
-	const { fadeVisible, ref } = useFadeOnScroll(20);
+	// const { fadeVisible, ref } = useFadeOnScroll(20);
 	const [hoverData, setHoverData] = useState({ index: null, x: 0, y: 0, value: 0 });
-	useEffect(() => {
-		if (!containerRef.current) return;
+	// useEffect(() => {
+	// 	if (!containerRef.current) return;
 
-		const updateWidth = () => {
-			let width = containerRef.current.offsetWidth;
+	// 	const updateWidth = () => {
+	// 		let width = containerRef.current.offsetWidth;
 
-			if (window.innerWidth < 1600) {
-				width -= 32 * 2;
-			} else {
-				width -= 52 * 2;
-			}
+	// 		if (window.innerWidth < 1600) {
+	// 			width -= 32 * 2;
+	// 		} else {
+	// 			width -= 52 * 2;
+	// 		}
 
-			setContainerWidth(width);
-		};
+	// 		setContainerWidth(width);
+	// 	};
 
-		updateWidth();
-		window.addEventListener("resize", updateWidth);
+	// 	updateWidth();
+	// 	window.addEventListener("resize", updateWidth);
 
-		return () => window.removeEventListener("resize", updateWidth);
-	}, []);
+	// 	return () => window.removeEventListener("resize", updateWidth);
+	// }, []);
 
 	const makeSmoothBezierPath = (values, height) => {
 		const width = 300;
@@ -163,12 +141,12 @@ const StatisticsTab = () => {
 
 	return (
 		<StatisticsContainer
-			ref={(el) => {
-				if (ref) ref.current = el;
-				containerRef.current = el;
-			}}
-			$fadeVisible={fadeVisible}
-			$containerWidth={containerWidth}
+			// ref={(el) => {
+			// 	if (ref) ref.current = el;
+			// 	containerRef.current = el;
+			// }}
+			// $fadeVisible={fadeVisible}
+			// $containerWidth={containerWidth}
 		>
 			{statisticsData.map((item, index) => (
 				<StatisticsItem key={index}>
@@ -298,7 +276,7 @@ const StatisticsContainer = styled.div`
     padding: 0 24px 30px
   }
 
-	${({ $forceHorizontal, $fadeVisible, $containerWidth }) =>
+	/* ${({ $forceHorizontal, $fadeVisible, $containerWidth }) =>
 		!$forceHorizontal &&
 		`
       &::after {
@@ -319,7 +297,7 @@ const StatisticsContainer = styled.div`
           display: none;
         }
       }
-  `}
+  `} */
 `;
 const StatisticsItem = styled.div`
 	display: flex;

@@ -262,4 +262,8 @@ export const popupDatas = [
         key: "average_coverage",
         name: "Средний охват публикации",
     },
+    {
+        key: "number_publications",
+        name: "Средний охват публикации",
+    },
 ]

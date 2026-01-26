@@ -155,6 +155,18 @@ const Chart = ({ data }) => {
               </g>
             )}
           </svg>
+          {hoverData.index !== null && (
+  <ChartTooltip
+    style={{
+      left: hoverData.x,
+      top: hoverData.y,
+    }}
+  >
+    <b>{months[hoverData.index]}</b>
+    <span>{formatY(hoverData.value)}</span>
+    <small>Просмотры</small>
+  </ChartTooltip>
+)}
         </StatsChartLine>
 
         <StatsChartGradient>
@@ -238,5 +250,35 @@ const StatsData = styled.div`
   position: relative;
   width: 100%;
 `;
+const ChartTooltip = styled.div`
+  position: absolute;
+  transform: translate(-20%, 10%);
+  background: #4164C029;
+  backdrop-filter: blur(24px);
+  border-radius: 12px;
+  padding: 10px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  pointer-events: none;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+  white-space: nowrap;
+  z-index: 5;
 
+  b {
+    color: #fff;
+    font-size: 12px;
+  }
+
+  span {
+    color: #336CFF;
+    font-weight: 700;
+    font-size: 14px;
+  }
+
+  small {
+    color: #6A7080;
+    font-size: 10px;
+  }
+`;
 export default Chart;
