@@ -1,6 +1,11 @@
 import styled from "styled-components";
 import { useState } from "react";
 
+import list from "@/assets/list.svg";
+import tape from "@/assets/tape.svg";
+
+import CustomSelectThree from "@/shared/CustomSelectThree";
+
 import PageHead from '@/components/PageHead'
 import YourChannels from "@/components/Analytics/YourChannels";
 import MonitoredChannels from "@/components/Analytics/MonitoredChannels";
@@ -27,14 +32,35 @@ const categoriesData = [
 
 const Analytics = () => {
   const [active, setActive] = useState({ col: 0, index: 0 });
-
+  const [viewMode, setViewMode] = useState("List");
+  const handleChange = (newValue) => {
+    if (!newValue) return;
+    setViewMode(newValue);
+  };
   return (
     <>
       <PageHead />
       <PageFilter filter={false} placeholder="Поиск каналов" />
       <AnalyticsContainer>
-        <AnalyticsTitle>Ваши каналы</AnalyticsTitle>
-        <YourChannels />
+        <TitleContainer>
+          <AnalyticsTitle>Ваши каналы</AnalyticsTitle>
+
+          <FilterBlock>
+            <img src={viewMode === 'List' ? list : tape} alt="view icon" />
+            <CustomSelectThree
+              options={[
+                { id: 'List', label: 'Список' },
+                { id: 'Tape', label: 'Лента' },
+              ]}
+              value={viewMode}
+              onChange={handleChange}
+              width="min-content"
+              right="-20px"
+            />
+          </FilterBlock>
+        </TitleContainer>
+
+        <YourChannels viewMode={viewMode} />
         <AnalyticsTitle>Отслеживаемые каналы</AnalyticsTitle>
         <MonitoredChannels />
         <AnalyticsTitleBig>Все категории</AnalyticsTitleBig>
@@ -73,12 +99,25 @@ const AnalyticsContainer = styled.section`
     padding: 0 24px 30px
   }
 `
+const TitleContainer = styled.div` 
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	margin-bottom: 32px;
+`;
 const AnalyticsTitle = styled.h2`
   font-family: "Montserrat Alternates", sans-serif;
 	font-size: 24px;
 	font-weight: 700;
-	margin-bottom: 40px;
 `
+const FilterBlock = styled.div` 
+	display: flex;
+	align-items: center;
+	gap: 16px;
+  padding: 16px;
+  border-radius: 8px;
+  background-color: #1A1F2D;
+`;
 const AnalyticsTitleBig = styled.h2`
 	font-size: 32px;
 	font-weight: 700;

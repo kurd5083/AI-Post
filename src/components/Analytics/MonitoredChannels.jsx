@@ -98,6 +98,7 @@ const MonitoredChannelsSwiper = styled.div`
   display: flex;
   align-items: center;
   margin-bottom: 40px;
+  margin-top: 32px;
 `
 const MonitoredChannelsButton = styled.button`
   display: flex;

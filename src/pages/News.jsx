@@ -63,8 +63,14 @@ const NewsDetail = () => {
 													publishedAt: null,
 													calendarScheduledAt: null,
 												},
+											}, {
+												onSuccess: () => {
+													addNotification("Новость успешно скопирована в канал", "update");
+												},
+												onError: (err) => {
+													addNotification(err.message || "Ошибка при копировании новости", "error");
+												},
 											});
-											addNotification("Новость успешно скопирована в канал", "update");
 										};
 
 										openPopup("select_channel", "popup_window", {

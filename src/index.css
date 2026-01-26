@@ -62,6 +62,10 @@ mark {
 .picker-wrapper {
   width: 100%;
 }
+.bold { font-weight: bold; }
+.italic { font-style: italic; }
+.underline { text-decoration: underline; }
+.strike { text-decoration: line-through; }
 .styled-code {
   background-color: #2b1a40;
   color: #c3aaff;    

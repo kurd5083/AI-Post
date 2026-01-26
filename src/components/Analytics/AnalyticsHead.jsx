@@ -44,7 +44,7 @@ const Head = styled.div`
   display: flex;
   justify-content: space-between;
   position: relative;
-  margin-top: 60px;
+  margin-top: 40px;
 	padding: 0 56px 30px;
 
   @media(max-width: 1600px) { 

@@ -135,9 +135,9 @@ const PreviewTab = () => {
 		return () => window.removeEventListener("resize", updateWidths);
 	}, []);
 	const handleChange = (newValue) => {
-    if (!newValue) return;
-    setViewMode(newValue);
-  };
+		if (!newValue) return;
+		setViewMode(newValue);
+	};
 	return (
 		<PreviewContainer>
 			<div>

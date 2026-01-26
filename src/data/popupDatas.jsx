@@ -258,4 +258,8 @@ export const popupDatas = [
         key: "dynamics_posts",
         name: "Динамика постов в канале",
     },
+    {
+        key: "average_coverage",
+        name: "Средний охват публикации",
+    },
 ]

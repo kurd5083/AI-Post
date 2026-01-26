@@ -11,6 +11,7 @@ import ModernLoading from "@/components/ModernLoading";
 import { useGetMediaLibrary } from "@/lib/mediaLibrary/useGetMediaLibrary";
 import { useDeleteMediaFile } from "@/lib/mediaLibrary/useDeleteMediaFile";
 import { useAddPostImagesMedia } from "@/lib/mediaLibrary/useAddPostImagesMedia";
+import { useSearchPexelsPhotos } from "@/lib/mediaLibrary/useSearchPexelsPhotos";
 
 import { usePopupStore } from "@/store/popupStore";
 import { useNotificationStore } from "@/store/notificationStore";
@@ -19,6 +20,7 @@ import { useLightboxStore } from "@/store/lightboxStore";
 import BtnBase from "@/shared/BtnBase";
 
 const Media = () => {
+  const [activeTab, setActiveTab] = useState("my");
   const [activeFilter, setActiveFilter] = useState("all");
   const [activeCategory, setActiveCategory] = useState("all");
   const { openPopup } = usePopupStore();
@@ -26,6 +28,11 @@ const Media = () => {
   const { openLightbox } = useLightboxStore();
   const [addingIds, setAddingIds] = useState([]);
 
+  const { photosData, photosLoading } = useSearchPexelsPhotos({
+    query: "nature",
+    per_page: 24,
+  });
+  console.log(photosData)
   const { mediaItems, mediaLoading } = useGetMediaLibrary();
   const { mutate: deleteMedia, isPending: deletingPending } = useDeleteMediaFile();
   const { mutate: addImages, isPending: addingPending } = useAddPostImagesMedia();
@@ -63,41 +70,60 @@ const Media = () => {
   const handleAddToPost = (item) => {
     if (addingIds.includes(item.id)) return;
 
-     openPopup("select_post", "popup_window", {
-    onSave: (postId) => {
-      if (!postId) return;
+    openPopup("select_post", "popup_window", {
+      onSave: (postId) => {
+        if (!postId) return;
 
-      setAddingIds(prev => [...prev, item.id]);
+        setAddingIds(prev => [...prev, item.id]);
 
-      addImages(
-        { postId: postId, images: [], imageUrl: [item.url] },
-        {
-          onSuccess: () => {
-            addNotification(`Изображение ${item.originalName} добавлено к посту`, "success");
-          },
-          onError: (err) => {
-            addNotification(err?.message || "Ошибка добавления изображения", "error");
-          },
-          onSettled: () => {
-            setAddingIds(prev => prev.filter(id => id !== item.id));
+        addImages(
+          { postId: postId, images: [], imageUrl: [item.url] },
+          {
+            onSuccess: () => {
+              addNotification(`Изображение ${item.originalName} добавлено к посту`, "success");
+            },
+            onError: (err) => {
+              addNotification(err?.message || "Ошибка добавления изображения", "error");
+            },
+            onSettled: () => {
+              setAddingIds(prev => prev.filter(id => id !== item.id));
+            }
           }
-        }
-      );
-    },
-    loading: addingPending
-  });
+        );
+      },
+      loading: addingPending
+    });
   };
   return (
     <MediaContainer>
       <PageHead>
-        <BtnBase
-          $padding="16px 45px"
-          $bg="#336CFF"
-          $color="#FFFFFF"
-          onClick={() => openPopup("upload_media", "popup")}
-        >
-          + Загрузить медиа
-        </BtnBase>
+        <HeadTabs>
+          {activeTab === "my" && (
+          <BtnBase
+            $padding="16px 45px"
+            $bg="#336CFF"
+            $color="#FFFFFF"
+            onClick={() => openPopup("upload_media", "popup")}
+          >
+            + Загрузить медиа
+          </BtnBase>
+        )}
+          <TabBtn
+            $active={activeTab === "my"}
+            onClick={() => setActiveTab("my")}
+          >
+            Мои медиа
+          </TabBtn>
+
+          <TabBtn
+            $active={activeTab === "pexels"}
+            onClick={() => setActiveTab("pexels")}
+          >
+            Pexels
+          </TabBtn>
+        </HeadTabs>
+
+        
       </PageHead>
       <PageFilter
         activeFilter={activeFilter}
@@ -115,7 +141,7 @@ const Media = () => {
           </MediaHeadText>
         ))}
       </MediaHead>
-      {mediaLoading ? (
+      {/* {mediaLoading ? (
         <ModernLoading text="Загрузка медиа..." />
       ) : filteredMedia?.length === 0 ? (
         <EmptyMedia>Медиа отсутствует</EmptyMedia>
@@ -178,6 +204,101 @@ const Media = () => {
             </MediaCard>
           ))}
         </MediaCards>
+      )} */}
+      {activeTab === "my" ? (
+        mediaLoading ? (
+          <ModernLoading text="Загрузка медиа..." />
+        ) : filteredMedia?.length === 0 ? (
+          <EmptyMedia>Медиа отсутствует</EmptyMedia>
+        ) : (
+          <MediaCards>
+            {filteredMedia?.map((item) => (
+              <MediaCard key={item.id}>
+                <MediaCardImage
+                  src={item.url}
+                  alt={item.originalName}
+                  onClick={() => openLightbox({ images: [item.url], initialIndex: 0 })}
+                />
+                <h4>{item.description}</h4>
+                <MediaCardSize>
+                  <img src={download}
+                    alt="download icon"
+                    width={16}
+                    height={16}
+                  />
+                  {(item.size / 1024 / 1024).toFixed(2)} MB
+                </MediaCardSize>
+                {item.tags?.length > 0 && (
+                  <MediaHash> {item.tags.map((tag, index) => <li key={index}>#{tag}</li>)} </MediaHash>)}
+                <CardActions>
+                  <LeftActions>
+                    <BtnBase
+                      $bg="transparent"
+                      $color="#fff"
+                      $border={true}
+                      $padding="13px 24px"
+                      onClick={() => handleDownload(item.url, item.originalName)}
+                    >
+                      Скачать
+                    </BtnBase>
+                    <DeleteButton
+                      disabled={deletingPending}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        openPopup("delete_confirm", "popup_window", {
+                          itemName: item.originalName,
+                          onDelete: () => handleDelete(item.id, item.originalName),
+                        });
+                      }} >
+                      <img src={del} alt="del icon" width={14} height={16} />
+                    </DeleteButton>
+                  </LeftActions>
+                  <BtnBase
+                    $bg="#336CFF"
+                    $color="#fff"
+                    $padding="16px 19px"
+                    disabled={addingIds.includes(item.id)}
+                    onClick={() => handleAddToPost(item)}
+                  >
+                    {addingIds.includes(item.id) ? "Добавление..." : "Добавить в пост"}
+                  </BtnBase>
+                </CardActions>
+              </MediaCard>))}
+          </MediaCards>
+        )
+      ) : (
+        photosLoading ? (
+          <ModernLoading text="Загрузка фото..." />
+        ) : photosData?.photos?.length === 0 ? (
+          <EmptyMedia>Фото не найдены</EmptyMedia>
+        ) : (
+          <MediaCards>
+            {photosData.photos.map((photo) => (
+              <MediaCard key={photo.id}>
+                <MediaCardImage
+                  src={photo.src.medium}
+                  alt={photo.alt}
+                  onClick={() =>
+                    openLightbox({
+                      images: [photo.src.large2x],
+                      initialIndex: 0,
+                    })
+                  }
+                />
+                <h4>{photo.photographer}</h4>
+
+                <BtnBase
+                  $bg="#336CFF"
+                  $color="#fff"
+                  $padding="12px"
+                  onClick={() => handleDownload(photo.src.original, "pexels.jpg")}
+                >
+                  Скачать
+                </BtnBase>
+              </MediaCard>
+            ))}
+          </MediaCards>
+        )
       )}
     </MediaContainer>
   )
@@ -186,6 +307,21 @@ const Media = () => {
 const MediaContainer = styled.div`
   padding-bottom: 30px;
 `
+const HeadTabs = styled.div`
+  display: flex;
+  gap: 16px;
+`;
+
+const TabBtn = styled.button`
+  padding: 16px 24px;
+  border-radius: 12px;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+
+  background: ${({ $active }) => ($active ? "#336CFF" : "#1C2438")};
+  color: ${({ $active }) => ($active ? "#fff" : "#6A7080")};
+`;
 const MediaHead = styled.div`
   display: flex;
   gap: 32px;
@@ -270,6 +406,7 @@ const MediaCardImage = styled.img`
   object-fit: cover;
   width: 170px;
   height: 170px;
+  cursor: pointer;
   @media(max-width: 480px) {
     width: 290px;
     height: 210px;

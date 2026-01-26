@@ -9,89 +9,90 @@ import "swiper/css";
 import ArrowIcon from "@/icons/ArrowIcon";
 import users from "@/assets/users.svg";
 
-import { slugchange } from "../../lib/slugchange";
+import { slugchange } from "@/lib/slugchange";
 
 const YourChannelsData = [
-	{
-		name: "Antropia Design",
-		q: "5.092.302"
-	},
-	{
-		name: "Antropia Design",
-		q: "5.092.302"
-	},
-	{
-		name: "Antropia Design",
-		q: "5.092.302"
-	},
-	{
-		name: "Antropia Design",
-		q: "5.092.302"
-	},
-	{
-		name: "Antropia Design",
-		q: "5.092.302"
-	},
-	{
-		name: "Antropia Design",
-		q: "5.092.302"
-	},
+	{ name: "Antropia Design", q: "5.092.302" },
+	{ name: "Antropia Design", q: "5.092.302" },
+	{ name: "Antropia Design", q: "5.092.302" },
+	{ name: "Antropia Design", q: "5.092.302" },
+	{ name: "Antropia Design", q: "5.092.302" },
+	{ name: "Antropia Design", q: "5.092.302" },
 ]
 
-
-const YourChannels = () => {
+const YourChannels = ({ viewMode }) => {
 	const [atStart, setAtStart] = useState(true);
 	const [atEnd, setAtEnd] = useState(false);
+
 	return (
 		<YourChannelsSwiper>
-			<YourChannelsButton
-				disabled={atStart}
-				$disabled={atStart}
-				className="YourChannelsButtonPrev"
-			>
-				<ArrowIcon color="#D6DCEC" />
-			</YourChannelsButton>
-			<YourChannelsList
-				spaceBetween={8}
-				slidesPerView="auto"
-				allowTouchMove={true}
-				modules={[Navigation]}
-				navigation={{
-					nextEl: ".YourChannelsButtonNext",
-					prevEl: ".YourChannelsButtonPrev",
-				}}
-				onReachBeginning={() => setAtStart(true)}
-				onReachEnd={() => setAtEnd(true)}
-				onFromEdge={() => {
-					setAtStart(false);
-					setAtEnd(false);
-				}}
-				onSlideChange={(swiper) => {
-					setAtStart(swiper.isBeginning);
-					setAtEnd(swiper.isEnd);
-				}}
-			>
-				{YourChannelsData.map((item) => (
-					<YourChannelsItem>
-						<YourChannelsItemImg $bgColor="#203442">
-						</YourChannelsItemImg>
-						<YourChannelsName to={slugchange(item.name)}>{item.name}</YourChannelsName>
-						<QuantityContainer>
-							<img src={users} alt="users icon" />
-							<YourChannelsQuantity>{item.q}</YourChannelsQuantity>
+			{viewMode === 'List' ? (
+				<YourChannelsList
+				>
+					{YourChannelsData.map((item) => (
+						<ListItem>
+							<ListItemImg $bgColor="#203442"></ListItemImg>
+							<ItemContainer>
+								<ListName to={slugchange(item.name)}>{item.name}</ListName>
+								<ListContainer>
+									<img src={users} alt="users icon" />
+									<ListQuantity>{item.q}</ListQuantity>
+								</ListContainer>
+							</ItemContainer>
+							<GoOver to={slugchange(item.name)}>Перейти</GoOver>
+						</ListItem>
+					))}
+				</YourChannelsList>
+			) : (
+				<>
+					<YourChannelsButton
+						disabled={atStart}
+						$disabled={atStart}
+						className="YourChannelsButtonPrev"
+					>
+						<ArrowIcon color="#D6DCEC" />
+					</YourChannelsButton>
+					<YourChannelsTape
+						spaceBetween={8}
+						slidesPerView="auto"
+						allowTouchMove={true}
+						modules={[Navigation]}
+						navigation={{
+							nextEl: ".YourChannelsButtonNext",
+							prevEl: ".YourChannelsButtonPrev",
+						}}
+						onReachBeginning={() => setAtStart(true)}
+						onReachEnd={() => setAtEnd(true)}
+						onFromEdge={() => {
+							setAtStart(false);
+							setAtEnd(false);
+						}}
+						onSlideChange={(swiper) => {
+							setAtStart(swiper.isBeginning);
+							setAtEnd(swiper.isEnd);
+						}}
+					>
+						{YourChannelsData.map((item) => (
+							<TapeItem>
+								<TapeItemImg $bgColor="#203442"></TapeItemImg>
+								<TapeName to={slugchange(item.name)}>{item.name}</TapeName>
+								<TapeContainer>
+									<img src={users} alt="users icon" />
+									<TapeQuantity>{item.q}</TapeQuantity>
 
-						</QuantityContainer>
-					</YourChannelsItem>
-				))}
-
-			</YourChannelsList>
-			<YourChannelsButton
-				className="YourChannelsButtonNext"
-				disabled={atEnd}
-				$disabled={atEnd}
-			>
-				<ArrowIcon color="#D6DCEC" />
-			</YourChannelsButton>
+								</TapeContainer>
+							</TapeItem>
+						))}
+					</YourChannelsTape>
+					<YourChannelsButton
+						className="YourChannelsButtonNext"
+						disabled={atEnd}
+						$disabled={atEnd}
+					>
+						<ArrowIcon color="#D6DCEC" />
+					</YourChannelsButton>
+				</>
+			)}
 		</YourChannelsSwiper>
 	)
 }
@@ -135,11 +136,11 @@ const YourChannelsButton = styled.button`
     }
   }
 `
-const YourChannelsList = styled(Swiper)`
+const YourChannelsTape = styled(Swiper)`
   margin: 0 48px;
 	width: 100%;
 `
-const YourChannelsItem = styled(SwiperSlide)`
+const TapeItem = styled(SwiperSlide)`
 	display: flex;
 	flex-direction: column;
 	align-items: center;
@@ -154,44 +155,95 @@ const YourChannelsItem = styled(SwiperSlide)`
     margin-right: 0 !important;
   }
 	`
-
-const YourChannelsItemImg = styled.div`
+const TapeItemImg = styled.div`
   background-color: ${props => props.$bgColor};
   width: 48px;
   height: 48px;
   border-radius: 16px;
 	margin-bottom: 24px;
 `
-const YourChannelsName = styled(Link)`
+const TapeName = styled(Link)`
   margin-bottom: 16px;
   font-weight: 700;
 `
-const QuantityContainer = styled.div`
+const TapeContainer = styled.div`
   display: flex;
 	align-items: center;
 	gap: 10px;
 `
-const YourChannelsQuantity = styled.p`
+const TapeQuantity = styled.p`
   color: #6A7080;
   font-size: 14px;
   font-weight: 700;
 `
+const YourChannelsList = styled.div`
+	display: grid;
+  gap: 24px 80px;
+  grid-template-columns: repeat(3, 1fr);
+	width: 100%;
 
-const EmptyYourChannels = styled.div`
-  box-sizing: border-box;
-  text-align: center;
-  color: #6A7080;
-  padding: 48px 0;
-  font-weight: 600;
-  background-color: #1C2438;
-  border-radius: 16px;
-  margin-top: 32px;
-  @media (max-width: 1400px) {
-    margin: 32px 32px 0;
+  @media (max-width: 1200px) {
+    grid-template-columns: repeat(2, 1fr);
   }
   @media (max-width: 768px) {
-    margin: 32px 24px;
+    grid-template-columns: 1fr;
   }
-`;
+`
+const ListItem = styled.div`
+	display: flex;
+	align-items: center;
+	gap: 24px;
+	justify-content: space-between;
+	border-top: 2px solid #333E59;
+	padding-top: 24px; 
+	
+	&:nth-child(-n+3) {
+		border: none;
+		padding: 0;
+	}
+
+	@media (max-width: 1200px) {
+		&:nth-child(n+3) {
+			border-top: 2px solid #333E59;
+			padding-top: 24px;
+		}
+	}
+	@media (max-width: 768px) {
+		&:nth-child(n+2) {
+			border-top: 2px solid #333E59;
+			padding-top: 24px;
+		}
+	}
+`
+const ListItemImg = styled.div`
+	background-color: ${props => props.$bgColor};
+  width: 48px;
+  height: 48px;
+  border-radius: 16px;
+`
+const ItemContainer = styled.div`
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+`
+const ListName = styled(Link)`
+	margin-bottom: 8px;
+  font-weight: 700;
+`
+const ListContainer = styled.div`
+  display: flex;
+	align-items: center;
+	gap: 10px;
+`
+const ListQuantity = styled.p`
+ color: #6A7080;
+  font-size: 14px;
+  font-weight: 700;
+`
+const GoOver = styled(Link)`
+ color: #336CFF;
+  font-size: 14px;
+  font-weight: 700;
+`
 
 export default YourChannels

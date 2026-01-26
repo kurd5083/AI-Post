@@ -28,10 +28,10 @@ const statisticsData = [
       { value: "+ 12%", label: "Рост за месяц" }
     ],
     points: [60, 50, 70, 55, 80, 60, 90],
-		content: 'dynamics_posts'
+	content: 'dynamics_posts'
   },
   {
-    title: "Лайки / комментарии за 24 часа",
+    title: "Средний охват",
     mainValue: "+ 7.890",
     mainSubValue: "Сегодня",
     details: [
@@ -39,7 +39,7 @@ const statisticsData = [
       { value: "+ 1.500", label: "За месяц" }
     ],
     points: [40, 50, 60, 70, 65, 80, 90],
-		content: 'subscriber_growth'
+	content: 'average_coverage'
   },
   {
     title: "Просмотры видео",

@@ -101,20 +101,20 @@ const Chart = ({ data }) => {
               </linearGradient>
             </defs>
             {yTicks.map((val, i) => {
-    const y = 300 - (val / 100) * 300;
+              const y = 300 - (val / 100) * 300;
 
-    return (
-      <line
-        key={i}
-        x1={0}
-        x2={containerWidth}
-        y1={y}
-        y2={y}
-        stroke="#2A3145"
-        strokeDasharray="4 4"
-      />
-    );
-  })}
+              return (
+                <line
+                  key={i}
+                  x1={0}
+                  x2={containerWidth}
+                  y1={y}
+                  y2={y}
+                  stroke="#2A3145"
+                  strokeDasharray="4 4"
+                />
+              );
+            })}
 
             <path
               d={makeSmoothBezierPath(points, 300)}

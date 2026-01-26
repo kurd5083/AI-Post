@@ -62,8 +62,14 @@ const TapeList = ({ forceHorizontal = false, padding, newsData, pending }) => {
           publishedAt: null,
           calendarScheduledAt: null,
         },
+      }, {
+        onSuccess: () => {
+          addNotification("Новость успешно скопирована в канал", "update");
+        },
+        onError: (err) => {
+          addNotification(err.message || "Ошибка при копировании новости", "error");
+        },
       });
-      addNotification("Новость успешно скопирована в канал", "update");
     };
 
     if (popup && popup?.status) {
