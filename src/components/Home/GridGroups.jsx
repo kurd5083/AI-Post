@@ -7,6 +7,7 @@ import DirIcon from '@/icons/DirIcon';
 import DelIcon from "@/icons/DelIcon";
 
 import СhannelPlug from '@/shared/СhannelPlug';
+import Empty from '@/shared/Empty';
 
 import { useUpdateUserAvatar } from '@/lib/channels/useUpdateUserAvatar';
 import { useUploadMedia } from '@/lib/mediaLibrary/useUploadMedia';
@@ -49,9 +50,9 @@ const GridGroups = () => {
 
   if (channelsPending) {
     return (
-      <GridContainer>
-        <NoChannels>Загрузка каналов...</NoChannels>
-      </GridContainer>
+      <EmptyContainer>
+        <Empty icon="📢">Загрузка каналов...</Empty>
+      </EmptyContainer>
     );
   }
 
@@ -69,9 +70,9 @@ const GridGroups = () => {
 
   if (!currentChannels.length) {
     return (
-      <GridContainer>
-        <NoChannels>{emptyMessage}</NoChannels>
-      </GridContainer>
+      <EmptyContainer>
+        <Empty icon="📢">{emptyMessage}</Empty>
+      </EmptyContainer>
     );
   }
 
@@ -161,6 +162,17 @@ const GridGroups = () => {
   );
 };
 
+
+const EmptyContainer = styled.div`
+  padding-bottom: 30px;
+  padding: 0 24px;
+  @media (max-width: 1600px) {
+    padding: 0;
+  }
+  @media (max-width: 768px) {
+    padding: 0 24px;
+  }
+`;
 const GridContainer = styled.div`
   display: grid;
   grid-template-columns: repeat(5, 1fr);
@@ -340,15 +352,6 @@ const ButtonDel = styled(BaseButton)`
     border: none;
     background-color: rgba(239, 98, 132, 0.08);
   }
-`;
-const NoChannels = styled.div`
-  grid-column: 1 / -1;
-  text-align: center;
-  color: #6A7080;
-  padding: 48px 0;
-  font-weight: 600;
-  background-color: #1C2438;
-  border-radius: 16px;
 `;
 
 export default GridGroups;

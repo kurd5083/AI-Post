@@ -2,6 +2,7 @@ import { useState, useEffect, useMemo } from "react";
 import styled from "styled-components";
 
 import CustomSelectSec from "@/shared/CustomSelectSec";
+import Empty from "@/shared/Empty";
 
 import CardAddPost from "@/components/Cards/CardAddPost";
 import ModernLoading from "@/components/ModernLoading";
@@ -28,7 +29,7 @@ const AddPostPopup = () => {
 	});
 
 	const channelId = popup?.data?.channelId;
-	const { posts, loadingPosts } = usePostsByChannel(channelId);
+	const { posts, loadingPosts } = usePostsByChannel({channelId});
 
 	const selectedChannel = userChannels.find(c => c.id === channelId);
 
@@ -187,7 +188,9 @@ const AddPostPopup = () => {
 								<CardAddPost key={item.id} item={item} bg selectedChannel={selectedChannel} />
 							)
 						) : (
-							<EmptyState>Постов пока нет</EmptyState>
+							<EmptyContainer>
+								<Empty icon="📝">Постов пока нет</Empty>
+							</EmptyContainer>
 						)}
 					</PublicationsList>
 
@@ -276,13 +279,7 @@ const PublicationsList = styled.div`
   }
 `;
 
-const EmptyState = styled.p`
-  text-align: center;
-  color: #6A7080;
-  padding: 48px 0;
-  font-weight: 600;
-  background-color: #1C2438;
-  border-radius: 16px;
+const EmptyContainer = styled.p`
   grid-column: 1 / span 3;
 `;
 

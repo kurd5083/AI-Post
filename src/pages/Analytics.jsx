@@ -33,6 +33,7 @@ const categoriesData = [
 const Analytics = () => {
   const [active, setActive] = useState({ col: 0, index: 0 });
   const [viewMode, setViewMode] = useState("List");
+  
   const handleChange = (newValue) => {
     if (!newValue) return;
     setViewMode(newValue);
@@ -44,7 +45,6 @@ const Analytics = () => {
       <AnalyticsContainer>
         <TitleContainer>
           <AnalyticsTitle>Ваши каналы</AnalyticsTitle>
-
           <FilterBlock>
             <img src={viewMode === 'List' ? list : tape} alt="view icon" />
             <CustomSelectThree
@@ -59,7 +59,6 @@ const Analytics = () => {
             />
           </FilterBlock>
         </TitleContainer>
-
         <YourChannels viewMode={viewMode} />
         <AnalyticsTitle>Отслеживаемые каналы</AnalyticsTitle>
         <MonitoredChannels />

@@ -5,7 +5,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 
 import CustomSelectThree from "@/shared/CustomSelectThree";
-
+import Empty from "@/shared/Empty";
 import rating from "@/assets/statistics/rating.svg";
 import channels from "@/assets/statistics/channels.svg";
 import views from "@/assets/statistics/views.svg";
@@ -34,13 +34,6 @@ const Statistics = () => {
 
   const stat = channelStat?.response;
 
-  // Генерируем рандомные значения
-  const randomStats = useMemo(() => ({
-    views: Math.floor(Math.random() * 50000) + 10000, // 10000-60000
-    averageReach: Math.floor(Math.random() * 20000) + 5000, // 5000-25000
-    generatedPosts: Math.floor(Math.random() * 500) + 100, // 100-600
-    mentions: Math.floor(Math.random() * 1000) + 200, // 200-1200
-  }), [selectedChannelId]);
   return (
     <StatisticsContainer>
       <StatisticsTitle>
@@ -59,9 +52,9 @@ const Statistics = () => {
         />
       </StatisticsTitle>
       {!selectedChannelId || channelStatLoading ? (
-        <EmptyStat>Загрузка статистики...</EmptyStat>
+        <Empty icon="📊">Загрузка статистики...</Empty>
       ) : !stat ? (
-        <EmptyStat>Для выбранного канала нет статистики</EmptyStat>
+        <Empty icon="📊">Нет статистики</Empty>
       ) : (
         <StatisticsList
           key={selectedChannelId}
@@ -74,9 +67,9 @@ const Statistics = () => {
               <StatisticsItemImg $bgColor="#20356E">
                 <img src={views} alt="views icon" />
               </StatisticsItemImg>
-              <p>{randomStats.views.toLocaleString()}</p>
+              <p>{stat.participants_count.toLocaleString()}</p>
             </StatisticsItemHead>
-            <StatisticsText>Просмотры</StatisticsText>
+            <StatisticsText>Подписчики канала</StatisticsText>
           </StatisticsItem>
 
           <StatisticsItem>
@@ -84,9 +77,9 @@ const Statistics = () => {
               <StatisticsItemImg $bgColor="#203442">
                 <img src={channels} alt="channels icon" />
               </StatisticsItemImg>
-              <p>{randomStats.averageReach.toLocaleString()}</p>
+              <p>{stat.avg_post_reach.toLocaleString()}</p>
             </StatisticsItemHead>
-            <StatisticsText>Средний охват</StatisticsText>
+            <StatisticsText>ERR</StatisticsText>
           </StatisticsItem>
 
           <StatisticsItem>
@@ -94,7 +87,7 @@ const Statistics = () => {
               <StatisticsItemImg $bgColor="#5D443B">
                 <SpeakerIcon color="#FF9C55"/>
               </StatisticsItemImg>
-              <p>{randomStats.mentions.toLocaleString()}</p>
+              <p>{stat.mentions_count.toLocaleString()}</p>
             </StatisticsItemHead>
             <StatisticsText>Упоминания</StatisticsText>
           </StatisticsItem>
@@ -104,7 +97,7 @@ const Statistics = () => {
               <StatisticsItemImg $bgColor="#522943">
                 <img src={generated} alt="generated icon" />
               </StatisticsItemImg>
-              <p>{randomStats.generatedPosts.toLocaleString()}</p>
+              <p>{stat.posts_count.toLocaleString()}</p>
             </StatisticsItemHead>
             <StatisticsText>Сгенерировано постов</StatisticsText>
           </StatisticsItem>
@@ -134,6 +127,8 @@ const StatisticsTitle = styled.h2`
   display: flex;
   align-items: center;
   gap: 30px;
+  margin-bottom: 32px;
+  
   @media (max-width: 1400px) {
     padding: 0 32px;
   }
@@ -155,7 +150,6 @@ const StatisticsList = styled(Swiper)`
   display: flex;
   justify-content: space-between;
   gap: 16px;
-  margin-top: 32px;
   @media (max-width: 1400px) {
     padding: 0 32px;
   }
@@ -211,24 +205,5 @@ const StatisticsText = styled.p`
   font-size: 14px;
   font-weight: 600;
 `
-const EmptyStat = styled.div`
-  box-sizing: border-box;
-  text-align: center;
-  color: #6A7080;
-  padding: 48px 0;
-  font-weight: 600;
-  background-color: #1C2438;
-  border-radius: 16px;
-  margin-top: 32px;
-  @media (max-width: 1400px) {
-    margin: 32px 32px 0;
-  }
-  @media (max-width: 768px) {
-    margin: 32px 24px;
-  }
-  @media (max-width: 480px) {
-    font-size: 13px;
-  }
-`;
 
 export default Statistics

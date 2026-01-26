@@ -35,7 +35,7 @@ const SettingsPopup = () => {
   const { user } = useUser();
   const channelId = popup?.data?.channelId;
   const { channel } = useChannelById(channelId);
-  const { posts } = usePostsByChannel(channelId);
+  const { posts } = usePostsByChannel({channelId});
   const { imageChannelPreset } = useGetChannelImagePreset(channelId);
   const { promptLibrary } = usePromptLibrary();
   const { globalPrompt } = useChannelGlobalPrompt(channelId);

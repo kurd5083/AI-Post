@@ -1,18 +1,23 @@
 import styled from "styled-components";
 import { useParams } from 'react-router-dom';
+
 import TimeIcon from "@/icons/TimeIcon";
+import news_stub from "@/assets/news-stub.png";
+import dzen_icon from "@/assets/dzen-icon.svg";
+import fire from "@/assets/tape/fire.svg";
+
+import BtnBase from "@/shared/BtnBase";
+import Empty from "@/shared/Empty";
 import TapeList from "@/components/TapeList";
 import ModernLoading from "@/components/ModernLoading";
+
 import { useNews } from "@/lib/news/useNews";
 import { useNewsById } from "@/lib/news/useNewsById";
 import { useCopyNewsToChannel } from "@/lib/news/useCopyNewsToChannel";
 import timeAgo from "@/lib/timeAgo";
-import news_stub from "@/assets/news-stub.png";
-import dzen_icon from "@/assets/dzen-icon.svg";
-import fire from "@/assets/tape/fire.svg";
+
 import { useLightboxStore } from "@/store/lightboxStore";
 import { usePopupStore } from "@/store/popupStore"
-import BtnBase from "@/shared/BtnBase";
 import { useNotificationStore } from "@/store/notificationStore";
 
 const NewsDetail = () => {

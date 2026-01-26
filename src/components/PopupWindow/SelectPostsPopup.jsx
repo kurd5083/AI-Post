@@ -18,7 +18,7 @@ const SelectPostPopup = () => {
   const { addNotification } = useNotificationStore();
 
   const { posts } = useGetPosts();
-  console.log(posts)
+
   const [selectedPostId, setSelectedPostId] = useState(null);
 
   const handleSave = () => {

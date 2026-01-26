@@ -1,14 +1,15 @@
 import styled from "styled-components";
 
 import BtnBase from "@/shared/BtnBase";
+import СhannelPlug from '@/shared/СhannelPlug';
 
-const ChannelInfo = () => {
+const ChannelInfo = ({ channel }) => {
 	return (
 		<ChannelInfoContainer>
 			<ChannelHeader>
-				<ChannelAvatar src="" alt="" />
+				<СhannelPlug width="144px" height="144px" radius="32px" text={channel?.name} />
 				<div>
-					<ChannelName>Antropia Gaming</ChannelName>
+					<ChannelName>{channel?.name}</ChannelName>
 					<ChannelUsername>@antropia_gaming</ChannelUsername>
 
 					<BtnBase $bg="#336CFF" $color="#FFFFFF" $padding="17px 40px">Отслеживать канал</BtnBase>
@@ -45,11 +46,6 @@ const ChannelHeader = styled.div`
 	gap: 40px;
 	border-right: 2px solid #2E3954;
 	padding-right: 40px;
-`
-const ChannelAvatar = styled.img`
-  width: 144px;
-  height: 144px;
-  border-radius: 32px;
 `
 const ChannelName = styled.h2`
   font-size: 32px;

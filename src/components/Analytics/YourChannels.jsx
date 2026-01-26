@@ -9,37 +9,32 @@ import "swiper/css";
 import ArrowIcon from "@/icons/ArrowIcon";
 import users from "@/assets/users.svg";
 
-import { slugchange } from "@/lib/slugchange";
+import СhannelPlug from '@/shared/СhannelPlug';
 
-const YourChannelsData = [
-	{ name: "Antropia Design", q: "5.092.302" },
-	{ name: "Antropia Design", q: "5.092.302" },
-	{ name: "Antropia Design", q: "5.092.302" },
-	{ name: "Antropia Design", q: "5.092.302" },
-	{ name: "Antropia Design", q: "5.092.302" },
-	{ name: "Antropia Design", q: "5.092.302" },
-]
+import { slugchange } from "@/lib/slugchange";
+import { useUserChannels } from "@/lib/channels/useUserChannels";
 
 const YourChannels = ({ viewMode }) => {
 	const [atStart, setAtStart] = useState(true);
 	const [atEnd, setAtEnd] = useState(false);
+  	const { userChannels } = useUserChannels();
 
 	return (
 		<YourChannelsSwiper>
 			{viewMode === 'List' ? (
 				<YourChannelsList
 				>
-					{YourChannelsData.map((item) => (
+					{userChannels?.map((item) => (
 						<ListItem>
-							<ListItemImg $bgColor="#203442"></ListItemImg>
+							<СhannelPlug width="48px" height="48px" text={item.name} />
 							<ItemContainer>
-								<ListName to={slugchange(item.name)}>{item.name}</ListName>
+								<ListName to={`/analytics/${item.id}`}>{item.name}</ListName>
 								<ListContainer>
 									<img src={users} alt="users icon" />
-									<ListQuantity>{item.q}</ListQuantity>
+									<ListQuantity>{item.subscribersCount}</ListQuantity>
 								</ListContainer>
 							</ItemContainer>
-							<GoOver to={slugchange(item.name)}>Перейти</GoOver>
+							<GoOver to={`/analytics/${item.id}`}>Перейти</GoOver>
 						</ListItem>
 					))}
 				</YourChannelsList>
@@ -72,13 +67,13 @@ const YourChannels = ({ viewMode }) => {
 							setAtEnd(swiper.isEnd);
 						}}
 					>
-						{YourChannelsData.map((item) => (
+						{userChannels.map((item) => (
 							<TapeItem>
-								<TapeItemImg $bgColor="#203442"></TapeItemImg>
+								<СhannelPlug width="48px" height="48px" text={item.name} />
 								<TapeName to={slugchange(item.name)}>{item.name}</TapeName>
 								<TapeContainer>
 									<img src={users} alt="users icon" />
-									<TapeQuantity>{item.q}</TapeQuantity>
+									<TapeQuantity>{item.subscribersCount}</TapeQuantity>
 
 								</TapeContainer>
 							</TapeItem>
@@ -155,14 +150,8 @@ const TapeItem = styled(SwiperSlide)`
     margin-right: 0 !important;
   }
 	`
-const TapeItemImg = styled.div`
-  background-color: ${props => props.$bgColor};
-  width: 48px;
-  height: 48px;
-  border-radius: 16px;
-	margin-bottom: 24px;
-`
 const TapeName = styled(Link)`
+	margin-top: 24px;
   margin-bottom: 16px;
   font-weight: 700;
 `
@@ -214,12 +203,6 @@ const ListItem = styled.div`
 			padding-top: 24px;
 		}
 	}
-`
-const ListItemImg = styled.div`
-	background-color: ${props => props.$bgColor};
-  width: 48px;
-  height: 48px;
-  border-radius: 16px;
 `
 const ItemContainer = styled.div`
 	flex: 1;

@@ -51,7 +51,6 @@ const Sidebar = () => {
                     setActivePage(item.id)
                   }}
                 >
-                  {console.log(activePage, item.id)}
                   {item.to ? (
                     <Link
                       to={item.to}

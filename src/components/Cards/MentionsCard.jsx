@@ -4,14 +4,15 @@ import TimeIcon from "@/icons/TimeIcon";
 import timeAgo from "@/lib/timeAgo";
 
 const MentionsCard = ({ item, bg }) => {
+  console.log(item)
   const post = item.postDetails;
   
 	return (
 		<MentionsCardItem $bg={bg}>
 			<MentionsCardItemHead>
 				<MentionsCardItemName>
-					<MentionsCardItemImg src={item.ava} alt={item?.username} />
-					<p>{item.mentionType === "channel" ? `Канал ${item.channelId}` : item.mentionType}</p>
+					<MentionsCardItemImg src={post.image} alt={item?.username} />
+					<p>{post.channelTitle}</p>
 				</MentionsCardItemName>
 				<MentionsCardItemTime>
           <TimeIcon/>

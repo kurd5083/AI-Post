@@ -8,6 +8,7 @@ import CardPablish from "@/components/Cards/CardPablish";
 import CardPablishPremoderation from "@/components/Cards/CardPablishPremoderation";
 import CardArhive from "@/components/Cards/CardArhive";
 import ModernLoading from "@/components/ModernLoading";
+import Empty from "@/shared/Empty";
 
 import CustomSelectSec from "@/shared/CustomSelectSec";
 
@@ -34,7 +35,7 @@ const PublicationsPopup = () => {
   const setDateFilter = usePublicationsStore((state) => state.setDateFilter);
   const setCurrentPage = usePublicationsStore((state) => state.setCurrentPage);
 
-  const { posts, loadingPosts } = usePostsByChannel(channelId);
+  const { posts, loadingPosts } = usePostsByChannel({channelId});
   const { postsArchived } = useGetArchivedPosts(channelId);
   const selectedChannel = userChannels.find((c) => c.id === channelId);
 
@@ -277,13 +278,15 @@ const PublicationsPopup = () => {
                 )
               )
             ) : (
-              <EmptyState>
-                {filter === "premoderation"
-                  ? "Постов на премодерации пока нет"
-                  : filter === "archive"
-                    ? "Архивных постов пока нет"
-                    : "Постов пока нет"}
-              </EmptyState>
+              <EmptyContainer>
+                <Empty icon="📝">
+                  {filter === "premoderation"
+                    ? "Постов на премодерации пока нет"
+                    : filter === "archive"
+                      ? "Архивных постов пока нет"
+                      : "Постов пока нет"}
+                </Empty>
+              </EmptyContainer>
             )}
           </PublicationsList>
 
@@ -396,17 +399,9 @@ const PublicationsList = styled.div`
     grid-template-columns: 1fr;
   }
 `;
-
-const EmptyState = styled.p`
-  text-align: center;
-  color: #6A7080;
-  padding: 48px 0;
-  font-weight: 600;
-  background-color: #1C2438;
-  border-radius: 16px;
+const EmptyContainer = styled.p`
   grid-column: 1 / span 3;
 `;
-
 const PaginationWrapper = styled.div`
   flex-grow: 1;
   display: flex;

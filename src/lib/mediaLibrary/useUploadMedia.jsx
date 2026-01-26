@@ -5,7 +5,7 @@ export const useUploadMedia = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (files) => uploadMedia(files),
+    mutationFn: ({files, url}) => uploadMedia({files, url}),
     onSuccess: () => {
       queryClient.invalidateQueries(["mediaLibrary"]);
     },

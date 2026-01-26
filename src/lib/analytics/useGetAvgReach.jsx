@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { getAvgReach } from "@/api/tgStat/getAvgReach";
+import { getAvgReach } from "@/api/analytics/getAvgReach";
 
 export const useGetAvgReach = ({ channelId, startDate, endDate, group }) => {
     const { data: avgReach, isPending: avgReachPending } = useQuery({

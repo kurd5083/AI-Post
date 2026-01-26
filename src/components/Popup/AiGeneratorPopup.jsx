@@ -110,7 +110,6 @@ const AiGeneratorPopup = () => {
                   onInput={e => {
                     const el = e.currentTarget;
                     const summaryHtml = el.innerHTML;
-                    console.log(summaryHtml)
                     const plainText = el.innerText;
                     const sel = document.getSelection();
                     if (sel?.rangeCount) {

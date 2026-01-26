@@ -9,10 +9,16 @@ import SpeakerIcon from "@/icons/SpeakerIcon";
 import my_team  from "@/assets/popup/my-team.svg";
 
 import useSwipeAllowed from "@/lib/useSwipeAllowed";
+import { useChannelStat } from "@/lib/tgStat/useChannelStat";
 
-const AnalyticsStatistics = () => {
+const AnalyticsStatistics = ({id}) => {
   const { isSwipe } = useSwipeAllowed(1800);
+    const { channelStat, channelStatLoading } = useChannelStat({
+      channelId: id,
+    });
   
+    const stat = channelStat?.response;
+    console.log(stat)
   return (
     <StatisticsList
       key={isSwipe}
@@ -25,7 +31,7 @@ const AnalyticsStatistics = () => {
           <StatisticsItemImg $bgColor="#284B55">
             <img src={scale} alt="scale icon" />
           </StatisticsItemImg>
-          <p>435,454</p>
+          <p>{stat?.daily_reach}</p>
         </StatisticsItemHead>
         <StatisticsText>Средний суточный охват</StatisticsText>
       </StatisticsItem>
@@ -35,7 +41,7 @@ const AnalyticsStatistics = () => {
           <StatisticsItemImg $bgColor="#374739">
             <PromotionIcon color="#B5EC5B"/>
           </StatisticsItemImg>
-          <p>800</p>
+          {/* <p>{stat?.adv_post_reach_24h}</p> */}
         </StatisticsItemHead>
         <StatisticsText>Подписки за 24 ч.</StatisticsText>
       </StatisticsItem>
@@ -45,7 +51,7 @@ const AnalyticsStatistics = () => {
           <StatisticsItemImg $bgColor="#5D443B">
             <SpeakerIcon color="#FF9C55"/>
           </StatisticsItemImg>
-          <p>25</p>
+          {/* <p>{stat.posts_count_24h}</p> */}
         </StatisticsItemHead>
         <StatisticsText>Публикации за 24 ч.</StatisticsText>
       </StatisticsItem>
@@ -55,7 +61,7 @@ const AnalyticsStatistics = () => {
           <StatisticsItemImg $bgColor="#253D59">
             <img src={my_team} alt="" />
           </StatisticsItemImg>
-          <p>50</p>
+          <p>{stat?.participants_count}</p>
         </StatisticsItemHead>
         <StatisticsText>Среднее кол-во подписок</StatisticsText>
       </StatisticsItem>

@@ -4,6 +4,8 @@ import styled from "styled-components";
 import BtnBase from "@/shared/BtnBase";
 
 // import useFadeOnScroll from "@/lib/useFadeOnScroll";
+import { useGetAvgReach } from "@/lib/analytics/useGetAvgReach";
+
 
 import { usePopupStore } from "@/store/popupStore"
 
@@ -58,6 +60,17 @@ const months = ["Январь", "Февраль", "Март", "Апрель"];
 
 const StatisticsTab = () => {
 	const { openPopup } = usePopupStore();
+	const startOfYear = Math.floor(new Date("2025-01-01T00:00:00Z").getTime() / 1000);
+	const endOfYear = Math.floor(new Date("2026-12-31T23:59:59Z").getTime() / 1000);
+	console.log(endOfYear)
+	const { avgReach, avgReachLoading } = useGetAvgReach({
+		channelId: 1,
+		group: "day",
+		startDate: startOfYear,
+  		endDate: endOfYear,
+	});
+	console.log(avgReach)  
+
 	// const [containerWidth, setContainerWidth] = useState(0);
 
 	// const containerRef = useRef();

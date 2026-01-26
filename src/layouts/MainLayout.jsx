@@ -3,6 +3,9 @@ import { useLocation } from "react-router-dom";
 import { Outlet } from "react-router";
 import styled from "styled-components";
 
+import TgIcon from "@/icons/TgIcon";
+
+import BtnBase from "@/shared/BtnBase";
 import Sidebar from "@/components/Sidebar";
 import Tape from "@/components/Tape";
 import Header from "@/components/Header";
@@ -12,25 +15,24 @@ import Lightbox from "@/components/Lightbox";
 import Popup from "@/components/Popup/Popup";
 import PopupWindow from "@/components/PopupWindow/PopupWindow";
 
-import { usePopupStore } from "@/store/popupStore";
-import { useLightboxStore } from "@/store/lightboxStore";
-import { useAuthStore } from "@/store/authStore";
-
-import BtnBase from "@/shared/BtnBase";
-import TgIcon from "@/icons/TgIcon";
 import { useTelegramBotLink } from "@/lib/user/useTelegramBotLink";
 import { useAuthEmail } from "@/lib/user/useAuthEmail";
 
+import { usePopupStore } from "@/store/popupStore";
+import { useLightboxStore } from "@/store/lightboxStore";
+import { useAuthStore } from "@/store/authStore";
+import useSearchStore from "@/store/searchStore";
 
 const MainLayout = () => {
-  const { popup, closePopup, openPopup } = usePopupStore();
+  const { popup, openPopup } = usePopupStore();
   const { isOpen } = useLightboxStore();
+
   const isAuthenticated = useAuthStore(s => s.isAuthenticated);
   const isInitialized = useAuthStore(s => s.isInitialized);
-  const token = useAuthStore(s => s.token);
   const init = useAuthStore(state => state.init);
+
   const { botLinkData } = useTelegramBotLink();
-  console.log(botLinkData, 'botLinkData')
+  const clearSearch = useSearchStore(s => s.clearSearch);
   const { register, login, isRegistering, isLoggingIn } = useAuthEmail();
   const location = useLocation();
   const [authMode, setAuthMode] = useState('login');
@@ -42,14 +44,13 @@ const MainLayout = () => {
   });
   const [error, setError] = useState('');
 
-
   useEffect(() => {
     init();
   }, [init]);
 
-  //   useEffect(() => {
-  //   closePopup();
-  // }, [location.pathname, token, isAuthenticated, closePopup]);
+  useEffect(() => {
+    clearSearch();
+  }, [location.pathname]);
 
   useEffect(() => {
     if (location.state?.openPostPopup && location.state?.postId) {

@@ -6,7 +6,6 @@ import CustomSelect from "@/shared/CustomSelect";
 
 import Chart from "@/components/Popup/Analytics/Chart";
 import ChartHead from "@/components/Popup/Analytics/ChartHead";
-
 const subscriber = [
   {
     id: 1,

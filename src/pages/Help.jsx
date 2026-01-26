@@ -1,11 +1,19 @@
 import { useState, useMemo } from "react";
+
+import styled from "styled-components";
+
+import ArrowIcon from "@/icons/ArrowIcon";
+
 import PageHead from '@/components/PageHead'
 import PageFilter from "@/components/PageFilter";
-import styled from "styled-components";
-import ArrowIcon from "@/icons/ArrowIcon";
+
 import { helpDatas } from "@/data/helpDatas";
-import useSearchStore from "@/store/searchStore";
+
+import HighlightText from "@/shared/HighlightText";
+
 import useFadeOnScroll from "@/lib/useFadeOnScroll";
+
+import useSearchStore from "@/store/searchStore";
 
 const Help = () => {
   const { fadeVisible, ref } = useFadeOnScroll(20);
@@ -25,28 +33,13 @@ const Help = () => {
       item.a.toLowerCase().includes(query)
     );
   }, [helpDatas, searchQuery]);
- 
-  const highlightMatches = (text, query) => {
-    if (!query.trim()) return text;
 
-    const regex = new RegExp(`(${query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
-    const parts = text.split(regex);
-
-    return parts.map((part, index) =>
-      regex.test(part) ? (
-        <Highlight key={index}>{part}</Highlight>
-      ) : (
-        part
-      )
-    );
-  };
   return (
     <>
       <PageHead />
       <PageFilter
         filter={false}
         placeholder="Поиск по вопросам"
-        searchValue={searchQuery}
       />
       <HelpContainer $fadeVisible={fadeVisible} ref={ref}>
         {filteredData.length > 0 ? (
@@ -55,7 +48,9 @@ const Help = () => {
               <HelpQuestion onClick={() => toggle(index)}>
                 <QuestionLeft>
                   <QuestionNum>{index + 1 < 10 ? `0${index + 1}` : index + 1}</QuestionNum>
-                  <p>{highlightMatches(item.q, searchQuery)}</p>
+                  <p>
+                    <HighlightText text={item.q} query={searchQuery} />
+                  </p>
                 </QuestionLeft>
                 <Icon open={openIndex === index}>
                   <ArrowIcon/>
@@ -63,7 +58,7 @@ const Help = () => {
               </HelpQuestion>
               {openIndex === index && (
                 <Answer>
-                  {highlightMatches(item.a, searchQuery)}
+                  <HighlightText text={item.a} query={searchQuery} />
                 </Answer>
               )}
             </HelpItem>

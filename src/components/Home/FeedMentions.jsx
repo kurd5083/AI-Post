@@ -8,6 +8,7 @@ import "swiper/css";
 import ArrowIcon from "@/icons/ArrowIcon";
 import TgIcon from "@/icons/TgIcon";
 
+import Empty from "@/shared/Empty";
 import MentionsCard from "@/components/Cards/MentionsCard";
 
 import CustomSelectThree from "@/shared/CustomSelectThree";
@@ -33,7 +34,6 @@ const FeedMentions = () => {
     limit: 8,
   });
 
-  // Тестовые упоминания для канала с id 48
   const testMentions = [
     {
       mentionId: 1,
@@ -176,9 +176,9 @@ const FeedMentions = () => {
       </FeedMentionsHead>
 
       {!selectedChannelId || (selectedChannelId !== 48 && mentionsLoading) ? (
-        <EmptyMentions>Загрузка упоминаний...</EmptyMentions>
+        <Empty icon="📣">Загрузка упоминаний...</Empty>
       ) : !mentionItems || mentionItems.length === 0 ? (
-        <EmptyMentions>Для выбранного канала нет упоминаний</EmptyMentions>
+        <Empty icon="📣">Нет упоминаний</Empty>
       ) : (
         <FeedMentionsList
           $fadeVisible={fadeVisible}
@@ -245,6 +245,7 @@ const FeedMentionsTitle = styled.h2`
   display: flex;
   align-items: center;
   gap: 30px;
+  margin-bottom: 24px;
   
   @media (max-width: 640px) {
     flex-direction: column;
@@ -297,7 +298,6 @@ const FeedMentionsButton = styled.button`
 `
 const FeedMentionsList = styled(Swiper)`
   position: relative;
-  margin-top: 24px;
   @media (max-width: 1400px) {
     padding: 0 32px;
   }
@@ -327,24 +327,6 @@ const FeedMentionsList = styled(Swiper)`
 const FeedMentionsItem = styled(SwiperSlide)`
   max-width: 345px;
 `
-const EmptyMentions = styled.div`
-  box-sizing: border-box;
-  text-align: center;
-  color: #6A7080;
-  padding: 48px 0;
-  font-weight: 600;
-  background-color: #1C2438;
-  border-radius: 16px;
-  margin-top: 24px;
-  @media (max-width: 1400px) {
-    margin: 24px 32px 0;
-  }
-  @media (max-width: 768px) {
-    margin: 24px 24px;
-  }
-  @media (max-width: 480px) {
-    font-size: 13px;
-  }
-`;
+
 
 export default FeedMentions

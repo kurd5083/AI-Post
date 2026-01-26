@@ -1,13 +1,19 @@
 import { useState } from "react";
 import styled from "styled-components";
-import { usePopupStore } from "@/store/popupStore";
+
 import del from "@/assets/del.svg";
 import DelIcon from "@/icons/DelIcon";
 import EyeIcon from "@/icons/EyeIcon";
+
+import Empty from "@/shared/Empty";
+import ModernLoading from "@/components/ModernLoading";
+
 import { useGetChannelInviteLinks } from "@/lib/channels/invite-link/useGetChannelInviteLinks";
 import { useRemoveInviteLink } from "@/lib/channels/invite-link/useRemoveInviteLink";
+
 import { useNotificationStore } from "@/store/notificationStore";
-import ModernLoading from "@/components/ModernLoading";
+import { usePopupStore } from "@/store/popupStore";
+
 
 const LinkGenerationMyPopup = () => {
   const [copied, setCopied] = useState(false);
@@ -126,7 +132,7 @@ const LinkGenerationMyPopup = () => {
             </tbody>
           </Table>
         ) : (
-          <EmptyLink>В канале пока нет ссылок</EmptyLink>
+          <Empty icon="🔗">В канале пока нет ссылок</Empty>
         )
       ) : (
         <ModernLoading text="Загрузка ссылок..." />
@@ -255,14 +261,5 @@ const DeleteButton = styled(BaseButton)`
     border: none;
     background-color: rgba(239, 98, 132, 0.08);
   }
-`
-const EmptyLink = styled.p`
-  box-sizing: border-box;
-  text-align: center;
-  color: #6A7080;
-  padding: 48px 0;
-  font-weight: 600;
-  background-color: #1C2438;
-  border-radius: 16px;
 `
 export default LinkGenerationMyPopup

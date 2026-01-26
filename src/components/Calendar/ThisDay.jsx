@@ -3,15 +3,16 @@ import styled from "styled-components";
 
 import ArrowIcon from "@/icons/ArrowIcon";
 
+import Empty from "@/shared/Empty";
+import AvaPlug from "@/shared/AvaPlug";
+import CustomSelect from "@/shared/CustomSelect";
+
+import ModernLoading from "@/components/ModernLoading";
+
 import useFadeOnScroll from "@/lib/useFadeOnScroll";
 import { useUserChannels } from "@/lib/channels/useUserChannels";
 import { useSendPostToChannel } from "@/lib/posts/useSendPostToChannel";
 import normalizeUrl from "@/lib/normalizeUrl";
-
-import ModernLoading from "@/components/ModernLoading";
-
-import CustomSelect from "@/shared/CustomSelect";
-import AvaPlug from "@/shared/AvaPlug";
 
 import { useCalendarStore } from "@/store/calendarStore";
 import { useNotificationStore } from "@/store/notificationStore";
@@ -148,7 +149,7 @@ const ThisDay = ({ posts, eventsPending }) => {
       {eventsPending
         ? <ModernLoading text="Загрузка постов..." />
         : filteredPosts?.length === 0
-          ? <EmptyCalendar>Нет постов</EmptyCalendar>
+          ? <Empty icon="📝">Нет постов</Empty>
           :
           <Grid $fadeVisible={fadeVisible} ref={ref}>
             {filteredPosts.map((item) => (
@@ -380,12 +381,5 @@ const CardPublish = styled.p`
     text-decoration: underline;
   }
 `;
-const EmptyCalendar = styled.p`
-  text-align: center;
-  color: #6A7080;
-  padding: 48px 0;
-  font-weight: 600;
-  background-color: #1C2438;
-  border-radius: 16px;
-`;
+
 export default ThisDay

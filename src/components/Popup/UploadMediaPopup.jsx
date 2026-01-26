@@ -1,8 +1,6 @@
 import { useRef, useState, useCallback } from 'react';
 import styled from "styled-components";
 import BtnBase from "@/shared/BtnBase";
-import InputPlus from "@/shared/InputPlus";
-import BlocksItems from "@/shared/BlocksItems";
 import preview_img from "@/assets/popup/preview-img.png";
 import upload_media from "@/assets/upload-media.svg";
 import { usePopupStore } from "@/store/popupStore";
@@ -24,17 +22,7 @@ const UploadMediaPopup = () => {
   const [previews, setPreviews] = useState([]);
   const [isDragOver, setIsDragOver] = useState(false);
 
-  const [title, setTitle] = useState("");
-  const [tag, setTag] = useState("");
-  const [tags, setTags] = useState([]);
-
-  const handleAddTag = () => {
-    const trimmed = tag.trim();
-    if (!trimmed) return;
-    if (tags.includes(trimmed)) return;
-    setTags(prev => [...prev, trimmed]);
-    setTag(""); 
-  };
+  const [titles, setTitles] = useState({});
 
   const handleFileButtonClick = () => {
     fileInputRef.current?.click();
@@ -79,15 +67,23 @@ const UploadMediaPopup = () => {
     addFiles(e.dataTransfer.files);
   }, [selectedFiles]);
 
+  const handleTitleChange = (index, value) => {
+    setTitles(prev => ({ ...prev, [index]: value }));
+  };
   const removeFile = (index) => {
     setSelectedFiles(prev => prev.filter((_, i) => i !== index));
     setPreviews(prev => prev.filter((_, i) => i !== index));
+    setTitles(prev => {
+      const copy = { ...prev };
+      delete copy[index];
+      return copy;
+    });
   };
 
   const handleSave = () => {
     if (!selectedFiles.length) return;
 
-    uploadMedia(selectedFiles, {
+    uploadMedia({ files: selectedFiles }, {
       onSuccess: async (uploadedItems) => {
         if (!uploadedItems?.length) {
           addNotification("Ошибка: не получены ID файлов", "error");
@@ -95,9 +91,9 @@ const UploadMediaPopup = () => {
         }
 
         await Promise.all(
-          uploadedItems.map((file) =>
+          uploadedItems.map((file, i) =>
             updateMetadata(
-              { id: file.id, data: { description: title, tags } },
+              { id: file.id, data: { description: titles[i] || "" } },
               { onError: () => addNotification("Ошибка обновления метаданных", "error") }
             )
           )
@@ -109,7 +105,6 @@ const UploadMediaPopup = () => {
       onError: (err) => addNotification(err?.message || "Ошибка загрузки файлов", "error")
     });
   };
-
   return (
     <UploadMediaContainer>
       <UploadMediaDownload
@@ -119,12 +114,18 @@ const UploadMediaPopup = () => {
         $isDragOver={isDragOver}
       >
         <UploadMediaDesc>
-          {previews[0] && (
-            <UploadDescImg
-              src={previews[0]}
-              alt="preview img"
-              onClick={() => openLightbox({ images: previews, initialIndex: 0 })}
-            />
+          {previews.length > 0 && (
+            <PreviewContainer>
+              {previews.map((src, i) => (
+                <UploadDescImg
+                  key={i}
+                  src={src}
+                  alt={`preview ${i}`}
+                  // onClick={() => openLightbox({ images: previews.map(img => img), initialIndex: 0 })}
+                />
+              ))}
+              
+            </PreviewContainer>
           )}
           <UploadDescContent>
             <h2>Перетяните файлы сюда</h2>
@@ -158,45 +159,27 @@ const UploadMediaPopup = () => {
       </UploadMediaDownload>
 
       {selectedFiles.length > 0 && (
-        <div style={{ marginBottom: 32 }}>
+        <UploadMediaItem>
+          <ItemTitle>Название <mark>(необязательное)</mark></ItemTitle>
+          <ItemDesc><mark>Название ссылки</mark> будут видеть только администраторы.</ItemDesc>
           {selectedFiles.map((file, i) => (
-            <SelectedFileInfo key={i}>
-              <span>
-                {file.name} ({(file.size / 1024 / 1024).toFixed(2)} MB)
-              </span>
-              <RemoveButton onClick={() => removeFile(i)}>×</RemoveButton>
-            </SelectedFileInfo>
+            <SelectedFileItem key={i}>
+
+              <FileInfo>
+                <span>{file.name} ({(file.size / 1024 / 1024).toFixed(2)} MB)</span>
+                <RemoveButton onClick={() => removeFile(i)}>×</RemoveButton>
+              </FileInfo>
+
+              <ItemInput
+                type="text"
+                placeholder="Название файла (необязательное)"
+                value={titles[i] || ""}
+                onChange={(e) => handleTitleChange(i, e.target.value)}
+              />
+            </SelectedFileItem>
           ))}
-        </div>
+        </UploadMediaItem>
       )}
-
-      <UploadMediaItem>
-        <ItemTitle>Название <mark>(необязательное)</mark></ItemTitle>
-        <ItemDesc><mark>Название ссылки</mark> будут видеть только администраторы.</ItemDesc>
-        <ItemInput
-          type="text"
-          placeholder="Название"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-        />
-      </UploadMediaItem>
-
-      <UploadMediaBlock>
-        <InputPlus
-          title="ХЕШТЕГИ"
-          placeholder="Введите хештег"
-          bg="#2B243C"
-          color="#FF55AD"
-          value={tag}
-          onChange={setTag}
-          onSubmit={handleAddTag}
-        />
-        <BlocksItems
-          items={tags.map(t => ({ value: t }))}
-          color="#EF6284"
-          onRemove={(tag) => setTags(prev => prev.filter(t => t !== tag))}
-        />
-      </UploadMediaBlock>
 
       <UploadMediaButtons>
         <BtnBase
@@ -288,6 +271,24 @@ const RemoveButton = styled.button`
     background: #FF4444;
   }
 `;
+const PreviewContainer = styled.div`
+  display: flex;
+  gap: 16px;
+  overflow-x: auto;
+  max-width: 600px;
+  padding-bottom: 8px;
+
+  &::-webkit-scrollbar {
+    height: 6px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: #6A7080;
+    border-radius: 3px;
+  }
+  &::-webkit-scrollbar-track {
+    background: #1C2438;
+  }
+`;
 const UploadDescImg = styled.img`
   width: 176px;
   height: 176px;
@@ -317,6 +318,25 @@ const UploadMediaItem = styled.div`
   display: flex;
   flex-direction: column;
   gap: 24px;
+`;
+const SelectedFileItem = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+`;
+
+const FileInfo = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 12px 16px;
+  background: #2E3954;
+  border-radius: 8px;
+  max-width: 400px;
+  width: 100%;
 `;
 const ItemTitle = styled.h3`
   font-size: 24px;
@@ -352,9 +372,7 @@ const ItemInput = styled.input`
     color: #D6DCEC;
   }
 `;
-const UploadMediaBlock = styled.div`
-  margin-top: 40px;
-`;
+
 const UploadMediaButtons = styled.div`
   display: flex;
   gap: 8px;

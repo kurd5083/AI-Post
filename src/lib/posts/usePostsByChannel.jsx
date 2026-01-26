@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { getPostsByChannel } from "@/api/posts/getPostsByChannel";
 
-export const usePostsByChannel = (channelId) => {
+export const usePostsByChannel = ({channelId}) => {
   const { data: posts, isLoading: loadingPosts } = useQuery({
     queryKey: ["posts-by-channel", channelId],
     queryFn: () => getPostsByChannel(channelId),

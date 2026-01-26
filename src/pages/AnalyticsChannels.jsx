@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import { useState } from "react";
+import { useParams } from "react-router";
 
 import location_icon from "@/assets/location-icon.svg";
 import AiGeneratorIcon from "@/icons/AiGeneratorIcon";
@@ -13,9 +14,13 @@ import ChannelInfo from "@/components/Analytics/ChannelInfo";
 import StatisticsTab from "@/components/Analytics/StatisticsTab";
 import PreviewTab from "@/components/Analytics/PreviewTab";
 
+import { useChannelById } from "@/lib/channels/useChannelById";
+
 const AnalyticsChannels = () => {
   const [selectedFilter, setSelectedFilter] = useState("24h");
   const [activeTab, setActiveTab] = useState("statistics");
+  const { id } = useParams()
+  const { channel } = useChannelById(Number(id));
 
   const changeContent = (tab) => setActiveTab(tab);
 
@@ -27,7 +32,7 @@ const AnalyticsChannels = () => {
   return (
     <AnalyticsContainer>
       <AnalyticsHead />
-      <ChannelInfo />
+      <ChannelInfo channel={channel} />
       <ChannelInfoWrapper>
         <ChannelInfoBlock>
           <ChannelInfoLabel>Геопозиция:</ChannelInfoLabel>
@@ -43,7 +48,7 @@ const AnalyticsChannels = () => {
           </ChannelInfoValue>
         </ChannelInfoBlock>
       </ChannelInfoWrapper>
-      <AnalyticsStatistics />
+      <AnalyticsStatistics id={channel?.id} />
       <ContentHeadContainer>
         <ContentHead>
           <ContentHeadText
@@ -59,13 +64,16 @@ const AnalyticsChannels = () => {
             Превью
           </ContentHeadText>
         </ContentHead>
+       {activeTab == "statistics" && (
         <FilterBlock>
           <FilterIcon color="#D6DCEC" />
           <FilterText>Фильтр</FilterText>
           <CustomSelectThree
             options={[
               { id: '24h', label: '24 часа' },
-              { id: '48h', label: '48 часов' },
+              { id: 'week', label: 'Неделя' },
+              { id: 'month', label: 'Месяц' },
+              { id: 'year', label: 'Год' },
             ]}
             value={selectedFilter}
             onChange={handleChange}
@@ -73,11 +81,12 @@ const AnalyticsChannels = () => {
             right="-20px"
           />
         </FilterBlock>
+      )}
       </ContentHeadContainer>
       {activeTab == "statistics" ? (
         <StatisticsTab />
       ) : (
-        <PreviewTab />
+        <PreviewTab channelId={channel.id} />
       )}
     </AnalyticsContainer>
   )

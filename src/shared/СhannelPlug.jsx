@@ -1,8 +1,8 @@
 import styled from "styled-components";
 
-const СhannelPlug = ({width, height, text}) => {
+const СhannelPlug = ({width, height, text, radius}) => {
   return (
-    <Plug $width={width} $height={height}>
+    <Plug $width={width} $height={height} $radius={radius}>
       {text?.split(" ").map(word => word[0]).join("").toUpperCase().slice(0, 2)}
     </Plug>
   )
@@ -14,7 +14,7 @@ const Plug = styled.div`
   justify-content: center;
   width: ${({$width}) => $width};
   height: ${({$height}) => $height};
-  border-radius: 12px;
+  border-radius: ${({$radius}) => $radius ? $radius : "12px"};
   background-color: #2B89ED;
   font-size: 20px;
   font-weight: 700;

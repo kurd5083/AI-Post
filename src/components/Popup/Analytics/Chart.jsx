@@ -122,50 +122,35 @@ const Chart = ({ data }) => {
               strokeWidth="3"
               fill="none"
             />
-
-            {hoverData.index !== null && (
-              <g>
-                <circle
-                  cx={hoverData.x}
-                  cy={hoverData.y}
-                  r="6"
-                  fill="#336CFF"
-                  stroke="#FFFFFF"
-                  strokeWidth="3"
-                />
-                <text
-                  x={hoverData.x}
-                  y={getTooltipY(hoverData.y)}
-                  textAnchor="middle"
-                  fontWeight={600}
-                  fontSize="14"
-                  fill="#FFF"
-                >
-                  {formatY(hoverData.value)}
-                </text>
-                <line
-                  x1={hoverData.x}
-                  y1={hoverData.y}
-                  x2={hoverData.x}
-                  y2={185}
-                  stroke="#FFFFFF"
-                  strokeWidth="1"
-                  strokeDasharray="4 2"
-                />
-              </g>
-            )}
           </svg>
-          {hoverData.index !== null && (
-  <ChartTooltip
-    style={{
-      left: hoverData.x,
-      top: hoverData.y,
-    }}
-  >
-    <b>{months[hoverData.index]}</b>
-    <span>{formatY(hoverData.value)}</span>
-    <small>Просмотры</small>
-  </ChartTooltip>
+         {hoverData.index !== null && (
+  <>
+    <HoverLine
+      style={{
+        left: hoverData.x,
+        top: hoverData.y,
+        height: 300 - hoverData.y,
+      }}
+    />
+
+    <HoverDot
+      style={{
+        left: hoverData.x,
+        top: hoverData.y,
+      }}
+    />
+
+    <ChartTooltip
+      style={{
+        left: hoverData.x,
+        top: hoverData.y,
+      }}
+    >
+      <b>{months[hoverData.index]}</b>
+      <span>{formatY(hoverData.value)}</span>
+      <small>Просмотры</small>
+    </ChartTooltip>
+  </>
 )}
         </StatsChartLine>
 
@@ -250,9 +235,31 @@ const StatsData = styled.div`
   position: relative;
   width: 100%;
 `;
+const HoverDot = styled.div`
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  background: #336CFF;
+  border: 3px solid #fff;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  z-index: 4;
+`;
+
+const HoverLine = styled.div`
+  position: absolute;
+  width: 0;
+  border-left: 1px dashed #fff;
+  opacity: 0.6;
+
+  transform: translateX(-50%);
+  pointer-events: none;
+  z-index: 3;
+`;
 const ChartTooltip = styled.div`
   position: absolute;
-  transform: translate(-20%, 10%);
+  transform: translate(10%, 10%);
   background: #4164C029;
   backdrop-filter: blur(24px);
   border-radius: 12px;

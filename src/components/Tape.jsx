@@ -36,7 +36,6 @@ const Tape = () => {
 
   const { mutate: createFeed, isPending: feedPending } = useCreatePersonalNewsFeed();
   const { newsFeed, newsFeedsLoading } = useGetPersonalNewsFeedId(2);
-  console.log(newsFeed, 'newsFeed')
   const { addNotification } = useNotificationStore();
 
   const handleFilterClick = () => {

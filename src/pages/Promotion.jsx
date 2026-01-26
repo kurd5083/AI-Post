@@ -1,15 +1,19 @@
 import styled from "styled-components";
-import PageHead from '@/components/PageHead'
-import CustomSelect from '@/shared/CustomSelect'
-import BtnBase from "@/shared/BtnBase";
 import { Link } from "react-router";
-import { usePromotionServices } from "@/lib/promotion/usePromotionServices";
+
 import SpeakerIcon from "@/icons/SpeakerIcon";
+
+import BtnBase from "@/shared/BtnBase";
+import CustomSelect from '@/shared/CustomSelect'
+import Empty from "@/shared/Empty";
+
+import PageHead from '@/components/PageHead'
 import ModernLoading from "@/components/ModernLoading";
+
+import { usePromotionServices } from "@/lib/promotion/usePromotionServices";
 
 const Promotion = () => {
 	const { servicesData, servicesDataPending } = usePromotionServices();
-
 	return (
 		<PromotionContainer>
 			<PageHead />
@@ -44,35 +48,39 @@ const Promotion = () => {
 			{servicesDataPending ? (
 				<ModernLoading text="Загрузка услуг..." />
 			) : (
-				<PromotionCards>
-					{servicesData?.length > 0 ? servicesData.map((item) => (
-						<PromotionCard key={item.service}>
-							<CardIcon><SpeakerIcon width={24} height={24} /></CardIcon>
-							<PromotionCardInfo>
-								<PromotionCardArea>{item.category}</PromotionCardArea>
-								<h3>{item.name}</h3>
-								<PromotionCardDesc>
-									<InfoRow>
-										<span>Мин/Макс: {item.min} / {item.max}</span>
-										<span>Цена: {item.rate}</span>
-										<span>Тип: {item.type}</span>
-									</InfoRow>
+				servicesData?.length > 0 ? (
+					<PromotionCards>
+						{servicesData?.map((item) => (
+							<PromotionCard key={item.service}>
+								<CardIcon><SpeakerIcon width={24} height={24} /></CardIcon>
+								<PromotionCardInfo>
+									<PromotionCardArea>{item.category}</PromotionCardArea>
+									<h3>{item.name}</h3>
+									<PromotionCardDesc>
+										<InfoRow>
+											<span>Мин/Макс: {item.min} / {item.max}</span>
+											<span>Цена: {item.rate}</span>
+											<span>Тип: {item.type}</span>
+										</InfoRow>
 
-									<Tags>
-										{item.refill && <Tag $bg="#336CFF">Refill</Tag>}
-										{item.cancel && <Tag $bg="#FF3B30">Cancel</Tag>}
-										{item.dripfeed && <Tag $bg="#FFD60A" $color="#000">Dripfeed</Tag>}
-									</Tags>
-								</PromotionCardDesc>
-								<BtnBase $color="#fff" $bg="#336CFF" $padding="17px 80px">
-									Заказать
-								</BtnBase>
-							</PromotionCardInfo>
-						</PromotionCard>
-					)) : (
-						<EmptyBlock>Услуги не найдены</EmptyBlock>
-					)}
-				</PromotionCards>
+										<Tags>
+											{item.refill && <Tag $bg="#336CFF">Refill</Tag>}
+											{item.cancel && <Tag $bg="#FF3B30">Cancel</Tag>}
+											{item.dripfeed && <Tag $bg="#FFD60A" $color="#000">Dripfeed</Tag>}
+										</Tags>
+									</PromotionCardDesc>
+									<BtnBase $color="#fff" $bg="#336CFF" $padding="17px 80px">
+										Заказать
+									</BtnBase>
+								</PromotionCardInfo>
+							</PromotionCard>
+						))}
+					</PromotionCards>
+				) : (
+					<EmptyContainer>
+						<Empty icon="🛠️">Услуги не найдены</Empty>
+					</EmptyContainer>
+				)
 			)}
 		</PromotionContainer>
 	)
@@ -223,13 +231,14 @@ const Tag = styled.span`
   padding: 4px 8px;
   border-radius: 8px;
 `
-const EmptyBlock = styled.div`
-	text-align: center;
-	color: #6A7080;
-	padding: 48px 0;
-	font-weight: 600;
-	background-color: #1C2438;
-	border-radius: 16px;
-	margin-top: 40px;
+const EmptyContainer = styled.div`
+	padding: 0 56px;
+
+	@media(max-width: 1600px) {
+    padding: 0 32px;
+  }
+  @media(max-width: 768px) {
+    padding: 0 24px;
+  }
 `;
 export default Promotion

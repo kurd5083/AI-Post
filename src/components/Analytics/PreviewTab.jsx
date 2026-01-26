@@ -11,109 +11,29 @@ import TimeIcon from "@/icons/TimeIcon";
 
 import CustomSelectThree from "@/shared/CustomSelectThree";
 
+import { useMentions } from "@/lib/tgStat/useMentions";
+import { usePostsByChannel } from "@/lib/posts/usePostsByChannel";
 // import useFadeOnScroll from "@/lib/useFadeOnScroll";	
+const months = [
+  "янв", "фев", "мар", "апр", "май", "июн",
+  "июл", "авг", "сен", "окт", "ноя", "дек"
+];
 
-const mentions = [
-  {
-    id: 1,
-    name: "Antropia Digital",
-    audience: "5.092.302",
-    avatar: "",
-    time: "2 часа назад",
-    action: "Упомянул канал",
-    title: "Новые тренды в цифровом маркетинге",
-    text: "Обзор ключевых изменений в маркетинговых стратегиях для соцсетей и рекламы.",
-    views: "12.3k",
-    comments: "34",
-	channel: '@Antropia_Gaming'
-  },
-  {
-    id: 2,
-    name: "Design Trends",
-    audience: "2.281.930",
-    avatar: "",
-    time: "2 часа назад",
-    action: "Упомянул канал",
-    title: "Мобильный UI 2025",
-    text: "Разбор трендов в визуальном стиле и UX обработке действий.",
-    views: "8.1k",
-    comments: "21",
-	channel: '@Antropia_Gaming'
-  },
-  {
-    id: 3,
-    name: "ArtLab Studio",
-    audience: "890.412",
-    avatar: "",
-    time: "2 часа назад",
-    action: "Упоминание",
-    title: "AI в сценографии",
-    text: "Как Midjourney и Stable Diffusion уже меняют индустрию театра.",
-    views: "4.7k",
-    comments: "12",
-	channel: '@Antropia_Gaming'
-  },
-  {
-    id: 4,
-    name: "Digital News",
-    audience: "1.044.880",
-    avatar: "",
-    time: "2 часа назад",
-    action: "Упомянул канал",
-    title: "IT события недели",
-    text: "Главные новости IT-индустрии за последнюю неделю: релизы, обновления и аналитика.",
-    views: "9.2k",
-    comments: "18",
-	channel: '@Antropia_Gaming'
-  }
-];
-const posts = [
-	{
-		id: 1,
-		author: "CNN",
-		avatar: "",
-		time: "1 час назад",
-		title: "Новогодние праздники",
-		text: "Одежду для питомцев, набор для гадания на гуще игрушечных гномов и снеговика оставили в метро",
-		views: "1.5к",
-		comments: "14",
-	},
-	{
-		id: 2,
-		author: "Antropia Gaming",
-		avatar: "",
-		time: "2 часа назад",
-		title: "Бесплатные ассеты",
-		text: "Подборка лучших бесплатных ассетов Unreal Engine и Unity",
-		views: "980",
-		comments: "6",
-	},
-	{
-		id: 3,
-		author: "Design Trends",
-		avatar: "",
-		time: "5 часов назад",
-		title: "Мобильный UI 2025",
-		text: "Разбор трендов в визуальном стиле и UX обработке действий",
-		views: "2.1к",
-		comments: "44",
-	},
-	{
-		id: 4,
-		author: "ArtLab Studio",
-		avatar: "",
-		time: "1 день назад",
-		title: "AI в сценографии",
-		text: "Как Midjourney и Stable Diffusion уже меняют индустрию театра",
-		views: "740",
-		comments: "2",
-	},
-];
-const PreviewTab = () => {
+const formatPostDate = (timestamp) => {
+  const d = new Date(timestamp * 1000); // преобразуем в миллисекунды
+  const day = d.getDate();
+  const month = months[d.getMonth()];
+  const hours = String(d.getHours()).padStart(2, "0");
+  const minutes = String(d.getMinutes()).padStart(2, "0");
+  return `${day} ${month}, ${hours}:${minutes}`;
+};
+
+const PreviewTab = ({ channelId }) => {
 	// const { fadeVisible: fadeMentions, ref: fadeMentionsRef } = useFadeOnScroll(20);
 	// const { fadeVisible: fadePosts, ref: fadePostsRef } = useFadeOnScroll(20);
 	const [viewMode, setViewMode] = useState("List");
-
+	const { posts } = usePostsByChannel({channelId});
+	console.log(posts)
 	// const mentionsRef = useRef();
 	// const postsRef = useRef();
 
@@ -134,10 +54,17 @@ const PreviewTab = () => {
 	// 	window.addEventListener("resize", updateWidths);
 	// 	return () => window.removeEventListener("resize", updateWidths);
 	// }, []);
+
+	const { mentions, mentionsLoading } = useMentions({
+		channelId: channelId,
+		limit: 8,
+	});
+
 	const handleChange = (newValue) => {
 		if (!newValue) return;
 		setViewMode(newValue);
 	};
+
 	return (
 		<PreviewContainer>
 			<div>
@@ -161,48 +88,51 @@ const PreviewTab = () => {
 					Просмотрите ленту, где указаны каналы, которые вас упомянули
 				</PreviewDescription>
 				<MentionsList
-					// ref={el => {
-					// 	mentionsRef.current = el;
-					// 	if (fadeMentionsRef) fadeMentionsRef.current = el;
-					// }}
-					// $fadeVisible={fadeMentions}
-					// $containerWidth={mentionsWidth}
+				// ref={el => {
+				// 	mentionsRef.current = el;
+				// 	if (fadeMentionsRef) fadeMentionsRef.current = el;
+				// }}
+				// $fadeVisible={fadeMentions}
+				// $containerWidth={mentionsWidth}
 				>
-					{mentions.map(m => (
+					{mentions?.response?.items.map(m => (
 						viewMode === 'List' ? (
 							<MentionCard key={m.id}>
-							<MentionsCardChannelInfo>
-								<ChannelAva src={m.avatar} alt="" />
-								<ChannelInfoContainer>
-									<ChannelName>{m.name}</ChannelName>
-									<MentionsCardAudience>
-										<img src={users} alt="users icon" />
-										{m.audience}
-									</MentionsCardAudience>
-								</ChannelInfoContainer>
-							</MentionsCardChannelInfo>
-							<MentionsCardMeta>
-								<MentionsCardMentionFrom>{m.action}</MentionsCardMentionFrom>
-								<MentionsCardTimestamp>
-									<TimeIcon color="#6A7080" />{m.date}
-								</MentionsCardTimestamp>
-							</MentionsCardMeta>
-						</MentionCard>
+								<MentionsCardChannelInfo>
+									<ChannelAva src={m.postDetails.image} alt="" />
+									<ChannelInfoContainer>
+										<ChannelName>{m.postDetails.channelTitle}</ChannelName>
+										<CardDetail>
+											<MentionsCardParams>
+												<img src={users} alt="users icon" />
+												{m.postDetails.audience}
+											</MentionsCardParams>
+											<MentionsCardParams>
+												<EyeIcon color="#6A7080" hoverColor="#6A7080" width={17} height={12} cursor="default" />
+												{m.postDetails.views}
+											</MentionsCardParams>
+										</CardDetail>
+									</ChannelInfoContainer>
+								</MentionsCardChannelInfo>
+								<MentionsCardMeta>
+									<MentionsCardMentionFrom>Упомянул канал</MentionsCardMentionFrom>
+									<MentionsCardTimestamp>
+										<TimeIcon color="#6A7080" />
+										 {formatPostDate(m.postDetails.date)}
+									</MentionsCardTimestamp>
+								</MentionsCardMeta>
+							</MentionCard>
 						) : (
 							<PostsCard key={m.id}>
 								<PostHead>
-									<PostChannelAva src={m.avatar} />
-									<PostChannelName>{m.author}</PostChannelName>
-									<PostTime><TimeIcon color="#6A7080" />{m.time}</PostTime>
+									<PostChannelAva src={m.postDetails.image} />
+									<PostChannelName>{m.postDetails.channelTitle}</PostChannelName>
+									<PostTime><TimeIcon color="#6A7080" />{formatPostDate(m.postDetails.date)}</PostTime>
 								</PostHead>
-								<PostTitle>{m.title}</PostTitle>
-								<PostText>{m.text}<br/>В <span>{m.channel}</span></PostText>
+								<PostText dangerouslySetInnerHTML={{ __html: m.postDetails.text }} />
 								<PostFooter>
-									<PostFooterParams>
-										<p><EyeIcon color="#336CFF" hoverColor="#336CFF" width={20} height={20} cursor="default" /> {m.views}</p>
-										<p><img src={pointLine} alt="" /> {m.comments}</p>
-									</PostFooterParams>
-									<MentionsCardMentionFrom>{m.action}</MentionsCardMentionFrom>
+									<PostFooterParams><EyeIcon color="#336CFF" hoverColor="#336CFF" width={20} height={20} cursor="default" />{m.postDetails.views}</PostFooterParams>
+									<MentionsCardMentionFrom>Упомянул канал</MentionsCardMentionFrom>
 								</PostFooter>
 							</PostsCard>
 						)
@@ -213,33 +143,32 @@ const PreviewTab = () => {
 				<PreviewTitle>Посты канала</PreviewTitle>
 				<PreviewDescription>Лента с постами и статистикой отслеживаемого вами канала</PreviewDescription>
 				<PostsList
-					// ref={el => {
-					// 	postsRef.current = el;
-					// 	if (fadePostsRef) fadePostsRef.current = el;
-					// }}
-					// $fadeVisible={fadePosts}
-					// $containerWidth={postsWidth}
+				// ref={el => {
+				// 	postsRef.current = el;
+				// 	if (fadePostsRef) fadePostsRef.current = el;
+				// }}
+				// $fadeVisible={fadePosts}
+				// $containerWidth={postsWidth}
 				>
-					{posts.map(p => (
-							<PostsCard key={p.id}>
-								<PostHead>
-									<PostChannelAva src={p.avatar} />
-									<PostChannelName>{p.author}</PostChannelName>
-									<PostTime><TimeIcon color="#6A7080" />{p.time}</PostTime>
-								</PostHead>
-								<PostTitle>{p.title}</PostTitle>
-								<PostText>{p.text}</PostText>
-								<PostFooter>
-									<PostFooterParams>
-										<p><EyeIcon color="#336CFF" hoverColor="#336CFF" width={20} height={20} cursor="default" /> {p.views}</p>
-										<p><img src={pointLine} alt="" /> {p.comments}</p>
-									</PostFooterParams>
-									<PostArrow>
-										<ArrowIcon color="#6A7080" hoverColor="#6A7080" />
-									</PostArrow>
-								</PostFooter>
-							</PostsCard>
-					
+					{posts?.map(p => (
+						<PostsCard key={p.id}>
+							<PostHead>
+								<PostChannelAva src={p.avatar} />
+								<PostChannelName>{p.author}</PostChannelName>
+								<PostTime><TimeIcon color="#6A7080" />{p.time}</PostTime>
+							</PostHead>
+							<PostTitle>{p.title}</PostTitle>
+							<PostText>{p.text}</PostText>
+							<PostFooter>
+								<PostFooterParams>
+									<p><EyeIcon color="#336CFF" hoverColor="#336CFF" width={20} height={20} cursor="default" /> {p.views}</p>
+								</PostFooterParams>
+								<PostArrow>
+									<ArrowIcon color="#6A7080" hoverColor="#6A7080" />
+								</PostArrow>
+							</PostFooter>
+						</PostsCard>
+
 					))}
 				</PostsList>
 			</div>
@@ -350,7 +279,13 @@ const ChannelName = styled.div`
 	font-size: 16px;
 	font-weight: 700;
 `;
-const MentionsCardAudience = styled.span`
+const CardDetail = styled.div`
+	display: flex;
+	align-items: center;
+	gap: 24px;
+`;
+
+const MentionsCardParams = styled.span`
 	display: flex;
 	align-items: center;
 	gap: 10px;
@@ -358,6 +293,7 @@ const MentionsCardAudience = styled.span`
 	font-size: 14px;
 	font-weight: 700;
 `;
+
 const MentionsCardMeta = styled.div`
 	display: flex;
 	flex-direction: column;
@@ -452,30 +388,25 @@ const PostText = styled.p`
 	font-weight: 600;
 	line-height: 20px;
 	color: #6A7080;
-	span {
+	display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  padding-right: 40px;
+  font-family: "Montserrat Alternates", sans-serif;
+	a, span {
 		color: #336CFF;
 	}
 `;
-const PostChannel = styled.span`
-	font-size: 14px;
-	font-weight: 600;
-	line-height: 20px;
-`;
-
 const PostFooter = styled.div`
 	display: flex;
 	justify-content: space-between;
 `;
 const PostFooterParams = styled.div`
 	display: flex;
-	gap: 24px;
-
-	p {
-		display: flex;
-		align-items: center;
-		gap: 16px;
-		font-weight: 600;
-	}
+	align-items: center;
+	gap: 16px;
+	font-weight: 600;
 `;
 const PostArrow = styled.button`
   display: flex;

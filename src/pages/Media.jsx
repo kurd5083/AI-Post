@@ -7,35 +7,43 @@ import del from "@/assets/del.svg";
 import PageHead from '@/components/PageHead'
 import PageFilter from "@/components/PageFilter";
 import ModernLoading from "@/components/ModernLoading";
+import BtnBase from "@/shared/BtnBase";
+import Empty from "@/shared/Empty";
 
 import { useGetMediaLibrary } from "@/lib/mediaLibrary/useGetMediaLibrary";
 import { useDeleteMediaFile } from "@/lib/mediaLibrary/useDeleteMediaFile";
 import { useAddPostImagesMedia } from "@/lib/mediaLibrary/useAddPostImagesMedia";
 import { useSearchPexelsPhotos } from "@/lib/mediaLibrary/useSearchPexelsPhotos";
+import { useUploadMedia } from '@/lib/mediaLibrary/useUploadMedia';
+import { useDebounce } from "@/lib/useDebounce";
 
 import { usePopupStore } from "@/store/popupStore";
 import { useNotificationStore } from "@/store/notificationStore";
 import { useLightboxStore } from "@/store/lightboxStore";
+import useSearchStore from "@/store/searchStore";
 
-import BtnBase from "@/shared/BtnBase";
 
 const Media = () => {
   const [activeTab, setActiveTab] = useState("my");
-  const [activeFilter, setActiveFilter] = useState("all");
   const [activeCategory, setActiveCategory] = useState("all");
+  const [uploadingIds, setUploadingIds] = useState([]);
+  const [addingIds, setAddingIds] = useState([]);
+
   const { openPopup } = usePopupStore();
   const { addNotification } = useNotificationStore();
   const { openLightbox } = useLightboxStore();
-  const [addingIds, setAddingIds] = useState([]);
+  const { searchQuery } = useSearchStore();
+  const debouncedQuery = useDebounce(searchQuery, 500);
 
   const { photosData, photosLoading } = useSearchPexelsPhotos({
-    query: "nature",
-    per_page: 24,
+    query: debouncedQuery || "nature",
+    per_page: 50,
   });
-  console.log(photosData)
+
   const { mediaItems, mediaLoading } = useGetMediaLibrary();
   const { mutate: deleteMedia, isPending: deletingPending } = useDeleteMediaFile();
   const { mutate: addImages, isPending: addingPending } = useAddPostImagesMedia();
+  const { mutate: uploadMedia, isPending: uploadMediaPending } = useUploadMedia();
 
   const categoryButtons = [
     { id: "all", label: "Вся медиа" },
@@ -45,13 +53,42 @@ const Media = () => {
   ];
 
   const filteredMedia = mediaItems?.items?.filter(item => {
-    if (activeCategory === "all") return true;
-    if (activeCategory === "images") return item.mimeType.startsWith("image/");
-    if (activeCategory === "gifs") return item.mimeType === "image/gif";
-    if (activeCategory === "videos") return item.mimeType.startsWith("video/");
-    return true;
+    const categoryMatch =
+      activeCategory === "all" ||
+      (activeCategory === "images" && item.mimeType.startsWith("image/")) ||
+      (activeCategory === "gifs" && item.mimeType === "image/gif") ||
+      (activeCategory === "videos" && item.mimeType.startsWith("video/"));
+
+    if (!categoryMatch) return false;
+
+    if (!debouncedQuery.trim()) return true;
+
+    const q = debouncedQuery.toLowerCase();
+
+    if (item.description) {
+      return item.description.toLowerCase().includes(q);
+    } else {
+      return item.originalName?.toLowerCase().includes(q);
+    }
   });
 
+  const handleSave = (photo) => {
+    if (uploadingIds.includes(photo.id)) return;
+
+    setUploadingIds(prev => [...prev, photo.id]);
+
+    uploadMedia({ url: photo.src.original }, {
+      onSuccess: () => {
+        addNotification("Картинка добавлена", "success");
+      },
+      onError: (err) => {
+        addNotification(err?.message || "Ошибка сохранения картинки", "error");
+      },
+      onSettled: () => {
+        setUploadingIds(prev => prev.filter(id => id !== photo.id));
+      }
+    });
+  };
   const handleDelete = (id, name) => {
     deleteMedia(id, {
       onSuccess: () => addNotification(`Файл ${name} удалён`, "delete"),
@@ -99,38 +136,24 @@ const Media = () => {
       <PageHead>
         <HeadTabs>
           {activeTab === "my" && (
-          <BtnBase
-            $padding="16px 45px"
-            $bg="#336CFF"
-            $color="#FFFFFF"
-            onClick={() => openPopup("upload_media", "popup")}
-          >
-            + Загрузить медиа
-          </BtnBase>
-        )}
-          <TabBtn
-            $active={activeTab === "my"}
-            onClick={() => setActiveTab("my")}
-          >
-            Мои медиа
-          </TabBtn>
-
-          <TabBtn
-            $active={activeTab === "pexels"}
-            onClick={() => setActiveTab("pexels")}
-          >
-            Pexels
-          </TabBtn>
+            <BtnBase
+              $padding="16px 45px"
+              $bg="#336CFF"
+              $color="#FFFFFF"
+              onClick={() => openPopup("upload_media", "popup")}
+            >
+              + Загрузить медиа
+            </BtnBase>
+          )}
+          <TabBtn $active={activeTab === "my"} onClick={() => setActiveTab("my")}>Мои медиа</TabBtn>
+          <TabBtn $active={activeTab === "pexels"} onClick={() => setActiveTab("pexels")}>Pexels</TabBtn>
         </HeadTabs>
-
-        
       </PageHead>
       <PageFilter
-        activeFilter={activeFilter}
-        setActiveFilter={setActiveFilter}
         placeholder="Поиск по медиа"
+        filter={false}
       />
-      <MediaHead>
+      {/* <MediaHead>
         {categoryButtons.map((button) => (
           <MediaHeadText
             key={button.id}
@@ -140,76 +163,14 @@ const Media = () => {
             {button.label}
           </MediaHeadText>
         ))}
-      </MediaHead>
-      {/* {mediaLoading ? (
-        <ModernLoading text="Загрузка медиа..." />
-      ) : filteredMedia?.length === 0 ? (
-        <EmptyMedia>Медиа отсутствует</EmptyMedia>
-      ) : (
-        <MediaCards>
-          {filteredMedia?.map((item) => (
-            <MediaCard key={item.id}>
-              <MediaCardImage
-                src={item.url}
-                alt={item.originalName}
-                onClick={() => openLightbox({
-                  images: [item.url],
-                  initialIndex: 0
-                })}
-              />
-              <h4>{item.description}</h4>
-              <MediaCardSize>
-                <img src={download} alt="download icon" width={16} height={16} />
-                {(item.size / 1024 / 1024).toFixed(2)} MB
-              </MediaCardSize>
-              {item.tags?.length > 0 && (
-                <MediaHash>
-                  {item.tags.map((tag, index) => <li key={index}>#{tag}</li>)}
-                </MediaHash>
-              )}
-              <CardActions>
-                <LeftActions>
-                  <BtnBase
-                    $bg="transparent"
-                    $color="#fff"
-                    $border={true}
-                    $padding="13px 24px"
-                    onClick={() => handleDownload(item.url, item.originalName)}
-                  >
-                    Скачать
-                  </BtnBase>
-                  <DeleteButton
-                    disabled={deletingPending}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      openPopup("delete_confirm", "popup_window", {
-                        itemName: item.originalName,
-                        onDelete: () => handleDelete(item.id, item.originalName),
-                      });
-                    }}
-                  >
-                    <img src={del} alt="del icon" width={14} height={16} />
-                  </DeleteButton>
-                </LeftActions>
-                <BtnBase
-                  $bg="#336CFF"
-                  $color="#fff"
-                  $padding="16px 19px"
-                  disabled={addingIds.includes(item.id)}
-                  onClick={() => handleAddToPost(item)}
-                >
-                  {addingIds.includes(item.id) ? "Добавление..." : "Добавить в пост"}
-                </BtnBase>
-              </CardActions>
-            </MediaCard>
-          ))}
-        </MediaCards>
-      )} */}
+      </MediaHead> */}
       {activeTab === "my" ? (
         mediaLoading ? (
           <ModernLoading text="Загрузка медиа..." />
         ) : filteredMedia?.length === 0 ? (
-          <EmptyMedia>Медиа отсутствует</EmptyMedia>
+          <EmptyContainer>
+            <Empty icon="🖼️">Медиа отсутствует</Empty>
+          </EmptyContainer>
         ) : (
           <MediaCards>
             {filteredMedia?.map((item) => (
@@ -219,7 +180,7 @@ const Media = () => {
                   alt={item.originalName}
                   onClick={() => openLightbox({ images: [item.url], initialIndex: 0 })}
                 />
-                <h4>{item.description}</h4>
+                <h4>{item.description || item.originalName}</h4>
                 <MediaCardSize>
                   <img src={download}
                     alt="download icon"
@@ -228,8 +189,6 @@ const Media = () => {
                   />
                   {(item.size / 1024 / 1024).toFixed(2)} MB
                 </MediaCardSize>
-                {item.tags?.length > 0 && (
-                  <MediaHash> {item.tags.map((tag, index) => <li key={index}>#{tag}</li>)} </MediaHash>)}
                 <CardActions>
                   <LeftActions>
                     <BtnBase
@@ -270,7 +229,9 @@ const Media = () => {
         photosLoading ? (
           <ModernLoading text="Загрузка фото..." />
         ) : photosData?.photos?.length === 0 ? (
-          <EmptyMedia>Фото не найдены</EmptyMedia>
+          <EmptyContainer>
+            <Empty icon="🖼️">Фото не найдены</Empty>
+          </EmptyContainer>
         ) : (
           <MediaCards>
             {photosData.photos.map((photo) => (
@@ -286,15 +247,28 @@ const Media = () => {
                   }
                 />
                 <h4>{photo.photographer}</h4>
-
-                <BtnBase
-                  $bg="#336CFF"
-                  $color="#fff"
-                  $padding="12px"
-                  onClick={() => handleDownload(photo.src.original, "pexels.jpg")}
-                >
-                  Скачать
-                </BtnBase>
+                <CardActions>
+                  <LeftActions>
+                    <BtnBase
+                      $bg="transparent"
+                      $color="#fff"
+                      $border={true}
+                      $padding="13px 24px"
+                      onClick={() => handleDownload(photo.src.original, "pexels.jpg")}
+                    >
+                      Скачать
+                    </BtnBase>
+                  </LeftActions>
+                  <BtnBase
+                    $bg="#336CFF"
+                    $color="#fff"
+                    $padding="16px 19px"
+                    onClick={() => handleSave(photo)}
+                    disabled={uploadingIds.includes(photo.id)}
+                  >
+                    {uploadingIds.includes(photo.id) ? "Добавление..." : "Добавить в медиа"}
+                  </BtnBase>
+                </CardActions>
               </MediaCard>
             ))}
           </MediaCards>
@@ -311,14 +285,12 @@ const HeadTabs = styled.div`
   display: flex;
   gap: 16px;
 `;
-
 const TabBtn = styled.button`
   padding: 16px 24px;
   border-radius: 12px;
   font-weight: 700;
   border: none;
   cursor: pointer;
-
   background: ${({ $active }) => ($active ? "#336CFF" : "#1C2438")};
   color: ${({ $active }) => ($active ? "#fff" : "#6A7080")};
 `;
@@ -357,7 +329,7 @@ const MediaCards = styled.div`
   gap: 16px;
   padding: 0 56px ;
   grid-template-columns: repeat(6, 1fr);
-@media (max-width: 1800px) {
+  @media (max-width: 1800px) {
     grid-template-columns: repeat(5, 1fr);
   }
   @media (max-width: 1600px) {
@@ -420,21 +392,6 @@ const MediaCardSize = styled.p`
 	font-weight: 700;
 	color: #6A7080;
 `
-const MediaHash = styled.ul`
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 8px;
-
-  li {
-    padding: 16px;
-    border-radius: 12px;
-    color: #AC60FD;
-    background-color: #242440;
-    font-size: 14px;
-    font-weight: 700;
-  }
-`
 const CardActions = styled.div`
   flex-grow: 1;
   display: flex;
@@ -467,13 +424,7 @@ const DeleteButton = styled.button`
 		background-color: rgba(239, 98, 132, 0.08);
 	}
 `
-const EmptyMedia = styled.div`
-  text-align: center;
-  color: #6A7080;
-  padding: 48px 0;
-  font-weight: 600;
-  background-color: #1C2438;
-  border-radius: 16px;
+const EmptyContainer = styled.div`
   margin: 0 56px ;
 
   @media (max-width: 1600px) {
