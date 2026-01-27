@@ -1,7 +1,6 @@
 import styled from "styled-components";
 import { Link } from "react-router";
 
-import SpeakerIcon from "@/icons/SpeakerIcon";
 
 import BtnBase from "@/shared/BtnBase";
 import CustomSelect from '@/shared/CustomSelect'
@@ -12,7 +11,10 @@ import ModernLoading from "@/components/ModernLoading";
 
 import { usePromotionServices } from "@/lib/promotion/usePromotionServices";
 
+import { usePopupStore } from "@/store/popupStore"
+
 const Promotion = () => {
+	const { openPopup, changeContent } = usePopupStore();
 	const { servicesData, servicesDataPending } = usePromotionServices();
 	return (
 		<PromotionContainer>
@@ -21,7 +23,7 @@ const Promotion = () => {
 				<PromotionHeadText $active={true}>Продвижение</PromotionHeadText>
 				<Link to='/my-orders'><PromotionHeadText >Мои заказы</PromotionHeadText></Link>
 			</PromotionHead>
-			<PromotionFilter>
+			{/* <PromotionFilter>
 				<label>Платформа
 					<CustomSelect
 						placeholder="Все платформы"
@@ -44,44 +46,67 @@ const Promotion = () => {
 						]}
 					/>
 				</label>
-			</PromotionFilter>
-			{servicesDataPending ? (
+			</PromotionFilter> */}
+			{/* {servicesDataPending ? (
 				<ModernLoading text="Загрузка услуг..." />
 			) : (
-				servicesData?.length > 0 ? (
-					<PromotionCards>
-						{servicesData?.map((item) => (
-							<PromotionCard key={item.service}>
-								<CardIcon><SpeakerIcon width={24} height={24} /></CardIcon>
-								<PromotionCardInfo>
-									<PromotionCardArea>{item.category}</PromotionCardArea>
-									<h3>{item.name}</h3>
-									<PromotionCardDesc>
-										<InfoRow>
-											<span>Мин/Макс: {item.min} / {item.max}</span>
-											<span>Цена: {item.rate}</span>
-											<span>Тип: {item.type}</span>
-										</InfoRow>
-
-										<Tags>
-											{item.refill && <Tag $bg="#336CFF">Refill</Tag>}
-											{item.cancel && <Tag $bg="#FF3B30">Cancel</Tag>}
-											{item.dripfeed && <Tag $bg="#FFD60A" $color="#000">Dripfeed</Tag>}
-										</Tags>
-									</PromotionCardDesc>
-									<BtnBase $color="#fff" $bg="#336CFF" $padding="17px 80px">
-										Заказать
-									</BtnBase>
-								</PromotionCardInfo>
-							</PromotionCard>
-						))}
-					</PromotionCards>
-				) : (
-					<EmptyContainer>
-						<Empty icon="🛠️">Услуги не найдены</Empty>
-					</EmptyContainer>
-				)
-			)}
+				servicesData?.length > 0 ? ( */}
+			<PromotionCards>
+				<PromotionCard>
+					<PromotionCardInfo>
+						<PromotionCardArea>Telegram</PromotionCardArea>
+						<h3>Бусты для канала</h3>
+						<PromotionCardDesc>Быстрое увеличение подписчиков и активности</PromotionCardDesc>
+						<BtnBase
+							$color="#fff"
+							$bg="#336CFF"
+							$margin="32"
+							$padding="17px 80px"
+							onClick={() =>
+								openPopup("select_channel", "popup_window", {
+									onSave: (channelId) =>
+										changeContent("boosts", "popup", {
+											channelId: channelId,
+										}),
+									dontClose: true, 
+								})
+							}
+						>
+							Заказать
+						</BtnBase>
+					</PromotionCardInfo>
+				</PromotionCard>
+				<PromotionCard>
+					<PromotionCardInfo>
+						<PromotionCardArea>Telegram</PromotionCardArea>
+						<h3>Охваты для канала</h3>
+						<PromotionCardDesc>Увеличение просмотров публикаций и вовлеченности</PromotionCardDesc>
+						<BtnBase
+							$color="#fff"
+							$bg="#336CFF"
+							$margin="32"
+							$padding="17px 80px"
+							onClick={() =>
+								openPopup("select_channel", "popup_window", {
+									onSave: (channelId) =>
+										changeContent("promotion", "popup", {
+											channelId: channelId,
+										}),
+									dontClose: true, 
+								})
+							}
+						>
+							Заказать
+						</BtnBase>
+					</PromotionCardInfo>
+				</PromotionCard>
+			</PromotionCards>
+			{/* // 	) : (
+			// 		<EmptyContainer>
+			// 			<Empty icon="🛠️">Услуги не найдены</Empty>
+			// 		</EmptyContainer>
+			// 	)
+			// )} */}
 		</PromotionContainer>
 	)
 }
@@ -176,9 +201,6 @@ const PromotionCard = styled.div`
 		margin-top: 24px;
 	}
 `
-const CardIcon = styled.div`
-	margin-top: 40px;
-`
 const PromotionCardInfo = styled.div`
 	h3 {
 		font-size: 24px;
@@ -200,45 +222,14 @@ const PromotionCardDesc = styled.div`
   margin-bottom: 24px;
 `
 
-const InfoRow = styled.div`
-  display: flex;
-	flex-direction: column;
-	align-items: flex-start;
-  gap: 12px;
-  margin-bottom: 12px;
-  font-size: 14px;
-  font-weight: 600;
-  color: #6A7080;
+// const EmptyContainer = styled.div`
+// 	padding: 0 56px;
 
-  span {
-    background-color: #1F2538;
-    padding: 6px 10px;
-    border-radius: 8px;
-  }
-`;
-
-const Tags = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-`
-
-const Tag = styled.span`
-  background-color: ${({ $bg }) => $bg || '#fff'};
-  color: ${({ $color }) => $color || '#fff'};
-  font-size: 12px;
-  font-weight: 700;
-  padding: 4px 8px;
-  border-radius: 8px;
-`
-const EmptyContainer = styled.div`
-	padding: 0 56px;
-
-	@media(max-width: 1600px) {
-    padding: 0 32px;
-  }
-  @media(max-width: 768px) {
-    padding: 0 24px;
-  }
-`;
+// 	@media(max-width: 1600px) {
+//     padding: 0 32px;
+//   }
+//   @media(max-width: 768px) {
+//     padding: 0 24px;
+//   }
+// `;
 export default Promotion

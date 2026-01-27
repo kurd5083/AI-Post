@@ -109,8 +109,8 @@ const SidebarContainer = styled.section`
   background: #131826;
   max-width: ${({ $isSidebarVisible }) => $isSidebarVisible ? '240px' : '116px'};
   width: 100%;
+  min-height: 100dvh;
   
-
   &::after {
     content: '';
     position: absolute;

@@ -44,14 +44,15 @@ const Head = styled.div`
   display: flex;
   justify-content: space-between;
   position: relative;
-  margin-top: 40px;
-	padding: 0 56px 30px;
+  margin-top: 24px;
+	padding: 0 56px;
 
   @media(max-width: 1600px) { 
-    padding: 0 32px 30px 
+    padding: 0 32px; 
 	}	
   @media(max-width: 768px) { 
-    padding: 0 24px 30px
+    padding: 0 24px;
+		margin-top: 0;
   }
 `
 const Arrow = styled.div`

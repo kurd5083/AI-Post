@@ -1,17 +1,25 @@
 import { useState, useRef, useEffect, useMemo } from "react";
 import styled from "styled-components";
-import Checkbox from "@/shared/Checkbox";
+
 import ArrowIcon from "@/icons/ArrowIcon";
 
-const CustomSelectThree = ({ placeholder = 'Выберите канал', options = [], value = null, onChange, view = false, background="#222B438F", width="220px", right="-20px" }) => {
+import Checkbox from "@/shared/Checkbox";
+import СhannelPlug from "@/shared/СhannelPlug";
+
+const CustomSelectThree = ({ placeholder = 'Выберите канал', options = [], value = null, onChange, view = false, background = "#222B438F", width = "220px", right = "-20px" }) => {
   const [isOpen, setIsOpen] = useState(false);
   const ref = useRef(null);
 
   const toggleItem = (id) => {
-  onChange(id === value ? null : id);
-  setIsOpen(false);
-};
-
+    if (id !== value) {
+      onChange(id);
+    }
+    setIsOpen(false);
+  };
+  const selected = useMemo(() => {
+    return options?.find((o) => o.id === value);
+  }, [value, options]);
+  
   const headerLabel = useMemo(() => {
     if (!value) return placeholder;
     const selectedOption = options?.find((o) => o.id === value);
@@ -31,12 +39,13 @@ const CustomSelectThree = ({ placeholder = 'Выберите канал', option
   return (
     <DropdownContainer ref={ref} $width={width}>
       <DropdownHeader onClick={(e) => {
-    e.stopPropagation(); // чтобы не дергалось дважды
-    setIsOpen(v => !v);
-  }} $view={view}>
+        e.stopPropagation();
+        setIsOpen(v => !v);
+      }} $view={view}>
+        {selected?.icon && <СhannelPlug width="32px" height="32px" text={selected.icon} />}
         <HeaderText title={headerLabel}>{headerLabel}</HeaderText>
         <Arrow $open={isOpen}>
-          <ArrowIcon color="#336CFF" hoverColor = "#336CFF" width={6} height={12}/>
+          <ArrowIcon color="#336CFF" hoverColor="#336CFF" width={6} height={12} />
         </Arrow>
       </DropdownHeader>
 
@@ -46,7 +55,7 @@ const CustomSelectThree = ({ placeholder = 'Выберите канал', option
             {options?.map((option) => (
               <DropdownItem key={option.id} onClick={() => toggleItem(option.id)}>
                 <ItemLeft>
-                  {option.avatar && <Avatar src={option.avatar} />}
+                  {selected?.icon && <СhannelPlug width="24px" height="24px" text={option.icon} />}
                   <ItemText>{option.label}</ItemText>
                 </ItemLeft>
                 <Checkbox
@@ -65,14 +74,14 @@ const CustomSelectThree = ({ placeholder = 'Выберите канал', option
 };
 
 const DropdownContainer = styled.div`
-  width: ${({$width}) => $width};
+  width: ${({ $width }) => $width};
   position: relative;
 `;
 const DropdownHeader = styled.div`
   display: flex;
   align-items: center;
   gap: 16px;
-  justify-content: ${({$view}) => $view ? 'flex-end' : 'flex-start'};
+  justify-content: ${({ $view }) => $view ? 'flex-end' : 'flex-start'};
   cursor: pointer;
 `;
 const HeaderText = styled.p`
@@ -94,8 +103,8 @@ const Arrow = styled.div`
 `;
 const DropdownList = styled.div`
   position: absolute;
-  right: ${({$right}) => $right};
-  background: ${({$background}) => $background};
+  right: ${({ $right }) => $right};
+  background: ${({ $background }) => $background};
   backdrop-filter: blur(20px);
   border-radius: 24px;
   margin-top: 20px;
@@ -121,11 +130,6 @@ const ItemLeft = styled.div`
   display: flex;
   align-items: center;
   gap: 16px;
-`;
-const Avatar = styled.img`
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
 `;
 const ItemText = styled.p`
   max-width: 100px;

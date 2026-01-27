@@ -90,6 +90,7 @@ const PageFilterInput = styled.input`
   font-size: 16px;
   font-weight: 700;
   border: none;
+  width: 100%;
 
   &::placeholder {
     color: #6A7080;

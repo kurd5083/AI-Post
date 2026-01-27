@@ -11,6 +11,11 @@ import YourChannels from "@/components/Analytics/YourChannels";
 import MonitoredChannels from "@/components/Analytics/MonitoredChannels";
 import PageFilter from "@/components/PageFilter";
 
+import { useDebounce } from "@/lib/useDebounce";
+
+import useSearchStore from "@/store/searchStore";
+
+
 const categoriesData = [
   [
     { name: "Блоги", q: "171.6 k" },
@@ -33,7 +38,12 @@ const categoriesData = [
 const Analytics = () => {
   const [active, setActive] = useState({ col: 0, index: 0 });
   const [viewMode, setViewMode] = useState("List");
-  
+
+  const { searchQuery } = useSearchStore();
+  const debouncedQuery = useDebounce(searchQuery, 500);
+
+
+
   const handleChange = (newValue) => {
     if (!newValue) return;
     setViewMode(newValue);
@@ -59,10 +69,14 @@ const Analytics = () => {
             />
           </FilterBlock>
         </TitleContainer>
-        <YourChannels viewMode={viewMode} />
-        <AnalyticsTitle>Отслеживаемые каналы</AnalyticsTitle>
-        <MonitoredChannels />
-        <AnalyticsTitleBig>Все категории</AnalyticsTitleBig>
+        <YourChannels debouncedQuery={debouncedQuery} viewMode={viewMode} />
+        <TitleContainer>
+          <AnalyticsTitle>Отслеживаемые каналы</AnalyticsTitle>
+        </TitleContainer>
+        <MonitoredChannels debouncedQuery={debouncedQuery}/>
+        <TitleContainer>
+          <AnalyticsTitleBig>Все категории</AnalyticsTitleBig>
+        </TitleContainer>
         <AnalyticsCategories>
           {categoriesData.map((column, colIndex) => (
             <AnalyticsCategory key={colIndex}>
@@ -74,7 +88,7 @@ const Analytics = () => {
                     className={isActive ? "active" : ""}
                     onClick={() => setActive({ col: colIndex, index: itemIndex })}
                   >
-                    {item.name}
+                    <p>{item.name}</p>
                     <span>{item.q}</span>
                   </li>
                 );
@@ -89,25 +103,32 @@ const Analytics = () => {
 
 const AnalyticsContainer = styled.section`
   position: relative;
-	padding: 0 56px 30px;
-
-  @media(max-width: 1600px) { 
-    padding: 0 32px 30px 
-	}	
-  @media(max-width: 768px) { 
-    padding: 0 24px 30px
-  }
+  padding-bottom:  30px;
 `
 const TitleContainer = styled.div` 
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
-	margin-bottom: 32px;
+  gap: 40px;
+  padding: 0 56px;
+
+  @media(max-width: 1600px) { 
+    padding: 0 32px 
+	}	
+  @media (max-width: 1400px) {
+    justify-content: flex-start;
+  }
+  @media(max-width: 768px) { 
+    flex-direction: column;
+    gap: 20px;
+    padding: 0 24px
+  }
 `;
 const AnalyticsTitle = styled.h2`
   font-family: "Montserrat Alternates", sans-serif;
 	font-size: 24px;
-	font-weight: 700;
+	font-weight: 700; 
+  text-align: center;
 `
 const FilterBlock = styled.div` 
 	display: flex;
@@ -125,7 +146,17 @@ const AnalyticsTitleBig = styled.h2`
 const AnalyticsCategories = styled.div`
   display: flex;
 	justify-content: space-between;
-	gap: 120px;
+  flex-wrap: wrap;
+
+	gap: 40px 120px;
+  padding: 0 56px;
+
+  @media(max-width: 1600px) { 
+    padding: 0 32px 
+	}	
+  @media(max-width: 768px) { 
+    padding: 0 24px
+  }
 `
 const AnalyticsCategory = styled.ul`
 	flex: 1;
@@ -136,14 +167,20 @@ const AnalyticsCategory = styled.ul`
 	li {
 		display: flex;
 		justify-content: space-between;
+    gap: 20px;
 		font-size: 20px;
 		font-weight: 600;
 		color: #6A7080;
 		cursor: pointer;
+    min-width: 240px;
 
+    p {
+      flex: 1;
+    }
 		span {
 			font-size: 14px;
 			font-weight: 700;
+      flex-grow: 0;
 		}
 		&.active {
       color: #336CFF;

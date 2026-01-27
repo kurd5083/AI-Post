@@ -3,6 +3,8 @@ import styled from "styled-components";
 
 import ArrowIcon from "@/icons/ArrowIcon";
 
+import СhannelPlug from "@/shared/СhannelPlug";
+
 const CustomSelect = ({ options = [], value, onChange, placeholder = "Выберите значение", padding=true, border=true, width }) => {
   const [open, setOpen] = useState(false);
   const selectRef = useRef(null);
@@ -30,7 +32,10 @@ const CustomSelect = ({ options = [], value, onChange, placeholder = "Выбер
   return (
     <SelectWrapper ref={selectRef} $width={width}>
       <SelectHeader onClick={toggle} $border={border} $padding={padding}>
-        <span>{selectedOption?.label || placeholder}</span>
+        <HeaderLeft>
+          {selectedOption?.icon && <СhannelPlug width="32px" height="32px" text={selectedOption.icon} />}
+          <span>{selectedOption?.label || placeholder}</span>
+        </HeaderLeft>
         <HeaderArrow className={open ? "open" : ""}>
           <ArrowIcon color="#D6DCEC" />
         </HeaderArrow>
@@ -43,6 +48,7 @@ const CustomSelect = ({ options = [], value, onChange, placeholder = "Выбер
               key={opt.value}
               onClick={() => handleSelect(opt)}
             >
+              {opt.icon && <СhannelPlug width="32px" height="32px" text={opt.icon} />}
               {opt.label}
             </SelectItem>
           ))}
@@ -72,7 +78,6 @@ const SelectHeader = styled.div`
   align-items: center;
   gap: 20px;
 `;
-
 const HeaderArrow = styled.div`
   transition: transform 0.2s ease;
   transform: rotate(90deg);
@@ -81,7 +86,11 @@ const HeaderArrow = styled.div`
     transform: rotate(270deg);
   }
 `;
-
+const HeaderLeft = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 16px;
+`;
 const SelectList = styled.ul`
   box-sizing: border-box;
   position: absolute;
@@ -99,12 +108,14 @@ const SelectList = styled.ul`
     display: none;
   }
 `;
-
 const SelectItem = styled.li`
-  padding: 16px 24px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 16px;
   cursor: pointer;
   color: #d6dcec;
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 700;
   border-bottom: 2px solid #2e3954;
 

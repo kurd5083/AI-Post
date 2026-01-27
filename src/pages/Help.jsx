@@ -11,6 +11,7 @@ import { helpDatas } from "@/data/helpDatas";
 
 import HighlightText from "@/shared/HighlightText";
 
+import { useDebounce } from "@/lib/useDebounce";
 import useFadeOnScroll from "@/lib/useFadeOnScroll";
 
 import useSearchStore from "@/store/searchStore";
@@ -23,16 +24,17 @@ const Help = () => {
   };
 
   const { searchQuery } = useSearchStore();
+  const debouncedQuery = useDebounce(searchQuery, 500);
 
   const filteredData = useMemo(() => {
-    if (!searchQuery.trim()) return helpDatas;
+    if (!debouncedQuery.trim()) return helpDatas;
 
-    const query = searchQuery.toLowerCase().trim();
+    const query = debouncedQuery.toLowerCase().trim();
     return helpDatas.filter(item =>
       item.q.toLowerCase().includes(query) ||
       item.a.toLowerCase().includes(query)
     );
-  }, [helpDatas, searchQuery]);
+  }, [helpDatas, debouncedQuery]);
 
   return (
     <>
@@ -49,7 +51,7 @@ const Help = () => {
                 <QuestionLeft>
                   <QuestionNum>{index + 1 < 10 ? `0${index + 1}` : index + 1}</QuestionNum>
                   <p>
-                    <HighlightText text={item.q} query={searchQuery} />
+                    <HighlightText text={item.q} query={debouncedQuery} />
                   </p>
                 </QuestionLeft>
                 <Icon open={openIndex === index}>
@@ -58,14 +60,14 @@ const Help = () => {
               </HelpQuestion>
               {openIndex === index && (
                 <Answer>
-                  <HighlightText text={item.a} query={searchQuery} />
+                  <HighlightText text={item.a} query={debouncedQuery} />
                 </Answer>
               )}
             </HelpItem>
           ))
         ) : (
           <NoResults>
-            По запросу "{searchQuery}" ничего не найдено
+            По запросу "{debouncedQuery}" ничего не найдено
           </NoResults>
         )}
       </HelpContainer>

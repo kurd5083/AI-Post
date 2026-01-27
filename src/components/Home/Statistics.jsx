@@ -45,7 +45,7 @@ const Statistics = () => {
           options={userChannels?.map(c => ({
             id: c.id,
             label: c.name,
-            avatar: c.avatarUrl,
+            icon: c.name,
           }))}
           value={selectedChannelId}
           onChange={setSelectedChannelId}

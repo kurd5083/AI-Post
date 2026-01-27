@@ -1,9 +1,14 @@
 import { useState } from "react";
 import styled from 'styled-components';
-import { useNotificationStore } from "@/store/notificationStore";
+
+import Empty from "@/shared/Empty";
+import HighlightText from "@/shared/HighlightText";
+
 import ModernLoading from "@/components/ModernLoading";
 
-const TableMyOrders = ({ promotionOrders, promotionOrdersPending }) => {
+import { useNotificationStore } from "@/store/notificationStore";
+
+const TableMyOrders = ({ promotionOrders, promotionOrdersPending, debouncedQuery }) => {
   const { addNotification } = useNotificationStore();
   const [copied, setCopied] = useState({});
 
@@ -56,7 +61,9 @@ const TableMyOrders = ({ promotionOrders, promotionOrdersPending }) => {
                     </TableCell>
                     <TableCell>
                       <CellOrdersLink>
-                        <span>{order.link}</span>
+                        <CellLink>
+                          <HighlightText text={order.link} query={debouncedQuery}>{order.link}</HighlightText>
+                        </CellLink>
                         <p onClick={() => handleCopy(order.link, order.id)}>
                           {copied[order.id] ? "Скопировано!" : "Скопировать"}
                         </p>
@@ -80,7 +87,7 @@ const TableMyOrders = ({ promotionOrders, promotionOrdersPending }) => {
               </tbody>
             </Table>
           ) : (
-            <EmptyBlock>Заказы не найдены</EmptyBlock>
+            <Empty icon="📦">Заказы не найдены</Empty>
           )}
         </TableWrapper>
       )}
@@ -109,7 +116,6 @@ const TableWrapper = styled.div`
 const Table = styled.table`
   width: 100%;
   border-spacing: 0;
-  margin-top: 16px;
   table-layout: fixed;
   border-collapse: separate;
 
@@ -179,9 +185,18 @@ const CellOrdersLink = styled.div`
   flex-direction: column;
   align-items: flex-start;
   gap: 8px;
-  span { color: #D6DCEC; }
+
   p { color: #336CFF; font-size: 12px; cursor: pointer; }
 `;
+const CellLink = styled.span`
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  word-break: break-all;
+  color: #D6DCEC;
+`;
+
 const TableCellStatus = styled.div`
   display: flex;
   align-items: center;
@@ -194,15 +209,6 @@ const StatusIndicator = styled.span`
   border-radius: 50%;
   background-color: ${props => props.$status ? '#B5EC5B' : '#EF6284'};
   margin-right: 16px;
-`;
-const EmptyBlock = styled.div`
-  text-align: center;
-  color: #6A7080;
-  padding: 48px 0;
-  font-weight: 600;
-  background-color: #1C2438;
-  border-radius: 16px;
-  margin-top: 40px;
 `;
 
 export default TableMyOrders;

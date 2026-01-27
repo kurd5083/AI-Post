@@ -1,17 +1,21 @@
 import { useState, useEffect } from "react";
 import styled from "styled-components";
-import BtnBase from "@/shared/BtnBase";
-import { useLightboxStore } from "@/store/lightboxStore";
-import { usePopupStore } from "@/store/popupStore";
-import normalizeUrl from "@/lib/normalizeUrl";
-import AvaPlug from "@/shared/AvaPlug";
+
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { registerLocale } from "react-datepicker";
 import ru from "date-fns/locale/ru";
 registerLocale("ru", ru);
+
+import BtnBase from "@/shared/BtnBase";
+import СhannelPlug from "@/shared/СhannelPlug";
+
+import normalizeUrl from "@/lib/normalizeUrl";
 import { useCreateCalendarEvent } from "@/lib/calendar/useCreateCalendarEvent";
+
 import { useNotificationStore } from "@/store/notificationStore";
+import { useLightboxStore } from "@/store/lightboxStore";
+import { usePopupStore } from "@/store/popupStore";
 
 const MAX_VISIBLE_IMAGES = 3;
 
@@ -64,7 +68,7 @@ const CardAddPost = ({ item, bg, selectedChannel }) => {
           {selectedChannel.avatarUrl ? (
             <CardAddItemImg src={selectedChannel.avatarUrl} alt={selectedChannel.name} />
           ) : (
-            <AvaPlug width="32px" height="32px" />
+            <СhannelPlug width="32px" height="32px" text={selectedChannel.name}/>
           )}
           <p>{selectedChannel.name}</p>
         </CardAddItemName>

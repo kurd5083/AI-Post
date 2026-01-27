@@ -286,7 +286,8 @@ const StatisticsContainer = styled.div`
     padding: 0 32px 30px 
   }	
   @media(max-width: 768px) { 
-    padding: 0 24px 30px
+    padding: 0 24px 30px;
+		max-height: 850px;
   }
 
 	/* ${({ $forceHorizontal, $fadeVisible, $containerWidth }) =>
@@ -322,6 +323,11 @@ const StatisticsItem = styled.div`
   border: 2px solid #2E3954;
   border-radius: 32px;
   padding: 40px 30px 24px 40px;
+  @media(max-width: 768px) { 
+    flex-direction: column;
+		align-items: flex-start;
+		width: 100%;
+	}
 `;
 const ButtonMore = styled.div`
 	position: absolute;

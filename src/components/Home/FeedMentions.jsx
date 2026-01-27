@@ -29,113 +29,12 @@ const FeedMentions = () => {
     }
   }, [userChannels]);
 
-  const { mentions, mentionsLoading } = useMentions({
-    channelId: selectedChannelId === 48 ? null : selectedChannelId,
+  const { mentions, mentionsPending } = useMentions({
+    channelId: selectedChannelId,
     limit: 8,
   });
 
-  const testMentions = [
-    {
-      mentionId: 1,
-      ava: "https://static10.tgstat.ru/channels/_0/bc/bc0026f2094fc3ccea0ff0a4790d3ea9.jpg",
-      username: "tech_channel",
-      mentionType: "channel",
-      channelId: 123,
-      postLink: "https://t.me/test/1",
-      postDetails: {
-        date: Math.floor(Date.now() / 1000) - 3600, // 1 час назад
-        text: "Отличный обзор новых технологий! Рекомендую посмотреть канал <b>@tech_channel</b> для актуальных новостей."
-      }
-    },
-    {
-      mentionId: 2,
-      ava: "https://static10.tgstat.ru/channels/_0/bc/bc0026f2094fc3ccea0ff0a4790d3ea9.jpg",
-      username: "design_news",
-      mentionType: "channel",
-      channelId: 456,
-      postLink: "https://t.me/test/2",
-      postDetails: {
-        date: Math.floor(Date.now() / 1000) - 7200, // 2 часа назад
-        text: "Интересная статья о дизайне. Особенно понравился раздел про <b>AI-генерацию</b> контента."
-      }
-    },
-    {
-      mentionId: 3,
-      ava: "https://static10.tgstat.ru/channels/_0/bc/bc0026f2094fc3ccea0ff0a4790d3ea9.jpg",
-      username: "marketing_tips",
-      mentionType: "channel",
-      channelId: 789,
-      postLink: "https://t.me/test/3",
-      postDetails: {
-        date: Math.floor(Date.now() / 1000) - 10800, // 3 часа назад
-        text: "Полезные советы по маркетингу в социальных сетях. Автоматизация постов - это будущее!"
-      }
-    },
-    {
-      mentionId: 4,
-      ava: "https://static10.tgstat.ru/channels/_0/bc/bc0026f2094fc3ccea0ff0a4790d3ea9.jpg",
-      username: "ai_insights",
-      mentionType: "channel",
-      channelId: 101,
-      postLink: "https://t.me/test/4",
-      postDetails: {
-        date: Math.floor(Date.now() / 1000) - 14400, // 4 часа назад
-        text: "Новые возможности искусственного интеллекта в контент-маркетинге. <b>Революция</b> уже началась!"
-      }
-    },
-    {
-      mentionId: 5,
-      ava: "https://static10.tgstat.ru/channels/_0/bc/bc0026f2094fc3ccea0ff0a4790d3ea9.jpg",
-      username: "content_creator",
-      mentionType: "channel",
-      channelId: 202,
-      postLink: "https://t.me/test/5",
-      postDetails: {
-        date: Math.floor(Date.now() / 1000) - 18000, // 5 часов назад
-        text: "Как создать вирусный контент? Секреты успешных постов и стратегии продвижения."
-      }
-    },
-    {
-      mentionId: 6,
-      ava: "https://static10.tgstat.ru/channels/_0/bc/bc0026f2094fc3ccea0ff0a4790d3ea9.jpg",
-      username: "social_media",
-      mentionType: "channel",
-      channelId: 303,
-      postLink: "https://t.me/test/6",
-      postDetails: {
-        date: Math.floor(Date.now() / 1000) - 21600, // 6 часов назад
-        text: "Аналитика и статистика - ключ к пониманию аудитории. Используйте данные для роста!"
-      }
-    },
-    {
-      mentionId: 7,
-      ava: "https://static10.tgstat.ru/channels/_0/bc/bc0026f2094fc3ccea0ff0a4790d3ea9.jpg",
-      username: "digital_trends",
-      mentionType: "channel",
-      channelId: 404,
-      postLink: "https://t.me/test/7",
-      postDetails: {
-        date: Math.floor(Date.now() / 1000) - 25200, // 7 часов назад
-        text: "Тренды цифрового маркетинга 2024. Что работает лучше всего для привлечения подписчиков?"
-      }
-    },
-    {
-      mentionId: 8,
-      ava: "https://static10.tgstat.ru/channels/_0/bc/bc0026f2094fc3ccea0ff0a4790d3ea9.jpg",
-      username: "tech_review",
-      mentionType: "channel",
-      channelId: 505,
-      postLink: "https://t.me/test/8",
-      postDetails: {
-        date: Math.floor(Date.now() / 1000) - 28800, // 8 часов назад
-        text: "Обзор новых инструментов для автоматизации контента. Экономия времени и повышение эффективности."
-      }
-    }
-  ];
-
-  const mentionItems = selectedChannelId === 48 
-    ? testMentions 
-    : (mentions?.response?.items || []);
+  const mentionItems = mentions?.response?.items || [];
   
   return (
     <FeedMentionsContainer>
@@ -149,7 +48,7 @@ const FeedMentions = () => {
             options={userChannels?.map((c) => ({
               id: c.id,
               label: c.name,
-              avatar: c.avatarUrl,
+              icon: c.name,
             }))}
             value={selectedChannelId}
             onChange={setSelectedChannelId}
@@ -175,7 +74,7 @@ const FeedMentions = () => {
         )}
       </FeedMentionsHead>
 
-      {!selectedChannelId || (selectedChannelId !== 48 && mentionsLoading) ? (
+      {!selectedChannelId || mentionsPending ? (
         <Empty icon="📣">Загрузка упоминаний...</Empty>
       ) : !mentionItems || mentionItems.length === 0 ? (
         <Empty icon="📣">Нет упоминаний</Empty>

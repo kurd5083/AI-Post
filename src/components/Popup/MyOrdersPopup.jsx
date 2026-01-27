@@ -123,7 +123,7 @@ const MyOrdersPopup = () => {
                     </TableCell>
                     <TableCell>
                       <CellOrdersLink>
-                        <span>{order.link}</span>
+                        <CellLink>{order.link}</CellLink>
                         <p onClick={() => handleCopy(order.link, order.id)}>
                           {copied[order.id] ? "Скопировано!" : "Скопировать"}
                         </p>
@@ -292,9 +292,17 @@ const CellOrdersLink = styled.div`
   flex-direction: column;
   align-items: flex-start;
   gap: 8px;
-  span { color: #D6DCEC; }
   p { color: #336CFF; font-size: 12px; cursor: pointer; }
 `;
+const CellLink = styled.span`
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  word-break: break-all;
+  color: #D6DCEC;
+`;
+
 const EmptyBlock = styled.div`
   text-align: center;
   color: #6A7080;

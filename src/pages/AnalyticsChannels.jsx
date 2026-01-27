@@ -21,14 +21,13 @@ const AnalyticsChannels = () => {
   const [activeTab, setActiveTab] = useState("statistics");
   const { id } = useParams()
   const { channel } = useChannelById(Number(id));
-
   const changeContent = (tab) => setActiveTab(tab);
 
   const handleChange = (newValue) => {
     if (!newValue) return;
     setSelectedFilter(newValue);
   };
-
+  if(!channel) return null
   return (
     <AnalyticsContainer>
       <AnalyticsHead />
@@ -86,7 +85,7 @@ const AnalyticsChannels = () => {
       {activeTab == "statistics" ? (
         <StatisticsTab />
       ) : (
-        <PreviewTab channelId={channel.id} />
+        <PreviewTab channelId={channel.id} channelName={channel.name} />
       )}
     </AnalyticsContainer>
   )
@@ -100,15 +99,19 @@ const ChannelInfoWrapper = styled.div`
   padding: 0 56px;
 
   @media(max-width: 1600px) { 
-    padding: 0 32px 
+    padding: 0 32px;
 	}	
   @media(max-width: 768px) { 
-    padding: 0 24px
+    padding: 0 24px;
+    gap: 40px;
   }
 `
 const ChannelInfoBlock = styled.div`
   display: flex;
   gap: 10px;
+  @media(max-width: 768px) { 
+    flex-direction: column;
+  }
 `
 const ChannelInfoLabel = styled.span`
   font-size: 14px;
@@ -123,12 +126,17 @@ const ChannelInfoValue = styled.p`
 `
 const ContentHeadContainer = styled.div` 
   display: flex; 
-  display: flex; 
   justify-content: space-between;
+  gap: 32px;
   margin-top: 40px; 
   padding: 0 56px;
+
   @media(max-width: 1600px) { padding: 0 32px }
-  @media(max-width: 768px) { padding: 0 24px }
+  @media(max-width: 768px) { 
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 0 24px 
+  }
 `;
 const FilterBlock = styled.div` 
   display: flex; 

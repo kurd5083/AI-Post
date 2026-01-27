@@ -84,7 +84,11 @@ const AiGeneratorPopup = () => {
                 />
                 {!channelId && (
                   <CustomSelectThree
-                    options={userChannels?.map(c => ({ id: c.id, label: c.name, avatar: c.avatarUrl }))}
+                    options={userChannels?.map(c => ({
+                      id: c.id,
+                      label: c.name,
+                      icon: c.name,
+                    }))}
                     value={usePostsStore.getState().channelMap[post.postId]}
                     onChange={(id) => usePostsStore.getState().setPostChannel(post.postId, id)}
                     background="#222b43f6"

@@ -7,7 +7,7 @@ import BtnBase from "@/shared/BtnBase";
 import CustomSelect from "@/shared/CustomSelectSec";
 
 import { useGetPosts } from "@/lib/posts/useGetPosts";
-
+import { useUserChannels } from "@/lib/channels/useUserChannels";
 import { usePopupStore } from "@/store/popupStore";
 import { useNotificationStore } from "@/store/notificationStore";
 
@@ -18,6 +18,7 @@ const SelectPostPopup = () => {
   const { addNotification } = useNotificationStore();
 
   const { posts } = useGetPosts();
+  const { userChannels } = useUserChannels();
 
   const [selectedPostId, setSelectedPostId] = useState(null);
 
@@ -44,10 +45,15 @@ const SelectPostPopup = () => {
         value={selectedPostId}
         onChange={(option) => setSelectedPostId(option.value)}
         width="100%"
-        options={posts?.map((post) => ({
-          value: post.postId,
-          label: post.title || `Пост #${post.postId}`,
-        }))}
+        options={posts?.map((post) => {
+          const channel = userChannels?.find(c => c.id === post.channelId);
+
+          return {
+            value: post.postId,
+            label: post.title,
+            icon: channel?.name
+          };
+        })}
       />
       <SelectPostButtons>
         <BtnBase onClick={handleSave} $color="#D6DCEC" $bg="#336CFF">

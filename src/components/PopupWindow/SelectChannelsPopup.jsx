@@ -1,17 +1,21 @@
 import { useState } from "react";
 import styled from "styled-components";
-import { usePopupStore } from "@/store/popupStore";
-import BtnBase from "@/shared/BtnBase";
-import CustomSelect from "@/shared/CustomSelectSec";
+
 import CloseIcon from "@/icons/CloseIcon";
+
+import BtnBase from "@/shared/BtnBase";
+import CustomSelectSec from "@/shared/CustomSelectSec";
+
 import { useUserChannels } from "@/lib/channels/useUserChannels";
+
 import { useNotificationStore } from "@/store/notificationStore";
+import { usePopupStore } from "@/store/popupStore";
 
 const SelectChannelsPopup = () => {
 	const { popup, goBack, closePopup } = usePopupStore();
 	const onSave = popup?.data?.onSave;
 	const loading = popup?.data?.loading;
-  const { addNotification } = useNotificationStore();
+  	const { addNotification } = useNotificationStore();
 
 	const { userChannels } = useUserChannels();
 	const [selectedChannelId, setSelectedChannelId] = useState(null);
@@ -23,7 +27,9 @@ const SelectChannelsPopup = () => {
 		}
 		onSave(selectedChannelId);
 
-		popup && popup?.previousPage.length > 0 ? goBack() : closePopup();
+		if (!popup?.data?.dontClose) {
+			popup && popup?.previousPage.length > 0 ? goBack() : closePopup();
+		}
 	};
 
 	return (
@@ -35,13 +41,14 @@ const SelectChannelsPopup = () => {
 				</CloseButton>
 			</SelectChannelsHead>
 			<SelectChannelsSubtitle>Укажите канал, в котором будет опубликована новость</SelectChannelsSubtitle>
-			<CustomSelect
+			<CustomSelectSec
 				value={selectedChannelId}
 				onChange={(option) => setSelectedChannelId(option.value)}
 				width="100%"
 				options={userChannels?.map((channel) => ({
 					value: channel.id,
 					label: channel.name,
+					icon: channel.name,
 				}))}
 			/>
 			<SelectChannelsButtons>

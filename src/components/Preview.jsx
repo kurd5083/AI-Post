@@ -6,6 +6,8 @@ import PreviewBG from "@/assets/ai-generator/PreviewBG.png";
 import ArrowIcon from "@/icons/ArrowIcon";
 import TgIcon from "@/icons/TgIcon";
 
+import Empty from "@/shared/Empty";
+
 import { useSendTestPost } from "@/lib/posts/useSendTestPost";
 import normalizeUrl from "@/lib/normalizeUrl";
 import getCleanSummaryForServer from "@/lib/getCleanSummaryForServer";
@@ -50,7 +52,9 @@ const Preview = ({ collapsed, onChange, testResult, view = true }) => {
     };
   }, [previewUrls]);
 
-  const hasContent = Boolean(title || summary || url || previewUrls.length);
+  const cleanSummary = summary?.replace(/<br\s*\/?>/gi, "").trim();
+
+  const hasContent = Boolean(title || cleanSummary || url || previewUrls.length);
 
   const handleSend = useCallback(() => {
     if (!hasContent) {
@@ -59,18 +63,18 @@ const Preview = ({ collapsed, onChange, testResult, view = true }) => {
     }
 
     sendTestPost(
-    {
-      title,
-      summary: getCleanSummaryForServer(summary),
-      url,
-      images: files,
-      imagesUrls: remoteUrls,
-    },
-    {
-      onSuccess: () => addNotification("Пост отправлен в Telegram!", "success"),
-      onError: () => addNotification("Ошибка отправки поста в Telegram", "error"),
-    }
-  );
+      {
+        title,
+        summary: getCleanSummaryForServer(summary),
+        url,
+        images: files,
+        imagesUrls: remoteUrls,
+      },
+      {
+        onSuccess: () => addNotification("Пост отправлен в Telegram!", "success"),
+        onError: () => addNotification("Ошибка отправки поста в Telegram", "error"),
+      }
+    );
 
   }, [title, summary, url, files, remoteUrls, hasContent]);
 
@@ -92,6 +96,7 @@ const Preview = ({ collapsed, onChange, testResult, view = true }) => {
         {!collapsed && (
           <>
             <PreviewInfo $bg={PreviewBG}>
+              {hasContent ? (
               <PreviewInfoContainer>
                 {!!previewUrls.length && (
                   <TgImages count={previewUrls.length}>
@@ -112,21 +117,13 @@ const Preview = ({ collapsed, onChange, testResult, view = true }) => {
                     ))}
                   </TgImages>
                 )}
-
-                <PreviewInfoContent>
-                  {hasContent ? (
-                    <>
-                      <PreviewInfoTitle>{title || "Введите заголовок"}</PreviewInfoTitle>
-
+                  <PreviewInfoContent>
+                      <PreviewInfoTitle>{title}</PreviewInfoTitle>
                       <PreviewInfoText
-                        dangerouslySetInnerHTML={{
-                          __html:
-                            summary?.replace(/<br\s*\/?>/gi, "").trim()
-                              ? summary
-                              : "Введите текст",
+                        dangerouslySetInnerHTML={{__html:
+                          summary?.replace(/<br\s*\/?>/gi, "").trim() && summary,
                         }}
                       />
-
                       {url && (
                         <>
                           <br /><br />
@@ -136,14 +133,11 @@ const Preview = ({ collapsed, onChange, testResult, view = true }) => {
                           </PreviewInfoLink>
                         </>
                       )}
-                    </>
-                  ) : (
-                    <EmptyText>
-                      Превью недоступно. Выберите пост или дождитесь загрузки данных.
-                    </EmptyText>
-                  )}
-                </PreviewInfoContent>
+                  </PreviewInfoContent>
               </PreviewInfoContainer>
+               ) : (
+                  <Empty icon="👀">Превью недоступно.<br/> Выберите пост или дождитесь загрузки данных.</Empty>
+                )}
             </PreviewInfo>
 
             <PreviewButton onClick={handleSend} disabled={isPending}>
@@ -229,12 +223,16 @@ const PreviewInfoContainer = styled.div`
   position: relative;
   z-index: 1;
   background-color: #131C22;
+  width: 500px;
+  @media (max-width: 768px) {
+    width: 100%
+  }
 `;
 const TgImages = styled.div`
   margin: 0 auto;
   display: grid;
   gap: 4px;
-  max-width: 500px;
+  width: 100%;
   overflow: hidden;
 
   ${({ count }) => {
@@ -317,9 +315,8 @@ const PreviewInfoContent = styled.p`
   line-height: 16px;
   font-weight: 600;
   scrollbar-width: none;
-  max-width: 500px;
-  width: 100%;
   overflow-y: auto;
+
 `;
 
 const PreviewInfoTitle = styled.h4`
@@ -333,7 +330,6 @@ const PreviewInfoText = styled.span`
   word-break: break-word;
 `;
 const PreviewInfoLinkIcon = styled.span`
-
   font-size: 14px;
 `;
 const PreviewInfoLink = styled.a`
@@ -345,10 +341,6 @@ const PreviewInfoLink = styled.a`
   &:hover {
     text-decoration: none;
   }
-`;
-const EmptyText = styled.p`
-  height: 100px;
-  font-size: 14px;
 `;
 
 export default Preview;

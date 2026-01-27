@@ -69,22 +69,25 @@ const AnalyticsStatistics = ({id}) => {
   );
 };
 
-const StatisticsList = styled(Swiper)`
-  display: flex;
-  justify-content: space-between;
+const StatisticsList = styled.ul`
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
   gap: 16px;
   margin-top: 52px;
   padding: 0 56px;
 
   @media(max-width: 1600px) { 
-    padding: 0 32px 
+    padding: 0 32px ;
 	}	
-
+  @media(max-width: 991px) { 
+   grid-template-columns: repeat(2, 1fr);
+	}	
   @media (max-width: 768px) {
-    padding: 0 24px
+    padding: 0 24px;
+    grid-template-columns: 1fr;
   }
 `
-const StatisticsItem = styled(SwiperSlide)`
+const StatisticsItem = styled.li`
   flex: 1;
   box-sizing: border-box;
   padding: 32px;
@@ -95,10 +98,6 @@ const StatisticsItem = styled(SwiperSlide)`
     margin-right: 0 !important;
   }
 
-  @media (max-width: 1800px) {
-    flex: none;
-    width: max-content;
-  }
    @media (max-width: 1600px) {
     padding: 20px 24px 24px;
   }

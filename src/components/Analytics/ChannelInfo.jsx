@@ -7,7 +7,25 @@ const ChannelInfo = ({ channel }) => {
 	return (
 		<ChannelInfoContainer>
 			<ChannelHeader>
-				<СhannelPlug width="144px" height="144px" radius="32px" text={channel?.name} />
+				<СhannelPlug
+					width={
+						window.innerWidth < 480
+							? "80px"
+							: window.innerWidth < 1400
+								? "104px"
+								: "144px"
+					}
+					height={
+						window.innerWidth < 480
+							? "80px"
+							: window.innerWidth < 1400
+								? "104px"
+								: "144px"
+					}
+					radius={window.innerWidth < 1400 ? "24px" : "32px"}
+					fs={window.innerWidth < 1400 ? "24px" : "36px"}
+					text={channel.name}
+				/>
 				<div>
 					<ChannelName>{channel?.name}</ChannelName>
 					<ChannelUsername>@antropia_gaming</ChannelUsername>
@@ -19,7 +37,7 @@ const ChannelInfo = ({ channel }) => {
 				<DescriptionTitle>Описание</DescriptionTitle>
 				<DescriptionText>
 					Канал об дизайне, трендах и реализации самых заветных идей, а также, внутрянка кухни.
-					<br/><br/>
+					<br /><br />
 					Подписывайтесь и отслеживайте канал!
 				</DescriptionText>
 			</ChannelDescription>
@@ -32,20 +50,27 @@ const ChannelInfoContainer = styled.div`
 	display: grid;
 	grid-template-columns: 1fr 1fr;
   padding: 0 56px 40px;
-
+	gap: 40px 0;
+ 
   @media(max-width: 1600px) { 
     padding: 0 32px 40px 
 	}	
+	@media(max-width: 991px) { 
+   grid-template-columns: 1fr;
+	}	
   @media(max-width: 768px) { 
-    padding: 0 24px 40px
+    padding: 0 24px 40px;
+		margin-top: 32px;
   }
 `
 const ChannelHeader = styled.div`
 	display: flex;
-	align-items: center;
 	gap: 40px;
-	border-right: 2px solid #2E3954;
 	padding-right: 40px;
+	@media(max-width: 480px) { 
+    flex-direction: column;
+		gap: 24px;
+  }
 `
 const ChannelName = styled.h2`
   font-size: 32px;
@@ -63,6 +88,10 @@ const ChannelDescription = styled.div`
   flex-direction: column;
   justify-content: center;
   padding-left: 48px;
+	border-left: 2px solid #2E3954;
+	@media(max-width: 480px) { 
+    padding-left: 32px;
+  }
 `
 const DescriptionTitle = styled.h3`
   font-size: 14px;

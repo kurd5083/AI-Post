@@ -29,7 +29,7 @@ const AddPostPopup = () => {
 	});
 
 	const channelId = popup?.data?.channelId;
-	const { posts, loadingPosts } = usePostsByChannel({channelId});
+	const { posts, pendingPosts } = usePostsByChannel({channelId});
 
 	const selectedChannel = userChannels.find(c => c.id === channelId);
 
@@ -180,7 +180,7 @@ const AddPostPopup = () => {
 				)}
 			</PublicationsHead>
 
-			{!loadingPosts && channelId ? (
+			{!pendingPosts && channelId ? (
 				<>
 					<PublicationsList>
 						{currentItems.length > 0 ? (

@@ -71,7 +71,7 @@ const PopupContent = styled.div`
     box-sizing: border-box;
     max-width: 520px;
     width: 100%;
-    background: #1c243860;
+    background: #1c2438a9;
     border-radius: 32px;
     padding: 48px;
     @media(max-width: 480px) {

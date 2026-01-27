@@ -1,12 +1,15 @@
 import styled from "styled-components";
+
 import BtnBase from "@/shared/BtnBase";
-import { useLightboxStore } from "@/store/lightboxStore";
+import СhannelPlug from "@/shared/СhannelPlug";
+
 import { useApprovePost } from "@/lib/posts/usePostsModeration";
 import { useRejectPost } from "@/lib/posts/useRejectPost";
-import { useNotificationStore } from "@/store/notificationStore";
 import normalizeUrl from "@/lib/normalizeUrl";
-import AvaPlug from "@/shared/AvaPlug";
 import { useArchivePost } from "@/lib/posts/useArchivePost";
+
+import { useLightboxStore } from "@/store/lightboxStore";
+import { useNotificationStore } from "@/store/notificationStore";
 
 const MAX_VISIBLE_IMAGES = 3;
 
@@ -56,7 +59,7 @@ const CardPablishPremoderation = ({ item, bg, channelId, selectedChannel }) => {
           {selectedChannel.avatarUrl ? (
             <CardPablishItemImg src={selectedChannel.avatarUrl} alt={selectedChannel.name} />
           ) : (
-            <AvaPlug width="32px" height="32px" />
+            <СhannelPlug width="32px" height="32px" text={selectedChannel.name}/>
           )}
           <p>{selectedChannel.name}</p>
         </CardPablishItemName>

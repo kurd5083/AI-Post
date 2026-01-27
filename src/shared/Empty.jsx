@@ -14,7 +14,7 @@ const EmptyMentions = styled.div`
   justify-content: center;
   text-align: center;
   color: #D6DCEC;
-  padding: 40px 20px;
+  padding: 20px;
   font-weight: 600;
   font-size: 16px;
   background: linear-gradient(135deg, #1C2438, #2A334E);

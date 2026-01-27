@@ -4,7 +4,7 @@ import styled from "styled-components";
 import ArrowIcon from "@/icons/ArrowIcon";
 
 import Empty from "@/shared/Empty";
-import AvaPlug from "@/shared/AvaPlug";
+import СhannelPlug from '@/shared/СhannelPlug';
 import CustomSelect from "@/shared/CustomSelect";
 
 import ModernLoading from "@/components/ModernLoading";
@@ -132,12 +132,12 @@ const ThisDay = ({ posts, eventsPending }) => {
             {
               value: 'all',
               label: 'Все каналы',
-              avatar: null
+              icon: null
             },
             ...(userChannels?.map(c => ({
               value: c.id,
               label: c.name,
-              avatar: c.avatarUrl
+              icon: c.name
             })) ?? [])
           ]}
           value={selectedChannel?.value}
@@ -157,7 +157,7 @@ const ThisDay = ({ posts, eventsPending }) => {
                 {console.log(item.post?.images, 'item.post?.images')}
                 <CardHeader>
                   <CardAuthor>
-                    <AvaPlug width="32px" height="32px" />
+                    <СhannelPlug width="32px" height="32px" text={item.channel.name}/>
                     <CardName>{item.channel.name}</CardName>
                   </CardAuthor>
                   {item.status !== "COMPLETED" && (

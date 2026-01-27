@@ -9,7 +9,7 @@ import normalizeUrl from "@/lib/normalizeUrl";
 import { useSendPostToChannel } from "@/lib/posts/useSendPostToChannel";
 import { useArchivePost } from "@/lib/posts/useArchivePost";
 
-import AvaPlug from "@/shared/AvaPlug";
+import СhannelPlug from "@/shared/СhannelPlug";
 import BtnBase from "@/shared/BtnBase";
 
 import EyeIcon from "@/icons/EyeIcon";
@@ -85,7 +85,7 @@ const CardPablish = ({ item, bg, selectedChannel }) => {
           {selectedChannel.avatarUrl ? (
             <CardPablishItemImg src={selectedChannel.avatarUrl} alt={selectedChannel.name} />
           ) : (
-            <AvaPlug width="32px" height="32px" />
+            <СhannelPlug width="32px" height="32px" text={selectedChannel.name}/>
           )}
           <p>{selectedChannel.name}</p>
         </CardPablishItemName>

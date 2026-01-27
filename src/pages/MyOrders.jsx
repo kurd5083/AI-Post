@@ -1,16 +1,29 @@
 import { useState } from "react";
-
 import styled from "styled-components";
-import PageHead from '@/components/PageHead'
 import { Link } from "react-router";
+
+import PageHead from '@/components/PageHead'
 import PageFilter from "@/components/PageFilter";
 import TableMyOrders from "@/components/TableMyOrders";
+
 import { usePromotionOrders } from "@/lib/promotion/usePromotionOrders";
+import { useDebounce } from "@/lib/useDebounce";
+
+import useSearchStore from "@/store/searchStore";
 
 const MyOrders = () => {
-  const [activeFilter, setActiveFilter] = useState("all");
   const { promotionOrders, promotionOrdersPending } = usePromotionOrders();
 
+  const { searchQuery } = useSearchStore();
+  const debouncedQuery = useDebounce(searchQuery, 500);
+
+  const filteredOrders = promotionOrders?.filter(order => {
+    if (!debouncedQuery.trim()) return true;
+
+    const q = debouncedQuery.toLowerCase().trim();
+
+    return order.link?.toLowerCase().includes(q)
+  });
   return (
     <>
       <PageHead/>
@@ -19,11 +32,11 @@ const MyOrders = () => {
 				<PromotionHeadText $active={true}>Мои заказы</PromotionHeadText>
 			</PromotionHead>
       <PageFilter
-        activeFilter={activeFilter}
-        setActiveFilter={setActiveFilter}
+       
         placeholder="Поиск по заказам"
+        filter={false}
       />
-      <TableMyOrders promotionOrders={promotionOrders} promotionOrdersPending={promotionOrdersPending}/>
+      <TableMyOrders promotionOrders={filteredOrders} promotionOrdersPending={promotionOrdersPending} debouncedQuery={debouncedQuery}/>
     </>
   )
 }

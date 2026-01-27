@@ -35,7 +35,7 @@ const PublicationsPopup = () => {
   const setDateFilter = usePublicationsStore((state) => state.setDateFilter);
   const setCurrentPage = usePublicationsStore((state) => state.setCurrentPage);
 
-  const { posts, loadingPosts } = usePostsByChannel({channelId});
+  const { posts, pendingPosts } = usePostsByChannel({channelId});
   const { postsArchived } = useGetArchivedPosts(channelId);
   const selectedChannel = userChannels.find((c) => c.id === channelId);
 
@@ -249,7 +249,7 @@ const PublicationsPopup = () => {
         )}
       </PublicationsHead>
 
-      {!loadingPosts && channelId ? (
+      {!pendingPosts && channelId ? (
         <>
           <PublicationsList>
             {currentItems.length > 0 ? (

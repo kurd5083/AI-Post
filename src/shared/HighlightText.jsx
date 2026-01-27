@@ -24,6 +24,7 @@ const HighlightText = ({ text, query }) => {
 };
 
 const Highlight = styled.span`
+  display: inline-block;
   background-color: #336CFF33;
   color: #336CFF;
   padding: 2px 4px;

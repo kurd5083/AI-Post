@@ -9,30 +9,32 @@ import ArrowIcon from "@/icons/ArrowIcon";
 import EyeIcon from "@/icons/EyeIcon";
 import TimeIcon from "@/icons/TimeIcon";
 
+import СhannelPlug from '@/shared/СhannelPlug';
 import CustomSelectThree from "@/shared/CustomSelectThree";
+import Empty from '@/shared/Empty';
 
 import { useMentions } from "@/lib/tgStat/useMentions";
 import { usePostsByChannel } from "@/lib/posts/usePostsByChannel";
 // import useFadeOnScroll from "@/lib/useFadeOnScroll";	
 const months = [
-  "янв", "фев", "мар", "апр", "май", "июн",
-  "июл", "авг", "сен", "окт", "ноя", "дек"
+	"янв", "фев", "мар", "апр", "май", "июн",
+	"июл", "авг", "сен", "окт", "ноя", "дек"
 ];
 
 const formatPostDate = (timestamp) => {
-  const d = new Date(timestamp * 1000); // преобразуем в миллисекунды
-  const day = d.getDate();
-  const month = months[d.getMonth()];
-  const hours = String(d.getHours()).padStart(2, "0");
-  const minutes = String(d.getMinutes()).padStart(2, "0");
-  return `${day} ${month}, ${hours}:${minutes}`;
+	const d = new Date(timestamp * 1000);
+	const day = d.getDate();
+	const month = months[d.getMonth()];
+	const hours = String(d.getHours()).padStart(2, "0");
+	const minutes = String(d.getMinutes()).padStart(2, "0");
+	return `${day} ${month}, ${hours}:${minutes}`;
 };
 
-const PreviewTab = ({ channelId }) => {
+const PreviewTab = ({ channelId, channelName }) => {
 	// const { fadeVisible: fadeMentions, ref: fadeMentionsRef } = useFadeOnScroll(20);
 	// const { fadeVisible: fadePosts, ref: fadePostsRef } = useFadeOnScroll(20);
 	const [viewMode, setViewMode] = useState("List");
-	const { posts } = usePostsByChannel({channelId});
+	const { posts, pendingPosts } = usePostsByChannel({ channelId });
 	console.log(posts)
 	// const mentionsRef = useRef();
 	// const postsRef = useRef();
@@ -55,7 +57,7 @@ const PreviewTab = ({ channelId }) => {
 	// 	return () => window.removeEventListener("resize", updateWidths);
 	// }, []);
 
-	const { mentions, mentionsLoading } = useMentions({
+	const { mentions, mentionsPending } = useMentions({
 		channelId: channelId,
 		limit: 8,
 	});
@@ -95,48 +97,56 @@ const PreviewTab = ({ channelId }) => {
 				// $fadeVisible={fadeMentions}
 				// $containerWidth={mentionsWidth}
 				>
-					{mentions?.response?.items.map(m => (
-						viewMode === 'List' ? (
-							<MentionCard key={m.id}>
-								<MentionsCardChannelInfo>
-									<ChannelAva src={m.postDetails.image} alt="" />
-									<ChannelInfoContainer>
-										<ChannelName>{m.postDetails.channelTitle}</ChannelName>
-										<CardDetail>
-											<MentionsCardParams>
-												<img src={users} alt="users icon" />
-												{m.postDetails.audience}
-											</MentionsCardParams>
-											<MentionsCardParams>
-												<EyeIcon color="#6A7080" hoverColor="#6A7080" width={17} height={12} cursor="default" />
-												{m.postDetails.views}
-											</MentionsCardParams>
-										</CardDetail>
-									</ChannelInfoContainer>
-								</MentionsCardChannelInfo>
-								<MentionsCardMeta>
-									<MentionsCardMentionFrom>Упомянул канал</MentionsCardMentionFrom>
-									<MentionsCardTimestamp>
-										<TimeIcon color="#6A7080" />
-										 {formatPostDate(m.postDetails.date)}
-									</MentionsCardTimestamp>
-								</MentionsCardMeta>
-							</MentionCard>
+					{mentionsPending ? (
+						<Empty icon="📣">Загрузка упоминаний...</Empty>
+					) : (
+						mentions?.response?.items.length === 0 ? (
+							<Empty icon="📣">Упоминаний нет</Empty>
 						) : (
-							<PostsCard key={m.id}>
-								<PostHead>
-									<PostChannelAva src={m.postDetails.image} />
-									<PostChannelName>{m.postDetails.channelTitle}</PostChannelName>
-									<PostTime><TimeIcon color="#6A7080" />{formatPostDate(m.postDetails.date)}</PostTime>
-								</PostHead>
-								<PostText dangerouslySetInnerHTML={{ __html: m.postDetails.text }} />
-								<PostFooter>
-									<PostFooterParams><EyeIcon color="#336CFF" hoverColor="#336CFF" width={20} height={20} cursor="default" />{m.postDetails.views}</PostFooterParams>
-									<MentionsCardMentionFrom>Упомянул канал</MentionsCardMentionFrom>
-								</PostFooter>
-							</PostsCard>
+							mentions?.response?.items.map(m => (
+								viewMode === 'List' ? (
+									<MentionCard key={m.id}>
+										<MentionsCardChannelInfo>
+											<ChannelAva src={m.postDetails.image} alt="" />
+											<ChannelInfoContainer>
+												<ChannelName>{m.postDetails.channelTitle}</ChannelName>
+												<CardDetail>
+													<MentionsCardParams>
+														<img src={users} alt="users icon" />
+														{m.postDetails.audience}
+													</MentionsCardParams>
+													<MentionsCardParams>
+														<EyeIcon color="#6A7080" hoverColor="#6A7080" width={17} height={12} cursor="default" />
+														{m.postDetails.views}
+													</MentionsCardParams>
+												</CardDetail>
+											</ChannelInfoContainer>
+										</MentionsCardChannelInfo>
+										<MentionsCardMeta>
+											<MentionsCardMentionFrom>Упомянул канал</MentionsCardMentionFrom>
+											<MentionsCardTimestamp>
+												<TimeIcon color="#6A7080" />
+												{formatPostDate(m.postDetails.date)}
+											</MentionsCardTimestamp>
+										</MentionsCardMeta>
+									</MentionCard>
+								) : (
+									<PostsCard key={m.id}>
+										<PostHead>
+											<PostChannelAva src={m.postDetails.image} />
+											<PostChannelName>{m.postDetails.channelTitle}</PostChannelName>
+											<PostTime><TimeIcon color="#6A7080" />{formatPostDate(m.postDetails.date)}</PostTime>
+										</PostHead>
+										<PostText dangerouslySetInnerHTML={{ __html: m.postDetails.text }} />
+										<PostFooter>
+											<PostFooterParams><EyeIcon color="#336CFF" hoverColor="#336CFF" width={20} height={20} cursor="default" />{m.postDetails.views}</PostFooterParams>
+											<MentionsCardMentionFrom>Упомянул канал</MentionsCardMentionFrom>
+										</PostFooter>
+									</PostsCard>
+								)
+							))
 						)
-					))}
+					)}
 				</MentionsList>
 			</div>
 			<div>
@@ -150,26 +160,42 @@ const PreviewTab = ({ channelId }) => {
 				// $fadeVisible={fadePosts}
 				// $containerWidth={postsWidth}
 				>
-					{posts?.map(p => (
-						<PostsCard key={p.id}>
-							<PostHead>
-								<PostChannelAva src={p.avatar} />
-								<PostChannelName>{p.author}</PostChannelName>
-								<PostTime><TimeIcon color="#6A7080" />{p.time}</PostTime>
-							</PostHead>
-							<PostTitle>{p.title}</PostTitle>
-							<PostText>{p.text}</PostText>
-							<PostFooter>
-								<PostFooterParams>
-									<p><EyeIcon color="#336CFF" hoverColor="#336CFF" width={20} height={20} cursor="default" /> {p.views}</p>
-								</PostFooterParams>
-								<PostArrow>
-									<ArrowIcon color="#6A7080" hoverColor="#6A7080" />
-								</PostArrow>
-							</PostFooter>
-						</PostsCard>
-
-					))}
+					{pendingPosts ? (
+						<Empty icon="📝">Загрузка постов...</Empty>
+					) : (
+						posts && posts.length == 0 ? (
+							<Empty icon="📝">Постов нет</Empty>
+						) : (
+							posts.map(p => (
+								<PostsCard key={p.id}>
+									<PostHead>
+										<СhannelPlug width="32px" height="32px" text={channelName} radius="50%" fs="16px" />
+										<PostChannelName>{channelName}</PostChannelName>
+										<PostTime>
+											<TimeIcon color="#6A7080" />
+											{new Date(p.publishedAt).toLocaleString("ru-RU", {
+												day: "numeric",
+												month: "short",
+												hour: "2-digit",
+												minute: "2-digit",
+												timeZone: "UTC",
+											})}
+										</PostTime>
+									</PostHead>
+									<PostTitle>{p.title}</PostTitle>
+									<PostText>{p.text}</PostText>
+									<PostFooter>
+										<PostFooterParams>
+											<p><EyeIcon color="#336CFF" hoverColor="#336CFF" width={20} height={20} cursor="default" /> {p.views}</p>
+										</PostFooterParams>
+										<PostArrow>
+											<ArrowIcon color="#6A7080" hoverColor="#6A7080" />
+										</PostArrow>
+									</PostFooter>
+								</PostsCard>
+							))
+						)
+					)}
 				</PostsList>
 			</div>
 		</PreviewContainer>
@@ -177,16 +203,21 @@ const PreviewTab = ({ channelId }) => {
 }
 const PreviewContainer = styled.div`
 	display: grid;
-	grid-template-columns: 1fr 1fr;
+	grid-template-columns: 2fr 1.5fr;
   margin-top: 40px;
   gap: 64px;
   padding: 0 56px;
 
   @media(max-width: 1600px) { 
-    padding: 0 32px 
+    padding: 0 32px;
+    gap: 20px;
+
+  }	
+  @media(max-width: 991px) { 
+		grid-template-columns: 1fr;
   }	
   @media(max-width: 768px) { 
-    padding: 0 24px
+    padding: 0 24px;
   }
 `;
 
@@ -258,11 +289,14 @@ const MentionCard = styled.div`
 	padding: 22px 32px;
 	border: 2px solid #333E59;
 	border-radius: 24px;
+	@media(max-width: 480px) { 
+    flex-direction: column;
+		gap: 24px;
+  }
 `;
 
 const MentionsCardChannelInfo = styled.div`
 	display: flex;
-	align-items: center;
 	gap: 24px;
 `;
 const ChannelAva = styled.img`
@@ -283,6 +317,7 @@ const CardDetail = styled.div`
 	display: flex;
 	align-items: center;
 	gap: 24px;
+	
 `;
 
 const MentionsCardParams = styled.span`
@@ -299,6 +334,11 @@ const MentionsCardMeta = styled.div`
 	flex-direction: column;
 	justify-content: space-between;
   align-items: flex-end;
+  text-align: right;
+  min-width: 130px;
+	@media(max-width: 480px) { 
+    flex-direction: row;
+  }
 `;
 const MentionsCardMentionFrom = styled.span`
 	font-size: 14px;
@@ -358,7 +398,6 @@ const PostsCard = styled.div`
 const PostHead = styled.div`
 	display: flex;
 	justify-content: space-between;
-	align-items: center;
 	gap: 16px;
 `;
 const PostChannelAva = styled.img`
@@ -385,7 +424,6 @@ const PostTitle = styled.h4`
 `;
 const PostText = styled.p`
 	font-size: 14px;
-	font-weight: 600;
 	line-height: 20px;
 	color: #6A7080;
 	display: -webkit-box;

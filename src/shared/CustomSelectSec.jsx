@@ -2,6 +2,8 @@ import { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
 import ArrowIcon from "@/icons/ArrowIcon";
 
+import СhannelPlug from "@/shared/СhannelPlug";
+
 const CustomSelect = ({
   options,
   placeholder = "Выберите значение",
@@ -39,12 +41,12 @@ const CustomSelect = ({
       setSelected(sel || null);
     }
   }, [value, options]);
-
+  
   return (
     <SelectWrapper ref={selectRef} $width={width}>
       <SelectHeader onClick={toggle} $fs={fs} $padding={padding}>
         <HeaderLeft>
-          {selected?.icon && <img src={selected.icon} alt="icon" width={16} height={16} />}
+          {selected?.icon && <СhannelPlug width="32px" height="32px" text={selected.icon} />}
           <span>{selected?.label || placeholder}</span>
         </HeaderLeft>
         <HeaderArrow className={open ? "open" : ""} >
@@ -59,7 +61,7 @@ const CustomSelect = ({
               key={opt.value}
               onClick={() => handleSelect(opt)}
             >
-              {opt.icon && <img src={opt.icon} alt="icon" />}
+              {opt.icon && <СhannelPlug width="32px" height="32px" text={opt.icon} />}
               {opt.label}
             </SelectItem>
           ))}

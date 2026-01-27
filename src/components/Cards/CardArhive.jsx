@@ -7,7 +7,7 @@ import normalizeUrl from "@/lib/normalizeUrl";
 import { useDeletePost } from "@/lib/posts/useDeletePost";
 import { useUnarchivePost } from "@/lib/posts/useUnarchivePost";
 
-import AvaPlug from "@/shared/AvaPlug";
+import СhannelPlug from '@/shared/СhannelPlug';
 import BtnBase from "@/shared/BtnBase";
 
 import EyeIcon from "@/icons/EyeIcon";
@@ -28,7 +28,7 @@ const CardArhive = ({ item, bg, selectedChannel }) => {
           {selectedChannel.avatarUrl ? (
             <CardArhiveItemImg src={selectedChannel.avatarUrl} alt={selectedChannel.name} />
           ) : (
-            <AvaPlug width="32px" height="32px" />
+            <СhannelPlug width="32px" height="32px" text={selectedChannel.name} />
           )}
           <p>{selectedChannel.name}</p>
         </CardArhiveItemName>
