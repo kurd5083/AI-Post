@@ -2,8 +2,16 @@ import styled from "styled-components";
 
 import BtnBase from "@/shared/BtnBase";
 import СhannelPlug from '@/shared/СhannelPlug';
+import Empty from "@/shared/Empty";
+
+import { useAddSubscribeChannel } from "@/lib/channels/useAddSubscribeChannel";
 
 const ChannelInfo = ({ channel }) => {
+	const { mutate: addSubscribe, isPending: subscribePending } = useAddSubscribeChannel();
+
+	const handleSubscribe = () => {
+		addSubscribe({ channel: `@${channel.username}` });
+	}
 	return (
 		<ChannelInfoContainer>
 			<ChannelHeader>
@@ -24,22 +32,29 @@ const ChannelInfo = ({ channel }) => {
 					}
 					radius={window.innerWidth < 1400 ? "24px" : "32px"}
 					fs={window.innerWidth < 1400 ? "24px" : "36px"}
-					text={channel.name}
+					text={channel.title}
 				/>
 				<div>
-					<ChannelName>{channel?.name}</ChannelName>
-					<ChannelUsername>@antropia_gaming</ChannelUsername>
-
-					<BtnBase $bg="#336CFF" $color="#FFFFFF" $padding="17px 40px">Отслеживать канал</BtnBase>
+					<ChannelName>{channel.title}</ChannelName>
+					<ChannelUsername>@{channel.username}</ChannelUsername>
+					<BtnBase
+						$bg="#336CFF"
+						$color="#FFFFFF"
+						$padding="17px 40px"
+						onClick={handleSubscribe}
+						disabled={subscribePending}
+					>
+						{subscribePending ? "Подписка..." : "Отслеживать канал"}
+					</BtnBase>
 				</div>
 			</ChannelHeader>
 			<ChannelDescription>
 				<DescriptionTitle>Описание</DescriptionTitle>
-				<DescriptionText>
-					Канал об дизайне, трендах и реализации самых заветных идей, а также, внутрянка кухни.
-					<br /><br />
-					Подписывайтесь и отслеживайте канал!
-				</DescriptionText>
+				{channel.description ? (
+					<DescriptionText>{channel.description}</DescriptionText>
+				) : (
+					<Empty icon="📝">Добавьте описание</Empty>
+				)}
 			</ChannelDescription>
 		</ChannelInfoContainer>
 	)

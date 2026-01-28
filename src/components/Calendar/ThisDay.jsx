@@ -23,7 +23,7 @@ const ThisDay = ({ posts, eventsPending }) => {
   const { fadeVisible, ref } = useFadeOnScroll(20);
   const { selectedDate, setSelectedDate } = useCalendarStore();
   const { userChannels } = useUserChannels();
-  console.log(userChannels)
+
   const [publishingPosts, setPublishingPosts] = useState({});
   const { addNotification } = useNotificationStore();
   const { popup, openPopup } = usePopupStore();

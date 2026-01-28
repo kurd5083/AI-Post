@@ -2,7 +2,6 @@ import { useRef, useState, useEffect } from "react";
 import styled from "styled-components";
 
 import users from "@/assets/users.svg";
-import pointLine from "@/assets/point-line.svg";
 import list from "@/assets/list.svg";
 import tape from "@/assets/tape.svg";
 import ArrowIcon from "@/icons/ArrowIcon";
@@ -14,7 +13,8 @@ import CustomSelectThree from "@/shared/CustomSelectThree";
 import Empty from '@/shared/Empty';
 
 import { useMentions } from "@/lib/tgStat/useMentions";
-import { usePostsByChannel } from "@/lib/posts/usePostsByChannel";
+import { useGetPostsLastDay } from "@/lib/posts/useGetPostsLastDay";
+
 // import useFadeOnScroll from "@/lib/useFadeOnScroll";	
 const months = [
 	"янв", "фев", "мар", "апр", "май", "июн",
@@ -30,12 +30,12 @@ const formatPostDate = (timestamp) => {
 	return `${day} ${month}, ${hours}:${minutes}`;
 };
 
-const PreviewTab = ({ channelId, channelName }) => {
+const PreviewTab = ({ channel_id, id, channelName }) => {
 	// const { fadeVisible: fadeMentions, ref: fadeMentionsRef } = useFadeOnScroll(20);
 	// const { fadeVisible: fadePosts, ref: fadePostsRef } = useFadeOnScroll(20);
 	const [viewMode, setViewMode] = useState("List");
-	const { posts, pendingPosts } = usePostsByChannel({ channelId });
-	console.log(posts)
+	const { postsLastDay, postsLastDayPending } = useGetPostsLastDay(channel_id);
+  console.log(postsLastDay)
 	// const mentionsRef = useRef();
 	// const postsRef = useRef();
 
@@ -58,7 +58,7 @@ const PreviewTab = ({ channelId, channelName }) => {
 	// }, []);
 
 	const { mentions, mentionsPending } = useMentions({
-		channelId: channelId,
+		channelId: id,
 		limit: 8,
 	});
 
@@ -67,6 +67,11 @@ const PreviewTab = ({ channelId, channelName }) => {
 		setViewMode(newValue);
 	};
 
+  const getFirstTextBetweenStars = (text) => {
+    const match = text.match(/\*\*(.*?)\*\*/);
+    if (!match) return "";
+    return match[1];
+  };
 	return (
 		<PreviewContainer>
 			<div>
@@ -160,20 +165,20 @@ const PreviewTab = ({ channelId, channelName }) => {
 				// $fadeVisible={fadePosts}
 				// $containerWidth={postsWidth}
 				>
-					{pendingPosts ? (
+					{postsLastDayPending ? (
 						<Empty icon="📝">Загрузка постов...</Empty>
 					) : (
-						posts && posts.length == 0 ? (
+						!!postsLastDay.posts && postsLastDay.posts.length == 0 ? (
 							<Empty icon="📝">Постов нет</Empty>
 						) : (
-							posts.map(p => (
+							postsLastDay.posts.map(p => (
 								<PostsCard key={p.id}>
 									<PostHead>
 										<СhannelPlug width="32px" height="32px" text={channelName} radius="50%" fs="16px" />
 										<PostChannelName>{channelName}</PostChannelName>
 										<PostTime>
 											<TimeIcon color="#6A7080" />
-											{new Date(p.publishedAt).toLocaleString("ru-RU", {
+											{new Date(p.post_date).toLocaleString("ru-RU", {
 												day: "numeric",
 												month: "short",
 												hour: "2-digit",
@@ -182,11 +187,10 @@ const PreviewTab = ({ channelId, channelName }) => {
 											})}
 										</PostTime>
 									</PostHead>
-									<PostTitle>{p.title}</PostTitle>
-									<PostText>{p.text}</PostText>
+									<PostText>{getFirstTextBetweenStars(p.text)}</PostText>
 									<PostFooter>
 										<PostFooterParams>
-											<p><EyeIcon color="#336CFF" hoverColor="#336CFF" width={20} height={20} cursor="default" /> {p.views}</p>
+											<EyeIcon color="#336CFF" hoverColor="#336CFF" width={20} height={20} cursor="default" /> {p.views}
 										</PostFooterParams>
 										<PostArrow>
 											<ArrowIcon color="#6A7080" hoverColor="#6A7080" />
@@ -417,15 +421,10 @@ const PostTime = styled.p`
 	font-size: 14px;
 	font-weight: 700;
 `;
-const PostTitle = styled.h4`
-	font-family: "Montserrat Alternates", sans-serif;
+
+const PostText = styled.h4`
 	font-size: 24px;
 	font-weight: 700;
-`;
-const PostText = styled.p`
-	font-size: 14px;
-	line-height: 20px;
-	color: #6A7080;
 	display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;

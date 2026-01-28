@@ -14,6 +14,7 @@ import ChannelInfo from "@/components/Analytics/ChannelInfo";
 import StatisticsTab from "@/components/Analytics/StatisticsTab";
 import PreviewTab from "@/components/Analytics/PreviewTab";
 
+import { useGetTelescopeInfo } from "@/lib/channels/useGetTelescopeInfo";
 import { useChannelById } from "@/lib/channels/useChannelById";
 
 const AnalyticsChannels = () => {
@@ -22,22 +23,25 @@ const AnalyticsChannels = () => {
   const { id } = useParams()
   const { channel } = useChannelById(Number(id));
   const changeContent = (tab) => setActiveTab(tab);
+  const { channelInfo } = useGetTelescopeInfo(channel?.channelId);
+	console.log(channelInfo) 
 
   const handleChange = (newValue) => {
     if (!newValue) return;
     setSelectedFilter(newValue);
   };
-  if(!channel) return null
+  if(!channel || !channelInfo) return null
+  console.log(channel)
   return (
     <AnalyticsContainer>
       <AnalyticsHead />
-      <ChannelInfo channel={channel} />
+      <ChannelInfo channel={channelInfo.channel} />
       <ChannelInfoWrapper>
         <ChannelInfoBlock>
           <ChannelInfoLabel>Геопозиция:</ChannelInfoLabel>
           <ChannelInfoValue>
             <img src={location_icon} alt="location icon" />
-            Россия
+            {channelInfo.channel.region}
           </ChannelInfoValue>
         </ChannelInfoBlock>
         <ChannelInfoBlock>
@@ -85,7 +89,7 @@ const AnalyticsChannels = () => {
       {activeTab == "statistics" ? (
         <StatisticsTab />
       ) : (
-        <PreviewTab channelId={channel.id} channelName={channel.name} />
+        <PreviewTab channel_id={channel.channelId} id={channel.id} channelName={channel.name} />
       )}
     </AnalyticsContainer>
   )

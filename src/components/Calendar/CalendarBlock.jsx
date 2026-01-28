@@ -1,14 +1,17 @@
 import { useState, useMemo, useEffect } from "react";
 import styled from "styled-components";
+
 import ArrowIcon from "@/icons/ArrowIcon";
+
 import { useCalendarStore } from "@/store/calendarStore";
 
 const weekDays = ["ПН", "ВТ", "СР", "ЧТ", "ПТ", "СБ", "ВСК"];
 
-const CalendarBlock = () => {
+const CalendarBlock = ({postsMonth}) => {
 	const today = new Date();
 	const [currentDate, setCurrentDate] = useState(today);
 	const { selectedDate, setSelectedDate } = useCalendarStore();
+
 
 	useEffect(() => {
 		const startISO = new Date(
@@ -22,6 +25,19 @@ const CalendarBlock = () => {
 		setSelectedDate({ startISO, endISO });
 	}, []);
 
+	const postsByDate = useMemo(() => {
+		if (!postsMonth?.length) return {};
+
+		return postsMonth.reduce((acc, post) => {
+			const key = post.scheduledAt.slice(0, 10);
+
+			if (!acc[key]) acc[key] = 0;
+			acc[key] += 1;
+
+			return acc;
+		}, {});
+	}, [postsMonth]);
+
 	const days = useMemo(() => {
 		const year = currentDate.getFullYear();
 		const month = currentDate.getMonth();
@@ -29,7 +45,6 @@ const CalendarBlock = () => {
 		const firstDayOfMonth = new Date(year, month, 1);
 		const lastDayOfMonth = new Date(year, month + 1, 0);
 		const daysInMonth = lastDayOfMonth.getDate();
-
 		const startOffset = (firstDayOfMonth.getDay() + 6) % 7;
 
 		const result = [];
@@ -37,19 +52,24 @@ const CalendarBlock = () => {
 		for (let i = 0; i < startOffset; i++) result.push(null);
 
 		for (let day = 1; day <= daysInMonth; day++) {
-			const dateObj = new Date(year, month, day);
-
+			const date = new Date(Date.UTC(year, month, day));
+			const key = date.toISOString().slice(0, 10);
+			const count = postsByDate[key] || 0;
 			const isActive =
 				selectedDate &&
-				dateObj.getFullYear() === new Date(selectedDate.startISO).getFullYear() &&
-				dateObj.getMonth() === new Date(selectedDate.startISO).getMonth() &&
-				dateObj.getDate() === new Date(selectedDate.startISO).getDate();
+				day === new Date(selectedDate.startISO).getUTCDate() &&
+				month === new Date(selectedDate.startISO).getUTCMonth() &&
+				year === new Date(selectedDate.startISO).getUTCFullYear();
 
-			result.push({ day, active: isActive });
+			result.push({
+				day,
+				active: isActive,
+				count
+			});
 		}
 
 		return result;
-	}, [currentDate, selectedDate]);
+	}, [currentDate, selectedDate, postsByDate]);
 
 	const changeMonth = (direction) => {
 		setCurrentDate(
@@ -83,7 +103,6 @@ const CalendarBlock = () => {
 			year: "numeric",
 		});
 
-
 	return (
 		<>
 			<CalendarHeader>
@@ -104,21 +123,17 @@ const CalendarBlock = () => {
 						<WeekDay key={day}>{day}</WeekDay>
 					))}
 				</WeekRow>
-
 				<Grid>
+					{console.log(days)}
 					{days.map((item, idx) =>
-						item ? (
-							<DayCard
-								key={idx}
-								$active={item.active}
-								onClick={() => handleDayClick(item.day)}
-							>
-								<DayNum>{item.day}</DayNum>
-								{item.channels && <small>{item.channels}</small>}
-							</DayCard>
-						) : (
-							<Empty key={idx} />
-						)
+						<DayCard
+							key={idx}
+							$active={item?.active}
+							onClick={() => handleDayClick(item?.day)}
+						>
+							<DayNum>{item?.day}</DayNum>
+							{item?.count > 0 && <Count>{item?.count}</Count>}
+						</DayCard>
 					)}
 				</Grid>
 			</GridContainer>
@@ -200,6 +215,14 @@ const DayNum = styled.span`
   font-size: 16px;
   font-weight: 700;
 `;
-const Empty = styled.div`height: 88px;`;
+const Count = styled.small`
+  align-self: flex-end;
+  background: #336CFF;
+  color: white;
+  border-radius: 10px;
+  padding: 2px 6px;
+  font-size: 11px;
+  font-weight: 700;
+`;
 
 export default CalendarBlock;

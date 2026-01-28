@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import styled from "styled-components";
 import BtnBase from "@/shared/BtnBase";
 
@@ -20,6 +21,52 @@ const Calendar = () => {
     selectedDate.startISO,
     selectedDate.endISO
   );
+  const today = new Date();
+  const startOfMonth = useMemo(() => new Date(today.getFullYear(), today.getMonth(), 1, 0, 0, 0, 0).toISOString(), [today]);
+  const endOfMonth = useMemo(() => new Date(today.getFullYear(), today.getMonth() + 1, 0, 23, 59, 59, 999).toISOString(), [today]);
+  
+  const { events: postsMonth, eventsMonthPending } = useCalendarEventsByRange(startOfMonth, endOfMonth);
+  const stats = useMemo(() => {
+    const startOfWeek = (date) => {
+      const day = date.getDay() || 7;
+      const monday = new Date(date);
+      monday.setDate(date.getDate() - day + 1);
+      monday.setHours(0,0,0,0);
+      return monday;
+    }
+
+    const endOfWeek = (date) => {
+      const start = startOfWeek(date);
+      const sunday = new Date(start);
+      sunday.setDate(start.getDate() + 6);
+      sunday.setHours(23,59,59,999);
+      return sunday;
+    }
+
+    const countInRange = (events, start, end) => {
+      return events?.filter(ev => {
+        const evDate = new Date(ev.scheduledAt);
+        return evDate >= start && evDate <= end;
+      }).length;
+    }
+
+    const thisWeekCount = countInRange(postsMonth, startOfWeek(today), endOfWeek(today));
+    
+    const nextWeekStart = new Date(endOfWeek(today));
+    nextWeekStart.setDate(nextWeekStart.getDate() + 1);
+    const nextWeekEnd = new Date(nextWeekStart);
+    nextWeekEnd.setDate(nextWeekStart.getDate() + 6);
+    nextWeekEnd.setHours(23,59,59,999);
+    const nextWeekCount = countInRange(postsMonth, nextWeekStart, nextWeekEnd);
+
+    const creatingCount = postsMonth?.length - thisWeekCount - nextWeekCount;
+    
+    return {
+      thisWeek: thisWeekCount,
+      nextWeek: nextWeekCount,
+      creating: creatingCount
+    }
+  }, [postsMonth]);
   return (
     <CalendarContainer>
       <PageHead>
@@ -55,7 +102,7 @@ const Calendar = () => {
       </PageHead>
       <CalendarContent>
         <CalendarGrid>
-          <CalendarBlock posts={posts} eventsPending={eventsPending} />
+          <CalendarBlock postsMonth={postsMonth} eventsPending={eventsPending} />
         </CalendarGrid>
         <CalendarStatistic >
           <StatisticTitle><AiGeneratorIcon color="#336CFF" />Статистика</StatisticTitle>
@@ -63,21 +110,21 @@ const Calendar = () => {
             <div>
               <ItemHead>
                 <ItemIcon $bg="#285257" $color="#66FFE8"></ItemIcon>
-                <h3>14 постов</h3>
+                <h3>{stats.thisWeek} постов</h3>
               </ItemHead>
               <ItemTime>На этой неделе</ItemTime>
             </div>
             <div>
               <ItemHead>
                 <ItemIcon $bg="#4E4233" $color="#FFBD5A"></ItemIcon>
-                <h3>8 постов</h3>
+                 <h3>{stats.nextWeek} постов</h3>
               </ItemHead>
               <ItemTime>На следующей неделе</ItemTime>
             </div>
             <div>
               <ItemHead>
                 <ItemIcon $bg="#4E243C" $color="#FF4A7D"></ItemIcon>
-                <h3>40 постов</h3>
+                  <h3>{stats.creating} постов</h3>
               </ItemHead>
               <ItemTime>Создается</ItemTime>
             </div>
