@@ -29,7 +29,7 @@ const CardArhive = ({ item, bg, selectedChannel }) => {
           <p>{selectedChannel.name}</p>
         </CardArhiveItemName>
         <CardArhiveItemTime>
-          <p>Дата публикации поста: </p>
+          <p>Дата публикации: </p>
           <span>
             {item.publishedAt
               ? new Date(item.publishedAt).toLocaleString("ru-RU", {

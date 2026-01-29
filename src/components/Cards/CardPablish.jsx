@@ -86,7 +86,7 @@ const CardPablish = ({ item, bg, selectedChannel }) => {
           <p>{selectedChannel.name}</p>
         </CardPablishItemName>
           <CardPablishItemTime>
-            <p>Дата создания поста:</p>
+            <p>Дата создания:</p>
             <span>
               {new Date(item.createdAt).toLocaleDateString("ru-RU")}{" "}
               {new Date(item.createdAt).toLocaleTimeString("ru-RU", {

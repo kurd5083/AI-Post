@@ -245,6 +245,7 @@ const ActionsPost = ({ post, textRefs, caretRanges, channelId, telegramId }) => 
 				}
 			);
 		};
+		
 		if (!post.serverId) {
 			const urlImages = post.images.filter(img => typeof img === "string");
 			const localFiles = post.images.filter(img => img instanceof File);

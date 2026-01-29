@@ -60,10 +60,20 @@ export const usePostsStore = create((set, get) => ({
       const nextChannelMap = { ...state.channelMap };
       delete nextChannelMap[postId];
 
+      let nextPosts = filtered;
+      if (filtered.length === 0) {
+        const newPost = createEmptyPost(1);
+        nextPosts = [newPost];
+        nextChannelMap[newPost.postId] = null;
+      }
+
       return {
-        posts: filtered,
+        posts: nextPosts,
         channelMap: nextChannelMap,
-        selectedPost: state.selectedPost?.postId === postId ? filtered[0] || null : state.selectedPost,
+        selectedPost:
+          state.selectedPost?.postId === postId
+            ? nextPosts[0]
+            : state.selectedPost,
       };
     }),
   updatePost: (postId, data) =>
@@ -171,7 +181,7 @@ export const usePostsStore = create((set, get) => ({
       if (!data?.imageUrls?.length) return notify("Не удалось получить изображение", "error");
 
       clearInterval(interval);
-      
+
       get().setImageProgress(postId, 100);
       setTimeout(() => get().resetImageProgress(postId), 1000);
       get().updatePost(postId, { images: [...(post.images || []), data.imageUrls[0]] });

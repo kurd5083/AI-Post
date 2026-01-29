@@ -1,7 +1,6 @@
 import { useState } from "react";
 import styled from "styled-components";
 
-import del from "@/assets/del.svg";
 import DelIcon from "@/icons/DelIcon";
 import EyeIcon from "@/icons/EyeIcon";
 
@@ -109,7 +108,7 @@ const LinkGenerationMyPopup = () => {
                     </TableCell>
                     <TableCellActions>
                       <HideButton>
-                        <EyeIcon/>
+                        <EyeIcon color="#6A7080" hoverColor="#6A7080" />
                       </HideButton>
                       <DeleteButton
                         disabled={removePending}
@@ -123,7 +122,7 @@ const LinkGenerationMyPopup = () => {
                           });
                         }}
                       >
-                        <img src={del} alt="del icon" width={14} height={16} />
+                        <DelIcon/>
                       </DeleteButton>
                     </TableCellActions>
                   </tr>

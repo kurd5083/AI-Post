@@ -69,16 +69,12 @@ const Lightbox = () => {
 
   return (
     <Overlay onClick={closeLightbox}>
-      <Close onClick={closeLightbox}>×</Close>
+      <Close onClick={(e) => { e.stopPropagation(); closeLightbox(); }}>×</Close>
 
       {images.length > 1 && (
-        <Nav left onClick={(e) => { e.stopPropagation(); prev(); }}>
-          ‹
-        </Nav>
+        <Nav left onClick={(e) => { e.stopPropagation(); prev(); }}>‹</Nav>
       )}
-
       <ImageWrapper
-        onClick={(e) => e.stopPropagation()}
         onWheel={onWheel}
         onMouseDown={onMouseDown}
         onMouseMove={onMouseMove}
@@ -87,6 +83,7 @@ const Lightbox = () => {
         onDoubleClick={onDoubleClick}
       >
         <Image
+          onClick={(e) => e.stopPropagation()}
           src={images[index]}
           style={{
             transform: `translate(${offset.x}px, ${offset.y}px) scale(${scale})`,
@@ -96,9 +93,7 @@ const Lightbox = () => {
       </ImageWrapper>
 
       {images.length > 1 && (
-        <Nav onClick={(e) => { e.stopPropagation(); next(); }}>
-          ›
-        </Nav>
+        <Nav onClick={(e) => { e.stopPropagation(); next(); }}>›</Nav>
       )}
     </Overlay>
   );
@@ -118,11 +113,9 @@ const Overlay = styled.div`
 const ImageWrapper = styled.div`
   width: 90vw;
   height: 90vh;
-
   display: flex;
   align-items: center;
   justify-content: center;
-
   overflow: hidden;
 `;
 

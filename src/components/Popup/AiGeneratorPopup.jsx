@@ -258,7 +258,6 @@ const AddPostButton = styled.div`
     grid-row: 3;
   }
 `;
-
 const GeneratorList = styled.div`
   box-sizing: border-box;
   display: flex;
@@ -271,9 +270,11 @@ const GeneratorList = styled.div`
   max-height: calc(100dvh - 285px);
   min-height: calc(100dvh - 285px);
   height: 100%;
-
+  padding-bottom: 30px;
+  
   @media(max-width: 2000px) {
     gap: 160px;
+    padding-bottom: 170px;
   } 
   @media(max-width: 1800px) {
     grid-column: 1 /span 5;
@@ -287,6 +288,7 @@ const GeneratorList = styled.div`
   }
   @media(max-width: 480px) {
     gap: 240px;
+    padding-bottom: 240px;
   } 
 `;
 const ListItem = styled.div`
@@ -295,7 +297,7 @@ const ListItem = styled.div`
   border-radius: 24px;
   border: 2px solid #252D43;
   animation: ${fadeIn} 0.3s ease forwards;
-
+ 
   @media(max-width: 480px) {
     padding: 16px;
   } 

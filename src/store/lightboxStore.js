@@ -9,7 +9,7 @@ export const useLightboxStore = create((set) => ({
   openLightbox: ({ images, initialIndex = 0 }) =>
     set({
       isOpen: true,
-      images: images?.map((img) => normalizeUrl(img)), // ✅ нормализация тут
+      images: images?.map((img) => normalizeUrl(img)),
       initialIndex,
     }),
 
