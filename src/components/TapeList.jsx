@@ -7,10 +7,10 @@ import { Navigation, Mousewheel, Autoplay } from "swiper/modules";
 import "swiper/css";
 
 import TimeIcon from "@/icons/TimeIcon";
-import ArrowIcon from "@/icons/ArrowIcon";
 import dzen_icon from "@/assets/dzen-icon.svg";
 import news_stub from "@/assets/news-stub.png";
 
+import Empty from "@/shared/Empty";
 import ModernLoading from "@/components/ModernLoading";
 
 import { useNotificationStore } from "@/store/notificationStore";
@@ -150,22 +150,11 @@ const TapeList = ({ forceHorizontal = false, padding, newsData, pending }) => {
               />
             </TapeItem>
           ))}
-          {/* {(forceHorizontal || isSwipe) && (
-            <div>
-              <TapePostButton className="TapePrev">
-                <ArrowIcon color="#D6DCEC" />
-              </TapePostButton>
-
-              <TapePostButton className="TapeNext">
-                <ArrowIcon color="#D6DCEC" />
-              </TapePostButton>
-            </div>
-          )} */}
         </TapeContainer>
       ) : (
-        <EmptyState
-          $padding={padding}
-        >Новостей нет</EmptyState>
+        <EmptyContainer $padding={padding}>
+          <Empty icon="📰">Новостей нет</Empty>
+        </EmptyContainer>
       )}
     </>
   )
@@ -318,42 +307,9 @@ const TapePostImg = styled.img`
     width: 105px;
   }
 `
-const TapePostButton = styled.button`
-	position: absolute;
-	top: 50%;
-  right: 32px;
-	transform: translateY(-50%);
-  align-items: center;
-  justify-content: center;
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  background-color: #1C2438;
-  z-index: 2;
-  @media (max-width: 1400px) {
-   right: 16px;
-  }
-	@media (max-width: 480px) {
-    width: 32px;
-    height: 32px;
-  }
-	
-  &:first-child {
-    transform: rotate(180deg) translateY(50%);
-		left: 32px;
-    @media (max-width: 1400px) {
-      left: 16px;
-    }
-  }
-`
-const EmptyState = styled.div`
-  padding: 48px 0;
-  text-align: center;
-  color: #6A7080;
-  font-weight: 600;
-  background-color: #1C2438;
-  border-radius: 16px;
+const EmptyContainer = styled.div`
   margin: ${({ $padding }) => $padding && "32px 56px 0"};
+
   margin-top: 32px;
 
   @media (max-width: 1400px) {
@@ -362,5 +318,6 @@ const EmptyState = styled.div`
   @media (max-width: 768px) {
     margin: 32px 24px 0;
   }
-`;
+`
+
 export default TapeList

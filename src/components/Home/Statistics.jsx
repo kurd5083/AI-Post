@@ -52,9 +52,13 @@ const Statistics = () => {
         />
       </StatisticsTitle>
       {!selectedChannelId || channelStatLoading ? (
-        <Empty icon="📊">Загрузка статистики...</Empty>
+        <EmptyContainer>
+          <Empty icon="📊">Загрузка статистики...</Empty>
+        </EmptyContainer>
       ) : !stat ? (
-        <Empty icon="📊">Нет статистики</Empty>
+        <EmptyContainer>
+          <Empty icon="📊">Нет статистики</Empty>
+        </EmptyContainer>
       ) : (
         <StatisticsList
           key={selectedChannelId}
@@ -205,5 +209,14 @@ const StatisticsText = styled.p`
   font-size: 14px;
   font-weight: 600;
 `
-
+const EmptyContainer = styled.div`
+  margin: 0;
+    
+  @media (max-width: 1400px) {
+    margin: 0 32px;
+  }
+  @media (max-width: 768px) {
+    margin: 0 24px;
+  }
+`
 export default Statistics

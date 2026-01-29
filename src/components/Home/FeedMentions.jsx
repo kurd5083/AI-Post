@@ -75,9 +75,13 @@ const FeedMentions = () => {
       </FeedMentionsHead>
 
       {!selectedChannelId || mentionsPending ? (
-        <Empty icon="📣">Загрузка упоминаний...</Empty>
+        <EmptyContainer>
+          <Empty icon="📣">Загрузка упоминаний...</Empty>
+        </EmptyContainer>
       ) : !mentionItems || mentionItems.length === 0 ? (
-        <Empty icon="📣">Нет упоминаний</Empty>
+        <EmptyContainer>
+          <Empty icon="📣">Нет упоминаний</Empty>
+        </EmptyContainer>
       ) : (
         <FeedMentionsList
           $fadeVisible={fadeVisible}
@@ -160,6 +164,7 @@ const TitleLeft = styled.span`
 const FeedMentionsButtons = styled.div`
   display: flex;
   gap: 8px;
+  margin-bottom: 24px;
 `
 const FeedMentionsButton = styled.button`
   display: flex;
@@ -222,10 +227,18 @@ const FeedMentionsList = styled(Swiper)`
     }
   }
 `;
-
 const FeedMentionsItem = styled(SwiperSlide)`
   max-width: 345px;
 `
-
+const EmptyContainer = styled.div`
+  margin: 0;
+    
+  @media (max-width: 1400px) {
+    margin: 0 32px;
+  }
+  @media (max-width: 768px) {
+    margin: 0 24px;
+  }
+`
 
 export default FeedMentions

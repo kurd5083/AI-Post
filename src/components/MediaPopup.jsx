@@ -4,6 +4,7 @@ import styled from "styled-components";
 import ImageIcon from "@/icons/ImageIcon";
 import VideoIcon from "@/icons/VideoIcon"; 
 
+import Empty from "@/shared/Empty";
 import ModernLoading from "@/components/ModernLoading";
 
 import { useGetMediaLibrary } from "@/lib/mediaLibrary/useGetMediaLibrary";
@@ -49,7 +50,9 @@ const MediaPopup = ({postId}) => {
 					</MediaGrid>
 				</>
 			) : (
-				<EmptyText>картинок нет</EmptyText>
+				<EmptyContainer>
+					<Empty icon="🖼️">картинок нет</Empty>
+				</EmptyContainer>
 			)}
 		</MediaContainer>
 	)
@@ -95,10 +98,16 @@ const MediaGrid = styled.div`
   margin-top: 24px;
   display: grid;
   gap: 8px;
-	grid-template-columns: repeat(auto-fit, minmax(106px, 1fr));
+	grid-template-columns: repeat(3, 1fr);
+	grid-template-rows: repeat(3, 1fr);
 	overflow-y: auto;
 	height: 330px;
 	scrollbar-width: none;
+
+	@media(max-width: 480px) {
+    grid-template-columns: repeat(2, 1fr);
+		grid-template-rows: repeat(2, 1fr);
+  }
 `;
 const MediaItem = styled.img`
   width: 100%;
@@ -112,15 +121,7 @@ const MediaItem = styled.img`
     transform: scale(1.05);
   }
 `;
-const EmptyText = styled.p`
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	width: 100%;
-	height: 100%;
-  font-size: 16px;
-  font-weight: 600;
-  color: #6A7080;
+const EmptyContainer = styled.p`
   margin-top: 32px;
 `;
 

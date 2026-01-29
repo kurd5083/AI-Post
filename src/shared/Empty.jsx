@@ -35,11 +35,11 @@ const EmptyMentions = styled.div`
     50% { transform: translateY(-10px); }
   }
 
-  @media (max-width: 1400px) {
+  /* @media (max-width: 1400px) {
     margin: 24px 32px 0;
-  }
+  } */
   @media (max-width: 768px) {
-    margin: 24px 24px;
+    /* margin: 24px 24px; */
     font-size: 15px;
   }
   @media (max-width: 480px) {

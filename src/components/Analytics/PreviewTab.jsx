@@ -174,7 +174,7 @@ const PreviewTab = ({ channel_id, id, channelName }) => {
 							postsLastDay.posts.map(p => (
 								<PostsCard key={p.id}>
 									<PostHead>
-										<СhannelPlug width="32px" height="32px" text={channelName} radius="50%" fs="16px" />
+										<СhannelPlug width="32px" height="32px" text={channelName} radius="50%" />
 										<PostChannelName>{channelName}</PostChannelName>
 										<PostTime>
 											<TimeIcon color="#6A7080" />
@@ -423,7 +423,7 @@ const PostTime = styled.p`
 `;
 
 const PostText = styled.h4`
-	font-size: 24px;
+	font-size: 20px;
 	font-weight: 700;
 	display: -webkit-box;
   -webkit-line-clamp: 2;
