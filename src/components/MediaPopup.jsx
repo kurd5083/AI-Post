@@ -69,11 +69,12 @@ const MediaContainer = styled.div`
   border-radius: 24px;
   backdrop-filter: blur(10px);
   z-index: 1000;
-  padding: 32px;
 `;
 const MediaNav = styled.div`
   display: flex; 
 	gap: 32px;
+  padding: 32px;
+
 `;
 const NavText = styled.p`
   display: flex;
@@ -89,13 +90,13 @@ const NavText = styled.p`
 `
 const MediaText = styled.p`
 	text-transform: uppercase;
-	margin-top: 32px;
 	color: #6A7080;
 	font-size: 12px;
 	font-weight: 700;
+	padding: 0 32px;
 `;
 const MediaGrid = styled.div`
-  margin-top: 24px;
+  padding: 24px 32px 32px;
   display: grid;
   gap: 8px;
 	grid-template-columns: repeat(3, 1fr);

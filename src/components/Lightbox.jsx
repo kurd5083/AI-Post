@@ -116,14 +116,22 @@ const Overlay = styled.div`
 `;
 
 const ImageWrapper = styled.div`
-  max-width: 90vw;
-  max-height: 90vh;
+  width: 90vw;
+  height: 90vh;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
   overflow: hidden;
 `;
 
 const Image = styled.img`
   max-width: 100%;
   max-height: 100%;
+  width: auto;
+  height: auto;
+
   user-select: none;
   transition: transform 0.15s ease-out;
 `;
