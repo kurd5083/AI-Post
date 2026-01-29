@@ -245,7 +245,7 @@ const ActionsPost = ({ post, textRefs, caretRanges, channelId, telegramId }) => 
 				}
 			);
 		};
-		
+
 		if (!post.serverId) {
 			const urlImages = post.images.filter(img => typeof img === "string");
 			const localFiles = post.images.filter(img => img instanceof File);
@@ -316,7 +316,7 @@ const ActionsPost = ({ post, textRefs, caretRanges, channelId, telegramId }) => 
 		const forbiddenMix = {
 			"code": ["code", "blockquote", "strike", "tg-spoiler"],
 			"blockquote": ["code", "blockquote", "strike", "tg-spoiler"],
-			"tg-spoiler": ["code", "blockquote", "strike"] 
+			"tg-spoiler": ["code", "blockquote", "strike"]
 		};
 
 		const checkForbidden = (wrapperTag) => {
@@ -327,7 +327,7 @@ const ActionsPost = ({ post, textRefs, caretRanges, channelId, telegramId }) => 
 			return false;
 		};
 
-		if (checkForbidden(wrapperTag)) return; 
+		if (checkForbidden(wrapperTag)) return;
 
 		if (existingWrapper && el.contains(existingWrapper)) {
 			const parent = existingWrapper.parentNode;
@@ -424,22 +424,20 @@ const ActionsPost = ({ post, textRefs, caretRanges, channelId, telegramId }) => 
 						onClick={() => formatText("strikeThrough")}
 					/>
 					<MonoIcon
-	color="#6A7080"
-	hoverColor="#FFFFFF"
-	onClick={() => formatMonospace(post.postId)}
-/>
-
-<QuoteIcon
-	color="#6A7080"
-	hoverColor="#FFFFFF"
-	onClick={() => formatQuote(post.postId)}
-/>
-
-<HiddenIcon
-	color="#6A7080"
-	hoverColor="#FFFFFF"
-	onClick={() => formatHidden(post.postId)}
-/>
+						color="#6A7080"
+						hoverColor="#FFFFFF"
+						onClick={() => formatMonospace(post.postId)}
+					/>
+					<QuoteIcon
+						color="#6A7080"
+						hoverColor="#FFFFFF"
+						onClick={() => formatQuote(post.postId)}
+					/>
+					<HiddenIcon
+						color="#6A7080"
+						hoverColor="#FFFFFF"
+						onClick={() => formatHidden(post.postId)}
+					/>
 					<LinkIcon
 						color="#6A7080"
 						hoverColor="#FFFFFF"
