@@ -16,7 +16,7 @@ const AnalyticsStatistics = ({id}) => {
     const { channelStat, channelStatLoading } = useChannelStat({
       channelId: id,
     });
-  
+    console.log(channelStat)
     const stat = channelStat?.response;
     console.log(stat)
   return (
