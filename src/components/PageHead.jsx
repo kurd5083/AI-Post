@@ -46,7 +46,11 @@ const HeadContent = styled.div`
   button {
     flex-shrink: 0;
     @media(max-width: 480px) {
-      margin-left: -51px;
+      &:first-child {
+        margin-left: -51px;
+        width: 100%;
+      }
+      flex: 1;
     }
   }
 `

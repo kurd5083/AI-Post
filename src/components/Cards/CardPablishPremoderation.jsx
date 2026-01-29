@@ -56,11 +56,7 @@ const CardPablishPremoderation = ({ item, bg, channelId, selectedChannel }) => {
     <CardPablishItem $bg={bg}>
       <CardPablishItemHead>
         <CardPablishItemName>
-          {selectedChannel.avatarUrl ? (
-            <CardPablishItemImg src={selectedChannel.avatarUrl} alt={selectedChannel.name} />
-          ) : (
-            <СhannelPlug width="32px" height="32px" text={selectedChannel.name}/>
-          )}
+          <СhannelPlug width="32px" height="32px" text={selectedChannel.name}/>
           <p>{selectedChannel.name}</p>
         </CardPablishItemName>
 

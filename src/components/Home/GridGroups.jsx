@@ -108,11 +108,7 @@ const GridGroups = () => {
           <AvatarWrap
             onClick={() => document.getElementById(`img-upload-${channel.id}`).click()}
           >
-            {channel?.avatarUrl ? (
-              <GridImg src={channel.avatarUrl} alt="Group" />
-            ) : (
-              <СhannelPlug width="40px" height="40px" text={channel.name} />
-            )}
+            <СhannelPlug width="40px" height="40px" text={channel.name} />
             <EditOverlay><img src={edit} alt='edit icon' /></EditOverlay>
           </AvatarWrap>
           <CellName>{channel.name}</CellName>

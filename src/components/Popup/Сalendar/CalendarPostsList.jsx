@@ -149,7 +149,6 @@ const CalendarPostsList = ({ posts }) => {
                 <ButtonEye onClick={() => handleEye(post)}>
                   <EyeIcon />
                 </ButtonEye>
-
                 {post.status !== "COMPLETED" && (
                   <>
                     <ButtonEdit
@@ -160,7 +159,6 @@ const CalendarPostsList = ({ posts }) => {
                     >
                       <TimeIcon />
                     </ButtonEdit>
-
                     <DeleteButton
                       onClick={(e) => {
                         e.stopPropagation();
@@ -274,6 +272,7 @@ const Content = styled.div`
   display: flex;
   flex-direction: column;
   gap: 14px;
+  height: 100%;
 `;
 const Title = styled.div`
   font-size: 17px;
@@ -337,6 +336,7 @@ const PostFooter = styled.div`
   justify-content: space-between;
   align-items: flex-end;
   gap: 24px;
+  flex-grow: 1;
 `;
 const MetaItem = styled.div`
   background: #222a3d;

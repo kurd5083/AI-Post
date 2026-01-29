@@ -65,11 +65,7 @@ const CardAddPost = ({ item, bg, selectedChannel }) => {
     <CardAddItem $bg={bg}>
       <CardAddItemHead>
         <CardAddItemName>
-          {selectedChannel.avatarUrl ? (
-            <CardAddItemImg src={selectedChannel.avatarUrl} alt={selectedChannel.name} />
-          ) : (
-            <СhannelPlug width="32px" height="32px" text={selectedChannel.name}/>
-          )}
+          <СhannelPlug width="32px" height="32px" text={selectedChannel.name}/>
           <p>{selectedChannel.name}</p>
         </CardAddItemName>
         

@@ -45,6 +45,7 @@ const SelectPostPopup = () => {
         value={selectedPostId}
         onChange={(option) => setSelectedPostId(option.value)}
         width="100%"
+        fs="16px"
         options={posts?.map((post) => {
           const channel = userChannels?.find(c => c.id === post.channelId);
 

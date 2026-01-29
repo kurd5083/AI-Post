@@ -55,7 +55,7 @@ const CustomSelectThree = ({ placeholder = 'Выберите канал', option
             {options?.map((option) => (
               <DropdownItem key={option.id} onClick={() => toggleItem(option.id)}>
                 <ItemLeft>
-                  {selected?.icon && <СhannelPlug width="24px" height="24px" text={option.icon} />}
+                  {option.icon && <СhannelPlug width="24px" height="24px" text={option.icon} />}
                   <ItemText>{option.label}</ItemText>
                 </ItemLeft>
                 <Checkbox

@@ -333,6 +333,7 @@ const CardImage = styled.img`
   width: 100%;
   object-fit: cover;
   border-radius: 16px;
+  cursor: pointer;
 `;
 const CardTitle = styled.h2`
   font-size: 24px;

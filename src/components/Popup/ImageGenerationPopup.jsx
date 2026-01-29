@@ -51,7 +51,7 @@ const ImageGenerationPopup = () => {
   if (imagePresetsLoading) {
     return <ModernLoading text="Загрузка стилей..." />;
   }
-
+  console.log(imagePresets)
   return (
     <ImageGenerationContent>
       <ImageGenerationContentTitle>Выберите одну стилистику</ImageGenerationContentTitle>
@@ -67,14 +67,14 @@ const ImageGenerationPopup = () => {
             </div>
           </Checkbox>
           <ImageGenerationImg
-            src={normalizeUrl(item.imageUrl)}
+            src={`https://aiposting.live/${item.imageUrl}`}
             alt="icon style"
             onClick={() =>
-              openLightbox({
-                images: [item.imageUrl],
-                initialIndex: 0,
-              })
-            }
+    openLightbox({
+      images: [`https://aiposting.live/${item.imageUrl}`],
+      initialIndex: 0,
+    })
+  }
           />
         </ImageGenerationContentItem>
       ))}

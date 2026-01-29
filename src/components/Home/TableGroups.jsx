@@ -99,11 +99,7 @@ const TableGroups = () => {
               <p>
                 <TableCellNum>#{index + 1}</TableCellNum>
                 <TableCellAva>
-                  {channel?.avatarUrl ? (
-                    <img src={channel.avatarUrl} alt="Group" />
-                  ) : (
-                    <СhannelPlug width="40px" height="40px" text={channel.name} />
-                  )}
+                  <СhannelPlug width="40px" height="40px" text={channel.name} />
                 </TableCellAva>
                 <CellName>{channel.name}</CellName>
               </p>

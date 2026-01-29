@@ -22,11 +22,7 @@ const PopupHead = () => {
               <ArrowIcon width={8} height={16} />
             </PopupArrow>
           }
-          {channel?.avatarUrl ? (
-            <PopupListAva src={channel?.avatarUrl} alt="ava icon" width={48} height={48} />
-          ) : (
-            <СhannelPlug width="48px" height="48px" text={channel?.name || "U"} />
-          )}
+          <СhannelPlug width="48px" height="48px" text={channel?.name || "U"} />
           <PopupListInfoContent>
             <p>{channel?.name || "Имя канала..."}</p>
             <span>{channel?.subscribersCount || 0} Подписчиков</span>
