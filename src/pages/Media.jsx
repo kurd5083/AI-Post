@@ -77,7 +77,7 @@ const Media = () => {
 
     setUploadingIds(prev => [...prev, photo.id]);
 
-    uploadMedia({ url: photo.src.original }, {
+    uploadMedia({ url: photo.src.tiny }, {
       onSuccess: () => {
         addNotification("Картинка добавлена", "success");
       },
@@ -237,11 +237,11 @@ const Media = () => {
             {photosData.photos.map((photo) => (
               <MediaCard key={photo.id}>
                 <MediaCardImage
-                  src={photo.src.medium}
+                  src={photo.src.tiny}
                   alt={photo.alt}
                   onClick={() =>
                     openLightbox({
-                      images: [photo.src.large2x],
+                      images: [photo.src.tiny],
                       initialIndex: 0,
                     })
                   }
@@ -254,7 +254,7 @@ const Media = () => {
                       $color="#fff"
                       $border={true}
                       $padding="13px 24px"
-                      onClick={() => handleDownload(photo.src.original, "pexels.jpg")}
+                      onClick={() => handleDownload(photo.src.tiny, "pexels.jpg")}
                     >
                       Скачать
                     </BtnBase>

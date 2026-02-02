@@ -70,11 +70,11 @@ const ImageGenerationPopup = () => {
             src={`https://aiposting.live/${item.imageUrl}`}
             alt="icon style"
             onClick={() =>
-    openLightbox({
-      images: [`https://aiposting.live/${item.imageUrl}`],
-      initialIndex: 0,
-    })
-  }
+              openLightbox({
+                images: [`https://aiposting.live/${item.imageUrl}`],
+                initialIndex: 0,
+              })
+            }
           />
         </ImageGenerationContentItem>
       ))}

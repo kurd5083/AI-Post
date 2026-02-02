@@ -8,6 +8,7 @@ const PostAddEdit = () => {
     const navigate = useNavigate();
     const postId = searchParams.get('postId');
     const { postsById, postsByIdPending } = useGetPostsById(postId)
+    console.log(postsById)
     const addPost = usePostsStore((state) => state.addPost);
 
     useEffect(() => {

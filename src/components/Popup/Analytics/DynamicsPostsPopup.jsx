@@ -1,79 +1,43 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import styled from "styled-components";
-
-import pointLine from "@/assets/point-line.svg";
-import EyeIcon from "@/icons/EyeIcon";
 
 import BtnBase from "@/shared/BtnBase";
 import CustomSelect from "@/shared/CustomSelect";
 
-import Chart from "@/components/Popup/Analytics/Chart";
 import ChartHead from "@/components/Popup/Analytics/ChartHead";
-const dynamics = [
-  {
-    id: 1,
-    postId: 4561224,
-    views: "1.5k",
-    sent: "14",
-    date: "19 Января, 19:35",
-    stats: [
-      { hour: 1, percent: 35.8, value: 305.53 },
-      { hour: 2, percent: 12.3, value: 74.24 },
-      { hour: 3, percent: 64.1, value: 645.88 },
-      { hour: 4, percent: 18.2, value: 175.32 },
-      { hour: 5, percent: 75.9, value: 662.16 },
-    ],
-  },
-  {
-    id: 2,
-    postId: 4561225,
-    views: "2.3k",
-    sent: "14",
-    date: "18 Января, 18:10",
-    stats: [
-      { hour: 1, percent: 22.4, value: 150.1 },
-      { hour: 2, percent: 44.7, value: 380.3 },
-      { hour: 3, percent: 61.2, value: 590.2 },
-      { hour: 4, percent: 72.5, value: 810.7 },
-      { hour: 5, percent: 85.3, value: 1020.4 },
-    ],
-  },
-  {
-    id: 2,
-    postId: 4561225,
-    views: "2.3k",
-    sent: "14",
-    date: "18 Января, 18:10",
-    stats: [
-      { hour: 1, percent: 22.4, value: 150.1 },
-      { hour: 2, percent: 44.7, value: 380.3 },
-      { hour: 3, percent: 61.2, value: 590.2 },
-      { hour: 4, percent: 72.5, value: 810.7 },
-      { hour: 5, percent: 85.3, value: 1020.4 },
-    ],
-  },
-  {
-    id: 2,
-    postId: 4561225,
-    views: "2.3k",
-    sent: "14",
-    date: "18 Января, 18:10",
-    stats: [
-      { hour: 1, percent: 22.4, value: 150.1 },
-      { hour: 2, percent: 44.7, value: 380.3 },
-      { hour: 3, percent: 61.2, value: 590.2 },
-      { hour: 4, percent: 72.5, value: 810.7 },
-      { hour: 5, percent: 85.3, value: 1020.4 },
-    ],
-  },
-];
+import LineChart from "@/components/Analytics/LineChart";
 
-const DynamicsPostsPopup = ({ data }) => {
+import { useStatisticsStore } from "@/store/statisticsStore";
+import { useAnalyticsFilterStore } from "@/store/analyticsFilterStore";
+
+const DynamicsPostsPopup = () => {
   const [dateFilter, setDateFilter] = useState({ period: "", value: "" });
+  const filter = useAnalyticsFilterStore(state => state.selectedFilter);
+
+  const { dayPoints, dayLabels } = useStatisticsStore();
+
+  const points = useMemo(() => {
+    const numericFilter = Number(filter) || 1;
+    return dayPoints.map(p => (Number(p) || 0) * numericFilter);
+  }, [dayPoints, filter]);
+
+  const labels = useMemo(() => dayLabels.map(l => l.short), [dayLabels]);
+  const tooltipLabels = useMemo(() => dayLabels.map(l => l.full), [dayLabels]);
+
   return (
     <Container>
       <ChartHead />
-      <Chart data={data} />
+      <ChartContainer>
+        <LineChart
+          points={points}
+          labels={labels}
+          tooltipLabels={tooltipLabels}
+          width={700}
+          height={300}
+          type="dynamicsPosts"
+          filter={filter}
+        />
+      </ChartContainer>
       <TableHead>
         <TableTitle>Таблица</TableTitle>
         <HeadActions>
@@ -95,8 +59,7 @@ const DynamicsPostsPopup = ({ data }) => {
         </HeadActions>
       </TableHead>
       <TableWrapper>
-        {/* {!linksLoading ? ( */}
-        {/* // links?.length > 0 ? ( */}
+  
         <Table>
           <colgroup>
             <col />
@@ -111,7 +74,7 @@ const DynamicsPostsPopup = ({ data }) => {
             </tr>
           </thead>
           <tbody>
-            {dynamics.map((dynamic) => (
+            {/* {dynamics.map((dynamic) => (
               <tr key={dynamic.id}>
                 <TableCell>
                   <CellDate>
@@ -130,28 +93,23 @@ const DynamicsPostsPopup = ({ data }) => {
                 <TableCell>
                   <CellStatistics>
                     {dynamic.stats.map((s) => (
-                      <CellStatisticsContaoner key={s.hour}>
+                      <CellStatisticsContainer key={s.hour}>
                         <p>{s.hour} час</p>
                         <span>{s.percent}% ({s.value})</span>
-                      </CellStatisticsContaoner>
+                      </CellStatisticsContainer>
                     ))}
                   </CellStatistics>
                 </TableCell>
               </tr>
-            ))}
+            ))} */}
           </tbody>
         </Table>
-        {/* // ) : (
-                // <EmptyLink>В канале пока нет ссылок</EmptyLink>
-              // )
-            // ) : (
-              // <ModernLoading text="Загрузка ссылок..." />
-            // )} */}
       </TableWrapper>
     </Container>
 
   )
 }
+
 const Container = styled.div`
   width: 100%;
 `;
@@ -161,6 +119,22 @@ const TableHead = styled.div`
   align-items: center;
   justify-content: space-between;
   gap: 20px;
+  padding: 0 56px;
+  margin-top: 40px;
+
+  @media(max-width: 1600px) { 
+    padding: 0 32px; 
+  }
+  @media(max-width: 768px) { 
+    padding: 0 24px; 
+  }
+`;
+const ChartContainer = styled.div`
+  display: grid;
+	align-items: end;
+	justify-items: start;
+	grid-template-columns: 30px 1fr;
+  grid-template-rows: 300px 20px;
   padding: 0 56px;
   margin-top: 40px;
 
@@ -266,7 +240,7 @@ const CellStatistics = styled.div`
   grid-template-columns: repeat(5, 1fr);
   gap: 40px;
 `;
-const CellStatisticsContaoner = styled.div`
+const CellStatisticsContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 8px;

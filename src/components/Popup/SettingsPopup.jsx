@@ -1,24 +1,27 @@
 import { useEffect, useState, useMemo } from "react";
 import styled, { keyframes } from "styled-components";
+
 import ArrowIcon from "@/icons/ArrowIcon";
 import { settingsDatas } from "@/data/settingsDatas";
+
 import ToggleSwitch from "@/shared/ToggleSwitch";
-import { usePopupStore } from "@/store/popupStore"
+
 import { useChannelById } from "@/lib/channels/useChannelById";
 import { useEnableChannelPosting, useDisableChannelPosting } from "@/lib/channels/useUpdateChannelPosting";
 import { useAutoApprovalStatus } from "@/lib/channels/useAutoApprovalStatus";
 import { useEnableChannelPromotion, useDisnableChannelPromotion } from "@/lib/channels/useEnableChannelPromotion";
 import { usePostsByChannel } from "@/lib/posts/usePostsByChannel";
 import { useUser } from "@/lib/user/useUser";
-import { useNotificationStore } from "@/store/notificationStore";
 import { useGetChannelImagePreset } from "@/lib/channels/image-generation/useGetChannelImagePreset";
 import { usePromptLibrary } from "@/lib/channels/usePromptLibrary";
 import { useChannelGlobalPrompt } from "@/lib/channels/global-prompt/useChannelGlobalPrompt";
 import { useChannelScheduleStatus } from "@/lib/channels/schedule/useChannelScheduleStatus";
 import { useChannelSchedule } from "@/lib/channels/schedule/useChannelSchedule";
-
 import { useChannelInterval } from "@/lib/channels/useChannelInterval";
 import { useCalendarEventsByRange } from "@/lib/calendar/useCalendarEventsByRange";
+
+import { useNotificationStore } from "@/store/notificationStore";
+import { usePopupStore } from "@/store/popupStore"
 
 const DAYS = [
   { label: "Пн", value: "MONDAY" },

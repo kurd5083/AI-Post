@@ -72,14 +72,6 @@ const Chart = ({ data }) => {
   };
 
   const handleMouseLeave = () => setHoverData({ index: null, x: 0, y: 0, value: 0 });
-  const getTooltipY = (y) => {
-    const topPadding = 18;
-    const bottomPadding = 18;
-    const height = 300;
-    if (y < topPadding) return y + 20;
-    if (y > height - bottomPadding) return y - 20;
-    return y - 10;
-  };
 
   return (
     <StatsChartContainer ref={containerRef}>

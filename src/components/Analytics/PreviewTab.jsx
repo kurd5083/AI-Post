@@ -1,4 +1,4 @@
-import { useRef, useState, useEffect } from "react";
+import { useState } from "react";
 import styled from "styled-components";
 
 import users from "@/assets/users.svg";
@@ -12,10 +12,10 @@ import СhannelPlug from '@/shared/СhannelPlug';
 import CustomSelectThree from "@/shared/CustomSelectThree";
 import Empty from '@/shared/Empty';
 
+
 import { useMentions } from "@/lib/tgStat/useMentions";
 import { useGetPostsLastDay } from "@/lib/posts/useGetPostsLastDay";
 
-// import useFadeOnScroll from "@/lib/useFadeOnScroll";	
 const months = [
 	"янв", "фев", "мар", "апр", "май", "июн",
 	"июл", "авг", "сен", "окт", "ноя", "дек"
@@ -31,32 +31,10 @@ const formatPostDate = (timestamp) => {
 };
 
 const PreviewTab = ({ channel_id, id, channelName }) => {
-	// const { fadeVisible: fadeMentions, ref: fadeMentionsRef } = useFadeOnScroll(20);
-	// const { fadeVisible: fadePosts, ref: fadePostsRef } = useFadeOnScroll(20);
+
 	const [viewMode, setViewMode] = useState("List");
 	const { postsLastDay, postsLastDayPending } = useGetPostsLastDay(channel_id);
-  console.log(postsLastDay)
-	// const mentionsRef = useRef();
-	// const postsRef = useRef();
-
-	// const [mentionsWidth, setMentionsWidth] = useState(0);
-	// const [postsWidth, setPostsWidth] = useState(0);
-
-	// useEffect(() => {
-	// 	const updateWidths = () => {
-	// 		if (mentionsRef.current) {
-	// 			setMentionsWidth(mentionsRef.current.offsetWidth);
-	// 		}
-	// 		if (postsRef.current) {
-	// 			setPostsWidth(postsRef.current.offsetWidth);
-	// 		}
-	// 	};
-
-	// 	updateWidths();
-	// 	window.addEventListener("resize", updateWidths);
-	// 	return () => window.removeEventListener("resize", updateWidths);
-	// }, []);
-
+	
 	const { mentions, mentionsPending } = useMentions({
 		channelId: id,
 		limit: 8,
@@ -157,14 +135,7 @@ const PreviewTab = ({ channel_id, id, channelName }) => {
 			<div>
 				<PreviewTitle>Посты канала</PreviewTitle>
 				<PreviewDescription>Лента с постами и статистикой отслеживаемого вами канала</PreviewDescription>
-				<PostsList
-				// ref={el => {
-				// 	postsRef.current = el;
-				// 	if (fadePostsRef) fadePostsRef.current = el;
-				// }}
-				// $fadeVisible={fadePosts}
-				// $containerWidth={postsWidth}
-				>
+				<PostsList>
 					{postsLastDayPending ? (
 						<Empty icon="📝">Загрузка постов...</Empty>
 					) : (
@@ -260,31 +231,8 @@ const MentionsList = styled.div`
 	margin-top: 20px;
 	max-height: 330px;
 	overflow-y: auto;
-  scrollbar-width: none;
+  	scrollbar-width: none;
 	padding-bottom: 30px;
-
-	/* ${({ $forceHorizontal, $fadeVisible, $containerWidth }) =>
-		!$forceHorizontal &&
-		`
-      &::after {
-        content: '';
-        position: fixed;
-        bottom: 0;
-        height: 135px;
-        width: ${$containerWidth}px;
-        background: linear-gradient(to top, #131826, transparent);
-        backdrop-filter: blur(8px);
-        mask-image: linear-gradient(to top, black 50%, transparent);
-        transition: opacity 0.2s;
-        opacity: ${$fadeVisible ? 1 : 0};
-        pointer-events: none;
-        z-index: 1;
-        
-        @media(max-width: 1400px) {
-          display: none;
-        }
-      }
-  `} */
 `;
 const MentionCard = styled.div`
 	display: flex;
@@ -293,10 +241,11 @@ const MentionCard = styled.div`
 	padding: 22px 32px;
 	border: 2px solid #333E59;
 	border-radius: 24px;
+
 	@media(max-width: 480px) { 
-    flex-direction: column;
+		flex-direction: column;
 		gap: 24px;
-  }
+	}
 `;
 
 const MentionsCardChannelInfo = styled.div`
@@ -323,7 +272,6 @@ const CardDetail = styled.div`
 	gap: 24px;
 	
 `;
-
 const MentionsCardParams = styled.span`
 	display: flex;
 	align-items: center;
@@ -332,14 +280,14 @@ const MentionsCardParams = styled.span`
 	font-size: 14px;
 	font-weight: 700;
 `;
-
 const MentionsCardMeta = styled.div`
 	display: flex;
 	flex-direction: column;
 	justify-content: space-between;
-  align-items: flex-end;
-  text-align: right;
-  min-width: 130px;
+	align-items: flex-end;
+	text-align: right;
+	min-width: 130px;
+	
 	@media(max-width: 480px) { 
     flex-direction: row;
   }
@@ -365,31 +313,8 @@ const PostsList = styled.div`
 	margin-top: 40px;
 	max-height: 330px;
 	overflow-y: auto;
-  scrollbar-width: none;
+  	scrollbar-width: none;
 	padding-bottom: 30px;
-
-	/* ${({ $forceHorizontal, $fadeVisible, $containerWidth }) =>
-		!$forceHorizontal &&
-		`
-      &::after {
-        content: '';
-        position: fixed;
-        bottom: 0;
-        height: 135px;
-        width: ${$containerWidth}px;
-        background: linear-gradient(to top, #131826, transparent);
-        backdrop-filter: blur(8px);
-        mask-image: linear-gradient(to top, black 50%, transparent);
-        transition: opacity 0.2s;
-        opacity: ${$fadeVisible ? 1 : 0};
-        pointer-events: none;
-        z-index: 1;
-        
-        @media(max-width: 1400px) {
-          display: none;
-        }
-      }
-  `} */
 `
 const PostsCard = styled.div`
 	display: flex;

@@ -4,11 +4,12 @@ import TableGroupsHead from "@/components/Home/TableGroupsHead";
 import СhannelContainer from "@/components/Home/СhannelContainer";
 import TableGroups from "@/components/Home/TableGroups";
 import GridGroups from "@/components/Home/GridGroups";
+
 import { useViewStore } from "@/store/viewStore";
 
 const Home = () => {
   const viewType = useViewStore((state) => state.viewType);
-
+  
   return (
     <>
       <Statistics />

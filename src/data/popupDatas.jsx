@@ -252,18 +252,26 @@ export const popupDatas = [
     },
     {
         key: "subscriber_growth",
-        name: "Рост количества подписчиков",
+        name: "Подписчики",
+    },
+    {
+        key: "subscriptions_day",
+        name: "Подписки / Отписки за 24ч",
     },
     {
         key: "dynamics_posts",
-        name: "Динамика постов в канале",
+        name: "Анализ просмотров",
+    },
+    {
+        key: "average_advertising",
+        name: "Средний охват / Рекламный",
     },
     {
         key: "average_coverage",
-        name: "Средний охват публикации",
+        name: "Средний охват одной публикации",
     },
     {
-        key: "number_publications",
-        name: "Средний охват публикации",
+        key: "publications_analytics",
+        name: "Публикации",
     },
 ]

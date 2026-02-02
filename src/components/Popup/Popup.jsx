@@ -31,9 +31,11 @@ import MyOrdersPopup from "@/components/Popup/MyOrdersPopup";
 import AddPostPopup from "@/components/Popup/AddPostPopup";
 import LivePreviewPopup from "@/components/Popup/LivePreviewPopup";
 import SubscriberGrowthPopup from "@/components/Popup/Analytics/SubscriberGrowthPopup";
+import SubscriptionsDay from "@/components/Popup/Analytics/SubscriptionsDay";
 import DynamicsPostsPopup from "@/components/Popup/Analytics/DynamicsPostsPopup";
 import AverageCoveragePopup from "@/components/Popup/Analytics/AverageCoveragePopup";
-import NumberPublicationsPopup from "@/components/Popup/Analytics/NumberPublicationsPopup";
+import AverageAdvertisingPopup from "@/components/Popup/Analytics/AverageAdvertisingPopup";
+import PublicationsAnalyticsPopup from "@/components/Popup/Analytics/PublicationsAnalyticsPopup";
 
 const Popup = () => {
     const { popup } = usePopupStore()
@@ -110,13 +112,17 @@ const Popup = () => {
                 <LivePreviewPopup/>
             ) : popup.content == 'subscriber_growth' ? (
                 <SubscriberGrowthPopup/>
+            ) : popup.content == 'subscriptions_day' ? (
+                <SubscriptionsDay/>
             ) : popup.content == 'dynamics_posts' ? (
                 <DynamicsPostsPopup/>
             ) : popup.content == 'average_coverage' ? (
                 <AverageCoveragePopup/>
-            ) : popup.content == 'number_publications' ? (
-                <NumberPublicationsPopup/>
-            ) : (
+            ) : popup.content == 'average_advertising' ? (
+                <AverageAdvertisingPopup/>
+            ) : popup.content == 'publications_analytics' ? (
+                <PublicationsAnalyticsPopup/>
+            )  : (
                 null
             )}
             

@@ -4,12 +4,11 @@ import styled from "styled-components";
 import fire from "@/assets/tape/fire.svg";
 import FilterIcon from "@/icons/FilterIcon";
 
-import TapeList from "@/components/TapeList";
+import CustomSelect from "@/shared/CustomSelect";
 import InputPlus from "@/shared/InputPlus";
 import BlocksItems from "@/shared/BlocksItems";
-import CustomSelectSec from "@/shared/CustomSelectSec";
 import BtnBase from "@/shared/BtnBase";
-import Counter from "@/shared/Counter";
+import TapeList from "@/components/TapeList";
 
 import { useNews } from "@/lib/news/useNews";
 import { useNotificationStore } from "@/store/notificationStore";
@@ -19,20 +18,19 @@ import { useGetPersonalNewsFeedId } from "@/lib/news/useGetPersonalNewsFeedId";
 const Tape = () => {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [filters, setFilters] = useState({});
+  const [updateInterval, setUpdateInterval] = useState(60);
+
   const { newsData, newsPending } = useNews(filters);
+
+  const [sourceWord, setSourceWord] = useState("");
+  const [sourceWords, setSourceWords] = useState([]);
 
   const [stopWord, setStopWord] = useState("");
   const [stopWords, setStopWords] = useState([]);
+
   const [priorityWord, setPriorityWord] = useState("");
   const [priorityWords, setPriorityWords] = useState([]);
-  const [language, setLanguage] = useState(filters.language || "ru");
 
-  const [feedName, setFeedName] = useState('');
-  const [feedDescription, setFeedDescription] = useState('');
-  const [updateInterval, setUpdateInterval] = useState(60);
-
-  const [categories, setCategories] = useState([]);
-  const [categoryInput, setCategoryInput] = useState("");
 
   const { mutate: createFeed, isPending: feedPending } = useCreatePersonalNewsFeed();
   const { newsFeed, newsFeedsLoading } = useGetPersonalNewsFeedId(2);
@@ -43,25 +41,23 @@ const Tape = () => {
   };
 
   const handleSave = () => {
-    if (!feedName.trim()) return addNotification("Введите название ленты", "info");
-    if (categories.length === 0) return addNotification("Добавьте хотя бы одну категорию", "info");
     const payload = {
-      name: feedName,
-      categories,
+      // name: feedName,
+      // categories,
       sourceIds: [],
       customSources: [],
       updateIntervalMinutes: updateInterval,
       isEnabled: true,
-      description: feedDescription,
+      // description: feedDescription,
     };
-    
+
     createFeed(payload,
       {
         onSuccess: () => {
           setFilters({
             stopWords: stopWords.join(","),
             priorityWords: priorityWords.join(","),
-            language,
+            language: "ru",
             page: "1",
             limit: "10",
           });
@@ -75,164 +71,172 @@ const Tape = () => {
       }
     );
   };
-  const handleAddStopWord = () => {
-    if (!stopWord.trim()) return;
-    if (stopWords.includes(stopWord)) {
-      addNotification("Стоп-слово уже добавлено", "info");
-      return;
-    }
-    setStopWords(prev => [...prev, stopWord]);
-    addNotification(`Стоп-слово "${stopWord}" добавлено`, "success");
-    setStopWord("");
-  };
+  const handleAddWord = ({ word, words, setWords, emptyMessage, existsMessage, successMessage, clearInput, }) => {
+    if (!word.trim()) return;
 
-  const handleAddPriorityWord = () => {
-    if (!priorityWord.trim()) return;
-    if (priorityWords.includes(priorityWord)) {
-      addNotification("Приоритетное слово уже добавлено", "info");
+    if (words.includes(word)) {
+      addNotification(existsMessage, "info");
       return;
     }
-    setPriorityWords(prev => [...prev, priorityWord]);
-    addNotification(`Приоритетное слово "${priorityWord}" добавлено`, "success");
-    setPriorityWord("");
-  };
-  const handleAddCategory = () => {
-    if (!categoryInput.trim()) return;
-    if (categories.includes(categoryInput)) return addNotification("Категория уже добавлена", "info");
-    setCategories(prev => [...prev, categoryInput]);
-    addNotification(`Категория "${categoryInput}" добавлена`, "success");
-    setCategoryInput("");
+
+    setWords(prev => [...prev, word]);
+    addNotification(successMessage(word), "success");
+    clearInput("");
   };
   return (
     <TapeContainer>
       <TapeHead>
         <TapeTitle>
           <img src={fire} alt="fire icon" />
-          <mark>Лайв</mark> лента
+          {isFilterOpen ? (
+            <><mark>Фильтр</mark> ленты</>
+          ) : (
+            <><mark>Лайв</mark> лента</>
+          )}
         </TapeTitle>
         <TapeBtn onClick={handleFilterClick}>
           <FilterIcon color="#D6DCEC" />
           Фильтр
         </TapeBtn>
       </TapeHead>
-
-      {isFilterOpen && (
+      {isFilterOpen ? (
         <FilterWrapper>
-          <FilterTitle>ЯЗЫК</FilterTitle>
-          <CustomSelectSec
-            options={[{ value: "ru", label: "Русский" }, { value: "en", label: "Английский" }]}
-            value={language}
-            onChange={(option) => setLanguage(option.value)}
-            width="340px"
-            fs="16px"
-            padding="24px"
-          />
+          <FilterInterval>
+            <h3>Интервал</h3>
+            <CustomSelect
+              placeholder="Выберите интервал"
+              options={[
+                { value: 15, label: "15 минут" },
+                { value: 30, label: "30 минут" },
+                { value: 60, label: "1 час" },
+                { value: 180, label: "3 часа" },
+                { value: 360, label: "6 часов" },
+              ]}
+              value={updateInterval}
+              width="160px"
+              onChange={(option) => setUpdateInterval(option.value)}
+            />
+          </FilterInterval>
           <FilterKey>
             <InputPlus
-              title="Стоп-слова"
-              placeholder="Ключевое слово"
-              bg="#2B243C"
-              color="#FF55AD"
+              title="Введите источник"
+              placeholder="Введите источник"
+              bg="#152136"
+              color="#336CFF"
               fs="16px"
               padding="16px"
-              value={stopWord}
-              onChange={setStopWord}
-              onSubmit={handleAddStopWord}
+              value={sourceWord}
+              onChange={setSourceWord}
+              onSubmit={() => {
+                handleAddWord({
+                  word: sourceWord,
+                  words: sourceWords,
+                  setWords: setSourceWords,
+                  existsMessage: "Источник уже добавлен",
+                  successMessage: w => `Источник "${w}" добавлен`,
+                  clearInput: setSourceWord,
+                });
+              }}
             />
-            {stopWords.length === 0 ? (
-              <EmptyText>Стоп-слова не добавлены</EmptyText>
+            {sourceWords.length === 0 ? (
+              <EmptyText>Источники не добавлены</EmptyText>
             ) : (
               <BlocksItems
-                items={stopWords.map((word, index) => ({ value: word, id: index }))}
-                color="#EF6284"
+                items={sourceWords.map((word, index) => ({ id: index, value: word }))}
+                color="#336CFF"
                 onRemove={(id) => {
-                  setStopWords(prev => prev.filter((_, index) => index !== id));
-                  addNotification("Стоп-слово удалено", "delete");
+                  setSourceWords(prev => prev.filter((_, index) => index !== id));
+                  addNotification("Источник удален", "delete");
                 }}
               />
             )}
-
           </FilterKey>
           <FilterKey>
             <InputPlus
               title="Приоритетные слова"
-              placeholder="Ключевое слово"
-              bg="#2B243C"
-              color="#FF55AD"
+              placeholder="Введите приоритетное слово"
+              bg="#152136"
+              color="#336CFF"
               fs="16px"
               padding="16px"
               value={priorityWord}
               onChange={setPriorityWord}
-              onSubmit={handleAddPriorityWord}
+              onSubmit={() => {
+                handleAddWord({
+                  word: priorityWord,
+                  words: priorityWords,
+                  setWords: setPriorityWords,
+                  existsMessage: "Приоритетное слово уже добавлено",
+                  successMessage: w => `Приоритетное слово "${w}" добавлено`,
+                  clearInput: setPriorityWord,
+                });
+              }}
             />
             {priorityWords.length === 0 ? (
               <EmptyText>Приоритетные слова не добавлены</EmptyText>
             ) : (
               <BlocksItems
                 items={priorityWords.map((word, index) => ({ id: index, value: word }))}
-                color="#EF6284"
+                color="#336CFF"
                 onRemove={(id) => {
                   setPriorityWords(prev => prev.filter((_, index) => index !== id));
                   addNotification("Приоритетное слово удалено", "delete");
                 }}
               />
             )}
-
           </FilterKey>
-          <CreateFolderTitle>Название ленты</CreateFolderTitle>
-          <CreateFolderInput
-            type="text"
-            placeholder="Введите название ленты"
-            value={feedName}
-            onChange={(e) => setFeedName(e.target.value)}
-          />
-          <CreateFolderTitle>Описание ленты</CreateFolderTitle>
-          <CreateFolderInput
-            type="text"
-            placeholder="Введите описание ленты"
-            value={feedDescription}
-            onChange={(e) => setFeedDescription(e.target.value)}
-          />
-
-          <CreateFolderTitle>Интервал обновления (мин.)</CreateFolderTitle>
-          <Counter placeholder="Количество" value={updateInterval} onChange={setUpdateInterval} />
           <FilterKey>
             <InputPlus
-              title="Категории"
-              placeholder="Добавить категорию"
-              bg="#2B243C"
-              color="#FF55AD"
+              title="Стоп-слова"
+              placeholder="Введите стоп-слово"
+              bg="#152136"
+              color="#336CFF"
               fs="16px"
               padding="16px"
-              value={categoryInput}
-              onChange={setCategoryInput}
-              onSubmit={handleAddCategory}
+              value={stopWord}
+              onChange={setStopWord}
+              onSubmit={() => {
+                handleAddWord({
+                  word: stopWord,
+                  words: stopWords,
+                  setWords: setStopWords,
+                  existsMessage: "Стоп-слово уже добавлено",
+                  successMessage: w => `Стоп-слово "${w}" добавлено`,
+                  clearInput: setStopWord,
+                });
+              }}
             />
-            {categories.length === 0 ? (
-              <EmptyText>Категории не добавлены</EmptyText>
+            {stopWords.length === 0 ? (
+              <EmptyText>Стоп-слова не добавлены</EmptyText>
             ) : (
               <BlocksItems
-                items={categories.map((cat, index) => ({ id: index, value: cat }))}
-                color="#EF6284"
-                onRemove={(id) => setCategories(prev => prev.filter((_, i) => i !== id))}
+                items={stopWords.map((word, index) => ({ value: word, id: index }))}
+                color="#336CFF"
+                onRemove={(id) => {
+                  setStopWords(prev => prev.filter((_, index) => index !== id));
+                  addNotification("Стоп-слово удалено", "delete");
+                }}
               />
             )}
           </FilterKey>
           <BtnBase
             $color="#D6DCEC"
             $bg="#336CFF"
-            $margin="40"
+            $margin="64"
+            $width="100%"
             onClick={handleSave}
             disabled={feedPending}
           >
-            {feedPending ? "Сохраняем..." : "Применить"}
+            {feedPending ? "Сохраняем..." : "Сохранить"}
           </BtnBase>
         </FilterWrapper>
+      ) : (
+        <TapeList
+          newsData={newsData?.data || []}
+          pending={newsPending}
+        />
       )}
-      <TapeList
-        newsData={newsData?.data || []}
-        pending={newsPending}
-      />
+
     </TapeContainer>
   );
 };
@@ -345,26 +349,14 @@ const TapeBtn = styled.button`
     background-color: #2C3241;
   }
 `;
-
 const FilterWrapper = styled.div`
   box-sizing: border-box;
-  position: absolute;
-  top: 180px;
-  left: 0;
-  width: calc(100% - 43px);
-  border-radius: 24px;
-  backdrop-filter: blur(64px);
-  margin-top: 24px;
-  padding: 24px;
-  background-color: #202638cc;
-  z-index: 100;
+  margin-top: 40px;
+  padding-bottom: 30px;
   max-height: calc(100dvh - 220px);
   overflow-y: auto;
   scrollbar-width: none;
   @media (max-width: 1400px) {
-    left: auto;
-    top: auto;
-    max-height: 350px;
     right: 160px;
     top: 105px;
     margin-left: 24px;
@@ -380,19 +372,20 @@ const FilterWrapper = styled.div`
     max-height: 290px;
   }
 `;
-const FilterTitle = styled.h3`
-  text-transform: uppercase;
-  margin: 24px 0 16px;
-  color: #6A7080;
-  font-size: 12px;
-  font-weight: 700;
+ 
+const FilterInterval = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 40px;
 
-  &:first-child {
-    margin-top: 0;
+  h3 {
+    font-family: "Montserrat Alternates", sans-serif;
+    font-size: 24px;
   }
 `
 const FilterKey = styled.div`
-  margin-top: 40px;
+  margin-bottom: 40px;
 `
 const EmptyText = styled.p`
   font-size: 16px;
@@ -400,25 +393,5 @@ const EmptyText = styled.p`
   color: #6A7080;
   margin-top: 32px;
 `;
-const CreateFolderTitle = styled.h2`
-  text-transform: uppercase;
-  color: #6a7080;
-  font-size: 12px;
-  font-weight: 700;
-  margin: 48px 0 26px;
-  border: none;
-`;
-const CreateFolderInput = styled.input`
-  background-color: transparent;
-  width: 100%;
-  color: #d6dcec;
-  font-size: 16px;
-  font-weight: 700;
-  padding-bottom: 24px;
-  border: none;
-  border-bottom: 2px solid #2e3954;
-  &::placeholder {
-    color: #d6dcec;
-  }
-`;
+
 export default Tape;

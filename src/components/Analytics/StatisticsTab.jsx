@@ -1,319 +1,278 @@
-import { useRef, useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import styled from "styled-components";
 
 import BtnBase from "@/shared/BtnBase";
+import CustomSelectFour from "@/shared/CustomSelectFour";
+import DayBarChart from "@/components/Analytics/DayBarChart";
+import LineChart from "@/components/Analytics/LineChart";
+import PostStatsDetails from "@/components/Analytics/PostStatsDetails";
 
-// import useFadeOnScroll from "@/lib/useFadeOnScroll";
-import { useGetAvgReach } from "@/lib/analytics/useGetAvgReach";
+import { useGetSubscribersDaily } from "@/lib/analytics/useGetSubscribersDaily";
+import { useGetDayTracking } from "@/lib/analytics/useGetDayTracking";
+import { useGetAdReachPeriod } from "@/lib/analytics/useGetAdReachPeriod";
+import { useGetPostsByPeriod } from "@/lib/analytics/useGetPostsByPeriod";
+import { useGetAnalyticsReach } from "@/lib/analytics/useGetAnalyticsReach";
+import useResolution from "@/lib/useResolution";
 
-
-import { usePopupStore } from "@/store/popupStore"
+import { useStatisticsStore } from "@/store/statisticsStore";
+import { usePopupStore } from "@/store/popupStore";
 
 const statisticsData = [
-  {
-    title: "Рост количества подписчиков",
-    mainValue: "+ 3.421",
-    mainSubValue: "Сегодня",
-    details: [
-      { value: "- 150", label: "За неделю" },
-      { value: "+ 1.200", label: "За месяц" }
-    ],
-    points: [0, 20, 35, 25, 50, 40, 70],
-		content: 'subscriber_growth'
-  },
-  {
-    title: "Динамика постов в канале",
-    mainValue: "15.342",
-    mainSubValue: null,
-    details: [
-      { value: "+ 5%", label: "Рост за неделю" },
-      { value: "+ 12%", label: "Рост за месяц" }
-    ],
-    points: [60, 50, 70, 55, 80, 60, 90],
-	content: 'dynamics_posts'
-  },
-  {
-    title: "Средний охват",
-    mainValue: "+ 7.890",
-    mainSubValue: "Сегодня",
-    details: [
-      { value: "- 200", label: "За неделю" },
-      { value: "+ 1.500", label: "За месяц" }
-    ],
-    points: [40, 50, 60, 70, 65, 80, 90],
-	content: 'average_coverage'
-  },
-  {
-    title: "Количество публикаций",
-    mainValue: "123.456",
-    mainSubValue: null,
-    details: [
-      { value: "+ 4.321", label: "За неделю" },
-      { value: "+ 15.000", label: "За месяц" }
-    ],
-    points: [50, 60, 80, 90, 70, 85, 100],
-	content: 'number_publications'
-  },
+  { title: "Подписчики", mainSubValue: "Всего", content: 'subscriber_growth' },
+  { title: "Подписки / Отписки за 24ч", mainSubValue: "Итого", content: 'subscriptions_day' },
+  { title: "Анализ просмотров", mainSubValue: "Просмотры", content: 'dynamics_posts' },
+  { title: "/ Рекламный", mainSubValue: "За сутки", content: 'average_advertising' },
+  { title: "Публикации", mainSubValue: "Всего", content: 'publications_analytics' },
+  { title: "1 публикации", mainSubValue: "За сутки", content: 'average_coverage' },
 ];
 
-const months = ["Январь", "Февраль", "Март", "Апрель"];
+const StatisticsTab = ({ channel_id, dateFromStr, dateToStr, dateFromShort, dateToShort, filter }) => {
+  const [selectedPost, setSelectedPost] = useState(null);
+  const { isSmall } = useResolution(768);
+  const { openPopup } = usePopupStore();
 
-const StatisticsTab = () => {
-	const { openPopup } = usePopupStore();
-	const startOfYear = Math.floor(new Date("2025-01-01T00:00:00Z").getTime() / 1000);
-	const endOfYear = Math.floor(new Date("2026-12-31T23:59:59Z").getTime() / 1000);
-	console.log(endOfYear)
-	const { avgReach, avgReachLoading } = useGetAvgReach({
-		channelId: 1,
-		group: "day",
-		startDate: startOfYear,
-  		endDate: endOfYear,
-	});
-	console.log(avgReach)  
+  const {
+    dayPoints, dayLabels,
+    subscriberPoints, subscriberLabels,
+    adReachPoints, adReachLabels,
+    postsByPeriodPoints, postsByPeriodLabels,
+    averageCoveragePoints, averageCoverageLabels,
+    setDayData,
+    setSubscriberData,
+    setAdReachData,
+    setPostsByPeriodData,
+    setAverageCoverageData,
+  } = useStatisticsStore();
 
-	// const [containerWidth, setContainerWidth] = useState(0);
+  const { dayTracking } = useGetDayTracking(channel_id);
+  const { postsByPeriod } = useGetPostsByPeriod({ channel_id, date_from: dateFromStr, date_to: dateToStr });
+  const { subscribersDaily } = useGetSubscribersDaily({ channel_id, date_from: dateFromShort, date_to: dateToShort });
+  const { adReachPeriod } = useGetAdReachPeriod({ channel_id, date_from: dateFromShort, date_to: dateToShort });
+  const { analyticsReach } = useGetAnalyticsReach({ channel_id, date_from: dateFromShort, date_to: dateToShort });
 
-	// const containerRef = useRef();
-	const svgRefs = useRef([]);
-	// const { fadeVisible, ref } = useFadeOnScroll(20);
-	const [hoverData, setHoverData] = useState({ index: null, x: 0, y: 0, value: 0 });
-	// useEffect(() => {
-	// 	if (!containerRef.current) return;
+  const sortedPostsByPeriod = useMemo(() => 
+    postsByPeriod?.data?.slice()?.sort((a,b) => new Date(a.date) - new Date(b.date)) || [],
+    [postsByPeriod]
+  );
 
-	// 	const updateWidth = () => {
-	// 		let width = containerRef.current.offsetWidth;
+  useEffect(() => {
+    if (selectedPost === null && dayTracking?.posts?.length) {
+      setSelectedPost(dayTracking.posts[0].post_id);
+    }
+  }, [dayTracking, selectedPost]);
 
-	// 		if (window.innerWidth < 1600) {
-	// 			width -= 32 * 2;
-	// 		} else {
-	// 			width -= 52 * 2;
-	// 		}
+  const selectedPostData = useMemo(() => {
+    return dayTracking?.posts?.find(p => p.post_id === selectedPost) || dayTracking?.posts?.[0];
+  }, [dayTracking, selectedPost]);
+  console.log(selectedPostData)
 
-	// 		setContainerWidth(width);
-	// 	};
+  const dayChartData = useMemo(() => {
+    if (!selectedPostData?.hourly?.length) return null;
+    const points = selectedPostData.hourly.map(h => h.views);
+    const labels = selectedPostData.hourly.map((h,i) => ({
+      short: `${i}`,
+      full: new Date(h.time || `2026-01-01T${i}:00:00`).toLocaleTimeString("ru-RU",{hour:"2-digit",minute:"2-digit"})
+    }));
+    return { points, labels };
+  }, [selectedPostData?.hourly]);
 
-	// 	updateWidth();
-	// 	window.addEventListener("resize", updateWidth);
+  useEffect(() => {
+    if (dayChartData) setDayData(dayChartData.points, dayChartData.labels);
+  }, [dayChartData, setDayData]);
 
-	// 	return () => window.removeEventListener("resize", updateWidth);
-	// }, []);
+  const subscriberChartData = useMemo(() => {
+    if (!subscribersDaily?.daily_data?.length) return null;
 
-	const makeSmoothBezierPath = (values, height) => {
-		const width = 300;
-		const step = width / (values.length - 1);
+    const points = subscribersDaily.daily_data.map(d => d.subscriber_count);
 
-		const pts = values.map((v, i) => [i * step, height - (v / 100) * height]);
+    const labels = subscribersDaily.daily_data.map(d => {
+      const dateObj = new Date(d.date);
+      return { 
+        short: dateObj.toLocaleDateString("ru-RU", { day: "numeric" }),
+        full: dateObj.toLocaleDateString("ru-RU", { day: "numeric", month: "short", year: "numeric" }),
+        delta: d.delta || 0,
+        joined: d.joined || 0,
+        left: d.left || 0
+      };
+    });
 
-		if (pts.length < 2) return "";
+    return { points, labels };
+  }, [subscribersDaily]);
 
-		let d = `M${pts[0][0]},${pts[0][1]}`;
-		for (let i = 1; i < pts.length; i++) {
-			const [x0, y0] = pts[i - 1];
-			const [x1, y1] = pts[i];
-			const cp1x = x0 + (x1 - x0) / 2;
-			const cp1y = y0;
-			const cp2x = x0 + (x1 - x0) / 2;
-			const cp2y = y1;
-			d += ` C${cp1x},${cp1y} ${cp2x},${cp2y} ${x1},${y1}`;
-		}
-		return d;
-	};
-	const handleMouseMove = (e, points, svg, chartIndex) => {
-		if (!svg) return;
+  useEffect(() => {
+    if (subscriberChartData) {
+      setSubscriberData(subscriberChartData.points, subscriberChartData.labels);
+    }
+  }, [subscriberChartData, setSubscriberData]);
+  const adReachChartData = useMemo(() => {
+    if (!adReachPeriod?.daily?.length) return null;
+    const numericFilter = Number(filter) || 1;
+    const points = adReachPeriod.daily.map(d => (Number(d.total_ad_reach) || 0) * numericFilter);
+    const labels = adReachPeriod.daily.map(d => {
+      const dateObj = new Date(d.date);
+      return { 
+        short: dateObj.toLocaleDateString("ru-RU",{day:"numeric"}), 
+        full: dateObj.toLocaleDateString("ru-RU",{day:"numeric",month:"short",year:"numeric"}) 
+      };
+    });
+    return { points, labels };
+  }, [adReachPeriod, filter]);
 
-		const rect = svg.getBoundingClientRect();
-		const x = e.clientX - rect.left;
+  useEffect(() => {
+    if (adReachChartData) setAdReachData(adReachChartData.points, adReachChartData.labels);
+  }, [adReachChartData, setAdReachData]);
 
-		const step = 300 / (points.length - 1);
-		const index = Math.round(x / step);
-		const clampedIndex = Math.max(0, Math.min(points.length - 1, index));
+  const postsChartData = useMemo(() => {
+    if (!sortedPostsByPeriod.length) return null;
+    const points = sortedPostsByPeriod.map(p => p.posts_count);
+    const labels = sortedPostsByPeriod.map(p => {
+      const dateObj = new Date(p.date);
+      return { 
+        short: dateObj.toLocaleDateString("ru-RU",{day:"numeric"}), 
+        full: dateObj.toLocaleDateString("ru-RU",{day:"numeric",month:"short",year:"numeric"}) 
+      };
+    });
+    return { points, labels };
+  }, [sortedPostsByPeriod]);
 
-		const svgHeight = 160;
-		const maxScale = 100;
-		const y = svgHeight - (points[clampedIndex] / maxScale) * svgHeight;
-		
-		setHoverData({
-			index: clampedIndex,
-			chartIndex,
-			x: clampedIndex * step,
-			y,
-			value: points[clampedIndex],
-		});
-	};
-	const handleMouseLeave = () => setHoverData({ index: null, x: 0, y: 0, value: 0 });
-	const getTooltipY = (y) => {
-		const topPadding = 18;
-		const bottomPadding = 18;
-		const height = 160;
+  useEffect(() => {
+    if (postsChartData) setPostsByPeriodData(postsChartData.points, postsChartData.labels);
+  }, [postsChartData, setPostsByPeriodData]);
 
-		if (y < topPadding) return y + 20;
-		if (y > height - bottomPadding) return y - 20;
+  const averageCoverageChartData = useMemo(() => {
+    if (!analyticsReach?.daily?.length) return null;
+    const points = analyticsReach.daily.map(d => d.avg_reach || 0);
+    const labels = analyticsReach.daily.map(d => {
+      const dateObj = new Date(d.date);
+      return { 
+        short: dateObj.toLocaleDateString("ru-RU",{day:"numeric"}), 
+        full: dateObj.toLocaleDateString("ru-RU",{day:"numeric",month:"short",year:"numeric"}) 
+      };
+    });
+    return { points, labels };
+  }, [analyticsReach]);
 
-		return y - 10;
-	};
+  useEffect(() => {
+    if (averageCoverageChartData) setAverageCoverageData(averageCoverageChartData.points, averageCoverageChartData.labels);
+  }, [averageCoverageChartData, setAverageCoverageData]);
 
-	return (
-		<StatisticsContainer
-			// ref={(el) => {
-			// 	if (ref) ref.current = el;
-			// 	containerRef.current = el;
-			// }}
-			// $fadeVisible={fadeVisible}
-			// $containerWidth={containerWidth}
-		>
-			{statisticsData.map((item, index) => (
-				<StatisticsItem key={index}>
-					<ButtonMore>
-						<BtnBase $color="#336CFF" $bg="#161F37" $padding="12px 24px" onClick={() => openPopup(item.content, "popup")} >Подробнее</BtnBase>
-					</ButtonMore>
-					<ItemLeft>
-						<ItemTitle>{item.title}</ItemTitle>
-						<StatsCardMainValue>
-							{item.mainValue}
-							{item.mainSubValue && <span>{item.mainSubValue}</span>}
-						</StatsCardMainValue>
-						<StatsCardDetails>
-							{item.details.map((detail, i) => (
-								<StatsCardDetailItem key={i}>
-									{detail.value} <span>{detail.label}</span>
-								</StatsCardDetailItem>
-							))}
-						</StatsCardDetails>
-					</ItemLeft>
-					<StatsChartContainer>
-						<StatsYAxis>
-							{[100, 75, 50, 25, 0].map((val, i) => (
-								<span key={i}>
-									{val}
-								</span>
-							))}
-						</StatsYAxis>
-						<StatsChart onMouseMove={(e) => handleMouseMove(e, item.points, svgRefs.current[index], index)}
-							onMouseLeave={handleMouseLeave}	>
-							<StatsChartLine>
-								<svg
-									ref={(el) => (svgRefs.current[index] = el)}
-									viewBox="-10 0 325 160"
-									preserveAspectRatio="none"
-								>
-									<defs>
-										<linearGradient id={`fadeStroke-${index}`} x1="0" x2="1" y1="0" y2="0">
-											<stop offset="0%" stopColor="#94b2ffc3" />
-											<stop offset="50%" stopColor="#336dffd8" />
-											<stop offset="100%" stopColor="#336dffac" />
-										</linearGradient>
-									</defs>
-									<path
-										d={makeSmoothBezierPath(item.points, 160)}
-										stroke={`url(#fadeStroke-${index})`}
-										strokeWidth="3"
-										fill="none"
-									/>
+  const handleChangePost = (value) => setSelectedPost(value);
 
-									{hoverData.index !== null && hoverData.chartIndex === index && (
-										<g>
-											<circle
-												cx={hoverData.x}
-												cy={hoverData.y}
-												r="6"
-												fill="#336CFF"
-												stroke="#FFFFFF"
-												strokeWidth="3"
-											/>
-											<text
-												x={hoverData.x}
-												y={getTooltipY(hoverData.y)}
-												textAnchor="middle"
-												fontWeight={600}
-												fontSize="14"
-												fill="#FFF"
-											>
-												{hoverData.value}
-											</text>
-											<line
-												x1={hoverData.x}
-												y1={hoverData.y}
-												x2={hoverData.x}
-												y2={185}
-												stroke="#FFFFFF"
-												strokeWidth="1"
-												strokeDasharray="4 2"
-											/>
-										</g>
-									)}
-								</svg>
-							</StatsChartLine>
+  const postOptions = useMemo(() => 
+    dayTracking?.posts?.map(post => ({
+      id: post.post_id,
+      label: `Пост #${post.post_id}`,
+      date: new Date(post.post_date),
+      views: post.total_views,
+      forward: post.total_forwards,
+    })) || [],
+    [dayTracking]
+  );
 
-							<StatsChartGradient>
-								<svg viewBox="-10 0 325 160" preserveAspectRatio="none">
-									<defs>
-										<linearGradient id={`gradientFill-${index}`} x1="0" x2="0" y1="0" y2="1">
-											<stop offset="0%" stopColor="#193169" />
-											<stop offset="100%" stopColor="#13192ac7" />
-										</linearGradient>
-									</defs>
-									<path
-										d={`${makeSmoothBezierPath(item.points, 160)} L300,150 L0,150 Z`}
-										fill={`url(#gradientFill-${index})`}
-									/>
-								</svg>
-							</StatsChartGradient>
-						</StatsChart>
-						<StatsData>
-							{months.map((month, i) => (
-								<span key={i} style={{ left: `${(i / (months.length - 1)) * 100}%` }}>
-									{month}
-								</span>
-							))}
-						</StatsData>
-					</StatsChartContainer>
-				</StatisticsItem>
-			))}
-		</StatisticsContainer>
-	)
-}
+  return (
+    <StatisticsContainer>
+      {statisticsData.map((item, index) => (
+        <StatisticsItem key={index}>
+          <ItemLeft>
+            <ItemTitle>
+              {item.content === "average_advertising" || item.content === "average_coverage" ? (
+                <><p style={{ color: "#336CFF" }}>Средний охват</p>{item.title}</>
+              ) : item.title}
+            </ItemTitle>
+            <StatsCardMainValue>
+              {item.content === "publications_analytics" ? (
+                sortedPostsByPeriod?.reduce((sum, p) => sum + (p.posts_count || 0), 0)
+              ) : item.content === "subscriber_growth" ? (
+                subscribersDaily?.current_subscribers || 0
+              ) : item.content === "dynamics_posts" && selectedPostData ? (
+                <>
+                  <span>Пост #{selectedPostData.post_id}</span>
+                  {selectedPostData.total_views || 0}
+                </>
+              ) : item.content === "average_advertising" ? (
+                adReachPeriod?.by_day?.total_ad_reach || 0
+              ) : item.content === "average_coverage" ? (
+                analyticsReach?.daily?.[0]?.avg_reach || 0
+              ) : 1}
+              {item.mainSubValue && <span>{item.mainSubValue}</span>}
+            </StatsCardMainValue>
+            <StatsCardDetails>
+              {item.content === "publications_analytics" ? (
+                <PostStatsDetails postsByPeriod={sortedPostsByPeriod} />
+              ) : item.content === "subscriber_growth" ? (
+                <PostStatsDetails subscribersDaily={subscribersDaily} />
+              ) : item.content === "dynamics_posts" && selectedPostData ? (
+                <PostStatsDetails selectedPostData={selectedPostData} />
+              ) : item.content === "average_advertising" ? (
+                <PostStatsDetails adReachPeriod={adReachPeriod} />
+              ) : item.content === "average_coverage" ? (
+                <PostStatsDetails analyticsReach={analyticsReach} />
+              ) : 1}
+            </StatsCardDetails>
+          </ItemLeft>
+          <ButtonsMore>
+            {item.content === "dynamics_posts" && (
+              <SelectContainer>
+                <CustomSelectFour
+                  options={postOptions}
+                  value={selectedPost}
+                  onChange={handleChangePost}
+                  width="min-content"
+                  right="-20px"
+                />
+              </SelectContainer>
+            )}
+            <BtnBase
+              $color="#336CFF"
+              $bg="#161F37"
+              $padding="12px 24px"
+              onClick={() => openPopup(item.content, "popup")}
+            >
+              Подробнее
+            </BtnBase>
+          </ButtonsMore>
+          <StatsChartContainer>
+            {item.content === "dynamics_posts" ? (
+              <DayBarChart points={dayPoints} labels={dayLabels} width={400} height={150} />
+            ) : item.content === "average_advertising" ? (
+              <LineChart points={adReachPoints} labels={adReachLabels.map(l => l.short)} tooltipLabels={adReachLabels.map(l => l.full)} width={isSmall ? 700 : 400} height={150} type="adReach" filter={filter} />
+            ) : item.content === "publications_analytics" ? (
+              <LineChart points={postsByPeriodPoints} labels={postsByPeriodLabels.map(l => l.short)} tooltipLabels={postsByPeriodLabels.map(l => l.full)} width={isSmall ? 700 : 400} height={150} type="posts" filter={filter} />
+            ) : item.content === "subscriber_growth" ? (
+              <LineChart points={subscriberPoints} labels={subscriberLabels.map(l => l.short)} tooltipLabels={subscriberLabels.map(l => l.full)} width={isSmall ? 700 : 400} height={150} type="adReach" filter={filter} />
+            ) : item.content === "average_coverage" ? (
+              <LineChart points={averageCoveragePoints} labels={averageCoverageLabels.map(l => l.short)} tooltipLabels={averageCoverageLabels.map(l => l.full)} width={isSmall ? 700 : 400} height={150} type="adReach" filter={filter} />
+            ) : item.content === "subscriptions_day" && (
+              <LineChart points={subscriberPoints} labels={subscriberLabels.map(l => l.short)} tooltipLabels={subscriberLabels.map(l => l.full)} width={isSmall ? 700 : 400} height={150} type="adReach" filter={filter} />
+            )}
+          </StatsChartContainer>
+        </StatisticsItem>
+      ))}
+    </StatisticsContainer>
+  );
+};
+
 const StatisticsContainer = styled.div`
-  margin-top: 40px;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 16px;
-  padding: 0 56px 30px;
+	margin-top: 40px;
+	display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(550px, 1fr));
+	gap: 16px;
+	padding: 0 56px 30px;
 	max-height: 450px;
 	overflow-y: auto;
   scrollbar-width: none;
 
 	@media(max-width: 1600px) { 
-    padding: 0 32px 30px 
-  }	
-  @media(max-width: 768px) { 
-    padding: 0 24px 30px;
+		padding: 0 32px 30px 
+	}	
+	@media(max-width: 768px) { 
+		padding: 0 24px 30px;
 		max-height: 850px;
+    grid-template-columns: 1fr;
   }
-
-	/* ${({ $forceHorizontal, $fadeVisible, $containerWidth }) =>
-		!$forceHorizontal &&
-		`
-      &::after {
-        content: '';
-        position: fixed;
-        bottom: 0;
-        height: 135px;
-        width: ${$containerWidth}px;
-        background: linear-gradient(to top, #131826, transparent);
-        backdrop-filter: blur(8px);
-        mask-image: linear-gradient(to top, black 50%, transparent);
-        transition: opacity 0.2s;
-        opacity: ${$fadeVisible ? 1 : 0};
-        pointer-events: none;
-        z-index: 1;
-        
-        @media(max-width: 1400px) {
-          display: none;
-        }
-      }
-  `} */
 `;
 const StatisticsItem = styled.div`
+box-sizing: border-box;
 	display: flex;
 	justify-content: space-between;
 	align-items: flex-end;
@@ -329,26 +288,41 @@ const StatisticsItem = styled.div`
 		width: 100%;
 	}
 `;
-const ButtonMore = styled.div`
+const ButtonsMore = styled.div`
 	position: absolute;
+	display: flex;
+	gap: 8px;
 	right: 24px;
 	top: 24px;
 	z-index: 10;
+  @media(max-width: 640px) { 
+    position: static;
+	}
+`;
+const SelectContainer = styled.div`
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 0 24px;
+	background-color: #1A1F2D;
+	border-radius: 8px;
 `;
 const ItemLeft = styled.div`
-	min-width: 230px;
+	min-width: 150px;
 	height: 100%;
 `;
-
 const ItemTitle = styled.h3`
-  font-size: 14px;
+  display: flex;
+  gap: 6px;
+  font-size: 18px;
   font-weight: 700;
+  white-space: nowrap;
 `;
 const StatsCardMainValue = styled.p`
-  margin-top: 45px;
+  margin-top: 24px;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 4px;
   font-size: 36px;
   font-weight: 800;
 
@@ -362,66 +336,19 @@ const StatsCardDetails = styled.div`
   margin-top: 32px;
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 16px;
 `;
-const StatsCardDetailItem = styled.p`
-  display: flex;
-  gap: 24px;
-  font-weight: 800;
-  span {
-    font-size: 14px;
-    font-weight: 600;
-    color: #6A7080;
-  }
-`;
+
 const StatsChartContainer = styled.div`
 	display: grid;
 	align-items: end;
 	justify-items: start;
 	grid-template-columns: 30px 1fr;
-  grid-template-rows: 160px 30px;
-`;
-const StatsYAxis = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  height: 100%;
-	grid-column:  1;
-  grid-row: 1;
-
-  span {
-    font-size: 10px;
-    font-weight: 600;
-    color: #6A7080;
-  }
-`;
-const StatsChart = styled.div`
-	grid-column:  2;
-  grid-row: 1;
-  width: 300px;
-	height: 160px;
-`;
-const StatsChartLine = styled.div`
-	margin-right: -15px;
- 	path {
-    filter: drop-shadow(0 0 6px #336dffae);
-  }
-`;
-const StatsChartGradient = styled.div`
-	margin-right: -15px;
-	margin-top: -140px;
-`;
-const StatsData = styled.div`
-	text-transform: uppercase;
-	box-sizing: border-box;
-	grid-column:  2;
-  grid-row: 2;
-	display: flex;
-	justify-content: space-between;
-  width: 300px;
-	color: #6A7080;
-	font-size: 10px;
-	font-weight: 600;
+  grid-template-rows: 150px 20px;
+	padding-top: 50px;
+  @media(max-width: 768px) { 
+    padding-top: 0px;
+	}
 `;
 
 export default StatisticsTab

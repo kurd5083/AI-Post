@@ -1,9 +1,12 @@
 import styled from "styled-components";
+
 import Statistics from "@/components/Home/Statistics";
 import BtnBase from "@/shared/BtnBase";
-import { usePopupStore } from "@/store/popupStore";
+
 import { useUser } from "@/lib/user/useUser";
 import { useUserBalance } from "@/lib/user/useUserBalance";
+
+import { usePopupStore } from "@/store/popupStore";
 import { useAuthStore } from "@/store/authStore";
 
 const ProfilePopup = () => {

@@ -1,64 +1,53 @@
-import { useState } from "react";
+import { useMemo } from "react";
 import styled from "styled-components";
 
-import BtnBase from "@/shared/BtnBase";
-import CustomSelect from "@/shared/CustomSelect";
-
-import Chart from "@/components/Popup/Analytics/Chart";
+import LineChart from "@/components/Analytics/LineChart";
 import ChartHead from "@/components/Popup/Analytics/ChartHead";
-const subscriber = [
-  {
-    id: 1,
-    date: "25 Декабря 2025, Ср",
-    subscriptions: 502,
-    unsubscriptions: 41,
-  },
-  {
-    id: 2,
-    date: "24 Декабря 2025, Вт",
-    subscriptions: 430,
-    unsubscriptions: 38,
-  },
-  {
-    id: 3,
-    date: "23 Декабря 2025, Пн",
-    subscriptions: 610,
-    unsubscriptions: 55,
-  },
-  {
-    id: 4,
-    date: "22 Декабря 2025, Вс",
-    subscriptions: 390,
-    unsubscriptions: 27,
-  },
-  {
-    id: 5,
-    date: "21 Декабря 2025, Сб",
-    subscriptions: 720,
-    unsubscriptions: 63,
-  },
-];
 
-const SubscriberGrowthPopup = ({ data }) => {
-  const [dateFilter, setDateFilter] = useState({ period: "", value: "" });
+import CustomSelect from "@/shared/CustomSelect";
+import BtnBase from "@/shared/BtnBase";
+
+import { useStatisticsStore } from "@/store/statisticsStore";
+import { useAnalyticsFilterStore } from "@/store/analyticsFilterStore";
+
+const SubscriberGrowthPopup = () => {
+  const filter = useAnalyticsFilterStore(state => state.selectedFilter);
+  const { subscriberPoints, subscriberLabels } = useStatisticsStore();
+  console.log(subscriberLabels)
+  const points = useMemo(() => {
+    const numericFilter = Number(filter) || 1;
+    return subscriberPoints.map(p => (Number(p) || 0) * numericFilter);
+  }, [subscriberPoints, filter]);
+
+  const labels = useMemo(() => subscriberLabels.map(l => l.short), [subscriberLabels]);
+  const tooltipLabels = useMemo(() => subscriberLabels.map(l => l.full), [subscriberLabels]);
+
   return (
     <Container>
       <ChartHead />
-      <Chart data={data} />
+
+      <ChartContainer>
+        <LineChart
+          points={points}
+          labels={labels}
+          tooltipLabels={tooltipLabels}
+          width={700}
+          height={300}
+          type="subscriberGrowth"
+          filter={filter}
+        />
+      </ChartContainer>
       <TableHead>
         <TableTitle>Таблица</TableTitle>
         <HeadActions>
           <CustomSelect
             placeholder="Уточнить"
-            value={dateFilter.value}
             options={[
               { value: "", label: "За сутки" },
               { value: "7", label: "За 7 дней" },
               { value: "30", label: "За 30 дней" },
             ]}
-            onChange={(option) =>
-              setDateFilter((prev) => ({ ...prev, value: option.value }))
-            }
+            
             width="165px"
             fs="14px"
           />
@@ -66,8 +55,6 @@ const SubscriberGrowthPopup = ({ data }) => {
         </HeadActions>
       </TableHead>
       <TableWrapper>
-        {/* {!linksLoading ? ( */}
-        {/* // links?.length > 0 ? ( */}
         <Table>
           <colgroup>
             <col />
@@ -84,37 +71,34 @@ const SubscriberGrowthPopup = ({ data }) => {
             </tr>
           </thead>
           <tbody>
-            {subscriber.map((subscrib) => {
-              const growth = subscrib.subscriptions - subscrib.unsubscriptions;
+      {subscriberLabels.map((sub, index) => {
+        const delta = sub.delta ?? 0;
+        const joined = sub.joined ?? 0;
+        const left = sub.left ?? 0;
+        const date = sub.full ?? sub.short;
 
-              return (
-                <tr key={subscrib.id}>
-                  <TableCell>
-                    <CellDate>{subscrib.date}</CellDate>
-                  </TableCell>
-                  <TableCell>
-                    <CellSubscriptions>+ {subscrib.subscriptions}</CellSubscriptions>
-                  </TableCell>
-                  <TableCell>
-                    <CellUnsubscriptions>- {subscrib.unsubscriptions}</CellUnsubscriptions>
-                  </TableCell>
-                  <TableCell>
-                    <CellGrowth $value={growth}>
-                      {growth > 0 ? "+" : ""}
-                      {growth}
-                    </CellGrowth>
-                  </TableCell>
-                </tr>
-              );
-            })}
-          </tbody>
+        return (
+          <tr key={index}>
+            <TableCell>
+              <CellDate>{date}</CellDate>
+            </TableCell>
+            <TableCell>
+              <CellSubscriptions>+ {joined}</CellSubscriptions>
+            </TableCell>
+            <TableCell>
+              <CellUnsubscriptions>- {left}</CellUnsubscriptions>
+            </TableCell>
+            <TableCell>
+              <CellGrowth $value={delta}>
+                {delta > 0 ? "+" : ""}
+                {delta}
+              </CellGrowth>
+            </TableCell>
+          </tr>
+        );
+      })}
+    </tbody>
         </Table>
-        {/* // ) : (
-                // <EmptyLink>В канале пока нет ссылок</EmptyLink>
-              // )
-            // ) : (
-              // <ModernLoading text="Загрузка ссылок..." />
-            // )} */}
       </TableWrapper>
     </Container>
   );
@@ -123,12 +107,27 @@ const SubscriberGrowthPopup = ({ data }) => {
 const Container = styled.div`
   width: 100%;
 `;
-
 const TableHead = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 20px;
+  padding: 0 56px;
+  margin-top: 40px;
+
+  @media(max-width: 1600px) { 
+    padding: 0 32px; 
+  }
+  @media(max-width: 768px) { 
+    padding: 0 24px; 
+  }
+`;
+const ChartContainer = styled.div`
+  display: grid;
+	align-items: end;
+	justify-items: start;
+	grid-template-columns: 30px 1fr;
+  grid-template-rows: 300px 20px;
   padding: 0 56px;
   margin-top: 40px;
 
@@ -210,13 +209,4 @@ const CellGrowth = styled.span`
   }};
 `;
 
-const EmptyLink = styled.p`
-  box-sizing: border-box;
-  text-align: center;
-  color: #6A7080;
-  padding: 48px 0;
-  font-weight: 600;
-  background-color: #1C2438;
-  border-radius: 16px;
-`
 export default SubscriberGrowthPopup;
