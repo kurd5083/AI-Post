@@ -1,35 +1,39 @@
 import styled from "styled-components";
 
-const ChatWindow = ({ hoverData, height }) => {
-	if (!hoverData) return null;
+const ChatWindow = ({ hoverData, height, width = 400 }) => {
+  if (!hoverData) return null;
 
-	return (
-		<>
-			<HoverLine
-				style={{
-					left: hoverData.x,
-					top: hoverData.y,
-					height: height - hoverData.y,
-				}}
-			/>
-			<HoverDot
-				style={{
-					left: hoverData.x,
-					top: hoverData.y,
-				}}
-			/>
-			<ChartTooltip
-				style={{
-					left: hoverData.x + 10,
-					top: hoverData.y - 30,
-				}}
-			>
-				<ChartDate>{hoverData.date}</ChartDate>
-				<ChartNumber>{hoverData.value}</ChartNumber>
-				<span>{hoverData.label}</span>
-			</ChartTooltip>
-		</>
-	);
+  let tooltipOffsetX = -130; 
+  if (hoverData.x < 120) tooltipOffsetX = 10;
+  else if (hoverData.x > width - 120) tooltipOffsetX = -140;
+
+  return (
+    <>
+      <HoverLine
+        style={{
+          left: hoverData.x,
+          top: hoverData.y,
+          height: height - hoverData.y,
+        }}
+      />
+      <HoverDot
+        style={{
+          left: hoverData.x,
+          top: hoverData.y,
+        }}
+      />
+      <ChartTooltip
+        style={{
+          left: hoverData.x + tooltipOffsetX,
+          top: hoverData.y - 30,
+        }}
+      >
+        <ChartDate>{hoverData.date}</ChartDate>
+        <ChartNumber>{hoverData.value}</ChartNumber>
+        <span>{hoverData.label}</span>
+      </ChartTooltip>
+    </>
+  );
 };
 
 const HoverDot = styled.div`
@@ -56,7 +60,6 @@ const HoverLine = styled.div`
 
 const ChartTooltip = styled.div`
   position: absolute;
-  transform: translate(-130%, 10%);
   background: #6A708029;
   backdrop-filter: blur(24px);
   border-radius: 12px;
@@ -72,17 +75,20 @@ const ChartTooltip = styled.div`
   span {
     color: #6A7080;
     font-size: 10px;
+    font-weight: 600;
   }
 `;
+
 const ChartDate = styled.p`
-   	color: #D6DCEC;
-	font-size: 12px;
-	font-weight: 600;
+  color: #D6DCEC;
+  font-size: 12px;
+  font-weight: 600;
 `;
+
 const ChartNumber = styled.p`
-   	color: #336CFF;
-    font-weight: 700;
-    font-size: 14px;
+  color: #336CFF;
+  font-weight: 700;
+  font-size: 14px;
 `;
 
 export default ChatWindow;

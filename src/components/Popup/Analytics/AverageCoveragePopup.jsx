@@ -4,81 +4,84 @@ import styled from "styled-components";
 import ChartHead from "@/components/Popup/Analytics/ChartHead";
 import LineChart from "@/components/Analytics/LineChart";
 
-import { useStatisticsStore } from "@/store/statisticsStore";
-import { useAnalyticsFilterStore } from "@/store/analyticsFilterStore";
+import { useAnalyticsStore } from "@/store/useAnalyticsStore";
 
 const AverageCoveragePopup = () => {
-    const filter = useAnalyticsFilterStore(state => state.selectedFilter);
-
-    const { averageCoveragePoints, averageCoverageLabels } = useStatisticsStore();
+    const { averageCoveragePoints, averageCoverageLabels, averageCoverageFilter } = useAnalyticsStore();
 
     const points = useMemo(() => {
-        const numericFilter = Number(filter) || 1;
+        const numericFilter = Number(averageCoverageFilter) || 1;
         return averageCoveragePoints.map(p => (Number(p) || 0) * numericFilter);
-    }, [averageCoveragePoints, filter]);
+    }, [averageCoveragePoints, averageCoverageFilter]);
 
-	const labels = useMemo(() => averageCoverageLabels.map(l => l.short), [averageCoverageLabels]);
-    const tooltipLabels = useMemo(() => averageCoverageLabels.map(l => l.full), [averageCoverageLabels]);
+    const labels = useMemo(() => averageCoverageLabels.map(l => l.short), [averageCoverageLabels]);
+    const tooltipLabels = useMemo(() => averageCoverageLabels.map(l => l.medium), [averageCoverageLabels]);
+    const hoverLabels = useMemo(() => averageCoverageLabels.map(l => l.full), [averageCoverageLabels]);
+    return (
+        <Container>
+            <ChartHead content="average_coverage" />
+            <ChartContainer>
+                <LineChart
+                    points={points}
+                    labels={labels}
+                    tooltipLabels={tooltipLabels}
+                    hoverLabels={hoverLabels}
+                    width={700}
+                    height={300}
+                    type="averageCoverage"
+                    filter={averageCoverageFilter}
+                    showGrid={true}
+                />
+            </ChartContainer>
 
-	return (
-		<Container>
-			<ChartHead />
-			<ChartContainer>
-				<LineChart
-					points={points}
+            <ChartTitle>Вовлеченность аудитории <span>(ER)</span></ChartTitle>
+            <ChartContainer>
+                <LineChart
+                    points={points}
                     labels={labels}
                     tooltipLabels={tooltipLabels}
                     width={700}
                     height={300}
-                    type="averageCoverag"
-                    filter={filter}
-				/>
-			</ChartContainer>
-			<ChartTitle>Вовлеченность аудитории <span>(ER)</span></ChartTitle>
-			<ChartHead />
-			<ChartContainer>
-				<LineChart
-					points={points}
-					labels={labels}
-					tooltipLabels={tooltipLabels}
-					width={700}
-					height={300}
-					type="averageCoverag"
-					filter={filter}
-				/>
-			</ChartContainer>
-			<ChartTitle>Вовлеченность аудитории по просмотрам <span>(ERR)</span></ChartTitle>
-			<ChartHead />
-			<ChartContainer>
-				<LineChart
-					points={points}
-					labels={labels}
-					tooltipLabels={tooltipLabels}
-					width={700}
-					height={300}
-					type="averageCoverag"
-					filter={filter}
-				/>
-			</ChartContainer>
-			<ChartTitle>Рекламная вовлеченность <span>(ERR24)</span></ChartTitle>
-			<ChartHead />
-			<ChartContainer>
-				<LineChart
-					points={points}
-					labels={labels}
-					tooltipLabels={tooltipLabels}
-					width={700}
-					height={300}
-					type="averageCoverag"
-					filter={filter}
-				/>
-			</ChartContainer>
-		</Container>
-	);
+                    type="averageCoverage"
+                    filter={averageCoverageFilter}
+                    showGrid={true}
+                />
+            </ChartContainer>
+
+            <ChartTitle>Вовлеченность аудитории по просмотрам <span>(ERR)</span></ChartTitle>
+            <ChartContainer>
+                <LineChart
+                    points={points}
+                    labels={labels}
+                    tooltipLabels={tooltipLabels}
+                    width={700}
+                    height={300}
+                    type="averageCoverage"
+                    filter={averageCoverageFilter}
+                    showGrid={true}
+                />
+            </ChartContainer>
+
+            <ChartTitle>Рекламная вовлеченность <span>(ERR24)</span></ChartTitle>
+            <ChartContainer>
+                <LineChart
+                    points={points}
+                    labels={labels}
+                    tooltipLabels={tooltipLabels}
+                    width={700}
+                    height={300}
+                    type="averageCoverage"
+                    filter={averageCoverageFilter}
+                    showGrid={true}
+                />
+            </ChartContainer>
+        </Container>
+    );
 };
 
 const Container = styled.div`
   	width: 100%;
+    padding-bottom: 30px;
 `;
 const ChartTitle = styled.h2`
 	margin: 64px 0 32px;

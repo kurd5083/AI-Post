@@ -70,15 +70,15 @@ const AnalyticsStatistics = ({ id, channelId }) => {
             </StatisticsName>
           </StatisticsItemHead>
           <StatisticsItemContent>
-            <ItemStat $value={metricsDay.reach.err}>
+            <ItemStat>
               <mark>{metricsDay.reach.err || 0} %</mark>
               <p>ERR</p>
             </ItemStat>
-            <ItemStat $value={metricsDay.reach.err24}>
+            <ItemStat>
               <mark>{metricsDay.reach.err24 || 0} %</mark>
               <p>ERR 24</p>
             </ItemStat>
-            <ItemStat $value={metricsDay.reach.er}>
+            <ItemStat>
               <mark>{metricsDay.reach.er || 0} %</mark>
               <p>ER</p>
             </ItemStat>
@@ -96,16 +96,16 @@ const AnalyticsStatistics = ({ id, channelId }) => {
             </StatisticsName>
           </StatisticsItemHead>
           <StatisticsItemContent>
-            <ItemStat $value={metricsDay.reach.avg_ad_reach_12h}>
-              <mark>{metricsDay.reach.avg_ad_reach_12h}</mark>
+            <ItemStat>
+              <mark>{metricsDay.reach.avg_ad_reach_12h || 0}</mark>
               <p>за 12 ч.</p>
             </ItemStat>
-            <ItemStat $value={metricsDay.reach.avg_ad_reach_24h}>
-              <mark>{metricsDay.reach.avg_ad_reach_24h}</mark>
+            <ItemStat>
+              <mark>{metricsDay.reach.avg_ad_reach_24h || 0}</mark>
               <p>за 24 ч.</p>
             </ItemStat>
-            <ItemStat $value={metricsDay.reach.avg_ad_reach_48h}>
-              <mark>{metricsDay.reach.avg_ad_reach_48h}</mark>
+            <ItemStat>
+              <mark>{metricsDay.reach.avg_ad_reach_48h || 0}</mark>
               <p>за 48 ч.</p>
             </ItemStat>
           </StatisticsItemContent>
@@ -122,15 +122,15 @@ const AnalyticsStatistics = ({ id, channelId }) => {
             </StatisticsName>
           </StatisticsItemHead>
           <StatisticsItemContent>
-            <ItemStat $value={metricsDay.posts.today}>
+            <ItemStat>
               <mark>{metricsDay.posts.today || 0}</mark>
               <p>Сегодня</p>
             </ItemStat>
-            <ItemStat $value={metricsDay.posts.today}>
+            <ItemStat>
               <mark>{metricsDay.posts.week || 0}</mark>
               <p>Неделя</p>
             </ItemStat>
-            <ItemStat $value={metricsDay.posts.today}>
+            <ItemStat>
               <mark>{metricsDay.posts.month || 0}</mark>
               <p>месяц</p>
             </ItemStat>
@@ -202,16 +202,15 @@ const ItemStat = styled.div`
   display: flex;
   flex-direction: column;
   gap: 2px;
-   mark {
-    font-size: 10px;
+  mark {
+    font-size: 12px;
     font-weight: 600;
-    color: ${({ $value }) =>
-    $value > 0 ? "#B5EC5B" : $value < 0 ? "#EF6284" : "#6A7080"};
+    color: ${({ $value }) => $value > 0 ? "#B5EC5B" : $value < 0 ? "#EF6284" : "#D6DCEC"};
   }
   p {
     text-transform: uppercase;
     color: #6A7080;
-    font-size: 10px;
+    font-size: 12px;
     font-weight: 600;
   }
 `
@@ -228,14 +227,14 @@ const StatisticsItemImg = styled.div`
 `
 const StatisticsText = styled.p`
   color: #6A7080;
-  font-size: 10px;
-  line-height: 10px;
+  font-size: 12px;
+  line-height: 12px;
   font-weight: 600;
   margin-bottom: 4px;
 `
 const StatisticsCount = styled.p`
-  font-size: 24px;
-  line-height: 24px;
+  font-size: 26px;
+  line-height: 26px;
   font-weight: 800;
 `
 const EmptyContainer = styled.div`

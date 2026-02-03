@@ -1,150 +1,230 @@
+import { useRef, useState, useEffect } from "react";
 import styled from "styled-components";
-import { useState, useEffect, useRef } from "react";
+import ChatWindow from "@/components/Analytics/ChatWindow";
 
-const DayBarChart = ({ points = [], height = 150 }) => {
-  const [hover, setHover] = useState(null);
-  const [chartWidth, setChartWidth] = useState(400);
+const DayBarChart = ({
+  points = [],
+  labels = [],
+  hoverLabels,
+  tooltipLabels,
+  height = 150,
+  filter,
+  type,
+  showGrid = false,
+  maxColumnWidth8 = false,
+}) => {
   const chartRef = useRef(null);
-
-  const maxBarWidth = 8;
-  const max = Math.max(...points, 1);
-  const gap = 6;
-  const hoursLabels = Array.from({ length: 24 }, (_, i) => `${i + 1}`);
-
-  const buildYAxis = (values = [], steps = 5) => {
-      const max = Math.max(...values, 0);
-      if (!max) return [0];
-
-      const raw = max / (steps - 1);
-      const mag = 10 ** Math.floor(Math.log10(raw));
-      const norm = raw / mag;
-
-      let nice;
-      if (norm <= 1) nice = 1;
-      else if (norm <= 2) nice = 2;
-      else if (norm <= 5) nice = 5;
-      else nice = 10;
-
-      const step = nice * mag;
-      const top = Math.ceil(max / step) * step;
-
-      const ticks = [];
-      for (let v = top; v >= 0; v -= step) ticks.push(v);
-
-      return ticks;
-    };
+  const svgRef = useRef(null);
+  const [chartWidth, setChartWidth] = useState(400);
+  const [hoverData, setHoverData] = useState(null);
 
   useEffect(() => {
-    const handleResize = () => {
-      if (chartRef.current) {
-        setChartWidth(chartRef.current.clientWidth);
-      }
+    const updateWidth = () => {
+      if (chartRef.current) setChartWidth(chartRef.current.offsetWidth);
     };
-    handleResize();
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
+    updateWidth();
+    window.addEventListener("resize", updateWidth);
+    return () => window.removeEventListener("resize", updateWidth);
   }, []);
 
-  const finalBarWidth = Math.min(chartWidth / points.length - gap, maxBarWidth);
+  const buildYAxis = (values = [], steps = 5) => {
+    const max = Math.max(...values, 0);
+    if (!max) return [0];
+
+    const raw = max / (steps - 1);
+    const mag = 10 ** Math.floor(Math.log10(raw));
+    const norm = raw / mag;
+
+    let nice;
+    if (norm <= 1) nice = 1;
+    else if (norm <= 2) nice = 2;
+    else if (norm <= 5) nice = 5;
+    else nice = 10;
+
+    const step = nice * mag;
+    const top = Math.ceil(max / step) * step;
+
+    const ticks = [];
+    for (let v = top; v >= 0; v -= step) ticks.push(v);
+
+    return ticks;
+  };
+
+  let chartPoints = [...points];
+  let chartLabels = [...labels];
+  let chartHoverLabels = hoverLabels ? [...hoverLabels] : [];
+  let chartTooltipLabels = tooltipLabels ? [...tooltipLabels] : [];
+
+  if (type === "dynamicsPosts") {
+    if (chartPoints.length < 24)
+      chartPoints = [...chartPoints, ...Array(24 - chartPoints.length).fill(0)];
+    else chartPoints = chartPoints.slice(0, 24);
+    chartLabels = Array.from({ length: 24 }, (_, i) => i + 1);
+
+    if (chartHoverLabels.length < 24)
+      chartHoverLabels = [...chartHoverLabels, ...Array(24 - chartHoverLabels.length).fill(null)];
+    else chartHoverLabels = chartHoverLabels.slice(0, 24);
+
+    if (chartTooltipLabels.length < 24)
+      chartTooltipLabels = [...chartTooltipLabels, ...Array(24 - chartTooltipLabels.length).fill("")];
+    else chartTooltipLabels = chartTooltipLabels.slice(0, 24);
+  }
+
+  const yTicks = buildYAxis(chartPoints);
+  const chartMax = yTicks[0] || 1;
+  const gap = 6;
+  const totalGap = gap * (chartPoints.length - 1);
+  const availableWidth = chartWidth - totalGap;
+
+  const barWidth = maxColumnWidth8
+    ? availableWidth / chartPoints.length
+    : Math.min(availableWidth / chartPoints.length, 8);
+
+  const step = barWidth + gap;
+
+  const handleMouseMove = (e) => {
+    if (!svgRef.current || !chartPoints.length) return;
+
+    const rect = svgRef.current.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const index = Math.floor(x / step);
+    const clampedIndex = Math.max(0, Math.min(chartPoints.length - 1, index));
+
+    setHoverData({
+      index: clampedIndex,
+      x: clampedIndex * step + barWidth / 2,
+      value: chartPoints[clampedIndex],
+      label: type === "dynamicsPosts" ? "Просмотров" : "Посты",
+      tooltip: chartTooltipLabels?.[clampedIndex] || "",
+      y: height - (chartPoints[clampedIndex] / chartMax) * height,
+      date: chartHoverLabels?.[clampedIndex] || null,
+    });
+  };
+
+  const handleMouseLeave = () => setHoverData(null);
 
   return (
     <>
       <StatsYAxis>
-        {buildYAxis(points).map((val, i) => (
+        {yTicks.map((val, i) => (
           <span key={i}>{val.toLocaleString()}</span>
         ))}
       </StatsYAxis>
-      <StatsChart ref={chartRef}>
-        <svg viewBox={`0 0 ${chartWidth} ${height}`} width="100%" preserveAspectRatio="none">
-          {points.map((value, i) => {
-            const h = (value / max) * height;
-            const x = i * (finalBarWidth + gap);
+
+      <StatsChart
+        ref={chartRef}
+        onMouseMove={handleMouseMove}
+        onMouseLeave={handleMouseLeave}
+        $height={height}
+      >
+        <svg
+          ref={svgRef}
+          viewBox={`0 0 ${chartWidth} ${height}`}
+          width="100%"
+          height={height}
+          preserveAspectRatio="none"
+        >
+          {showGrid &&
+            yTicks.map((val, i) => {
+              const y = height - (val / chartMax) * height;
+              return (
+                <line
+                  key={i}
+                  x1="0"
+                  x2={chartWidth}
+                  y1={y}
+                  y2={y}
+                  stroke="#2a3145"
+                  strokeDasharray="4 4"
+                  strokeWidth="1"
+                  opacity="0.6"
+                />
+              );
+            })}
+
+          {chartPoints.map((value, i) => {
+            const h = (value / chartMax) * height;
+            const x = i * step;
             const y = height - h;
             return (
               <rect
                 key={i}
                 x={x}
                 y={y}
-                width={finalBarWidth}
+                width={barWidth}
                 height={h}
                 rx={6}
-                fill={hover === i ? "#336CFF" : "#2E3954"}
-                onMouseEnter={() => setHover(i)}
-                onMouseLeave={() => setHover(null)}
+                fill={hoverData?.index === i ? "#336CFF" : "#2E3954"}
               />
             );
           })}
         </svg>
 
-        {hover !== null && (
-          <Tooltip style={{ left: `${hover * (finalBarWidth + gap) + finalBarWidth / 2}px` }}>
-            {points[hover].toLocaleString()} просмотров
-          </Tooltip>
+        {hoverData && (
+          <ChatWindow hoverData={hoverData} height={height} points={chartPoints} type={type}/>
         )}
-
-
       </StatsChart>
+
       <StatsData>
-        {hoursLabels.map((l, i) => (
-          <span
-            key={i}
-            style={{
-              position: "absolute",
-              left: `${i * (finalBarWidth + gap) + finalBarWidth / 2}px`,
-              transform: "translateX(-50%)",
-              bottom: 0,
-            }}
-          >
-            {l}
-          </span>
-        ))}
+        {chartLabels.length > 0 &&
+          chartLabels.map((label, i) => {
+            const x = i * step + barWidth / 2;
+            return (
+              <span
+                key={i}
+                style={{
+                  left: `${x}px`,
+                  transform: "translateX(-50%)",
+                  width: `${barWidth}px`,
+                  textAlign: "center",
+                  display: "inline-block",
+                }}
+              >
+                {label}
+              </span>
+            );
+          })}
       </StatsData>
     </>
   );
 };
+
 const StatsYAxis = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   height: 100%;
-	grid-column:  1;
+  grid-column: 1;
   grid-row: 1;
 
   span {
     font-size: 10px;
     font-weight: 600;
-    color: #6A7080;
+    color: #6a7080;
   }
 `;
+
 const StatsChart = styled.div`
   position: relative;
+  grid-column: 2;
+  grid-row: 1;
   width: 100%;
-  min-width: 330px;
-  height: 150px;
-`;
-
-const Tooltip = styled.div`
-  position: absolute;
-  top: -50px;
-  transform: translateX(-50%);
-  background: #1b2236;
-  padding: 10px 14px;
-  border-radius: 14px;
-  font-size: 12px;
-  font-weight: 700;
-  white-space: nowrap;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+  height: ${({ $height }) => `${$height}px`};
 `;
 
 const StatsData = styled.div`
   position: relative;
-  text-transform: uppercase;
+  width: 100%;
   grid-column: 2;
   grid-row: 2;
-  color: #6A7080;
-  font-size: 9px;
+  color: #d6dcec;
+  font-size: 10px;
   font-weight: 600;
-  min-width: 320px;
+
+  span {
+    position: absolute;
+    white-space: nowrap;
+  }
 `;
 
 export default DayBarChart;

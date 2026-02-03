@@ -7,134 +7,95 @@ import CustomSelect from "@/shared/CustomSelect";
 import LineChart from "@/components/Analytics/LineChart";
 import ChartHead from "@/components/Popup/Analytics/ChartHead";
 
-import { useAnalyticsFilterStore } from "@/store/analyticsFilterStore";
-import { useStatisticsStore } from "@/store/statisticsStore";
-
-const subscriber = [
-	{
-		id: 1,
-		date: "25 Декабря 2025, Ср",
-		subscriptions: 502,
-		unsubscriptions: 41,
-	},
-	{
-		id: 2,
-		date: "24 Декабря 2025, Вт",
-		subscriptions: 430,
-		unsubscriptions: 38,
-	},
-	{
-		id: 3,
-		date: "23 Декабря 2025, Пн",
-		subscriptions: 610,
-		unsubscriptions: 55,
-	},
-	{
-		id: 4,
-		date: "22 Декабря 2025, Вс",
-		subscriptions: 390,
-		unsubscriptions: 27,
-	},
-	{
-		id: 5,
-		date: "21 Декабря 2025, Сб",
-		subscriptions: 720,
-		unsubscriptions: 63,
-	},
-];
+import { useAnalyticsStore } from "@/store/useAnalyticsStore";
 
 const SubscriptionsDayPopup = () => {
-	const filter = useAnalyticsFilterStore(state => state.selectedFilter);
-	const { dayPoints, dayLabels } = useStatisticsStore();
+  const { dayPoints, dayLabels, dayFilter, subscriberLabels } = useAnalyticsStore();
+  const selectedFilter = dayFilter;
 
-	const points = useMemo(() => {
-		const numericFilter = Number(filter) || 1;
-		return dayPoints.map(p => (Number(p) || 0) * numericFilter);
-	}, [dayPoints, filter]);
+  const points = useMemo(() => dayPoints.map(p => (Number(p) || 0) * (Number(selectedFilter) || 1)), [dayPoints, selectedFilter]);
+  const labels = useMemo(() => dayLabels.map(l => l.short), [dayLabels]);
+  const tooltipLabels = useMemo(() => dayLabels.map(l => l.medium), [dayLabels]);
+  const hoverLabels = useMemo(() => dayLabels.map(l => l.full), [dayLabels]);
 
-	const labels = useMemo(() => dayLabels.map(l => l.short), [dayLabels]);
-	const tooltipLabels = useMemo(() => dayLabels.map(l => l.full), [dayLabels]);
+  return (
+    <Container>
+      <ChartHead content="subscriptions_day"/>
 
-	return (
-		<Container>
-			<ChartHead />
+      <ChartContainer>
+        <LineChart
+          points={points}
+          labels={labels}
+          tooltipLabels={tooltipLabels}
+          hoverLabels={hoverLabels}
+          width={700}
+          height={300}
+          type="subscriptionsDay"
+          filter={selectedFilter}
+          showGrid={true}
+        />
+      </ChartContainer>
 
-			<ChartContainer>
-				<LineChart
-					points={points}
-					labels={labels}
-					tooltipLabels={tooltipLabels}
-					width={700}
-					height={300}
-					type="subscriptionsDay"
-					filter={filter}
-				/>
-			</ChartContainer>
-			<TableHead>
-				<TableTitle>Таблица</TableTitle>
-				<HeadActions>
-					<CustomSelect
-						placeholder="Уточнить"
-						options={[
-							{ value: "", label: "За сутки" },
-							{ value: "7", label: "За 7 дней" },
-							{ value: "30", label: "За 30 дней" },
-						]}
-						width="165px"
-						fs="14px"
-					/>
-					<BtnBase $padding="16px 24px">Выгрузить в Excel</BtnBase>
-				</HeadActions>
-			</TableHead>
-			<TableWrapper>
-				<Table>
-					<colgroup>
-						<col />
-						<col />
-						<col />
-						<col />
-					</colgroup>
-					<thead>
-						<tr>
-							<HeaderCell>ДАТА</HeaderCell>
-							<HeaderCell>Подписки</HeaderCell>
-							<HeaderCell>Отписки</HeaderCell>
-							<HeaderCell>прирост</HeaderCell>
-						</tr>
-					</thead>
-					<tbody>
-						{subscriber.map((subscrib) => {
-							const growth = subscrib.subscriptions - subscrib.unsubscriptions;
+      <TableHead>
+        <TableTitle>Таблица</TableTitle>
+        <HeadActions>
+          <CustomSelect
+            placeholder="Уточнить"
+            options={[
+              { value: "", label: "За сутки" },
+              { value: "7", label: "За 7 дней" },
+              { value: "30", label: "За 30 дней" },
+            ]}
+            width="165px"
+            fs="14px"
+          />
+          <BtnBase $padding="16px 24px">Выгрузить в Excel</BtnBase>
+        </HeadActions>
+      </TableHead>
 
-							return (
-								<tr key={subscrib.id}>
-									<TableCell>
-										<CellDate>{subscrib.date}</CellDate>
-									</TableCell>
-									<TableCell>
-										<CellSubscriptions>+ {subscrib.subscriptions}</CellSubscriptions>
-									</TableCell>
-									<TableCell>
-										<CellUnsubscriptions>- {subscrib.unsubscriptions}</CellUnsubscriptions>
-									</TableCell>
-									<TableCell>
-										<CellGrowth $value={growth}>
-											{growth > 0 ? "+" : ""}
-											{growth}
-										</CellGrowth>
-									</TableCell>
-								</tr>
-							);
-						})}
-					</tbody>
-				</Table>
-			</TableWrapper>
-		</Container>
-	);
+      <TableWrapper>
+        <Table>
+          <colgroup>
+            <col />
+            <col />
+            <col />
+            <col />
+          </colgroup>
+          <thead>
+            <tr>
+              <HeaderCell>ДАТА</HeaderCell>
+              <HeaderCell>Подписки</HeaderCell>
+              <HeaderCell>Отписки</HeaderCell>
+              <HeaderCell>Прирост</HeaderCell>
+            </tr>
+          </thead>
+          <tbody>
+            {subscriberLabels.map((sub, index) => {
+              const delta = sub.delta ?? 0;
+              const joined = sub.joined ?? 0;
+              const left = sub.left ?? 0;
+              const date = sub.full ?? sub.short;
+
+              return (
+                <tr key={index}>
+                  <TableCell><CellDate>{date}</CellDate></TableCell>
+                  <TableCell><CellSubscriptions>+ {joined}</CellSubscriptions></TableCell>
+                  <TableCell><CellUnsubscriptions>- {left}</CellUnsubscriptions></TableCell>
+                  <TableCell><CellGrowth $value={delta}>{delta > 0 ? "+" : ""}{delta}</CellGrowth></TableCell>
+                </tr>
+              );
+            })}
+          </tbody>
+        </Table>
+      </TableWrapper>
+    </Container>
+  );
 };
+
 
 const Container = styled.div`
   width: 100%;
+  padding-bottom: 30px;
 `;
 const TableHead = styled.div`
   display: flex;

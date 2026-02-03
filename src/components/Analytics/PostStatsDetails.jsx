@@ -95,13 +95,13 @@ const PostStatsDetails = ({ postsByPeriod, selectedPostData, subscribersDaily, a
   }
   return (
     <>
-      <StatsCardDetailItem $value={counts.yesterday}>
+      <StatsCardDetailItem>
         {counts.yesterday} <span>за день</span>
       </StatsCardDetailItem>
-      <StatsCardDetailItem $value={counts.week}>
+      <StatsCardDetailItem>
         {counts.week} <span>за неделю</span>
       </StatsCardDetailItem>
-      <StatsCardDetailItem $value={counts.month}>
+      <StatsCardDetailItem>
         {counts.month} <span>за месяц</span>
       </StatsCardDetailItem>
     </>
@@ -112,7 +112,7 @@ const StatsCardDetailItem = styled.p`
   gap: 24px;
   font-weight: 800;
   color: ${({ $value }) =>
-    $value > 0 ? "#B5EC5B" : $value < 0 ? "#EF6284" : "#6A7080"};
+    $value > 0 ? "#B5EC5B" : $value < 0 ? "#EF6284" : "#D6DCEC"};
 
   span {
     font-size: 14px;

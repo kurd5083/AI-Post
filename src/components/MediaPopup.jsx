@@ -96,9 +96,9 @@ const MediaText = styled.p`
 	padding: 0 32px;
 `;
 const MediaGrid = styled.div`
-  padding: 24px 32px 32px;
-  display: grid;
-  gap: 8px;
+	padding: 24px 32px 32px;
+	display: grid;
+	gap: 8px;
 	grid-template-columns: repeat(3, 1fr);
 	grid-template-rows: repeat(3, 1fr);
 	overflow-y: auto;

@@ -7,36 +7,39 @@ import ChartHead from "@/components/Popup/Analytics/ChartHead";
 import CustomSelect from "@/shared/CustomSelect";
 import BtnBase from "@/shared/BtnBase";
 
-import { useStatisticsStore } from "@/store/statisticsStore";
-import { useAnalyticsFilterStore } from "@/store/analyticsFilterStore";
+import { useAnalyticsStore } from "@/store/useAnalyticsStore";
 
 const SubscriberGrowthPopup = () => {
-  const filter = useAnalyticsFilterStore(state => state.selectedFilter);
-  const { subscriberPoints, subscriberLabels } = useStatisticsStore();
-  console.log(subscriberLabels)
+  const { subscriberPoints, subscriberLabels, subscriberFilter } = useAnalyticsStore();
+  const selectedFilter = subscriberFilter;
+
   const points = useMemo(() => {
-    const numericFilter = Number(filter) || 1;
+    const numericFilter = Number(selectedFilter) || 1;
     return subscriberPoints.map(p => (Number(p) || 0) * numericFilter);
-  }, [subscriberPoints, filter]);
+  }, [subscriberPoints, selectedFilter]);
 
   const labels = useMemo(() => subscriberLabels.map(l => l.short), [subscriberLabels]);
-  const tooltipLabels = useMemo(() => subscriberLabels.map(l => l.full), [subscriberLabels]);
+  const tooltipLabels = useMemo(() => subscriberLabels.map(l => l.medium), [subscriberLabels]);
+  const hoverLabels = useMemo(() => subscriberLabels.map(l => l.full), [subscriberLabels]);
 
   return (
     <Container>
-      <ChartHead />
+      <ChartHead content="subscriber_growth"/>
 
       <ChartContainer>
         <LineChart
           points={points}
           labels={labels}
           tooltipLabels={tooltipLabels}
+          hoverLabels={hoverLabels}
           width={700}
           height={300}
           type="subscriberGrowth"
-          filter={filter}
+          filter={selectedFilter}
+          showGrid={true}
         />
       </ChartContainer>
+
       <TableHead>
         <TableTitle>Таблица</TableTitle>
         <HeadActions>
@@ -47,13 +50,13 @@ const SubscriberGrowthPopup = () => {
               { value: "7", label: "За 7 дней" },
               { value: "30", label: "За 30 дней" },
             ]}
-            
             width="165px"
             fs="14px"
           />
           <BtnBase $padding="16px 24px">Выгрузить в Excel</BtnBase>
         </HeadActions>
       </TableHead>
+
       <TableWrapper>
         <Table>
           <colgroup>
@@ -67,45 +70,36 @@ const SubscriberGrowthPopup = () => {
               <HeaderCell>ДАТА</HeaderCell>
               <HeaderCell>Подписки</HeaderCell>
               <HeaderCell>Отписки</HeaderCell>
-              <HeaderCell>прирост</HeaderCell>
+              <HeaderCell>Прирост</HeaderCell>
             </tr>
           </thead>
           <tbody>
-      {subscriberLabels.map((sub, index) => {
-        const delta = sub.delta ?? 0;
-        const joined = sub.joined ?? 0;
-        const left = sub.left ?? 0;
-        const date = sub.full ?? sub.short;
+            {subscriberLabels.map((sub, index) => {
+              const delta = sub.delta ?? 0;
+              const joined = sub.joined ?? 0;
+              const left = sub.left ?? 0;
+              const date = sub.full ?? sub.short;
 
-        return (
-          <tr key={index}>
-            <TableCell>
-              <CellDate>{date}</CellDate>
-            </TableCell>
-            <TableCell>
-              <CellSubscriptions>+ {joined}</CellSubscriptions>
-            </TableCell>
-            <TableCell>
-              <CellUnsubscriptions>- {left}</CellUnsubscriptions>
-            </TableCell>
-            <TableCell>
-              <CellGrowth $value={delta}>
-                {delta > 0 ? "+" : ""}
-                {delta}
-              </CellGrowth>
-            </TableCell>
-          </tr>
-        );
-      })}
-    </tbody>
+              return (
+                <tr key={index}>
+                  <TableCell><CellDate>{date}</CellDate></TableCell>
+                  <TableCell><CellSubscriptions>+ {joined}</CellSubscriptions></TableCell>
+                  <TableCell><CellUnsubscriptions>- {left}</CellUnsubscriptions></TableCell>
+                  <TableCell><CellGrowth $value={delta}>{delta > 0 ? "+" : ""}{delta}</CellGrowth></TableCell>
+                </tr>
+              );
+            })}
+          </tbody>
         </Table>
       </TableWrapper>
     </Container>
   );
 };
 
+
 const Container = styled.div`
   width: 100%;
+  padding-bottom: 30px;
 `;
 const TableHead = styled.div`
   display: flex;

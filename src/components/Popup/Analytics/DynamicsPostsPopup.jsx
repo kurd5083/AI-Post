@@ -1,43 +1,44 @@
 import { useState, useMemo } from "react";
 import styled from "styled-components";
+import { Swiper, SwiperSlide } from "swiper/react";
+import "swiper/css";
+
+import EyeIcon from "@/icons/EyeIcon";
 
 import BtnBase from "@/shared/BtnBase";
 import CustomSelect from "@/shared/CustomSelect";
-
 import ChartHead from "@/components/Popup/Analytics/ChartHead";
 import LineChart from "@/components/Analytics/LineChart";
 
-import { useStatisticsStore } from "@/store/statisticsStore";
-import { useAnalyticsFilterStore } from "@/store/analyticsFilterStore";
+import { useAnalyticsStore } from "@/store/useAnalyticsStore";
 
 const DynamicsPostsPopup = () => {
   const [dateFilter, setDateFilter] = useState({ period: "", value: "" });
-  const filter = useAnalyticsFilterStore(state => state.selectedFilter);
 
-  const { dayPoints, dayLabels } = useStatisticsStore();
-
-  const points = useMemo(() => {
-    const numericFilter = Number(filter) || 1;
-    return dayPoints.map(p => (Number(p) || 0) * numericFilter);
-  }, [dayPoints, filter]);
-
+  const { dayPoints, dayLabels, dayFilter, dayPosts } = useAnalyticsStore();
+  const selectedFilter = dayFilter;
+  const points = useMemo(() => dayPoints.map(p => (Number(p) || 0) * (Number(selectedFilter) || 1)), [dayPoints, selectedFilter]);
   const labels = useMemo(() => dayLabels.map(l => l.short), [dayLabels]);
-  const tooltipLabels = useMemo(() => dayLabels.map(l => l.full), [dayLabels]);
-
+  const tooltipLabels = useMemo(() => dayLabels.map(l => l.medium), [dayLabels]);
+  const hoverLabels = useMemo(() => dayLabels.map(l => l.full), [dayLabels]);
+  
   return (
     <Container>
-      <ChartHead />
+      <ChartHead content="dynamics_posts" />
       <ChartContainer>
         <LineChart
           points={points}
           labels={labels}
           tooltipLabels={tooltipLabels}
+          hoverLabels={hoverLabels}
           width={700}
           height={300}
           type="dynamicsPosts"
-          filter={filter}
+          filter={selectedFilter}
+          showGrid={true}
         />
       </ChartContainer>
+
       <TableHead>
         <TableTitle>Таблица</TableTitle>
         <HeadActions>
@@ -58,8 +59,8 @@ const DynamicsPostsPopup = () => {
           <BtnBase $padding="16px 24px">Выгрузить в Excel</BtnBase>
         </HeadActions>
       </TableHead>
+
       <TableWrapper>
-  
         <Table>
           <colgroup>
             <col />
@@ -74,44 +75,64 @@ const DynamicsPostsPopup = () => {
             </tr>
           </thead>
           <tbody>
-            {/* {dynamics.map((dynamic) => (
-              <tr key={dynamic.id}>
+            {dayPosts?.map((dynamic) => (
+              <tr key={dynamic.post_id}>
                 <TableCell>
                   <CellDate>
-                    <DateName>Пост #{dynamic.postId}</DateName> 
+                    <DateName>Пост #{dynamic.post_id}</DateName>
                     <DateViews>
-                      <EyeIcon color="#336CFF" hoverColor="#336CFF" width={16} height={13} cursor="default" />
-                      {dynamic.views}
+                      <EyeIcon color="#336CFF" hoverColor="#336CFF" width={18} height={18} cursor="default" />
+                      {dynamic.total_views}
                     </DateViews>
-                    <Date>{dynamic.date}</Date> 
-                    <DateSent><img src={pointLine} alt="" />{dynamic.sent}</DateSent>
+                    <DateText>
+                      {new Date(dynamic.post_date).toLocaleString("ru-RU", {
+                        day: "numeric",
+                        month: "short",
+                        hour: "2-digit",
+                        minute: "2-digit"
+                      })}
+                    </DateText>
                   </CellDate>
                 </TableCell>
 
-                <TableCell />
+                <TableCell>
+                  <MiniChart>
+                    {(() => {
+                      const max = Math.max(...(dynamic.hourly?.map(h => h.views) || [1]));
+
+                      return dynamic.hourly?.map((h) => (
+                        <Bar
+                          key={h.hour_offset}
+                          height={(h.views / max) * 60 + 4}
+                          title={`${h.hour_offset}ч — ${h.views}`}
+                        />
+                      ));
+                    })()}
+                  </MiniChart>
+                </TableCell>
 
                 <TableCell>
                   <CellStatistics>
-                    {dynamic.stats.map((s) => (
-                      <CellStatisticsContainer key={s.hour}>
-                        <p>{s.hour} час</p>
-                        <span>{s.percent}% ({s.value})</span>
-                      </CellStatisticsContainer>
+                    {dynamic.hourly?.map((h) => (
+                        <CellStatisticsContainer>
+                          <p>{h.hour_offset} час</p>
+                          <span>{h.views} просмотров</span>
+                        </CellStatisticsContainer>
                     ))}
                   </CellStatistics>
                 </TableCell>
               </tr>
-            ))} */}
+            ))}
           </tbody>
         </Table>
       </TableWrapper>
     </Container>
-
-  )
-}
+  );
+};
 
 const Container = styled.div`
   width: 100%;
+  padding-bottom: 30px;
 `;
 
 const TableHead = styled.div`
@@ -213,7 +234,7 @@ const DateName = styled.p`
   grid-column: 1;
   grid-row: 1;
 `;
-const Date = styled.p`
+const DateText = styled.p`
   grid-column: 1;
   grid-row: 2;
 `;
@@ -226,18 +247,10 @@ const DateViews = styled.span`
   grid-column: 2;
   grid-row: 1;
 `;
-const DateSent = styled.span`
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  color: #D6DCEC;
-  font-weight: 700;
-  grid-column: 2;
-  grid-row: 2;
-`;
+
 const CellStatistics = styled.div`
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: repeat(12, 1fr);
   gap: 40px;
 `;
 const CellStatisticsContainer = styled.div`
@@ -250,5 +263,22 @@ const CellStatisticsContainer = styled.div`
     color: #D6DCEC;
   }
 `;
+const MiniChart = styled.div`
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+  height: 64px;
+`;
 
+const Bar = styled.div`
+  width: 4px;
+  height: ${({ height }) => height}px;
+  background: #424E70;
+  border-radius: 2px;
+  transition: 0.15s;
+
+  &:hover {
+    opacity: 0.7;
+  }
+`;
 export default DynamicsPostsPopup
