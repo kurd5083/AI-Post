@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import styled from "styled-components";
 
 import fire from "@/assets/tape/fire.svg";
@@ -16,9 +16,12 @@ import { useCreatePersonalNewsFeed } from "@/lib/news/usePersonalNewsFeed";
 import { useGetPersonalNewsFeedId } from "@/lib/news/useGetPersonalNewsFeedId";
 
 const Tape = () => {
+  const { newsFeed, newsFeedsLoading } = useGetPersonalNewsFeedId();
+
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [filters, setFilters] = useState({});
   const [updateInterval, setUpdateInterval] = useState(60);
+
 
   const { newsData, newsPending } = useNews(filters);
 
@@ -31,9 +34,14 @@ const Tape = () => {
   const [priorityWord, setPriorityWord] = useState("");
   const [priorityWords, setPriorityWords] = useState([]);
 
+  useEffect(() => {
+    if (newsFeed) {
+      setUpdateInterval(newsFeed.updateIntervalMinutes || 60);
+      setSourceWords(newsFeed.sources?.map(s => s.url) || []);
+    }
+  }, [newsFeed]);
 
   const { mutate: createFeed, isPending: feedPending } = useCreatePersonalNewsFeed();
-  const { newsFeed, newsFeedsLoading } = useGetPersonalNewsFeedId(2);
   const { addNotification } = useNotificationStore();
 
   const handleFilterClick = () => {
@@ -43,9 +51,10 @@ const Tape = () => {
   const handleSave = () => {
     const payload = {
       // name: feedName,
-      // categories,
-      sourceIds: [],
-      customSources: [],
+      categories: [],
+      // sourceIds: [],
+      sourceLinks: sourceWords,
+      // customSources: [],
       updateIntervalMinutes: updateInterval,
       isEnabled: true,
       // description: feedDescription,
@@ -255,12 +264,10 @@ const TapeContainer = styled.section`
   @media (max-width: 1600px) {
     max-width: 370px;
   }
-
   @media(max-width: 1400px) {
     max-width: 100%;
     padding: 32px 0;
     overflow: visible;
-
   }
 
   &::after {
@@ -357,19 +364,13 @@ const FilterWrapper = styled.div`
   overflow-y: auto;
   scrollbar-width: none;
   @media (max-width: 1400px) {
-    right: 160px;
-    top: 105px;
-    margin-left: 24px;
+    margin: 40px 32px 0;
     width: auto;
   }
+  @media (max-width: 768px) {
+    margin: 40px 24px 0;
+  }
   @media (max-width: 480px) {
-    right: auto;
-    margin: 0;
-    bottom: auto;
-    top: 160px;
-    left: 24px;
-    width: calc(100% - 48px);
-    max-height: 290px;
   }
 `;
  

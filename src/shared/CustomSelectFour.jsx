@@ -3,6 +3,7 @@ import styled from "styled-components";
 
 import ArrowIcon from "@/icons/ArrowIcon";
 import EyeIcon from "@/icons/EyeIcon";
+import pointLine from "@/assets/point-line.svg";
 
 import СhannelPlug from "@/shared/СhannelPlug";
 
@@ -27,15 +28,15 @@ const CustomSelectFour = ({ placeholder = 'Выберите пост', options =
   }, [value, options]);
 
   const formatDate = (date) => {
-    return date.toLocaleDateString("ru-RU", { day: "numeric", month: "short" }) +
+    const d = new Date(date);
+
+    return (
+      d.toLocaleDateString("ru-RU", { day: "numeric", month: "short" }) +
       ", " +
-      date.toLocaleTimeString("ru-RU", { hour: "2-digit", minute: "2-digit" });
+      d.toLocaleTimeString("ru-RU", { hour: "2-digit", minute: "2-digit" })
+    );
   };
 
-  const formatViews = (views) => {
-    if (views >= 1000) return (views / 1000).toFixed(1) + "k";
-    return views.toString();
-  };
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (ref.current && !ref.current.contains(e.target)) {
@@ -58,7 +59,6 @@ const CustomSelectFour = ({ placeholder = 'Выберите пост', options =
           <ArrowIcon color="#6A7080" hoverColor="#6A7080" width={6} height={12} />
         </Arrow>
       </DropdownHeader>
-
       {isOpen && (
         <DropdownList $background={background} $right={right}>
           <DropdownContent>
@@ -73,7 +73,10 @@ const CustomSelectFour = ({ placeholder = 'Выберите пост', options =
                 </ItemBlock>
                 <ItemBlock>
                   <ItemDate>{formatDate(option.date)}</ItemDate>
-                  <ItemParams>{option.forward}</ItemParams>
+                  <ItemParams>
+                    <img src={pointLine} alt="" />
+                    {option.forward}
+                  </ItemParams>
                 </ItemBlock>
               </DropdownItem>
             ))}
@@ -120,7 +123,7 @@ const DropdownList = styled.div`
   border-radius: 12px;
   margin-top: 20px;
   max-height: 200px;
-  width: 160px;
+  width: 180px;
   overflow-y: auto;
   scrollbar-width: none;
   padding: 16px;

@@ -4,15 +4,14 @@ import TimeIcon from "@/icons/TimeIcon";
 import timeAgo from "@/lib/timeAgo";
 
 const MentionsCard = ({ item, bg }) => {
-  console.log(item)
   const post = item.postDetails;
-  
-	return (
+
+  return (
 		<MentionsCardItem $bg={bg}>
 			<MentionsCardItemHead>
 				<MentionsCardItemName>
-					<MentionsCardItemImg src={post.image} alt={item?.username} />
-					<p>{post.channelTitle}</p>
+					<MentionsCardItemImg src={post?.image} alt={item?.username} />
+					<p>{post?.channelTitle}</p>
 				</MentionsCardItemName>
 				<MentionsCardItemTime>
           <TimeIcon/>
@@ -49,6 +48,7 @@ const MentionsCardItem = styled.div`
   border: 2px solid ${({ $bg }) => $bg ? '#181F30' : '#1F273B'};
   border-radius: 24px;
   background-color: ${({ $bg }) => $bg ? '#181F30' : 'transparent'};
+  height: 140px;
 
   &:hover {
     background-color: #181F30;

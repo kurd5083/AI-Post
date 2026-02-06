@@ -7,7 +7,7 @@ import ModernLoading from "@/components/ModernLoading";
 import { useImagePresets } from "@/lib/channels/image-generation/useImagePresets";
 import { useGetChannelImagePreset } from "@/lib/channels/image-generation/useGetChannelImagePreset";
 import { useUpdateChannelImagePreset } from "@/lib/channels/image-generation/useUpdateChannelImagePreset";
-import normalizeUrl from "@/lib/normalizeUrl";
+import normalizeUrl from "@/hooks/normalizeUrl";
 
 import { usePopupStore } from "@/store/popupStore";
 import { useLightboxStore } from "@/store/lightboxStore";
@@ -51,7 +51,7 @@ const ImageGenerationPopup = () => {
   if (imagePresetsLoading) {
     return <ModernLoading text="Загрузка стилей..." />;
   }
-  console.log(imagePresets)
+
   return (
     <ImageGenerationContent>
       <ImageGenerationContentTitle>Выберите одну стилистику</ImageGenerationContentTitle>

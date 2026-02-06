@@ -10,7 +10,7 @@ import СhannelPlug from '@/shared/СhannelPlug';
 
 import { useChannelsGroupedByFolders } from "@/lib/useChannelsGroupedByFolders";
 import { useDeleteChannel } from "@/lib/channels/useDeleteChannel";
-import useResolution from "@/lib/useResolution";
+import useResolution from "@/hooks/useResolution";
 
 import { getPendingModerationCount } from '@/api/channels/getPendingModerationCount';
 

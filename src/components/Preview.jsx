@@ -9,7 +9,7 @@ import TgIcon from "@/icons/TgIcon";
 import Empty from "@/shared/Empty";
 
 import { useSendTestPost } from "@/lib/posts/useSendTestPost";
-import normalizeUrl from "@/lib/normalizeUrl";
+import normalizeUrl from "@/hooks/normalizeUrl";
 import getCleanSummaryForServer from "@/lib/getCleanSummaryForServer";
 
 import { useLightboxStore } from "@/store/lightboxStore";
@@ -60,8 +60,7 @@ const Preview = ({ collapsed, onChange, testResult, view = true }) => {
     if (!hasContent) {
       addNotification("Нет данных для отправки поста", "info");
       return;
-    }
-
+    } 
     sendTestPost(
       {
         title,

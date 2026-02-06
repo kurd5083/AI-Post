@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useEffect } from "react";
 import styled from "styled-components";
 
 import BtnBase from "@/shared/BtnBase";
@@ -8,11 +8,12 @@ import LineChart from "@/components/Analytics/LineChart";
 import PostStatsDetails from "@/components/Analytics/PostStatsDetails";
 
 import { useGetSubscribersDaily } from "@/lib/analytics/useGetSubscribersDaily";
-import { useGetDayTracking } from "@/lib/analytics/useGetDayTracking";
 import { useGetAdReachPeriod } from "@/lib/analytics/useGetAdReachPeriod";
 import { useGetPostsByPeriod } from "@/lib/analytics/useGetPostsByPeriod";
 import { useGetAnalyticsReach } from "@/lib/analytics/useGetAnalyticsReach";
-import useResolution from "@/lib/useResolution";
+import { usePostViewsDynamics } from "@/hooks/analytics/usePostViewsDynamics";
+
+import useResolution from "@/hooks/useResolution";
 
 import { useAnalyticsStore } from "@/store/useAnalyticsStore";
 import { usePopupStore } from "@/store/popupStore";
@@ -32,89 +33,82 @@ const parseLocalDate = (dateStr) => {
 };
 
 const StatisticsTab = ({ id, channel_id, dateRanges }) => {
-  const [selectedPost, setSelectedPost] = useState(null);
   const { isSmall } = useResolution(768);
   const { openPopup } = usePopupStore();
 
   const {
     dayPoints, dayLabels,
-    subscriberPoints, subscriberLabels,
+    subscriberPoints, subscriberLabels, subscriberDayPoints, subscriberDayLabels,
     adReachPoints, adReachLabels,
     postsByPeriodPoints, postsByPeriodLabels,
-    averageCoveragePoints, averageCoverageLabels,
-    dayFilter, subscriberFilter, adReachFilter, postsByPeriodFilter, averageCoverageFilter,
-    setDayData, setSubscriberData, setAdReachData, setPostsByPeriodData, setAverageCoverageData
+    averageCoverageAvgPoints, averageCoverageAvgLabels,
+    dayFilter, subscriberFilter, adReachFilter, postsByPeriodFilter, averageCoverageAvgFilter,
+    setSubscriberData, setSubscriberDayData, setAdReachData, setPostsByPeriodData,
+    setAverageCoverageAvgData, setAverageCoverageErData, setAverageCoverageErr24Data, setAverageCoverageErrData
   } = useAnalyticsStore();
+  const { selectedPostData, setSelectedPost, postOptions  } = usePostViewsDynamics({ channel_id, dayFilter, dateRanges });
 
-  const { dayTracking } = useGetDayTracking(channel_id);
-  const { postsByPeriod } = useGetPostsByPeriod({
-    channel_id,
-    date_from: dateRanges.postsByPeriodFilterRange.dateFromStr,
-    date_to: dateRanges.postsByPeriodFilterRange.dateToStr
-  });
+  const today = new Date();
+  const formattedToday = today.toISOString().split('T')[0];
+
+  const { postsByPeriod } = useGetPostsByPeriod(
+    {
+      channel_id,
+      ...(postsByPeriodFilter === "24h"
+        ? {
+          date_from: dateRanges.postsByPeriodFilterRange.dateToStr,
+          date_to: dateRanges.postsByPeriodFilterRange.dateToStr
+        }
+        : {
+          date_from: dateRanges.adReachFilterRange.dateFromShort,
+          date_to: dateRanges.adReachFilterRange.dateToShort
+        }
+      )
+    });
   const { subscribersDaily } = useGetSubscribersDaily({
     channel_id,
-    date_from: dateRanges.subscriberFilterRange.dateFromShort,
-    date_to: dateRanges.subscriberFilterRange.dateToShort
+    ...(subscriberFilter === "24h"
+      ? { date: formattedToday }
+      : {
+        date_from: dateRanges.subscriberFilterRange.dateFromShort,
+        date_to: dateRanges.subscriberFilterRange.dateToShort
+      }
+    )
   });
+  const { subscribersDaily: subscribersDay } = useGetSubscribersDaily({
+    channel_id,
+    date: formattedToday
+  });
+
   const { adReachPeriod } = useGetAdReachPeriod({
     channel_id,
-    date_from: dateRanges.adReachFilterRange.dateFromShort,
-    date_to: dateRanges.adReachFilterRange.dateToShort
+    ...(adReachFilter === "24h"
+      ? {}
+      : {
+        date_from: dateRanges.adReachFilterRange.dateFromShort,
+        date_to: dateRanges.adReachFilterRange.dateToShort
+      }
+    )
   });
-  const { analyticsReach } = useGetAnalyticsReach({
-    channel_id,
-    date_from: dateRanges.averageCoverageFilterRange.dateFromShort,
-    date_to: dateRanges.averageCoverageFilterRange.dateToShort
-  });
-  const sortedPostsByPeriod = useMemo(() =>
-    postsByPeriod?.data?.slice()?.sort((a, b) => new Date(a.date) - new Date(b.date)) || [],
-    [postsByPeriod]
-  );
-
-  const selectedPostData = useMemo(
-    () => dayTracking?.posts?.find(p => p.post_id === selectedPost) || dayTracking?.posts?.[0],
-    [dayTracking, selectedPost]
-
-  );
-  useEffect(() => {
-    const post = selectedPostData;
-    if (!post) return;
-
-    if (selectedPost === null) {
-      setSelectedPost(post.post_id);
-    }
-
-    if (post.hourly?.length) {
-      const points = post.hourly?.map(h => h.views) || [];
-      const labels = post.hourly?.map((h, i) => {
-        const dateObj = new Date(h.recorded_at);
-        return {
-          short: `${i + 1}`,
-          full: `${i + 1} ч.`,
-        };
-      }) || [];
-
-      const posts = dayTracking?.posts?.map(p => ({
-        post_id: p.post_id,
-        post_date: p.post_date,
-        text_preview: p.text_preview,
-        total_views: p.total_views,
-        url: p.url,
-        hourly: p.hourly || [],
-        reposts: p.reposts || 0
-      })) || [];
-
-      setDayData(points, labels, posts);
-    }
-  }, [selectedPostData, selectedPost, setDayData, dayTracking]);
-
-
 
   useEffect(() => {
-    if (subscribersDaily?.daily_data?.length) {
-      const points = subscribersDaily.daily_data.map(d => d.subscriber_count);
-      const labels = subscribersDaily.daily_data.map(d => {
+    if (!subscribersDaily) return;
+
+    let points = [];
+    let labels = [];
+
+    if (subscriberFilter === "24h" && subscribersDaily.hourly?.length) {
+      points = subscribersDaily.hourly.map(h => h.subscriber_count || 0);
+      labels = subscribersDaily.hourly.map(h => ({
+        short: h.time_label,
+        full: `${h.time_label} ч.`,
+        delta: h.delta || 0,
+        joined: h.joined || 0,
+        left: h.left || 0
+      }));
+    } else if (subscribersDaily.daily_data?.length) {
+      points = subscribersDaily.daily_data.map(d => d.subscriber_count || 0);
+      labels = subscribersDaily.daily_data.map(d => {
         const dateObj = parseLocalDate(d.date);
         return {
           short: dateObj.toLocaleDateString("ru-RU", { day: "numeric" }),
@@ -125,15 +119,43 @@ const StatisticsTab = ({ id, channel_id, dateRanges }) => {
           left: d.left || 0
         };
       });
-      setSubscriberData(points, labels);
     }
-  }, [subscribersDaily, setSubscriberData]);
+
+    setSubscriberData(points, labels);
+  }, [subscribersDaily, subscriberFilter, setSubscriberData]);
 
   useEffect(() => {
-    if (adReachPeriod?.daily?.length) {
+    if (!subscribersDay?.hourly?.length) return;
+
+    const points = subscribersDay.hourly.map(h => h.subscriber_count || 0);
+
+    const labels = subscribersDay.hourly.map(h => ({
+      short: h.time_label,
+      medium: `${h.time_label}`,
+      full: `${h.time_label} ч.`,
+      delta: h.delta || 0,
+      joined: h.joined || 0,
+      left: h.left || 0,
+    }));
+
+    setSubscriberDayData(points, labels);
+  }, [subscribersDay, setSubscriberDayData]);
+
+  useEffect(() => {
+    if (!adReachPeriod) return;
+
+    let points = [];
+    let labels = [];
+    if (adReachFilter === "24h" && adReachPeriod.hourly?.length) {
+      points = adReachPeriod.hourly.map(h => Number(h.total_ad_reach) || 0);
+      labels = adReachPeriod.hourly.map(h => ({
+        short: h.time_label,
+        full: `${h.time_label} ч.`,
+      }));
+    } else if (adReachPeriod.daily?.length) {
       const numericFilter = Number(adReachFilter) || 1;
-      const points = adReachPeriod.daily.map(d => (Number(d.total_ad_reach) || 0) * numericFilter);
-      const labels = adReachPeriod.daily.map(d => {
+      points = adReachPeriod.daily.map(d => (Number(d.total_ad_reach) || 0) * numericFilter);
+      labels = adReachPeriod.daily.map(d => {
         const dateObj = parseLocalDate(d.date);
         return {
           short: dateObj.toLocaleDateString("ru-RU", { day: "numeric" }),
@@ -141,52 +163,119 @@ const StatisticsTab = ({ id, channel_id, dateRanges }) => {
           full: dateObj.toLocaleDateString("ru-RU", { day: "numeric", month: "short", year: "numeric" })
         };
       });
-      setAdReachData(points, labels);
     }
-  }, [adReachPeriod, adReachFilter, setAdReachData]);
+
+    setAdReachData(points, labels);
+  }, [adReachPeriod, adReachFilter, adReachFilter, setAdReachData]);
 
   useEffect(() => {
-    if (sortedPostsByPeriod.length) {
-      const points = sortedPostsByPeriod.map(p => p.posts_count);
-      const labels = sortedPostsByPeriod.map(p => {
+    if (!postsByPeriod) return;
+
+    let points = [];
+    let labels = [];
+    let hourly = [];
+    if (postsByPeriodFilter === "24h" && postsByPeriod.data[0].hourly?.length) {
+      points = postsByPeriod.data[0].hourly.map(h => h.posts_count || 0);
+      labels = postsByPeriod.data[0].hourly.map(h => ({
+        short: `${h.time_label}`,
+        medium: `${h.time_label} ч.`,
+        full: `${h.time_label} ч.`,
+      }));
+      hourly = postsByPeriod.data;
+    }
+
+    else if (postsByPeriod.data?.length) {
+      const sorted = postsByPeriod.data
+        .slice()
+        .sort((a, b) => new Date(a.date) - new Date(b.date));
+
+      points = sorted.map(p => p.posts_count || 0);
+
+      labels = sorted.map(p => {
         const dateObj = parseLocalDate(p.date);
+
         return {
           short: dateObj.toLocaleDateString("ru-RU", { day: "numeric" }),
           medium: dateObj.toLocaleDateString("ru-RU", { day: "numeric", month: "short" }),
-          full: dateObj.toLocaleDateString("ru-RU", { day: "numeric", month: "short", year: "numeric" })
+          full: dateObj.toLocaleDateString("ru-RU", { day: "numeric", month: "short", year: "numeric" }),
+          hourly: postsByPeriod.data
         };
       });
-      setPostsByPeriodData(points, labels);
     }
-  }, [sortedPostsByPeriod, setPostsByPeriodData]);
+
+    setPostsByPeriodData(points, labels, hourly);
+
+  }, [postsByPeriod, postsByPeriodFilter, setPostsByPeriodData]);
+
+  const { analyticsReach } = useGetAnalyticsReach({
+    channel_id,
+    ...(averageCoverageAvgFilter === "24h"
+      ? { days: 1 }
+      : {
+        date_from: dateRanges.averageCoverageAvgFilterRange.dateFromShort,
+        date_to: dateRanges.averageCoverageAvgFilterRange.dateToShort
+      }
+    )
+  });
 
   useEffect(() => {
-    if (analyticsReach?.daily?.length) {
-      const points = analyticsReach.daily.map(d => d.avg_reach || 0);
-      const labels = analyticsReach.daily.map(d => {
+    if (!analyticsReach) return;
+
+    const pointsAvg = [];
+    const pointsEr = [];
+    const pointsErr24 = [];
+    const pointsErr = [];
+    const labels = [];
+
+    if (averageCoverageAvgFilter === "24h" && analyticsReach.hourly?.length) {
+      analyticsReach.hourly.forEach(h => {
+        const hour = parseInt(h.time_label.split(":")[0], 10);
+
+        pointsAvg.push(h.avg_reach || 0);
+        pointsEr.push(h.er_percent || 0);
+        pointsErr24.push(h.err24_percent || 0);
+        pointsErr.push(h.err_percent || 0);
+
+        labels.push({
+          short: `${h.time_label}`,
+          medium: `${h.time_label} ч.`,
+          full: `${h.time_label} ч.`
+        });
+      });
+    }
+
+    else if (analyticsReach.daily?.length) {
+      analyticsReach.daily.forEach(d => {
         const dateObj = parseLocalDate(d.date);
-        return {
+
+        pointsAvg.push(d.avg_reach || 0);
+        pointsEr.push(d.er_percent || 0);
+        pointsErr24.push(d.err24_percent || 0);
+        pointsErr.push(d.err_percent || 0);
+
+        labels.push({
           short: dateObj.toLocaleDateString("ru-RU", { day: "numeric" }),
           medium: dateObj.toLocaleDateString("ru-RU", { day: "numeric", month: "short" }),
           full: dateObj.toLocaleDateString("ru-RU", { day: "numeric", month: "short", year: "numeric" })
-        };
+        });
       });
-      setAverageCoverageData(points, labels);
     }
-  }, [analyticsReach, setAverageCoverageData]);
+
+    setAverageCoverageAvgData(pointsAvg, labels);
+    setAverageCoverageErData(pointsEr, labels);
+    setAverageCoverageErr24Data(pointsErr24, labels);
+    setAverageCoverageErrData(pointsErr, labels);
+
+  }, [
+    analyticsReach,
+    averageCoverageAvgFilter,
+    setAverageCoverageAvgData,
+    setAverageCoverageErData,
+    setAverageCoverageErr24Data,
+    setAverageCoverageErrData
+  ]);
 
   const handleChangePost = (value) => setSelectedPost(value);
-
-  const postOptions = useMemo(() =>
-    dayTracking?.posts?.map(post => ({
-      id: post.post_id,
-      label: `Пост #${post.post_id}`,
-      date: new Date(post.post_date),
-      views: post.total_views,
-      forward: post.total_forwards,
-    })) || [],
-    [dayTracking]
-  );
 
   return (
     <StatisticsContainer>
@@ -200,9 +289,11 @@ const StatisticsTab = ({ id, channel_id, dateRanges }) => {
             </ItemTitle>
             <StatsCardMainValue>
               {item.content === "publications_analytics" ? (
-                sortedPostsByPeriod?.reduce((sum, p) => sum + (p.posts_count || 0), 0)
+                postsByPeriod?.data?.reduce((sum, p) => sum + (p.posts_count || 0), 0) || 0
               ) : item.content === "subscriber_growth" ? (
                 subscribersDaily?.current_subscribers || 0
+              ) : item.content === "subscriptions_day" ? (
+                subscribersDay?.by_day.delta || 0
               ) : item.content === "dynamics_posts" && selectedPostData ? (
                 <>
                   <span>Пост #{selectedPostData.post_id}</span>
@@ -210,23 +301,25 @@ const StatisticsTab = ({ id, channel_id, dateRanges }) => {
                 </>
               ) : item.content === "average_advertising" ? (
                 adReachPoints?.reduce((sum, val) => sum + val, 0) || 0
-              ) : item.content === "average_coverage" ? (
-                averageCoveragePoints?.[0] || 0
-              ) : 1}
+              ) : item.content === "average_coverage" && (
+                averageCoverageAvgPoints?.[0] || 0
+              )}
               {item.mainSubValue && <span>{item.mainSubValue}</span>}
             </StatsCardMainValue>
             <StatsCardDetails>
               {item.content === "publications_analytics" ? (
-                <PostStatsDetails postsByPeriod={sortedPostsByPeriod} />
+                <PostStatsDetails postsByPeriod={postsByPeriod?.data} />
               ) : item.content === "subscriber_growth" ? (
                 <PostStatsDetails subscribersDaily={subscribersDaily} />
+              ) : item.content === "subscriptions_day" ? (
+                <PostStatsDetails subscribersDay={subscribersDay} />
               ) : item.content === "dynamics_posts" && selectedPostData ? (
                 <PostStatsDetails selectedPostData={selectedPostData} />
               ) : item.content === "average_advertising" ? (
                 <PostStatsDetails adReachPeriod={{ daily: adReachPoints }} />
-              ) : item.content === "average_coverage" ? (
-                <PostStatsDetails analyticsReach={{ daily: averageCoveragePoints }} />
-              ) : 1}
+              ) : item.content === "average_coverage" && (
+                <PostStatsDetails analyticsReach={{ daily: averageCoverageAvgPoints }} />
+              )}
             </StatsCardDetails>
           </ItemLeft>
           <ButtonsMore>
@@ -234,7 +327,7 @@ const StatisticsTab = ({ id, channel_id, dateRanges }) => {
               <SelectContainer>
                 <CustomSelectFour
                   options={postOptions}
-                  value={selectedPost}
+                  value={selectedPostData?.post_id}
                   onChange={handleChangePost}
                   width="min-content"
                   right="-20px"
@@ -247,6 +340,8 @@ const StatisticsTab = ({ id, channel_id, dateRanges }) => {
               $padding="12px 24px"
               onClick={() => openPopup(item.content, "popup", {
                 channelId: id,
+                channel_id: channel_id,
+                dateRanges
               })}
             >
               Подробнее
@@ -297,25 +392,25 @@ const StatisticsTab = ({ id, channel_id, dateRanges }) => {
               />
             ) : item.content === "subscriptions_day" ? (
               <LineChart
-                points={subscriberPoints}
-                labels={subscriberLabels.map(l => l.short)}
+                points={subscriberDayPoints}
+                labels={subscriberDayLabels.map(l => l.short)}
                 tooltipLabels={subscriberLabels.map(l => l.medium)}
                 hoverLabels={subscriberLabels.map(l => l.full)}
                 width={isSmall ? 700 : 400}
                 height={150}
-                type="subscriber_growth"
+                type="subscriptions_day"
                 ilter={subscriberFilter}
               />
             ) : item.content === "average_coverage" && (
               <LineChart
-                points={averageCoveragePoints}
-                labels={averageCoverageLabels.map(l => l.short)}
-                tooltipLabels={averageCoverageLabels.map(l => l.medium)}
-                hoverLabels={averageCoverageLabels.map(l => l.full)}
+                points={averageCoverageAvgPoints}
+                labels={averageCoverageAvgLabels.map(l => l.short)}
+                tooltipLabels={averageCoverageAvgLabels.map(l => l.medium)}
+                hoverLabels={averageCoverageAvgLabels.map(l => l.full)}
                 width={isSmall ? 700 : 400}
                 height={150}
                 type="averageCoverage"
-                filter={dayFilter}
+                filter={averageCoverageAvgFilter}
               />
             )}
           </StatsChartContainer>
@@ -326,12 +421,14 @@ const StatisticsTab = ({ id, channel_id, dateRanges }) => {
 };
 
 const StatisticsContainer = styled.div`
+box-sizing: border-box;
   margin-top: 40px;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(550px, 1fr));
   gap: 16px;
   padding: 0 56px 30px;
-  max-height: 550px;
+  min-height: 610px;
+  max-height: 610px;
   overflow-y: auto;
   scrollbar-width: none;
 
@@ -387,6 +484,8 @@ const SelectContainer = styled.div`
 const ItemLeft = styled.div`
   min-width: 150px;
   height: 100%;
+  display: flex;
+  flex-direction: column;
 `;
 
 const ItemTitle = styled.h3`
@@ -404,6 +503,7 @@ const StatsCardMainValue = styled.p`
   gap: 4px;
   font-size: 36px;
   font-weight: 800;
+  flex-grow: 1;
 
   span {
     font-size: 14px;
@@ -424,7 +524,8 @@ const StatsChartContainer = styled.div`
   align-items: end;
   justify-items: start;
   grid-template-columns: 30px 1fr;
-  grid-template-rows: 150px 20px;
+  flex: 1;
+  grid-template-rows: 150px 30px;
   padding-top: 50px;
   @media(max-width: 768px) { 
     padding-top: 0px;

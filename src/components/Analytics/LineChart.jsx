@@ -62,7 +62,12 @@ const LineChart = ({ points = [], labels, hoverLabels, tooltipLabels, width = 40
   const makeSmoothBezierPath = (values, height, actualWidth, max) => {
     if (!values.length) return "";
     const step = actualWidth / (values.length - 1);
-    const pts = values.map((v, i) => [i * step, height - (v / max) * height]);
+    const MIN_OFFSET = 3;
+
+    const pts = values.map((v, i) => {
+      const y = height - (v / max) * height;
+      return [i * step, Math.min(height - MIN_OFFSET, y)];
+    });
     if (pts.length < 2) return "";
 
     let d = `M${pts[0][0]},${pts[0][1]}`;
@@ -91,10 +96,14 @@ const LineChart = ({ points = [], labels, hoverLabels, tooltipLabels, width = 40
     let labelText = "";
     switch (type) {
       case "subscriber_growth": labelText = "Подписчики"; break;
+      case "subscriptions_day": labelText = "Подписчики"; break;
       case "adReach": labelText = "Рекл. охват"; break;
       case "posts": labelText = "Публикации"; break;
       case "averageCoverage": labelText = "Ср. охват 1 публ."; break;
       case "dynamicsPosts": labelText = "Посты"; break;
+      case "er": labelText = "Вовлеченность аудитории"; break;
+      case "err": labelText = "Вовлеченность аудитории"; break;
+      case "err24": labelText = "Рекламная вовлеченность"; break;
       default: labelText = "";
     }
 
@@ -112,7 +121,7 @@ const LineChart = ({ points = [], labels, hoverLabels, tooltipLabels, width = 40
 
   return (
     <>
-      <StatsYAxis>
+      <StatsYAxis $chartWidth={chartWidth}>
         {yTicks.map((val, i) => <span key={i}>{val.toLocaleString()}</span>)}
       </StatsYAxis>
 
@@ -150,41 +159,38 @@ const LineChart = ({ points = [], labels, hoverLabels, tooltipLabels, width = 40
           </svg>
         </StatsChartGradient>
       </StatsChart>
-<StatsData>
-  {chartLabels.length > 0 && chartLabels.map((_, i, arr) => {
-    const isFirst = i === 0;
-    const isLast = i === arr.length - 1;
+      <StatsData $chartWidth={chartWidth}>
+        {chartLabels.length > 0 && chartLabels.map((_, i, arr) => {
+          const isFirst = i === 0;
+          const isLast = i === arr.length - 1;
 
-    let showLabel = false;
-    let labelText = chartLabels[i];
+          let showLabel = false;
+          let labelText = chartLabels[i];
 
-    if (type === "dynamicsPosts") {
-      // Показываем все 24 метки
-      showLabel = true;
-    } else {
-      // Старая логика для других фильтров
-      const minWidthPerTick = filter === "year" ? 100 : 30;
-      const maxTicks = Math.min(11, Math.max(1, Math.floor(chartWidth / minWidthPerTick)));
-      const step = Math.ceil(chartLabels.length / maxTicks);
+          if (type === "dynamicsPosts") {
+            showLabel = true;
+          } else {
+            const minWidthPerTick = filter === "year" ? 100 : filter === "24h" ? 60 : 30;
+            const maxTicks = Math.min(11, Math.max(1, Math.floor(chartWidth / minWidthPerTick)));
+            const step = Math.ceil(chartLabels.length / maxTicks);
 
-      if (isFirst || isLast || i % step === 0) showLabel = true;
+            if (isFirst || isLast || i % step === 0) showLabel = true;
 
-      // Для year используем tooltipLabels, чтобы показывать полную дату
-      if (filter === "year" && tooltipLabels?.[i]) {
-        labelText = tooltipLabels[i];
-      }
-    }
+            if (filter === "year" && tooltipLabels?.[i]) {
+              labelText = tooltipLabels[i];
+            }
+          }
 
-    if (!showLabel) return null;
+          if (!showLabel) return null;
 
-    const style = {
-      left: isFirst ? "0%" : isLast ? "100%" : `${(i / (arr.length - 1)) * 100}%`,
-      transform: isFirst ? "none" : isLast ? "translateX(-100%)" : "translateX(-50%)",
-    };
+          const style = {
+            left: `${(i / (arr.length - 1)) * 100}%`,
+            transform: "translateX(-50%)",
+          };
 
-    return <span key={i} style={style}>{labelText}</span>;
-  })}
-</StatsData>
+          return <span key={i} style={style}>{labelText}</span>;
+        })}
+      </StatsData>
     </>
   );
 };
@@ -196,7 +202,11 @@ const StatsYAxis = styled.div`
   height: 100%;
   grid-column: 1;
   grid-row: 1;
-  span { font-size: 10px; font-weight: 600; color: #6A7080; }
+  span { 
+    font-size: ${({$chartWidth}) => $chartWidth > 600 ? '14px' : '12px'}; 
+    font-weight: 600; 
+    color: #D6DCEC; 
+  }
 `;
 const StatsChart = styled.div`
   position: relative;
@@ -216,9 +226,14 @@ const StatsData = styled.div`
   gap: 2px;
   min-width: 200px;
   color: #D6DCEC;
-  font-size: 10px;
+  font-size: ${({$chartWidth}) => $chartWidth > 600 ? '14px' : '10px'}; 
   font-weight: 600;
-  span { position: absolute; transform: translateX(-50%); white-space: nowrap; }
+  span { 
+    position: absolute; 
+    transform: translateX(-50%); 
+    white-space: nowrap; 
+    bottom: 0px;
+  }
 `;
 
 export default LineChart;

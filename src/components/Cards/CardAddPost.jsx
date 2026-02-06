@@ -10,7 +10,7 @@ registerLocale("ru", ru);
 import BtnBase from "@/shared/BtnBase";
 import СhannelPlug from "@/shared/СhannelPlug";
 
-import normalizeUrl from "@/lib/normalizeUrl";
+import normalizeUrl from "@/hooks/normalizeUrl";
 import { useCreateCalendarEvent } from "@/lib/calendar/useCreateCalendarEvent";
 
 import { useNotificationStore } from "@/store/notificationStore";

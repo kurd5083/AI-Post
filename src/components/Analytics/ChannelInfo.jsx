@@ -82,10 +82,12 @@ const ChannelHeader = styled.div`
 	display: flex;
 	gap: 40px;
 	padding-right: 40px;
+	align-items: flex-start;
+	
 	@media(max-width: 480px) { 
-    flex-direction: column;
+    	flex-direction: column;
 		gap: 24px;
-  }
+  	}
 `
 const ChannelName = styled.h2`
   font-size: 32px;

@@ -9,7 +9,7 @@ import GridIcon from "@/icons/GridIcon";
 import ListIcon from "@/icons/ListIcon";
 import DirIcon from "@/icons/DirIcon";
 
-import useResolution from "@/lib/useResolution";
+import useResolution from "@/hooks/useResolution";
 import useSwipeAllowed from "@/lib/useSwipeAllowed";
 import { useChannelsGroupedByFolders } from "@/lib/useChannelsGroupedByFolders";
 import { useDeleteFolder } from "@/lib/channels/folder/useDeleteFolder";

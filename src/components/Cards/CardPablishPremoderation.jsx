@@ -5,7 +5,7 @@ import СhannelPlug from "@/shared/СhannelPlug";
 
 import { useApprovePost } from "@/lib/posts/usePostsModeration";
 import { useRejectPost } from "@/lib/posts/useRejectPost";
-import normalizeUrl from "@/lib/normalizeUrl";
+import normalizeUrl from "@/hooks/normalizeUrl";
 import { useArchivePost } from "@/lib/posts/useArchivePost";
 
 import { useLightboxStore } from "@/store/lightboxStore";

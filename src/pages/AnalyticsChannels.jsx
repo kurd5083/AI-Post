@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useMemo } from "react";
 import styled from "styled-components";
 import { useParams } from "react-router";
 
@@ -13,6 +13,7 @@ import ChannelInfo from "@/components/Analytics/ChannelInfo";
 import StatisticsTab from "@/components/Analytics/StatisticsTab";
 import PreviewTab from "@/components/Analytics/PreviewTab";
 import AnalyticsStatistics from "@/components/Analytics/AnalyticsStatistics";
+import ModernLoading from "@/components/ModernLoading";
 
 import { useGetTelescopeInfo } from "@/lib/channels/useGetTelescopeInfo";
 import { useChannelById } from "@/lib/channels/useChannelById";
@@ -23,7 +24,7 @@ const AnalyticsChannels = () => {
   const [activeTab, setActiveTab] = useState("statistics");
   const { id } = useParams();
   const { channel } = useChannelById(Number(id));
-  const { channelInfo } = useGetTelescopeInfo(channel?.channelId);
+  const { channelInfo, channelPending } = useGetTelescopeInfo(channel?.channelId);
 
   const changeContent = (tab) => setActiveTab(tab);
 
@@ -32,12 +33,12 @@ const AnalyticsChannels = () => {
     subscriberFilter,
     adReachFilter,
     postsByPeriodFilter,
-    averageCoverageFilter,
+    averageCoverageAvgFilter,
     setDayFilter,
     setSubscriberFilter,
     setAdReachFilter,
     setPostsByPeriodFilter,
-    setAverageCoverageFilter,
+    setAverageCoverageAvgFilter,
   } = useAnalyticsStore();
 
   const handleChange = (newFilter) => {
@@ -46,25 +47,24 @@ const AnalyticsChannels = () => {
     setSubscriberFilter(newFilter);
     setAdReachFilter(newFilter);
     setPostsByPeriodFilter(newFilter);
-    setAverageCoverageFilter(newFilter);
+    setAverageCoverageAvgFilter(newFilter);
   };
-  const [dateRange, setDateRange] = useState(getDateRange({
-    dayFilter,
-    subscriberFilter,
-    adReachFilter,
-    postsByPeriodFilter,
-    averageCoverageFilter,
-  }));
-
-  useEffect(() => {
-    setDateRange(getDateRange({
+  const dateRange = useMemo(() =>
+    getDateRange({
       dayFilter,
       subscriberFilter,
       adReachFilter,
       postsByPeriodFilter,
-      averageCoverageFilter,
-    }));
-  }, [dayFilter, subscriberFilter, adReachFilter, postsByPeriodFilter, averageCoverageFilter]);
+      averageCoverageAvgFilter,
+    }),
+    [
+      dayFilter,
+      subscriberFilter,
+      adReachFilter,
+      postsByPeriodFilter,
+      averageCoverageAvgFilter,
+    ]
+  );
 
   function getDateRange(filters) {
     const now = new Date();
@@ -97,78 +97,80 @@ const AnalyticsChannels = () => {
       subscriberFilterRange: calcRange(filters.subscriberFilter),
       adReachFilterRange: calcRange(filters.adReachFilter),
       postsByPeriodFilterRange: calcRange(filters.postsByPeriodFilter),
-      averageCoverageFilterRange: calcRange(filters.averageCoverageFilter),
+      averageCoverageAvgFilterRange: calcRange(filters.averageCoverageAvgFilter),
     };
   }
-
-  if (!channel || !channelInfo) return null;
-
   return (
-    <AnalyticsContainer>
-      <AnalyticsHead />
-      <ChannelInfo channel={channelInfo.channel} />
-      <ChannelInfoWrapper>
-        <ChannelInfoBlock>
-          <ChannelInfoLabel>Геопозиция:</ChannelInfoLabel>
-          <ChannelInfoValue>
-            <img src={location_icon} alt="location icon" />
-            {channelInfo.channel.region}
-          </ChannelInfoValue>
-        </ChannelInfoBlock>
-        <ChannelInfoBlock>
-          <ChannelInfoLabel>Категория:</ChannelInfoLabel>
-          <ChannelInfoValue>
-            <AiGeneratorIcon color="#336CFF" />Искусство
-          </ChannelInfoValue>
-        </ChannelInfoBlock>
-      </ChannelInfoWrapper>
-
-      <AnalyticsStatistics id={channel?.id} channelId={channel?.channelId} />
-
-      <ContentHeadContainer>
-        <ContentHead>
-          <ContentHeadText $active={activeTab === "statistics"} onClick={() => changeContent("statistics")}>
-            Статистика
-          </ContentHeadText>
-          <ContentHeadText $active={activeTab === "preview"} onClick={() => changeContent("preview")}>
-            Превью
-          </ContentHeadText>
-        </ContentHead>
-
-        {activeTab === "statistics" && (
-          <FilterBlock>
-            <FilterIcon color="#D6DCEC" />
-            <FilterText>Фильтр</FilterText>
-            <CustomSelectThree
-              options={[
-                { id: '24h', label: '24 часа' },
-                { id: 'week', label: 'Неделя' },
-                { id: 'month', label: 'Месяц' },
-                { id: 'year', label: 'Год' },
-              ]}
-              value={dayFilter}
-              onChange={handleChange}
-              width="min-content"
-              right="-20px"
-            />
-          </FilterBlock>
-        )}
-      </ContentHeadContainer>
-
-      {activeTab === "statistics" ? (
-        <StatisticsTab
-          id={channel.id}
-          channel_id={channel.channelId}
-          dateRanges={dateRange}
-        />
+    <>
+      {channelPending ? (
+        <ModernLoading text="Загрузка аналитики..." />
       ) : (
-        <PreviewTab channel_id={channel.channelId} id={channel.id} channelName={channel.name} />
+        <>
+          <AnalyticsHead />
+          <ChannelInfo channel={channelInfo.channel} />
+          <ChannelInfoWrapper>
+            <ChannelInfoBlock>
+              <ChannelInfoLabel>Геопозиция:</ChannelInfoLabel>
+              <ChannelInfoValue>
+                <img src={location_icon} alt="location icon" />
+                {channelInfo.channel.region}
+              </ChannelInfoValue>
+            </ChannelInfoBlock>
+            <ChannelInfoBlock>
+              <ChannelInfoLabel>Категория:</ChannelInfoLabel>
+              <ChannelInfoValue>
+                <AiGeneratorIcon color="#336CFF" />Искусство
+              </ChannelInfoValue>
+            </ChannelInfoBlock>
+          </ChannelInfoWrapper>
+
+          <AnalyticsStatistics id={channel?.id} channelId={channel?.channelId} />
+
+          <ContentHeadContainer>
+            <ContentHead>
+              <ContentHeadText $active={activeTab === "statistics"} onClick={() => changeContent("statistics")}>
+                Статистика
+              </ContentHeadText>
+              <ContentHeadText $active={activeTab === "preview"} onClick={() => changeContent("preview")}>
+                Превью
+              </ContentHeadText>
+            </ContentHead>
+
+            {activeTab === "statistics" && (
+              <FilterBlock>
+                <FilterIcon color="#D6DCEC" />
+                <FilterText>Фильтр</FilterText>
+                <CustomSelectThree
+                  options={[
+                    { id: '24h', label: '24 часа' },
+                    { id: 'week', label: 'Неделя' },
+                    { id: 'month', label: 'Месяц' },
+                    { id: 'year', label: 'Год' },
+                  ]}
+                  value={dayFilter}
+                  onChange={handleChange}
+                  width="min-content"
+                  right="-20px"
+                />
+              </FilterBlock>
+            )}
+          </ContentHeadContainer>
+          {activeTab === "statistics" ? (
+            <StatisticsTab
+              id={channel.id}
+              channel_id={channel.channelId}
+              dateRanges={dateRange}
+            />
+          ) : (
+            <PreviewTab channel_id={channel.channelId} id={channel.id} channelName={channel.name} />
+          )}
+        </>
       )}
-    </AnalyticsContainer>
+
+    </>
   );
 };
 
-const AnalyticsContainer = styled.div``;
 
 const ChannelInfoWrapper = styled.div`
   display: flex;

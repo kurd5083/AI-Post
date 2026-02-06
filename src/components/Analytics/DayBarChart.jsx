@@ -8,7 +8,6 @@ const DayBarChart = ({
   hoverLabels,
   tooltipLabels,
   height = 150,
-  filter,
   type,
   showGrid = false,
   maxColumnWidth8 = false,
@@ -72,15 +71,17 @@ const DayBarChart = ({
 
   const yTicks = buildYAxis(chartPoints);
   const chartMax = yTicks[0] || 1;
-  const gap = 6;
-  const totalGap = gap * (chartPoints.length - 1);
-  const availableWidth = chartWidth - totalGap;
+  const MIN_BAR_WIDTH = 4;
+  const MAX_BAR_WIDTH = 44;
 
-  const barWidth = maxColumnWidth8
-    ? availableWidth / chartPoints.length
-    : Math.min(availableWidth / chartPoints.length, 8);
+  const step = chartWidth / chartPoints.length;
 
-  const step = barWidth + gap;
+  let barWidth = step * 0.7;
+  let gap = step * 0.3;
+
+  barWidth = maxColumnWidth8
+    ? barWidth
+    : Math.max(MIN_BAR_WIDTH, Math.min(barWidth, MAX_BAR_WIDTH));
 
   const handleMouseMove = (e) => {
     if (!svgRef.current || !chartPoints.length) return;
@@ -105,7 +106,7 @@ const DayBarChart = ({
 
   return (
     <>
-      <StatsYAxis>
+      <StatsYAxis $chartWidth={chartWidth}>
         {yTicks.map((val, i) => (
           <span key={i}>{val.toLocaleString()}</span>
         ))}
@@ -153,7 +154,7 @@ const DayBarChart = ({
                 y={y}
                 width={barWidth}
                 height={h}
-                rx={6}
+                rx={chartWidth < 800 ? 4 : 16}
                 fill={hoverData?.index === i ? "#336CFF" : "#2E3954"}
               />
             );
@@ -161,11 +162,11 @@ const DayBarChart = ({
         </svg>
 
         {hoverData && (
-          <ChatWindow hoverData={hoverData} height={height} points={chartPoints} type={type}/>
+          <ChatWindow hoverData={hoverData} height={height} points={chartPoints} type={type} />
         )}
       </StatsChart>
 
-      <StatsData>
+      <StatsData $chartWidth={chartWidth} $maxColumnWidth8={maxColumnWidth8}>
         {chartLabels.length > 0 &&
           chartLabels.map((label, i) => {
             const x = i * step + barWidth / 2;
@@ -198,9 +199,9 @@ const StatsYAxis = styled.div`
   grid-row: 1;
 
   span {
-    font-size: 10px;
+    font-size: ${({ $chartWidth }) => $chartWidth > 700 ? '14px' : '12px'}; 
     font-weight: 600;
-    color: #6a7080;
+    color: #D6DCEC;
   }
 `;
 
@@ -218,12 +219,13 @@ const StatsData = styled.div`
   grid-column: 2;
   grid-row: 2;
   color: #d6dcec;
-  font-size: 10px;
+  font-size: ${({ $chartWidth, $maxColumnWidth8 }) => !$maxColumnWidth8 ? '8px' : $chartWidth > 700 ? '14px' : '12px'}; 
   font-weight: 600;
 
   span {
     position: absolute;
     white-space: nowrap;
+    bottom: 0px;
   }
 `;
 

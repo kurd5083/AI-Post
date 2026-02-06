@@ -8,7 +8,7 @@ import EyeIcon from "@/icons/EyeIcon";
 import DelIcon from "@/icons/DelIcon";
 import TimeIcon from "@/icons/TimeIcon";
 
-import normalizeUrl from "@/lib/normalizeUrl";
+import normalizeUrl from "@/hooks/normalizeUrl";
 
 import { useLightboxStore } from "@/store/lightboxStore";
 import { usePopupStore } from "@/store/popupStore"

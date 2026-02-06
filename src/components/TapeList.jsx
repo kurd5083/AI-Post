@@ -49,6 +49,7 @@ const TapeList = ({ forceHorizontal = false, padding, newsData, pending }) => {
   const handleClick = (id) => {
     const copyNews = async (channelId) => {
       const postsInChannel = await getPostsByChannel(channelId);
+
       const exists = postsInChannel.some((post) => {
         post.id == id
       });
@@ -84,7 +85,6 @@ const TapeList = ({ forceHorizontal = false, padding, newsData, pending }) => {
       });
     }
   };
-
   return (
     <>
       {pending ? (

@@ -11,7 +11,7 @@ import ActionsPost from "@/components/Popup/AiGenerator/ActionsPost";
 import { useUser } from "@/lib/user/useUser";
 import { useDeletePostImage } from "@/lib/posts/useDeletePostImage";
 import { useUserChannels } from "@/lib/channels/useUserChannels";
-import normalizeUrl from "@/lib/normalizeUrl";
+import normalizeUrl from "@/hooks/normalizeUrl";
 
 import { useNotificationStore } from "@/store/notificationStore";
 import { usePostsStore } from "@/store/postsStore";

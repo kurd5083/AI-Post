@@ -14,9 +14,7 @@ import { useGetMetricsDay } from "@/lib/analytics/useGetMetricsDay";
 const AnalyticsStatistics = ({ id, channelId }) => {
   const { isSwipe } = useSwipeAllowed(1800);
 
-  const { channelStat, channelStatLoading } = useChannelStat({
-    channelId: id,
-  });
+  const { channelStat, channelStatLoading } = useChannelStat({ channelId: id });
 
   const stat = channelStat?.response;
   const { metricsDay, metricsDayPending } = useGetMetricsDay(channelId);

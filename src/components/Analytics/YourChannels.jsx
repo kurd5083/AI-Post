@@ -13,13 +13,13 @@ import СhannelPlug from '@/shared/СhannelPlug';
 import HighlightText from "@/shared/HighlightText";
 import Empty from "@/shared/Empty";
 
-import { slugchange } from "@/lib/slugchange";
+import { slugchange } from "@/hooks/slugchange";
 import { useUserChannels } from "@/lib/channels/useUserChannels";
 
 const YourChannels = ({ debouncedQuery, viewMode }) => {
 	const [atStart, setAtStart] = useState(true);
 	const [atEnd, setAtEnd] = useState(false);
-	const { userChannels } = useUserChannels();
+	const { userChannels, userPending } = useUserChannels();
 
 	const filteredChannels = userChannels?.filter((item) => {
 		if (!debouncedQuery.trim()) return true;
@@ -30,83 +30,89 @@ const YourChannels = ({ debouncedQuery, viewMode }) => {
 
 	return (
 		<>
-			{filteredChannels?.length === 0 ? (
+			{userPending ? (
 				<EmptyContainer>
-					<Empty icon="📢">Нет каналов</Empty>
+					<Empty icon="📢">Загрузка каналов...</Empty>
 				</EmptyContainer>
 			) : (
-				<YourChannelsSwiper $padding={viewMode == 'List'}>
-					{viewMode === 'List' ? (
-						<YourChannelsList>
-							{filteredChannels?.map((item) => (
-								<ListItem>
-									<СhannelPlug width="48px" height="48px" text={item.name} />
-									<ItemContainer>
-										<ListName to={`/analytics/${item.id}`}>
-											<HighlightText text={item.name} query={debouncedQuery}>{item.name}</HighlightText>
-										</ListName>
-										<ListContainer>
-											<img src={users} alt="users icon" />
-											<ListQuantity>{item.subscribersCount}</ListQuantity>
-										</ListContainer>
-									</ItemContainer>
-									<GoOver to={`/analytics/${item.id}`}>Перейти</GoOver>
-								</ListItem>
-							))}
-						</YourChannelsList>
-					) : (
-						<>
-							<YourChannelsButton
-								disabled={atStart}
-								$disabled={atStart}
-								className="YourChannelsButtonPrev"
-							>
-								<ArrowIcon color="#D6DCEC" />
-							</YourChannelsButton>
-							<YourChannelsTape
-								spaceBetween={8}
-								slidesPerView="auto"
-								allowTouchMove={true}
-								modules={[Navigation]}
-								navigation={{
-									nextEl: ".YourChannelsButtonNext",
-									prevEl: ".YourChannelsButtonPrev",
-								}}
-								onReachBeginning={() => setAtStart(true)}
-								onReachEnd={() => setAtEnd(true)}
-								onFromEdge={() => {
-									setAtStart(false);
-									setAtEnd(false);
-								}}
-								onSlideChange={(swiper) => {
-									setAtStart(swiper.isBeginning);
-									setAtEnd(swiper.isEnd);
-								}}
-							>
-								{filteredChannels.map((item) => (
-									<TapeItem>
+				filteredChannels?.length === 0 ? (
+					<EmptyContainer>
+						<Empty icon="📢">Нет каналов</Empty>
+					</EmptyContainer>
+				) : (
+					<YourChannelsSwiper $padding={viewMode == 'List'}>
+						{viewMode === 'List' ? (
+							<YourChannelsList>
+								{filteredChannels?.map((item) => (
+									<ListItem>
 										<СhannelPlug width="48px" height="48px" text={item.name} />
-										<TapeName to={slugchange(item.name)}>
-											<HighlightText text={item.name} query={debouncedQuery}>{item.name}</HighlightText>
-										</TapeName>
-										<TapeContainer>
-											<img src={users} alt="users icon" />
-											<TapeQuantity>{item.subscribersCount}</TapeQuantity>
-
-										</TapeContainer>
-									</TapeItem>
+										<ItemContainer>
+											<ListName to={`/analytics/${item.id}`}>
+												<HighlightText text={item.name} query={debouncedQuery}>{item.name}</HighlightText>
+											</ListName>
+											<ListContainer>
+												<img src={users} alt="users icon" />
+												<ListQuantity>{item.subscribersCount}</ListQuantity>
+											</ListContainer>
+										</ItemContainer>
+										<GoOver to={`/analytics/${item.id}`}>Перейти</GoOver>
+									</ListItem>
 								))}
-							</YourChannelsTape>
-							<YourChannelsButton
-								className="YourChannelsButtonNext"
-								disabled={atEnd}
-								$disabled={atEnd}
-							>
-								<ArrowIcon color="#D6DCEC" />
-							</YourChannelsButton>
-						</>
-					)}
-				</YourChannelsSwiper>
+							</YourChannelsList>
+						) : (
+							<>
+								<YourChannelsButton
+									disabled={atStart}
+									$disabled={atStart}
+									className="YourChannelsButtonPrev"
+								>
+									<ArrowIcon color="#D6DCEC" />
+								</YourChannelsButton>
+								<YourChannelsTape
+									spaceBetween={8}
+									slidesPerView="auto"
+									allowTouchMove={true}
+									modules={[Navigation]}
+									navigation={{
+										nextEl: ".YourChannelsButtonNext",
+										prevEl: ".YourChannelsButtonPrev",
+									}}
+									onReachBeginning={() => setAtStart(true)}
+									onReachEnd={() => setAtEnd(true)}
+									onFromEdge={() => {
+										setAtStart(false);
+										setAtEnd(false);
+									}}
+									onSlideChange={(swiper) => {
+										setAtStart(swiper.isBeginning);
+										setAtEnd(swiper.isEnd);
+									}}
+								>
+									{filteredChannels.map((item) => (
+										<TapeItem>
+											<СhannelPlug width="48px" height="48px" text={item.name} />
+											<TapeName to={slugchange(item.name)}>
+												<HighlightText text={item.name} query={debouncedQuery}>{item.name}</HighlightText>
+											</TapeName>
+											<TapeContainer>
+												<img src={users} alt="users icon" />
+												<TapeQuantity>{item.subscribersCount}</TapeQuantity>
+
+											</TapeContainer>
+										</TapeItem>
+									))}
+								</YourChannelsTape>
+								<YourChannelsButton
+									className="YourChannelsButtonNext"
+									disabled={atEnd}
+									$disabled={atEnd}
+								>
+									<ArrowIcon color="#D6DCEC" />
+								</YourChannelsButton>
+							</>
+						)}
+					</YourChannelsSwiper>
+				)
 			)}
 		</>
 	)
@@ -123,7 +129,7 @@ const YourChannelsSwiper = styled.div`
     padding: 0 32px 
 	}	
 	@media(max-width: 1400px) { 
-    padding: ${({$padding}) => $padding || 0};
+    padding: ${({ $padding }) => $padding || 0};
 	}	
 	@media(max-width: 768px) { 
     margin-bottom: 90px;

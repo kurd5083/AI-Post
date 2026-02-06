@@ -18,7 +18,7 @@ const ChartHead = ({ content }) => {
     dynamics_posts: "adReachFilter",
     publications_analytics: "postsByPeriodFilter",
     average_advertising: "adReachFilter",
-    average_coverage: "averageCoverageFilter",
+    average_coverage: "averageCoverageAvgFilter",
   };
 
   const setFilterSelectorMap = {
@@ -27,12 +27,11 @@ const ChartHead = ({ content }) => {
     dynamics_posts: "setAdReachFilter",
     publications_analytics: "setPostsByPeriodFilter",
     average_advertising: "setAdReachFilter",
-    average_coverage: "setAverageCoverageFilter",
+    average_coverage: "setAverageCoverageAvgFilter",
   };
 
   const filterKey = filterSelectorMap[content] || "dayFilter";
   const setFilterKey = setFilterSelectorMap[content] || "setDayFilter";
-
   const filter = useAnalyticsStore(state => state[filterKey]);
   const setFilter = useAnalyticsStore(state => state[setFilterKey]);
 

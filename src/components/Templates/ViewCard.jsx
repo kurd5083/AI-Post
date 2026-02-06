@@ -4,7 +4,7 @@ import copy from "@/assets/copy.svg";
 import SpeakerIcon from "@/icons/SpeakerIcon";
 import star from "@/assets/templates/star.svg";
 import BtnBase from "@/shared/BtnBase";
-import useResolution from "@/lib/useResolution";
+import useResolution from "@/hooks/useResolution";
 import EditIcon from "@/icons/EditIcon";
 import DelIcon from "@/icons/DelIcon";
 import { useDeletePostTemplate } from "@/lib/template/useDeletePostTemplate";

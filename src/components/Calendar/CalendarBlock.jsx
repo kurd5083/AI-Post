@@ -124,7 +124,6 @@ const CalendarBlock = ({postsMonth}) => {
 					))}
 				</WeekRow>
 				<Grid>
-					{console.log(days)}
 					{days.map((item, idx) =>
 						<DayCard
 							key={idx}

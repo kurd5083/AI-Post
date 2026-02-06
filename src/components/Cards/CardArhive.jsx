@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { useLightboxStore } from "@/store/lightboxStore";
 import { usePopupStore } from "@/store/popupStore";
 
-import normalizeUrl from "@/lib/normalizeUrl";
+import normalizeUrl from "@/hooks/normalizeUrl";
 import { useDeletePost } from "@/lib/posts/useDeletePost";
 import { useUnarchivePost } from "@/lib/posts/useUnarchivePost";
 

@@ -12,7 +12,7 @@ import ModernLoading from "@/components/ModernLoading";
 import useFadeOnScroll from "@/lib/useFadeOnScroll";
 import { useUserChannels } from "@/lib/channels/useUserChannels";
 import { useSendPostToChannel } from "@/lib/posts/useSendPostToChannel";
-import normalizeUrl from "@/lib/normalizeUrl";
+import normalizeUrl from "@/hooks/normalizeUrl";
 
 import { useCalendarStore } from "@/store/calendarStore";
 import { useNotificationStore } from "@/store/notificationStore";
@@ -70,10 +70,12 @@ const ThisDay = ({ posts, eventsPending }) => {
     month: "long",
   });
 
-  const filteredPosts =
-    !selectedChannel || selectedChannel.value === 'all'
-      ? posts
-      : posts?.filter(post => post.channelId === selectedChannel.value);
+  const filteredPosts = 
+    (!selectedChannel || selectedChannel.value === 'all'
+      ? posts ?? []
+      : (posts ?? []).filter(post => post.channelId === selectedChannel.value)
+    ).sort((a, b) => b.postId - a.postId);
+
 
   const formatUTCTime = (utcString) => {
     if (!utcString) return "";
@@ -154,7 +156,6 @@ const ThisDay = ({ posts, eventsPending }) => {
           <Grid $fadeVisible={fadeVisible} ref={ref}>
             {filteredPosts.map((item) => (
               <Card key={item.id}>
-                {console.log(item.post?.images, 'item.post?.images')}
                 <CardHeader>
                   <CardAuthor>
                     <СhannelPlug width="32px" height="32px" text={item.channel.name}/>
@@ -187,10 +188,12 @@ const ThisDay = ({ posts, eventsPending }) => {
                     }
                   />
                 )}
-
-                <CardTitle>{item.title}</CardTitle>
-                <CardSubtitle>{item?.post?.summary}</CardSubtitle>
-
+                <CardTitle
+                  dangerouslySetInnerHTML={{ __html: item.title }}
+                />
+                <CardSubtitle
+                  dangerouslySetInnerHTML={{ __html: item?.post?.summary }}
+                />
                 <CardFooter>
                   <CardTime>{formatUTCTime(item.scheduledAt)}</CardTime>
                   {item.status === "COMPLETED" ? (

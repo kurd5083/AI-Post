@@ -10,18 +10,15 @@ import ChartHead from "@/components/Popup/Analytics/ChartHead";
 import { useAnalyticsStore } from "@/store/useAnalyticsStore";
 
 const SubscriptionsDayPopup = () => {
-  const { dayPoints, dayLabels, dayFilter, subscriberLabels } = useAnalyticsStore();
-  const selectedFilter = dayFilter;
+  const { subscriberDayPoints, subscriberDayLabels } = useAnalyticsStore();
 
-  const points = useMemo(() => dayPoints.map(p => (Number(p) || 0) * (Number(selectedFilter) || 1)), [dayPoints, selectedFilter]);
-  const labels = useMemo(() => dayLabels.map(l => l.short), [dayLabels]);
-  const tooltipLabels = useMemo(() => dayLabels.map(l => l.medium), [dayLabels]);
-  const hoverLabels = useMemo(() => dayLabels.map(l => l.full), [dayLabels]);
+  const points = useMemo(() => subscriberDayPoints.map(p => (Number(p) || 0)), [subscriberDayPoints]);
+  const labels = useMemo(() => subscriberDayLabels.map(l => l.short), [subscriberDayLabels]);
+  const tooltipLabels = useMemo(() => subscriberDayLabels.map(l => l.medium), [subscriberDayLabels]);
+  const hoverLabels = useMemo(() => subscriberDayLabels.map(l => l.full), [subscriberDayLabels]);
 
   return (
     <Container>
-      <ChartHead content="subscriptions_day"/>
-
       <ChartContainer>
         <LineChart
           points={points}
@@ -30,27 +27,14 @@ const SubscriptionsDayPopup = () => {
           hoverLabels={hoverLabels}
           width={700}
           height={300}
-          type="subscriptionsDay"
-          filter={selectedFilter}
+          type="subscriptions_day"
           showGrid={true}
         />
       </ChartContainer>
 
       <TableHead>
         <TableTitle>Таблица</TableTitle>
-        <HeadActions>
-          <CustomSelect
-            placeholder="Уточнить"
-            options={[
-              { value: "", label: "За сутки" },
-              { value: "7", label: "За 7 дней" },
-              { value: "30", label: "За 30 дней" },
-            ]}
-            width="165px"
-            fs="14px"
-          />
-          <BtnBase $padding="16px 24px">Выгрузить в Excel</BtnBase>
-        </HeadActions>
+        <BtnBase $padding="16px 24px">Выгрузить в Excel</BtnBase>
       </TableHead>
 
       <TableWrapper>
@@ -70,7 +54,7 @@ const SubscriptionsDayPopup = () => {
             </tr>
           </thead>
           <tbody>
-            {subscriberLabels.map((sub, index) => {
+            {subscriberDayLabels.map((sub, index) => {
               const delta = sub.delta ?? 0;
               const joined = sub.joined ?? 0;
               const left = sub.left ?? 0;
@@ -103,7 +87,7 @@ const TableHead = styled.div`
   justify-content: space-between;
   gap: 20px;
   padding: 0 56px;
-  margin-top: 40px;
+  margin-top: 70px;
 
   @media(max-width: 1600px) { 
     padding: 0 32px; 
@@ -117,7 +101,7 @@ const ChartContainer = styled.div`
 	align-items: end;
 	justify-items: start;
 	grid-template-columns: 30px 1fr;
-  grid-template-rows: 300px 20px;
+  grid-template-rows: 300px 30px;
   padding: 0 56px;
   margin-top: 40px;
 
@@ -133,11 +117,6 @@ const TableTitle = styled.h3`
   font-size: 24px;
   font-weight: 700;
 `;
-const HeadActions = styled.div`
-  display: flex;
-  gap: 20px;
-`;
-
 const TableWrapper = styled.div`
   box-sizing: border-box;
   display: flex;

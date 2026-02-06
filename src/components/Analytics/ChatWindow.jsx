@@ -3,7 +3,7 @@ import styled from "styled-components";
 const ChatWindow = ({ hoverData, height, width = 400 }) => {
   if (!hoverData) return null;
 
-  let tooltipOffsetX = -130; 
+  let tooltipOffsetX = -120; 
   if (hoverData.x < 120) tooltipOffsetX = 10;
   else if (hoverData.x > width - 120) tooltipOffsetX = -140;
 
@@ -25,7 +25,7 @@ const ChatWindow = ({ hoverData, height, width = 400 }) => {
       <ChartTooltip
         style={{
           left: hoverData.x + tooltipOffsetX,
-          top: hoverData.y - 30,
+          top: hoverData.y - 70,
         }}
       >
         <ChartDate>{hoverData.date}</ChartDate>
@@ -59,8 +59,9 @@ const HoverLine = styled.div`
 `;
 
 const ChartTooltip = styled.div`
+  box-sizing: border-box;
   position: absolute;
-  background: #6A708029;
+  background: #4165c052;
   backdrop-filter: blur(24px);
   border-radius: 12px;
   padding: 10px 14px;
@@ -68,21 +69,22 @@ const ChartTooltip = styled.div`
   flex-direction: column;
   gap: 4px;
   pointer-events: none;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.562);
   white-space: nowrap;
-  z-index: 5;
+  z-index: 25;
+  min-width: 120px;
 
   span {
     color: #6A7080;
-    font-size: 10px;
-    font-weight: 600;
+    font-size: 11px;
+    font-weight: 700;
   }
 `;
 
 const ChartDate = styled.p`
   color: #D6DCEC;
-  font-size: 12px;
-  font-weight: 600;
+  font-size: 13px;
+  font-weight: 700;
 `;
 
 const ChartNumber = styled.p`

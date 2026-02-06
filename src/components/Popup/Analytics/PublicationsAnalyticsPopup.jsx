@@ -7,23 +7,29 @@ import ChartHead from "@/components/Popup/Analytics/ChartHead";
 import { useAnalyticsStore } from "@/store/useAnalyticsStore";
 
 const PublicationsAnalyticsPopup = () => {
-    const { postsByPeriodPoints, postsByPeriodLabels, postsByPeriodFilter } = useAnalyticsStore();
-    const data = [
-        { dates: "20 Декабря, Пн", values: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] },
-        { dates: "21 Декабря, Вт", values: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] },
-        { dates: "22 Декабря, Пн", values: [0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] },
-        { dates: "23 Декабря, Вт", values: [0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] },
-        { dates: "24 Декабря, Пн", values: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] },
-        { dates: "25 Декабря, Вт", values: [0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 0] },
-    ];
+    const { postsByPeriodPoints, postsByPeriodLabels, postsByPeriodHourly, postsByPeriodFilter } = useAnalyticsStore();
     const selectedFilter = postsByPeriodFilter;
-
     const points = useMemo(() => postsByPeriodPoints.map((p) => (Number(p) || 0) * (Number(selectedFilter) || 1)), [postsByPeriodPoints, selectedFilter]);
     const labels = useMemo(() => postsByPeriodLabels.map((l) => l.short), [postsByPeriodLabels]);
     const tooltipLabels = useMemo(() => postsByPeriodLabels.map((l) => l.medium), [postsByPeriodLabels]);
     const hoverLabels = useMemo(() => postsByPeriodLabels.map((l) => l.full), [postsByPeriodLabels]);
-    
-    const hours = Array.from({ length: 24 }, (_, i) => i + 1);
+
+    const hours = Array.from({ length: 24 }, (_, i) => i);
+    const formatRuDate = (dateStr) => {
+        const date = new Date(dateStr);
+
+        const day = date.getDate();
+
+        const month = new Intl.DateTimeFormat("ru-RU", {
+            month: "long",
+        }).format(date);
+
+        const weekday = new Intl.DateTimeFormat("ru-RU", {
+            weekday: "short",
+        }).format(date);
+
+        return `${day} ${month[0].toUpperCase() + month.slice(1)}, ${weekday}`;
+    };
     return (
         <Container>
             <ChartHead content="publications_analytics" />
@@ -53,12 +59,12 @@ const PublicationsAnalyticsPopup = () => {
                 </Hours>
             </HoursRow>
             <GridContainer>
-                {data.map((day, i) => (
+                {postsByPeriodHourly.map((day, i) => (
                     <Row key={i}>
-                        <DayLabel>{day.dates}</DayLabel>
+                        <DayLabel>{formatRuDate(day.date)}</DayLabel>
                         <Hours>
-                            {day.values.map((val, j) => (
-                                <Cell key={j} intensity={val} />
+                            {day.hourly.map((val, j) => (
+                                <Cell key={j} intensity={val.posts_count} >{val.posts_count > 0 && val.posts_count}</Cell>
                             ))}
                         </Hours>
                     </Row>
@@ -77,7 +83,7 @@ const ChartContainer = styled.div`
     align-items: end;
     justify-items: start;
     grid-template-columns: 30px 1fr;
-    grid-template-rows: 300px 20px;
+    grid-template-rows: 300px 30px;
     padding: 0 56px;
     margin-top: 40px;
 
@@ -147,21 +153,26 @@ const Row = styled.div`
   gap: 8px;
 `;
 const DayLabel = styled.div`
-  min-width: 120px;
-  font-size: 14px;
-  font-weight: 600;
-  color: #6A7080;
+    min-width: 120px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #6A7080;
 `;
 const Hours = styled.div`
-  display: grid;
-  grid-template-columns: repeat(24, 24px);
-  gap: 4px;
+    display: grid;
+    grid-template-columns: repeat(24, 24px);
+    gap: 4px;
 `;
 const Cell = styled.div`
-  width: 24px;
-  height: 24px;
-  border-radius: 4px;
-  background-color: ${({ intensity }) =>  intensity === 0 ? "#424E70" : `#336CFF`};
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    border-radius: 4px;
+    background-color: ${({ intensity }) => intensity === 0 ? "#424E70" : `#336CFF`};
+    font-weight: 700;
+    font-size: 16px;
 `;
 
 export default PublicationsAnalyticsPopup;

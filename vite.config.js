@@ -17,6 +17,7 @@ export default defineConfig({
       '@/pages': path.resolve(__dirname, 'src/pages'),
       '@/shared': path.resolve(__dirname, 'src/shared'),
       '@/lib': path.resolve(__dirname, 'src/lib'),
+      '@/hooks': path.resolve(__dirname, 'src/hooks'),
       '@/icons': path.resolve(__dirname, 'src/icons'),
       '@/api': path.resolve(__dirname, 'src/api'),
     },

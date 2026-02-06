@@ -31,15 +31,12 @@ const formatPostDate = (timestamp) => {
 };
 
 const PreviewTab = ({ channel_id, id, channelName }) => {
-
 	const [viewMode, setViewMode] = useState("List");
-	const { postsLastDay, postsLastDayPending } = useGetPostsLastDay(channel_id);
-	
+	const { postsLastDay, postsLastDayPending } = useGetPostsLastDay({channel_id});
 	const { mentions, mentionsPending } = useMentions({
 		channelId: id,
 		limit: 8,
 	});
-
 	const handleChange = (newValue) => {
 		if (!newValue) return;
 		setViewMode(newValue);
@@ -90,17 +87,17 @@ const PreviewTab = ({ channel_id, id, channelName }) => {
 								viewMode === 'List' ? (
 									<MentionCard key={m.id}>
 										<MentionsCardChannelInfo>
-											<ChannelAva src={m.postDetails.image} alt="" />
+											<ChannelAva src={m.postDetails?.image} alt="" />
 											<ChannelInfoContainer>
-												<ChannelName>{m.postDetails.channelTitle}</ChannelName>
+												<ChannelName>{m.postDetails?.channelTitle}</ChannelName>
 												<CardDetail>
 													<MentionsCardParams>
 														<img src={users} alt="users icon" />
-														{m.postDetails.audience}
+														{m.postDetails?.audience}
 													</MentionsCardParams>
 													<MentionsCardParams>
 														<EyeIcon color="#6A7080" hoverColor="#6A7080" width={17} height={12} cursor="default" />
-														{m.postDetails.views}
+														{m.postDetails?.views}
 													</MentionsCardParams>
 												</CardDetail>
 											</ChannelInfoContainer>
@@ -109,20 +106,20 @@ const PreviewTab = ({ channel_id, id, channelName }) => {
 											<MentionsCardMentionFrom>Упомянул канал</MentionsCardMentionFrom>
 											<MentionsCardTimestamp>
 												<TimeIcon color="#6A7080" />
-												{formatPostDate(m.postDetails.date)}
+												{formatPostDate(m.postDetails?.date)}
 											</MentionsCardTimestamp>
 										</MentionsCardMeta>
 									</MentionCard>
 								) : (
 									<PostsCard key={m.id}>
 										<PostHead>
-											<PostChannelAva src={m.postDetails.image} />
-											<PostChannelName>{m.postDetails.channelTitle}</PostChannelName>
-											<PostTime><TimeIcon color="#6A7080" />{formatPostDate(m.postDetails.date)}</PostTime>
+											<PostChannelAva src={m.postDetails?.image} />
+											<PostChannelName>{m.postDetails?.channelTitle}</PostChannelName>
+											<PostTime><TimeIcon color="#6A7080" />{formatPostDate(m.postDetails?.date)}</PostTime>
 										</PostHead>
-										<PostText dangerouslySetInnerHTML={{ __html: m.postDetails.text }} />
+										<PostText dangerouslySetInnerHTML={{ __html: m.postDetails?.text }} />
 										<PostFooter>
-											<PostFooterParams><EyeIcon color="#336CFF" hoverColor="#336CFF" width={20} height={20} cursor="default" />{m.postDetails.views}</PostFooterParams>
+											<PostFooterParams><EyeIcon color="#336CFF" hoverColor="#336CFF" width={20} height={20} cursor="default" />{m.postDetails?.views}</PostFooterParams>
 											<MentionsCardMentionFrom>Упомянул канал</MentionsCardMentionFrom>
 										</PostFooter>
 									</PostsCard>

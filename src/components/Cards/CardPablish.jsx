@@ -5,7 +5,7 @@ import { usePostsStore } from "@/store/postsStore";
 import { usePopupStore } from "@/store/popupStore";
 import { useNotificationStore } from "@/store/notificationStore";
 
-import normalizeUrl from "@/lib/normalizeUrl";
+import normalizeUrl from "@/hooks/normalizeUrl";
 import { useSendPostToChannel } from "@/lib/posts/useSendPostToChannel";
 import { useArchivePost } from "@/lib/posts/useArchivePost";
 

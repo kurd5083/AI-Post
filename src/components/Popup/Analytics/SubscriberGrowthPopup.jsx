@@ -34,7 +34,7 @@ const SubscriberGrowthPopup = () => {
           hoverLabels={hoverLabels}
           width={700}
           height={300}
-          type="subscriberGrowth"
+          type="subscriber_growth"
           filter={selectedFilter}
           showGrid={true}
         />
@@ -42,21 +42,8 @@ const SubscriberGrowthPopup = () => {
 
       <TableHead>
         <TableTitle>Таблица</TableTitle>
-        <HeadActions>
-          <CustomSelect
-            placeholder="Уточнить"
-            options={[
-              { value: "", label: "За сутки" },
-              { value: "7", label: "За 7 дней" },
-              { value: "30", label: "За 30 дней" },
-            ]}
-            width="165px"
-            fs="14px"
-          />
-          <BtnBase $padding="16px 24px">Выгрузить в Excel</BtnBase>
-        </HeadActions>
+        <BtnBase $padding="16px 24px">Выгрузить в Excel</BtnBase>
       </TableHead>
-
       <TableWrapper>
         <Table>
           <colgroup>
@@ -107,7 +94,7 @@ const TableHead = styled.div`
   justify-content: space-between;
   gap: 20px;
   padding: 0 56px;
-  margin-top: 40px;
+  margin-top: 70px;
 
   @media(max-width: 1600px) { 
     padding: 0 32px; 
@@ -121,7 +108,7 @@ const ChartContainer = styled.div`
 	align-items: end;
 	justify-items: start;
 	grid-template-columns: 30px 1fr;
-  grid-template-rows: 300px 20px;
+  grid-template-rows: 300px 30px;
   padding: 0 56px;
   margin-top: 40px;
 
@@ -137,11 +124,6 @@ const TableTitle = styled.h3`
   font-size: 24px;
   font-weight: 700;
 `;
-const HeadActions = styled.div`
-  display: flex;
-  gap: 20px;
-`;
-
 const TableWrapper = styled.div`
   box-sizing: border-box;
   display: flex;

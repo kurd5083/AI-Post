@@ -45,7 +45,7 @@ const ChartContainer = styled.div`
 	align-items: end;
 	justify-items: start;
 	grid-template-columns: 30px 1fr;
-    grid-template-rows: 300px 20px;
+    grid-template-rows: 300px 30px;
     padding: 0 56px;
     margin-top: 40px;
 

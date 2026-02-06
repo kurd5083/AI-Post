@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import normalizeUrl from "@/lib/normalizeUrl";
+import normalizeUrl from "@/hooks/normalizeUrl";
 
 export const useLightboxStore = create((set) => ({
   isOpen: false,

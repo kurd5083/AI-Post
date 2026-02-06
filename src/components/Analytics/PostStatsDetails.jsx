@@ -1,12 +1,11 @@
 import { useState, useEffect } from "react";
 import styled from "styled-components";
 
-const PostStatsDetails = ({ postsByPeriod, selectedPostData, subscribersDaily, adReachPeriod, analyticsReach }) => {
+const PostStatsDetails = ({ postsByPeriod, selectedPostData, subscribersDaily, subscribersDay, adReachPeriod, analyticsReach }) => {
   const [counts, setCounts] = useState({ yesterday: 0, week: 0, month: 0 });
 
   useEffect(() => {
     const today = new Date();
-    console.log(today)
     const formatDate = (date) => date.toISOString().split("T")[0];
 
     const todayStr = formatDate(today);
@@ -20,6 +19,7 @@ const PostStatsDetails = ({ postsByPeriod, selectedPostData, subscribersDaily, a
       });
       return;
     }
+
     if (subscribersDaily?.daily_data) {
       const data = subscribersDaily.daily_data;
 
@@ -60,10 +60,10 @@ const PostStatsDetails = ({ postsByPeriod, selectedPostData, subscribersDaily, a
     return (
       <>
         <StatsCardDetailItem>
-          {selectedPostData.total_er_percent}% <span>ER</span>
+          {selectedPostData.total_er_percent || 0}% <span>ER</span>
         </StatsCardDetailItem>
         <StatsCardDetailItem>
-          {selectedPostData.total_forwards} <span>Репосты</span>
+          {selectedPostData.reposts || 0} <span>Репосты</span>
         </StatsCardDetailItem>
         <StatsCardDetailItem>
           <span>
@@ -93,6 +93,21 @@ const PostStatsDetails = ({ postsByPeriod, selectedPostData, subscribersDaily, a
       </>
     );
   }
+  if (subscribersDay) {
+
+    return (
+      <>
+        <StatsCardDetailItem $value={subscribersDay.by_day.joined}>
+          {subscribersDay.by_day.joined} <span>Подписки</span>
+        </StatsCardDetailItem>
+
+        <StatsCardDetailItem $value={-subscribersDay.by_day.left}>
+          {subscribersDay.by_day.left} <span>Отписки</span>
+        </StatsCardDetailItem>
+      </>
+    );
+  }
+
   return (
     <>
       <StatsCardDetailItem>

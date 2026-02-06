@@ -7,29 +7,26 @@ import LineChart from "@/components/Analytics/LineChart";
 import { useAnalyticsStore } from "@/store/useAnalyticsStore";
 
 const AverageCoveragePopup = () => {
-    const { averageCoveragePoints, averageCoverageLabels, averageCoverageFilter } = useAnalyticsStore();
+    const { averageCoverageAvgPoints, averageCoverageErPoints, averageCoverageErr24Points, averageCoverageErrPoints, averageCoverageAvgLabels,
+        averageCoverageAvgFilter, averageCoverageErFilter, averageCoverageErrFilter, averageCoverageErr24Filter  } = useAnalyticsStore();
 
-    const points = useMemo(() => {
-        const numericFilter = Number(averageCoverageFilter) || 1;
-        return averageCoveragePoints.map(p => (Number(p) || 0) * numericFilter);
-    }, [averageCoveragePoints, averageCoverageFilter]);
+    const labels = useMemo(() => averageCoverageAvgLabels.map(l => l.short), [averageCoverageAvgLabels]);
+    const tooltipLabels = useMemo(() => averageCoverageAvgLabels.map(l => l.medium), [averageCoverageAvgLabels]);
+    const hoverLabels = useMemo(() => averageCoverageAvgLabels.map(l => l.full), [averageCoverageAvgLabels]);
 
-    const labels = useMemo(() => averageCoverageLabels.map(l => l.short), [averageCoverageLabels]);
-    const tooltipLabels = useMemo(() => averageCoverageLabels.map(l => l.medium), [averageCoverageLabels]);
-    const hoverLabels = useMemo(() => averageCoverageLabels.map(l => l.full), [averageCoverageLabels]);
     return (
         <Container>
             <ChartHead content="average_coverage" />
             <ChartContainer>
                 <LineChart
-                    points={points}
+                    points={averageCoverageAvgPoints}
                     labels={labels}
                     tooltipLabels={tooltipLabels}
                     hoverLabels={hoverLabels}
                     width={700}
                     height={300}
                     type="averageCoverage"
-                    filter={averageCoverageFilter}
+                    filter={averageCoverageAvgFilter}
                     showGrid={true}
                 />
             </ChartContainer>
@@ -37,13 +34,12 @@ const AverageCoveragePopup = () => {
             <ChartTitle>Вовлеченность аудитории <span>(ER)</span></ChartTitle>
             <ChartContainer>
                 <LineChart
-                    points={points}
+                    points={averageCoverageErPoints}
                     labels={labels}
                     tooltipLabels={tooltipLabels}
                     width={700}
                     height={300}
-                    type="averageCoverage"
-                    filter={averageCoverageFilter}
+                    type="er"
                     showGrid={true}
                 />
             </ChartContainer>
@@ -51,13 +47,12 @@ const AverageCoveragePopup = () => {
             <ChartTitle>Вовлеченность аудитории по просмотрам <span>(ERR)</span></ChartTitle>
             <ChartContainer>
                 <LineChart
-                    points={points}
+                    points={averageCoverageErrPoints}
                     labels={labels}
                     tooltipLabels={tooltipLabels}
                     width={700}
                     height={300}
-                    type="averageCoverage"
-                    filter={averageCoverageFilter}
+                    type="err"
                     showGrid={true}
                 />
             </ChartContainer>
@@ -65,13 +60,12 @@ const AverageCoveragePopup = () => {
             <ChartTitle>Рекламная вовлеченность <span>(ERR24)</span></ChartTitle>
             <ChartContainer>
                 <LineChart
-                    points={points}
+                    points={averageCoverageErr24Points}
                     labels={labels}
                     tooltipLabels={tooltipLabels}
                     width={700}
                     height={300}
-                    type="averageCoverage"
-                    filter={averageCoverageFilter}
+                    type="err24"
                     showGrid={true}
                 />
             </ChartContainer>
@@ -84,7 +78,7 @@ const Container = styled.div`
     padding-bottom: 30px;
 `;
 const ChartTitle = styled.h2`
-	margin: 64px 0 32px;
+	margin: 84px 0 32px;
   	font-size: 32px;
 	line-height: 32px;
   	font-weight: 700;
@@ -102,7 +96,7 @@ const ChartContainer = styled.div`
 	align-items: end;
 	justify-items: start;
 	grid-template-columns: 30px 1fr;
-    grid-template-rows: 300px 20px;
+    grid-template-rows: 300px 30px;
 	padding: 0 56px;
 	margin-top: 40px;
 

@@ -353,7 +353,7 @@ const ActionsPost = ({ post, textRefs, caretRanges, channelId, telegramId }) => 
 	};
 
 	const formatMonospace = (postId) => wrapSelectionToggle(postId, "code", "styled-code");
-	const formatQuote = (postId) => wrapSelectionToggle(postId, "blockquote", "styled-quote");
+	const formatQuote = (postId) => wrapSelectionToggle(postId, "pre", "styled-quote");
 	const formatHidden = (postId) => wrapSelectionToggle(postId, "tg-spoiler", "styled-spoiler");
 
 	const formatText = command => {
