@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-const CrossedSIcon = ({ color = "#6A7080", hoverColor = "#FFFFFF", width = 16, height = 22, onClick }) => {
+const CrossedIcon = ({ color = "#6A7080", hoverColor = "#FFFFFF", width = 16, height = 22, onClick }) => {
   const [isHovered, setIsHovered] = useState(false);
   const currentColor = isHovered ? hoverColor : color;
 
@@ -32,4 +32,4 @@ const CrossedSIcon = ({ color = "#6A7080", hoverColor = "#FFFFFF", width = 16, h
   );
 };
 
-export default CrossedSIcon;
+export default CrossedIcon;
