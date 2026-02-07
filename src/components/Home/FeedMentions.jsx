@@ -108,9 +108,11 @@ const FeedMentions = () => {
           }}
         >
           {mentionItems.map((item, index) => (
-            <FeedMentionsItem key={item.mentionId || index}>
+            item?.postDetails && (
+              <FeedMentionsItem key={item.mentionId || index}>
               <MentionsCard item={item} />
             </FeedMentionsItem>
+            )
           ))}
         </FeedMentionsList>
       )}

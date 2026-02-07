@@ -4,8 +4,8 @@ import TimeIcon from "@/icons/TimeIcon";
 import timeAgo from "@/lib/timeAgo";
 
 const MentionsCard = ({ item, bg }) => {
-  const post = item.postDetails;
-
+  
+  const post = item?.postDetails;
   return (
 		<MentionsCardItem $bg={bg}>
 			<MentionsCardItemHead>
