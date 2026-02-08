@@ -46,14 +46,15 @@ const PostStatsDetails = ({ postsByPeriod, selectedPostData, subscribersDaily, s
       setCounts({ yesterday, week, month });
     }
   }, [postsByPeriod, selectedPostData, subscribersDaily, adReachPeriod, analyticsReach]);
+
   if (selectedPostData) {
     return (
       <>
         <StatsCardDetailItem>
-          {selectedPostData.current_er_percent || 0}% <span>ER</span>
+          {selectedPostData.total_er_percent || 0}% <span>ER</span>
         </StatsCardDetailItem>
         <StatsCardDetailItem>
-          {selectedPostData.current_forwards || 0} <span>Репосты</span>
+          {selectedPostData.reposts || 0} <span>Репосты</span>
         </StatsCardDetailItem>
         <StatsCardDetailItem>
           <span>

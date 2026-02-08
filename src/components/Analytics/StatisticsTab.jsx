@@ -475,7 +475,7 @@ const SelectContainer = styled.div`
 `;
 
 const ItemLeft = styled.div`
-  max-width: 150px;
+  max-width: 180px;
   width: 100%;
   height: 100%;
   display: flex;
