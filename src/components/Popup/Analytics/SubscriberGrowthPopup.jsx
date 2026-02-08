@@ -13,13 +13,6 @@ const SubscriberGrowthPopup = () => {
   const { subscriberPoints, subscriberLabels, subscriberFilter } = useAnalyticsStore();
   const selectedFilter = subscriberFilter;
 
-  const points = useMemo(() => {
-    const numericFilter = Number(selectedFilter) || 1;
-    return subscriberPoints.map(p => (Number(p) || 0) * numericFilter);
-  }, [subscriberPoints, selectedFilter]);
-
-  const labels = useMemo(() => subscriberLabels.map(l => l.short), [subscriberLabels]);
-  const tooltipLabels = useMemo(() => subscriberLabels.map(l => l.medium), [subscriberLabels]);
   const hoverLabels = useMemo(() => subscriberLabels.map(l => l.full), [subscriberLabels]);
 
   return (
@@ -28,9 +21,8 @@ const SubscriberGrowthPopup = () => {
 
       <ChartContainer>
         <LineChart
-          points={points}
-          labels={labels}
-          tooltipLabels={tooltipLabels}
+          points={subscriberPoints}
+          labels={subscriberLabels}
           hoverLabels={hoverLabels}
           width={700}
           height={300}
@@ -107,8 +99,9 @@ const ChartContainer = styled.div`
   display: grid;
 	align-items: end;
 	justify-items: start;
-	grid-template-columns: 30px 1fr;
+	grid-template-columns: max-content 1fr;
   grid-template-rows: 300px 30px;
+  gap: 0 10px;
   padding: 0 56px;
   margin-top: 40px;
 

@@ -11,11 +11,12 @@ const PostStatsDetails = ({ postsByPeriod, selectedPostData, subscribersDaily, s
     const todayStr = formatDate(today);
     const weekAgoStr = formatDate(new Date(today.getTime() - 7 * 86400000));
     const monthAgoStr = formatDate(new Date(today.getTime() - 30 * 86400000));
+    console.log(adReachPeriod)
     if (adReachPeriod) {
       setCounts({
-        yesterday: adReachPeriod.by_day?.total_ad_reach || 0,
-        week: adReachPeriod.by_week?.total_ad_reach || 0,
-        month: adReachPeriod.by_month?.total_ad_reach || 0,
+        yesterday: adReachPeriod.by_day?.avg_ad_reach || 0,
+        week: adReachPeriod.by_week?.avg_ad_reach || 0,
+        month: adReachPeriod.by_month?.avg_ad_reach || 0,
       });
       return;
     }
@@ -39,31 +40,20 @@ const PostStatsDetails = ({ postsByPeriod, selectedPostData, subscribersDaily, s
       return;
     }
     if (postsByPeriod) {
-
-      const yesterday = postsByPeriod
-        .filter(p => p.date === todayStr)
-        .reduce((sum, p) => sum + (p.posts_count || 0), 0);
-
-      const week = postsByPeriod
-        .filter(p => p.date >= weekAgoStr)
-        .reduce((sum, p) => sum + (p.posts_count || 0), 0);
-
-      const month = postsByPeriod
-        .filter(p => p.date >= monthAgoStr)
-        .reduce((sum, p) => sum + (p.posts_count || 0), 0);
-
+      const yesterday = postsByPeriod.posts_last_day
+      const week = postsByPeriod.posts_last_week
+      const month = postsByPeriod.posts_last_month
       setCounts({ yesterday, week, month });
     }
   }, [postsByPeriod, selectedPostData, subscribersDaily, adReachPeriod, analyticsReach]);
-
   if (selectedPostData) {
     return (
       <>
         <StatsCardDetailItem>
-          {selectedPostData.total_er_percent || 0}% <span>ER</span>
+          {selectedPostData.current_er_percent || 0}% <span>ER</span>
         </StatsCardDetailItem>
         <StatsCardDetailItem>
-          {selectedPostData.reposts || 0} <span>Репосты</span>
+          {selectedPostData.current_forwards || 0} <span>Репосты</span>
         </StatsCardDetailItem>
         <StatsCardDetailItem>
           <span>
@@ -94,15 +84,14 @@ const PostStatsDetails = ({ postsByPeriod, selectedPostData, subscribersDaily, s
     );
   }
   if (subscribersDay) {
-
     return (
       <>
-        <StatsCardDetailItem $value={subscribersDay.by_day.joined}>
-          {subscribersDay.by_day.joined} <span>Подписки</span>
+        <StatsCardDetailItem $value={subscribersDay.by_day.left}>
+          {subscribersDay.by_day.left} <span>Подписки</span>
         </StatsCardDetailItem>
 
-        <StatsCardDetailItem $value={-subscribersDay.by_day.left}>
-          {subscribersDay.by_day.left} <span>Отписки</span>
+        <StatsCardDetailItem $value={subscribersDay.by_day.delta}>
+          {subscribersDay.by_day.delta} <span>Отписки</span>
         </StatsCardDetailItem>
       </>
     );
@@ -110,13 +99,13 @@ const PostStatsDetails = ({ postsByPeriod, selectedPostData, subscribersDaily, s
 
   return (
     <>
-      <StatsCardDetailItem>
+      <StatsCardDetailItem $value={counts.yesterday}>
         {counts.yesterday} <span>за день</span>
       </StatsCardDetailItem>
-      <StatsCardDetailItem>
+      <StatsCardDetailItem $value={counts.week}>
         {counts.week} <span>за неделю</span>
       </StatsCardDetailItem>
-      <StatsCardDetailItem>
+      <StatsCardDetailItem $value={counts.month}>
         {counts.month} <span>за месяц</span>
       </StatsCardDetailItem>
     </>

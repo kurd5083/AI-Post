@@ -12,9 +12,8 @@ import СhannelPlug from '@/shared/СhannelPlug';
 import CustomSelectThree from "@/shared/CustomSelectThree";
 import Empty from '@/shared/Empty';
 
-
+import { useGetDayTracking } from "@/lib/analytics/useGetDayTracking";
 import { useMentions } from "@/lib/tgStat/useMentions";
-import { useGetPostsLastDay } from "@/lib/posts/useGetPostsLastDay";
 
 const months = [
 	"янв", "фев", "мар", "апр", "май", "июн",
@@ -32,7 +31,7 @@ const formatPostDate = (timestamp) => {
 
 const PreviewTab = ({ channel_id, id, channelName }) => {
 	const [viewMode, setViewMode] = useState("List");
-	const { postsLastDay, postsLastDayPending } = useGetPostsLastDay({channel_id});
+	const { dayTracking, dayTrackingPending } = useGetDayTracking({ channel_id });
 	const { mentions, mentionsPending } = useMentions({
 		channelId: id,
 		limit: 8,
@@ -42,11 +41,11 @@ const PreviewTab = ({ channel_id, id, channelName }) => {
 		setViewMode(newValue);
 	};
 
-  const getFirstTextBetweenStars = (text) => {
-    const match = text.match(/\*\*(.*?)\*\*/);
-    if (!match) return "";
-    return match[1];
-  };
+	const getFirstTextBetweenStars = (text) => {
+		const match = text.match(/\*\*(.*?)\*\*/);
+		if (!match) return "";
+		return match[1];
+	};
 	return (
 		<PreviewContainer>
 			<div>
@@ -133,14 +132,14 @@ const PreviewTab = ({ channel_id, id, channelName }) => {
 				<PreviewTitle>Посты канала</PreviewTitle>
 				<PreviewDescription>Лента с постами и статистикой отслеживаемого вами канала</PreviewDescription>
 				<PostsList>
-					{postsLastDayPending ? (
+					{dayTrackingPending ? (
 						<Empty icon="📝">Загрузка постов...</Empty>
 					) : (
-						!!postsLastDay.posts && postsLastDay.posts.length == 0 ? (
+						!!dayTracking.posts && dayTracking.posts.length == 0 ? (
 							<Empty icon="📝">Постов нет</Empty>
 						) : (
-							postsLastDay.posts.map(p => (
-								<PostsCard key={p.id}>
+							dayTracking.posts.map(p => (
+								<PostsCard key={p.post_id}>
 									<PostHead>
 										<СhannelPlug width="32px" height="32px" text={channelName} radius="50%" />
 										<PostChannelName>{channelName}</PostChannelName>
@@ -155,7 +154,8 @@ const PreviewTab = ({ channel_id, id, channelName }) => {
 											})}
 										</PostTime>
 									</PostHead>
-									<PostText>{getFirstTextBetweenStars(p.text)}</PostText>
+									<PostText>{p.text_preview}</PostText>
+
 									<PostFooter>
 										<PostFooterParams>
 											<EyeIcon color="#336CFF" hoverColor="#336CFF" width={20} height={20} cursor="default" /> {p.views}
@@ -176,23 +176,22 @@ const PreviewTab = ({ channel_id, id, channelName }) => {
 const PreviewContainer = styled.div`
 	display: grid;
 	grid-template-columns: 2fr 1.5fr;
-  margin-top: 40px;
-  gap: 64px;
-  padding: 0 56px;
+	margin-top: 40px;
+	gap: 64px;
+	padding: 0 56px;
 
-  @media(max-width: 1600px) { 
-    padding: 0 32px;
-    gap: 20px;
+	@media(max-width: 1600px) { 
+		padding: 0 32px;
+		gap: 20px;
 
-  }	
-  @media(max-width: 991px) { 
-		grid-template-columns: 1fr;
-  }	
-  @media(max-width: 768px) { 
-    padding: 0 24px;
-  }
+	}	
+	@media(max-width: 991px) { 
+			grid-template-columns: 1fr;
+	}	
+	@media(max-width: 768px) { 
+		padding: 0 24px;
+	}
 `;
-
 const MentionsHeader = styled.div`
 	display: flex;
 	justify-content: space-between;
@@ -207,11 +206,10 @@ const FilterBlock = styled.div`
 	display: flex;
 	align-items: center;
 	gap: 16px;
-  padding: 16px;
-  border-radius: 8px;
-  background-color: #1A1F2D;
+	padding: 16px;
+	border-radius: 8px;
+	background-color: #1A1F2D;
 `;
-
 const PreviewDescription = styled.p`
 	max-width: 370px;
 	margin-top: 6px;
@@ -244,7 +242,6 @@ const MentionCard = styled.div`
 		gap: 24px;
 	}
 `;
-
 const MentionsCardChannelInfo = styled.div`
 	display: flex;
 	gap: 24px;
@@ -267,7 +264,6 @@ const CardDetail = styled.div`
 	display: flex;
 	align-items: center;
 	gap: 24px;
-	
 `;
 const MentionsCardParams = styled.span`
 	display: flex;
@@ -347,12 +343,10 @@ const PostTime = styled.p`
 const PostText = styled.h4`
 	font-size: 20px;
 	font-weight: 700;
-	display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  padding-right: 40px;
-  font-family: "Montserrat Alternates", sans-serif;
+	padding-right: 40px;
+	font-family: "Montserrat Alternates", sans-serif;
+	white-space: pre-line;  
+
 	a, span {
 		color: #336CFF;
 	}
@@ -368,14 +362,14 @@ const PostFooterParams = styled.div`
 	font-weight: 600;
 `;
 const PostArrow = styled.button`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-sizing: border-box;
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  border: 2px solid #6A7080;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	box-sizing: border-box;
+	width: 32px;
+	height: 32px;
+	border-radius: 50%;
+	border: 2px solid #6A7080;
 `
 
 export default PreviewTab

@@ -18,7 +18,7 @@ const AnalyticsStatistics = ({ id, channelId }) => {
 
   const stat = channelStat?.response;
   const { metricsDay, metricsDayPending } = useGetMetricsDay(channelId);
-
+  console.log(metricsDay)
   return (
     metricsDayPending ? (
       <EmptyContainer>
@@ -38,7 +38,7 @@ const AnalyticsStatistics = ({ id, channelId }) => {
             </StatisticsItemImg>
             <StatisticsName>
               <StatisticsText>Подписчики</StatisticsText>
-              <StatisticsCount>{stat?.current_subscribers || 0}</StatisticsCount>
+              <StatisticsCount>{metricsDay.subscribers.subscriber_count || 0}</StatisticsCount>
             </StatisticsName>
           </StatisticsItemHead>
           <StatisticsItemContent>
@@ -47,7 +47,7 @@ const AnalyticsStatistics = ({ id, channelId }) => {
               <p>Сегодня</p>
             </ItemStat>
             <ItemStat $value={metricsDay.subscribers.growth_7d_percent}>
-              <mark>{metricsDay.subscribers.growth_7d_percent || 0}</mark>
+              <mark>{metricsDay.subscribers.growth_7d_percent || 0} %</mark>
               <p>Неделя</p>
             </ItemStat>
             <ItemStat $value={metricsDay.subscribers.growth_30d_percent}>
@@ -82,7 +82,6 @@ const AnalyticsStatistics = ({ id, channelId }) => {
             </ItemStat>
           </StatisticsItemContent>
         </StatisticsItem>
-
         <StatisticsItem>
           <StatisticsItemHead>
             <StatisticsItemImg $bgColor="#374739">
@@ -108,7 +107,6 @@ const AnalyticsStatistics = ({ id, channelId }) => {
             </ItemStat>
           </StatisticsItemContent>
         </StatisticsItem>
-
         <StatisticsItem>
           <StatisticsItemHead>
             <StatisticsItemImg $bgColor="#2B505B">
@@ -149,13 +147,13 @@ const StatisticsList = styled.ul`
   @media(max-width: 1600px) { 
     padding: 0 32px ;
 	}	
-  @media(max-width: 991px) { 
+  @media(max-width: 1200px) { 
    grid-template-columns: repeat(2, 1fr);
 	}	
   @media (max-width: 768px) {
     padding: 0 24px;
   }
-  @media (max-width: 560px) {
+  @media (max-width: 640px) {
     grid-template-columns: 1fr;
   }
 `
@@ -172,7 +170,7 @@ const StatisticsItem = styled.li`
   @media (max-width: 1600px) {
     padding: 20px 24px 24px;
   }
-  @media (max-width: 560px) {
+  @media (max-width: 640px) {
     align-items: center;
   }
 `
@@ -192,8 +190,6 @@ const StatisticsName = styled.div`
 `
 const StatisticsItemContent = styled.div`
   display: flex;
-  justify-content: space-between;
-  max-width: 200px;
   gap: 20px;
 `
 const ItemStat = styled.div`

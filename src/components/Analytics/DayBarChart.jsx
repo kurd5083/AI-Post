@@ -58,7 +58,7 @@ const DayBarChart = ({
     if (chartPoints.length < 24)
       chartPoints = [...chartPoints, ...Array(24 - chartPoints.length).fill(0)];
     else chartPoints = chartPoints.slice(0, 24);
-    chartLabels = Array.from({ length: 24 }, (_, i) => i + 1);
+    chartLabels = Array.from({ length: 24 }, (_, i) => i);
 
     if (chartHoverLabels.length < 24)
       chartHoverLabels = [...chartHoverLabels, ...Array(24 - chartHoverLabels.length).fill(null)];

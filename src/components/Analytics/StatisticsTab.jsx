@@ -37,8 +37,7 @@ const StatisticsTab = ({ id, channel_id, dateRanges }) => {
   const { openPopup } = usePopupStore();
 
   const {
-    dayPoints, dayLabels,
-    subscriberPoints, subscriberLabels, subscriberDayPoints, subscriberDayLabels,
+    dayPoints, dayLabels, subscriberPoints, subscriberLabels, subscriberDayPoints, subscriberDayLabels,
     adReachPoints, adReachLabels,
     postsByPeriodPoints, postsByPeriodLabels,
     averageCoverageAvgPoints, averageCoverageAvgLabels,
@@ -46,7 +45,7 @@ const StatisticsTab = ({ id, channel_id, dateRanges }) => {
     setSubscriberData, setSubscriberDayData, setAdReachData, setPostsByPeriodData,
     setAverageCoverageAvgData, setAverageCoverageErData, setAverageCoverageErr24Data, setAverageCoverageErrData
   } = useAnalyticsStore();
-  const { selectedPostData, setSelectedPost, postOptions  } = usePostViewsDynamics({ channel_id, dayFilter, dateRanges });
+  const { selectedPostData, setSelectedPost, postOptions } = usePostViewsDynamics({ channel_id, dayFilter, dateRanges });
 
   const today = new Date();
   const formattedToday = today.toISOString().split('T')[0];
@@ -60,8 +59,8 @@ const StatisticsTab = ({ id, channel_id, dateRanges }) => {
           date_to: dateRanges.postsByPeriodFilterRange.dateToStr
         }
         : {
-          date_from: dateRanges.adReachFilterRange.dateFromShort,
-          date_to: dateRanges.adReachFilterRange.dateToShort
+          date_from: dateRanges.postsByPeriodFilterRange.dateFromShort,
+          date_to: dateRanges.postsByPeriodFilterRange.dateToShort
         }
       )
     });
@@ -112,7 +111,7 @@ const StatisticsTab = ({ id, channel_id, dateRanges }) => {
         const dateObj = parseLocalDate(d.date);
         return {
           short: dateObj.toLocaleDateString("ru-RU", { day: "numeric" }),
-          medium: dateObj.toLocaleDateString("ru-RU", { day: "numeric", month: "short" }),
+          medium: dateObj.toLocaleDateString("ru-RU", { day: "numeric", month: "numeric" }),
           full: dateObj.toLocaleDateString("ru-RU", { day: "numeric", month: "short", year: "numeric" }),
           delta: d.delta || 0,
           joined: d.joined || 0,
@@ -128,9 +127,8 @@ const StatisticsTab = ({ id, channel_id, dateRanges }) => {
     if (!subscribersDay?.hourly?.length) return;
 
     const points = subscribersDay.hourly.map(h => h.subscriber_count || 0);
-
     const labels = subscribersDay.hourly.map(h => ({
-      short: h.time_label,
+      short: `${h.time_label}`,
       medium: `${h.time_label}`,
       full: `${h.time_label} ч.`,
       delta: h.delta || 0,
@@ -143,23 +141,23 @@ const StatisticsTab = ({ id, channel_id, dateRanges }) => {
 
   useEffect(() => {
     if (!adReachPeriod) return;
-
+    console.log(adReachPeriod) 
     let points = [];
     let labels = [];
     if (adReachFilter === "24h" && adReachPeriod.hourly?.length) {
-      points = adReachPeriod.hourly.map(h => Number(h.total_ad_reach) || 0);
+      points = adReachPeriod.hourly.map(h => Number(h.avg_ad_reach) || 0);
       labels = adReachPeriod.hourly.map(h => ({
         short: h.time_label,
         full: `${h.time_label} ч.`,
       }));
     } else if (adReachPeriod.daily?.length) {
       const numericFilter = Number(adReachFilter) || 1;
-      points = adReachPeriod.daily.map(d => (Number(d.total_ad_reach) || 0) * numericFilter);
+      points = adReachPeriod.daily.map(d => (Number(d.avg_ad_reach) || 0) * numericFilter);
       labels = adReachPeriod.daily.map(d => {
         const dateObj = parseLocalDate(d.date);
         return {
           short: dateObj.toLocaleDateString("ru-RU", { day: "numeric" }),
-          medium: dateObj.toLocaleDateString("ru-RU", { day: "numeric", month: "short" }),
+          medium: dateObj.toLocaleDateString("ru-RU", { day: "numeric", month: "numeric" }),
           full: dateObj.toLocaleDateString("ru-RU", { day: "numeric", month: "short", year: "numeric" })
         };
       });
@@ -174,33 +172,30 @@ const StatisticsTab = ({ id, channel_id, dateRanges }) => {
     let points = [];
     let labels = [];
     let hourly = [];
+
     if (postsByPeriodFilter === "24h" && postsByPeriod.data[0].hourly?.length) {
       points = postsByPeriod.data[0].hourly.map(h => h.posts_count || 0);
-      labels = postsByPeriod.data[0].hourly.map(h => ({
-        short: `${h.time_label}`,
-        medium: `${h.time_label} ч.`,
-        full: `${h.time_label} ч.`,
-      }));
+      labels = postsByPeriod.data[0].hourly.map(h => {
+        const hour = parseInt(h.time_label.split(":")[0], 10);
+          return {
+          short: `${hour}`,
+          medium: `${h.time_label}`,
+          full: `${h.time_label} ч.`,
+          }
+        });
       hourly = postsByPeriod.data;
-    }
-
-    else if (postsByPeriod.data?.length) {
-      const sorted = postsByPeriod.data
-        .slice()
-        .sort((a, b) => new Date(a.date) - new Date(b.date));
-
-      points = sorted.map(p => p.posts_count || 0);
-
-      labels = sorted.map(p => {
+    } else if (postsByPeriod.data?.length) {
+      points = postsByPeriod.data.map(p => p.posts_count || 0);
+      labels = postsByPeriod.data.map(p => {
         const dateObj = parseLocalDate(p.date);
 
         return {
           short: dateObj.toLocaleDateString("ru-RU", { day: "numeric" }),
-          medium: dateObj.toLocaleDateString("ru-RU", { day: "numeric", month: "short" }),
+          medium: dateObj.toLocaleDateString("ru-RU", { day: "numeric", month: "numeric" }),
           full: dateObj.toLocaleDateString("ru-RU", { day: "numeric", month: "short", year: "numeric" }),
-          hourly: postsByPeriod.data
         };
       });
+      hourly = postsByPeriod.data;
     }
 
     setPostsByPeriodData(points, labels, hourly);
@@ -220,7 +215,6 @@ const StatisticsTab = ({ id, channel_id, dateRanges }) => {
 
   useEffect(() => {
     if (!analyticsReach) return;
-
     const pointsAvg = [];
     const pointsEr = [];
     const pointsErr24 = [];
@@ -229,7 +223,6 @@ const StatisticsTab = ({ id, channel_id, dateRanges }) => {
 
     if (averageCoverageAvgFilter === "24h" && analyticsReach.hourly?.length) {
       analyticsReach.hourly.forEach(h => {
-        const hour = parseInt(h.time_label.split(":")[0], 10);
 
         pointsAvg.push(h.avg_reach || 0);
         pointsEr.push(h.er_percent || 0);
@@ -239,7 +232,10 @@ const StatisticsTab = ({ id, channel_id, dateRanges }) => {
         labels.push({
           short: `${h.time_label}`,
           medium: `${h.time_label} ч.`,
-          full: `${h.time_label} ч.`
+          full: `${h.time_label} ч.`,
+          er_percent: h.er_percent || 0,
+          err24_percent: h.err24_percent || 0,
+          err_percent: h.err_percent || 0,
         });
       });
     }
@@ -255,8 +251,11 @@ const StatisticsTab = ({ id, channel_id, dateRanges }) => {
 
         labels.push({
           short: dateObj.toLocaleDateString("ru-RU", { day: "numeric" }),
-          medium: dateObj.toLocaleDateString("ru-RU", { day: "numeric", month: "short" }),
-          full: dateObj.toLocaleDateString("ru-RU", { day: "numeric", month: "short", year: "numeric" })
+          medium: dateObj.toLocaleDateString("ru-RU", { day: "numeric", month: "numeric" }),
+          full: dateObj.toLocaleDateString("ru-RU", { day: "numeric", month: "short", year: "numeric" }),
+          er_percent: analyticsReach.er_percent || 0,
+          err24_percent: analyticsReach.err24_percent || 0,
+          err_percent: analyticsReach.err_percent || 0,
         });
       });
     }
@@ -300,7 +299,7 @@ const StatisticsTab = ({ id, channel_id, dateRanges }) => {
                   {selectedPostData.total_views || 0}
                 </>
               ) : item.content === "average_advertising" ? (
-                adReachPoints?.reduce((sum, val) => sum + val, 0) || 0
+                adReachPeriod?.by_day.avg_ad_reach || 0
               ) : item.content === "average_coverage" && (
                 averageCoverageAvgPoints?.[0] || 0
               )}
@@ -308,7 +307,7 @@ const StatisticsTab = ({ id, channel_id, dateRanges }) => {
             </StatsCardMainValue>
             <StatsCardDetails>
               {item.content === "publications_analytics" ? (
-                <PostStatsDetails postsByPeriod={postsByPeriod?.data} />
+                <PostStatsDetails postsByPeriod={postsByPeriod} />
               ) : item.content === "subscriber_growth" ? (
                 <PostStatsDetails subscribersDaily={subscribersDaily} />
               ) : item.content === "subscriptions_day" ? (
@@ -316,9 +315,9 @@ const StatisticsTab = ({ id, channel_id, dateRanges }) => {
               ) : item.content === "dynamics_posts" && selectedPostData ? (
                 <PostStatsDetails selectedPostData={selectedPostData} />
               ) : item.content === "average_advertising" ? (
-                <PostStatsDetails adReachPeriod={{ daily: adReachPoints }} />
+                <PostStatsDetails adReachPeriod={adReachPeriod} />
               ) : item.content === "average_coverage" && (
-                <PostStatsDetails analyticsReach={{ daily: averageCoverageAvgPoints }} />
+                <PostStatsDetails analyticsReach={analyticsReach} />
               )}
             </StatsCardDetails>
           </ItemLeft>
@@ -351,8 +350,7 @@ const StatisticsTab = ({ id, channel_id, dateRanges }) => {
             {item.content === "dynamics_posts" ? (
               <DayBarChart
                 points={dayPoints}
-                labels={dayLabels.map(l => l.short)}
-                tooltipLabels={dayLabels.map(l => l.medium)}
+                labels={dayLabels}
                 hoverLabels={dayLabels.map(l => l.full)}
                 width={400}
                 type="dynamicsPosts"
@@ -360,8 +358,7 @@ const StatisticsTab = ({ id, channel_id, dateRanges }) => {
             ) : item.content === "average_advertising" ? (
               <LineChart
                 points={adReachPoints}
-                labels={adReachLabels.map(l => l.short)}
-                tooltipLabels={adReachLabels.map(l => l.medium)}
+                labels={adReachLabels}
                 hoverLabels={adReachLabels.map(l => l.full)}
                 width={isSmall ? 700 : 400}
                 height={150}
@@ -371,8 +368,7 @@ const StatisticsTab = ({ id, channel_id, dateRanges }) => {
             ) : item.content === "publications_analytics" ? (
               <LineChart
                 points={postsByPeriodPoints}
-                labels={postsByPeriodLabels.map(l => l.short)}
-                tooltipLabels={postsByPeriodLabels.map(l => l.medium)}
+                labels={postsByPeriodLabels}
                 hoverLabels={postsByPeriodLabels.map(l => l.full)}
                 width={isSmall ? 700 : 400}
                 height={150}
@@ -382,30 +378,27 @@ const StatisticsTab = ({ id, channel_id, dateRanges }) => {
             ) : item.content === "subscriber_growth" ? (
               <LineChart
                 points={subscriberPoints}
-                labels={subscriberLabels.map(l => l.short)}
-                tooltipLabels={subscriberLabels.map(l => l.medium)}
+                labels={subscriberLabels}
                 hoverLabels={subscriberLabels.map(l => l.full)}
                 width={isSmall ? 700 : 400}
                 height={150}
                 type="subscriber_growth"
-                ilter={subscriberFilter}
+                filter={subscriberFilter}
               />
             ) : item.content === "subscriptions_day" ? (
               <LineChart
                 points={subscriberDayPoints}
-                labels={subscriberDayLabels.map(l => l.short)}
-                tooltipLabels={subscriberLabels.map(l => l.medium)}
-                hoverLabels={subscriberLabels.map(l => l.full)}
+                labels={subscriberDayLabels}
+                hoverLabels={subscriberDayLabels.map(l => l.full)}
                 width={isSmall ? 700 : 400}
                 height={150}
                 type="subscriptions_day"
-                ilter={subscriberFilter}
+                filter={subscriberFilter}
               />
             ) : item.content === "average_coverage" && (
               <LineChart
                 points={averageCoverageAvgPoints}
-                labels={averageCoverageAvgLabels.map(l => l.short)}
-                tooltipLabels={averageCoverageAvgLabels.map(l => l.medium)}
+                labels={averageCoverageAvgLabels}
                 hoverLabels={averageCoverageAvgLabels.map(l => l.full)}
                 width={isSmall ? 700 : 400}
                 height={150}
@@ -482,7 +475,8 @@ const SelectContainer = styled.div`
 `;
 
 const ItemLeft = styled.div`
-  min-width: 150px;
+  max-width: 150px;
+  width: 100%;
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -523,7 +517,8 @@ const StatsChartContainer = styled.div`
   display: grid;
   align-items: end;
   justify-items: start;
-  grid-template-columns: 30px 1fr;
+  grid-template-columns: max-content 1fr;
+  gap: 0 20px;
   flex: 1;
   grid-template-rows: 150px 30px;
   padding-top: 50px;

@@ -10,10 +10,6 @@ const AverageAdvertisingPopup = () => {
     const { adReachPoints, adReachLabels, dayFilter } = useAnalyticsStore();
     const selectedFilter = dayFilter;
 
-    const points = useMemo(() => adReachPoints.map(p => (Number(p) || 0) * (Number(selectedFilter) || 1)), [adReachPoints, selectedFilter]);
-    
-    const labels = useMemo(() => adReachLabels.map(l => l.short), [adReachLabels]);
-    const tooltipLabels = useMemo(() => adReachLabels.map(l => l.medium), [adReachLabels]);
     const hoverLabels = useMemo(() => adReachLabels.map(l => l.full), [adReachLabels]);
 
     return (
@@ -21,9 +17,8 @@ const AverageAdvertisingPopup = () => {
             <ChartHead content="average_advertising"/>
             <ChartContainer>
                 <LineChart
-                    points={points} 
-                    labels={labels} 
-                    tooltipLabels={tooltipLabels}
+                    points={adReachPoints} 
+                    labels={adReachLabels} 
                     hoverLabels={hoverLabels} 
                     width={700}
                     height={300}
@@ -44,8 +39,9 @@ const ChartContainer = styled.div`
     display: grid;
 	align-items: end;
 	justify-items: start;
-	grid-template-columns: 30px 1fr;
+	grid-template-columns: max-content 1fr;
     grid-template-rows: 300px 30px;
+    gap: 0 10px;
     padding: 0 56px;
     margin-top: 40px;
 

@@ -8,13 +8,14 @@ import { useAnalyticsStore } from "@/store/useAnalyticsStore";
 
 const PublicationsAnalyticsPopup = () => {
     const { postsByPeriodPoints, postsByPeriodLabels, postsByPeriodHourly, postsByPeriodFilter } = useAnalyticsStore();
+    
     const selectedFilter = postsByPeriodFilter;
-    const points = useMemo(() => postsByPeriodPoints.map((p) => (Number(p) || 0) * (Number(selectedFilter) || 1)), [postsByPeriodPoints, selectedFilter]);
+    
     const labels = useMemo(() => postsByPeriodLabels.map((l) => l.short), [postsByPeriodLabels]);
-    const tooltipLabels = useMemo(() => postsByPeriodLabels.map((l) => l.medium), [postsByPeriodLabels]);
     const hoverLabels = useMemo(() => postsByPeriodLabels.map((l) => l.full), [postsByPeriodLabels]);
 
     const hours = Array.from({ length: 24 }, (_, i) => i);
+
     const formatRuDate = (dateStr) => {
         const date = new Date(dateStr);
 
@@ -30,15 +31,15 @@ const PublicationsAnalyticsPopup = () => {
 
         return `${day} ${month[0].toUpperCase() + month.slice(1)}, ${weekday}`;
     };
+
     return (
         <Container>
             <ChartHead content="publications_analytics" />
 
             <ChartContainer>
                 <DayBarChart
-                    points={points}
+                    points={postsByPeriodPoints}
                     labels={labels}
-                    tooltipLabels={tooltipLabels}
                     hoverLabels={hoverLabels}
                     width={700}
                     height={300}
@@ -76,14 +77,14 @@ const PublicationsAnalyticsPopup = () => {
 
 const Container = styled.div`
     width: 100%;
-    padding-bottom: 30px;
 `;
 const ChartContainer = styled.div`
     display: grid;
     align-items: end;
     justify-items: start;
-    grid-template-columns: 30px 1fr;
+    grid-template-columns: max-content 1fr;
     grid-template-rows: 300px 30px;
+    gap: 0 10px;
     padding: 0 56px;
     margin-top: 40px;
 
@@ -138,13 +139,16 @@ const GridContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 16px;
-  padding: 0 56px;
+  padding: 0 56px 30px;
+  max-height: 230px;
+  overflow-y: auto;
+  scrollbar-width: none;
 
   @media(max-width: 1600px) {
-    padding: 0 32px;
+    padding: 0 32px 30px;
   }
   @media(max-width: 768px) {
-    padding: 0 24px;
+    padding: 0 24px 30px;
   }
 `;
 const Row = styled.div`

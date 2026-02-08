@@ -17,15 +17,10 @@ import { useAnalyticsStore } from "@/store/useAnalyticsStore";
 const DynamicsPostsPopup = () => {
   const [atStart, setAtStart] = useState(true);
   const [atEnd, setAtEnd] = useState(false);
-
   const { dayPoints, dayLabels, dayFilter, dayPosts } = useAnalyticsStore();
 
   const selectedFilter = dayFilter;
 
-  const points = useMemo(() => dayPoints.map(p => (Number(p) || 0) * (Number(selectedFilter) || 1)), [dayPoints, selectedFilter]);
-  const labels = useMemo(() => dayLabels.map(l => l.short), [dayLabels]);
-
-  const tooltipLabels = useMemo(() => dayLabels.map(l => l.medium), [dayLabels]);
   const hoverLabels = useMemo(() => dayLabels.map(l => l.full), [dayLabels]);
 
   return (
@@ -33,9 +28,8 @@ const DynamicsPostsPopup = () => {
       <ChartHead content="dynamics_posts" />
       <ChartContainer>
         <LineChart
-          points={points}
-          labels={labels}
-          tooltipLabels={tooltipLabels}
+          points={dayPoints}
+          labels={dayLabels}
           hoverLabels={hoverLabels}
           width={700}
           height={300}
@@ -182,8 +176,9 @@ const ChartContainer = styled.div`
   display: grid;
 	align-items: end;
 	justify-items: start;
-	grid-template-columns: 30px 1fr;
+	grid-template-columns: max-content 1fr;
   grid-template-rows: 300px 30px;
+  gap: 0 10px;
   padding: 0 56px;
   margin-top: 40px;
 

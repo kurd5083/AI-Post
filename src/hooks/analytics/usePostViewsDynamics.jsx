@@ -36,7 +36,6 @@ export const usePostViewsDynamics = ({ channel_id, dayFilter, dateRanges }) => {
           };
         })
       );
-
       setPostsWithHourly(posts);
       setSelectedPostData(posts[0]);
     };
@@ -46,18 +45,22 @@ export const usePostViewsDynamics = ({ channel_id, dayFilter, dateRanges }) => {
 
   useEffect(() => {
     if (!selectedPostData) return;
-
     const hourlyData = selectedPostData.hourly?.data || selectedPostData.hourly || [];
+    console.log(hourlyData)
     const points = hourlyData.map(h => h.views);
-    const labels = hourlyData.map(h => ({
-      short: `${h.time_label}`,
-      medium: `${h.time_label}`,
-      full: `${h.time_label} ч.`
-    }));
+    const labels = hourlyData.map(h => {
+    const hour = h.time_label.replace('h', '').padStart(2, '0');
 
-    setDayData(points, labels, postsWithHourly);
+    return {
+      short: `${hour}:00`,
+      medium: `${hour}:00`,
+      full: `${hour}:00 ч.`
+    };
+  });
+
+  setDayData(points, labels, postsWithHourly);
   }, [selectedPostData, postsWithHourly, setDayData]);
-
+  
   const postOptions = useMemo(
     () =>
       postsLastDay?.posts?.map(p => ({

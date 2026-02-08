@@ -2,7 +2,7 @@ import { useRef, useState, useEffect } from "react";
 import styled from "styled-components";
 import ChatWindow from "@/components/Analytics/ChatWindow";
 
-const LineChart = ({ points = [], labels, hoverLabels, tooltipLabels, width = 400, height = 150, type, filter, showGrid = false }) => {
+const LineChart = ({ points = [], labels, hoverLabels, width = 400, height = 150, type, filter, showGrid = false }) => {
   const chartRef = useRef(null);
   const svgRef = useRef(null);
   const [chartWidth, setChartWidth] = useState(width);
@@ -44,10 +44,11 @@ const LineChart = ({ points = [], labels, hoverLabels, tooltipLabels, width = 40
   let chartHoverLabels = hoverLabels ? [...hoverLabels] : [];
 
   if (type === "dynamicsPosts") {
+    console.log(labels, hoverLabels, 'labels, hoverLabels') 
     if (chartPoints.length < 24) chartPoints = [...chartPoints, ...Array(24 - chartPoints.length).fill(0)];
     else chartPoints = chartPoints.slice(0, 24);
 
-    chartLabels = Array.from({ length: 24 }, (_, i) => i + 1);
+    chartLabels = Array.from({ length: 24 }, (_, i) => i);
 
     if (chartHoverLabels.length < 24) chartHoverLabels = [
       ...chartHoverLabels,
@@ -100,13 +101,12 @@ const LineChart = ({ points = [], labels, hoverLabels, tooltipLabels, width = 40
       case "adReach": labelText = "Рекл. охват"; break;
       case "posts": labelText = "Публикации"; break;
       case "averageCoverage": labelText = "Ср. охват 1 публ."; break;
-      case "dynamicsPosts": labelText = "Посты"; break;
+      case "dynamicsPosts": labelText = "Просмотов"; break;
       case "er": labelText = "Вовлеченность аудитории"; break;
       case "err": labelText = "Вовлеченность аудитории"; break;
       case "err24": labelText = "Рекламная вовлеченность"; break;
       default: labelText = "";
     }
-
     setHoverData({
       index: clampedIndex,
       x: clampedIndex * step,
@@ -165,20 +165,17 @@ const LineChart = ({ points = [], labels, hoverLabels, tooltipLabels, width = 40
           const isLast = i === arr.length - 1;
 
           let showLabel = false;
+          
           let labelText = chartLabels[i];
-
+          
           if (type === "dynamicsPosts") {
             showLabel = true;
           } else {
-            const minWidthPerTick = filter === "year" ? 100 : filter === "24h" ? 60 : 30;
+            const minWidthPerTick = filter === "year" ? 100 : 70;
             const maxTicks = Math.min(11, Math.max(1, Math.floor(chartWidth / minWidthPerTick)));
             const step = Math.ceil(chartLabels.length / maxTicks);
 
             if (isFirst || isLast || i % step === 0) showLabel = true;
-
-            if (filter === "year" && tooltipLabels?.[i]) {
-              labelText = tooltipLabels[i];
-            }
           }
 
           if (!showLabel) return null;
@@ -187,10 +184,13 @@ const LineChart = ({ points = [], labels, hoverLabels, tooltipLabels, width = 40
             left: `${(i / (arr.length - 1)) * 100}%`,
             transform: "translateX(-50%)",
           };
-
-          return <span key={i} style={style}>{labelText}</span>;
+          return <span key={i} style={style}>
+            {type === "posts" ? labelText.medium : type === "dynamicsPosts" ? labelText : (
+              filter === "week" || filter === "month" || filter === "year" ?  labelText.medium : labelText.short
+            )}
+          </span>;
         })}
-      </StatsData>
+      </StatsData>  
     </>
   );
 };

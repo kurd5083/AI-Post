@@ -25,7 +25,7 @@ const AnalyticsChannels = () => {
   const { id } = useParams();
   const { channel } = useChannelById(Number(id));
   const { channelInfo, channelPending } = useGetTelescopeInfo(channel?.channelId);
-
+    console.log(channelInfo) 
   const changeContent = (tab) => setActiveTab(tab);
 
   const {
@@ -107,13 +107,13 @@ const AnalyticsChannels = () => {
       ) : (
         <>
           <AnalyticsHead />
-          <ChannelInfo channel={channelInfo.channel} />
+          <ChannelInfo channel={channelInfo?.channel} />
           <ChannelInfoWrapper>
             <ChannelInfoBlock>
               <ChannelInfoLabel>Геопозиция:</ChannelInfoLabel>
               <ChannelInfoValue>
                 <img src={location_icon} alt="location icon" />
-                {channelInfo.channel.region}
+                {channelInfo?.channel.region}
               </ChannelInfoValue>
             </ChannelInfoBlock>
             <ChannelInfoBlock>
@@ -123,9 +123,7 @@ const AnalyticsChannels = () => {
               </ChannelInfoValue>
             </ChannelInfoBlock>
           </ChannelInfoWrapper>
-
           <AnalyticsStatistics id={channel?.id} channelId={channel?.channelId} />
-
           <ContentHeadContainer>
             <ContentHead>
               <ContentHeadText $active={activeTab === "statistics"} onClick={() => changeContent("statistics")}>
@@ -135,7 +133,6 @@ const AnalyticsChannels = () => {
                 Превью
               </ContentHeadText>
             </ContentHead>
-
             {activeTab === "statistics" && (
               <FilterBlock>
                 <FilterIcon color="#D6DCEC" />

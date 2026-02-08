@@ -7,11 +7,7 @@ import LineChart from "@/components/Analytics/LineChart";
 import { useAnalyticsStore } from "@/store/useAnalyticsStore";
 
 const AverageCoveragePopup = () => {
-    const { averageCoverageAvgPoints, averageCoverageErPoints, averageCoverageErr24Points, averageCoverageErrPoints, averageCoverageAvgLabels,
-        averageCoverageAvgFilter, averageCoverageErFilter, averageCoverageErrFilter, averageCoverageErr24Filter  } = useAnalyticsStore();
-
-    const labels = useMemo(() => averageCoverageAvgLabels.map(l => l.short), [averageCoverageAvgLabels]);
-    const tooltipLabels = useMemo(() => averageCoverageAvgLabels.map(l => l.medium), [averageCoverageAvgLabels]);
+    const { averageCoverageAvgPoints, averageCoverageErPoints, averageCoverageErr24Points, averageCoverageErrPoints, averageCoverageAvgLabels, averageCoverageAvgFilter } = useAnalyticsStore();
     const hoverLabels = useMemo(() => averageCoverageAvgLabels.map(l => l.full), [averageCoverageAvgLabels]);
 
     return (
@@ -20,8 +16,7 @@ const AverageCoveragePopup = () => {
             <ChartContainer>
                 <LineChart
                     points={averageCoverageAvgPoints}
-                    labels={labels}
-                    tooltipLabels={tooltipLabels}
+                    labels={averageCoverageAvgLabels}
                     hoverLabels={hoverLabels}
                     width={700}
                     height={300}
@@ -35,8 +30,7 @@ const AverageCoveragePopup = () => {
             <ChartContainer>
                 <LineChart
                     points={averageCoverageErPoints}
-                    labels={labels}
-                    tooltipLabels={tooltipLabels}
+                    labels={averageCoverageAvgLabels}
                     width={700}
                     height={300}
                     type="er"
@@ -48,8 +42,7 @@ const AverageCoveragePopup = () => {
             <ChartContainer>
                 <LineChart
                     points={averageCoverageErrPoints}
-                    labels={labels}
-                    tooltipLabels={tooltipLabels}
+                    labels={averageCoverageAvgLabels}
                     width={700}
                     height={300}
                     type="err"
@@ -61,8 +54,7 @@ const AverageCoveragePopup = () => {
             <ChartContainer>
                 <LineChart
                     points={averageCoverageErr24Points}
-                    labels={labels}
-                    tooltipLabels={tooltipLabels}
+                    labels={averageCoverageAvgLabels}
                     width={700}
                     height={300}
                     type="err24"
@@ -95,8 +87,9 @@ const ChartContainer = styled.div`
  	display: grid;
 	align-items: end;
 	justify-items: start;
-	grid-template-columns: 30px 1fr;
+	grid-template-columns: max-content 1fr;
     grid-template-rows: 300px 30px;
+    gap: 0 10px;
 	padding: 0 56px;
 	margin-top: 40px;
 

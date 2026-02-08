@@ -12,18 +12,14 @@ import { useAnalyticsStore } from "@/store/useAnalyticsStore";
 const SubscriptionsDayPopup = () => {
   const { subscriberDayPoints, subscriberDayLabels } = useAnalyticsStore();
 
-  const points = useMemo(() => subscriberDayPoints.map(p => (Number(p) || 0)), [subscriberDayPoints]);
-  const labels = useMemo(() => subscriberDayLabels.map(l => l.short), [subscriberDayLabels]);
-  const tooltipLabels = useMemo(() => subscriberDayLabels.map(l => l.medium), [subscriberDayLabels]);
   const hoverLabels = useMemo(() => subscriberDayLabels.map(l => l.full), [subscriberDayLabels]);
 
   return (
     <Container>
       <ChartContainer>
         <LineChart
-          points={points}
-          labels={labels}
-          tooltipLabels={tooltipLabels}
+          points={subscriberDayPoints}
+          labels={subscriberDayLabels}
           hoverLabels={hoverLabels}
           width={700}
           height={300}
@@ -100,8 +96,9 @@ const ChartContainer = styled.div`
   display: grid;
 	align-items: end;
 	justify-items: start;
-	grid-template-columns: 30px 1fr;
+	grid-template-columns: max-content 1fr;
   grid-template-rows: 300px 30px;
+  gap: 0 10px;
   padding: 0 56px;
   margin-top: 40px;
 
