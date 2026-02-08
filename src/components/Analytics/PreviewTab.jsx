@@ -30,6 +30,7 @@ const formatPostDate = (timestamp) => {
 };
 
 const PreviewTab = ({ channel_id, id, channelName, channelAva }) => {
+	console.log(channel_id, id)
 	const [viewMode, setViewMode] = useState("List");
 	const { dayTracking, dayTrackingPending } = useGetDayTracking({ channel_id });
 	const { mentions, mentionsPending } = useMentions({
@@ -41,7 +42,7 @@ const PreviewTab = ({ channel_id, id, channelName, channelAva }) => {
 		setViewMode(newValue);
 	};
 
-
+	console.log(mentions)
 	return (
 		<PreviewContainer>
 			<div>
@@ -67,7 +68,7 @@ const PreviewTab = ({ channel_id, id, channelName, channelAva }) => {
 				<MentionsList>
 					{mentionsPending ? (
 						<Empty icon="📣">Загрузка упоминаний...</Empty>
-					) : mentions?.response?.items.length === 0 ? (
+					) : !mentions || !mentions.response || mentions.response.items.length === 0 ? (
 						<Empty icon="📣">Упоминаний нет</Empty>
 					) : (
 						mentions?.response?.items.map((m) => {

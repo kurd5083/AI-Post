@@ -158,7 +158,7 @@ const AnalyticsChannels = () => {
               dateRanges={dateRange}
             />
           ) : (
-            <PreviewTab channel_id={channel.channelId} id={channel.id} channelName={channel.name} channelAva={channelInfo?.channel.avatar_url} />
+            <PreviewTab channel_id={channel.channelId} id={channel.id} channelName={channel.name} channelAva={channelInfo?.channel?.avatar_url} />
           )}
         </>
       )}

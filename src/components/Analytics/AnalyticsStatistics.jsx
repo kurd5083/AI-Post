@@ -18,7 +18,7 @@ const AnalyticsStatistics = ({ id, channelId }) => {
 
   const stat = channelStat?.response;
   const { metricsDay, metricsDayPending } = useGetMetricsDay(channelId);
-
+  console.log(metricsDay)
   return (
     metricsDayPending ? (
       <EmptyContainer>
@@ -46,12 +46,12 @@ const AnalyticsStatistics = ({ id, channelId }) => {
               <mark>{metricsDay.subscribers.growth_24h || 0}</mark>
               <p>Сегодня</p>
             </ItemStat>
-            <ItemStat $value={metricsDay.subscribers.growth_7d_percent}>
-              <mark>{metricsDay.subscribers.growth_7d_percent || 0} %</mark>
+            <ItemStat $value={metricsDay.subscribers.growth_7d}>
+              <mark>{metricsDay.subscribers.growth_7d || 0}</mark>
               <p>Неделя</p>
             </ItemStat>
-            <ItemStat $value={metricsDay.subscribers.growth_30d_percent}>
-              <mark>{metricsDay.subscribers.growth_30d_percent || 0} %</mark>
+            <ItemStat $value={metricsDay.subscribers.growth_30d}>
+              <mark>{metricsDay.subscribers.growth_30d || 0}</mark>
               <p>месяц</p>
             </ItemStat>
           </StatisticsItemContent>
@@ -64,7 +64,7 @@ const AnalyticsStatistics = ({ id, channelId }) => {
             </StatisticsItemImg>
             <StatisticsName>
               <StatisticsText>Суточный рекл. охват</StatisticsText>
-              <StatisticsCount>{stat?.daily_reach}</StatisticsCount>
+              <StatisticsCount>{stat?.daily_reach || 0}</StatisticsCount>
             </StatisticsName>
           </StatisticsItemHead>
           <StatisticsItemContent>
@@ -119,8 +119,8 @@ const AnalyticsStatistics = ({ id, channelId }) => {
           </StatisticsItemHead>
           <StatisticsItemContent>
             <ItemStat>
-              <mark>{metricsDay.posts.today || 0}</mark>
-              <p>Сегодня</p>
+              <mark>{metricsDay.posts.yesterday || 0}</mark>
+              <p>Вчера</p>
             </ItemStat>
             <ItemStat>
               <mark>{metricsDay.posts.week || 0}</mark>
@@ -191,6 +191,9 @@ const StatisticsName = styled.div`
 const StatisticsItemContent = styled.div`
   display: flex;
   gap: 20px;
+  max-width: 250px;
+  width: 100%;
+  justify-content: space-between;
 `
 const ItemStat = styled.div`
   display: flex;

@@ -3,7 +3,7 @@ import styled from "styled-components";
 
 const PostStatsDetails = ({ postsByPeriod, selectedPostData, subscribersDaily, subscribersDay, adReachPeriod, analyticsReach }) => {
   const [counts, setCounts] = useState({ yesterday: 0, week: 0, month: 0 });
-
+  console.log(adReachPeriod)
   useEffect(() => {
     const today = new Date();
     const formatDate = (date) => date.toISOString().split("T")[0];
@@ -97,7 +97,21 @@ const PostStatsDetails = ({ postsByPeriod, selectedPostData, subscribersDaily, s
       </>
     );
   }
-
+if (adReachPeriod) {
+    return (
+      <>
+        <StatsCardDetailItem $value={counts.yesterday}>
+        {counts.yesterday} <span>За 12 ч.</span>
+      </StatsCardDetailItem>
+      <StatsCardDetailItem $value={counts.week}>
+        {counts.week} <span>за 24 ч.</span>
+      </StatsCardDetailItem>
+      <StatsCardDetailItem $value={counts.month}>
+        {counts.month} <span>за 48 ч.</span>
+      </StatsCardDetailItem>
+      </>
+    );
+  }
   return (
     <>
       <StatsCardDetailItem $value={counts.yesterday}>

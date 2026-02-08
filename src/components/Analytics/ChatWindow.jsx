@@ -29,7 +29,12 @@ const ChatWindow = ({ hoverData, height, width = 400 }) => {
         }}
       >
         <ChartDate>{hoverData.date}</ChartDate>
-        <ChartNumber>{hoverData.value}</ChartNumber>
+        <ChartNumber>{hoverData.value}{hoverData.small && (
+          <>
+            <span> / </span>
+            <small>{`${hoverData.small} %`}</small>
+          </>
+        )}</ChartNumber>
         <span>{hoverData.label}</span>
       </ChartTooltip>
     </>
@@ -61,13 +66,12 @@ const HoverLine = styled.div`
 const ChartTooltip = styled.div`
   box-sizing: border-box;
   position: absolute;
-  background: #4165c052;
-  backdrop-filter: blur(24px);
+  background: #6A708029;
+  backdrop-filter: blur(64px);
   border-radius: 12px;
   padding: 10px 14px;
   display: flex;
   flex-direction: column;
-  gap: 4px;
   pointer-events: none;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.562);
   white-space: nowrap;
@@ -80,17 +84,25 @@ const ChartTooltip = styled.div`
     font-weight: 700;
   }
 `;
-
 const ChartDate = styled.p`
   color: #D6DCEC;
   font-size: 13px;
   font-weight: 700;
+  margin-bottom: 12px;
 `;
-
 const ChartNumber = styled.p`
-  color: #336CFF;
+  color: #D6DCEC;
   font-weight: 700;
-  font-size: 14px;
+  font-size: 16px;
+  margin-bottom: 8px;
+  span {
+    font-size: 12px;
+    color: #6A7080;
+  }
+  small {
+    font-size: 12px;
+    color: #B5EC5B;
+  }
 `;
 
 export default ChatWindow;

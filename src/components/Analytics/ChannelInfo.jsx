@@ -15,9 +15,9 @@ const ChannelInfo = ({ channel }) => {
 	return (
 		<ChannelInfoContainer>
 			<ChannelHeader>
-				{channel.avatar_url ? (
+				{channel?.avatar_url ? (
 					<img
-						src={channel.avatar_url}
+						src={channel?.avatar_url}
 						alt={channel.title}
 						style={{
 							width: window.innerWidth < 480 ? 80 : window.innerWidth < 1400 ? 104 : 144,

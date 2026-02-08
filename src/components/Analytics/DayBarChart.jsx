@@ -95,6 +95,7 @@ const DayBarChart = ({
       index: clampedIndex,
       x: clampedIndex * step + barWidth / 2,
       value: chartPoints[clampedIndex],
+      small: type === "dynamicsPosts" && `1`,
       label: type === "dynamicsPosts" ? "Просмотров" : "Посты",
       tooltip: chartTooltipLabels?.[clampedIndex] || "",
       y: height - (chartPoints[clampedIndex] / chartMax) * height,

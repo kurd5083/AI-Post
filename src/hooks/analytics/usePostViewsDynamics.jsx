@@ -49,7 +49,7 @@ export const usePostViewsDynamics = ({ channel_id, dayFilter, dateRanges }) => {
     const points = hourlyData.map(h => h.views);
     const labels = hourlyData.map(h => {
     const hour = h.time_label.replace('h', '').padStart(2, '0');
-      console.log(selectedPostData)
+
     return {
       short: `${hour}:00`,
       medium: `${hour}:00`,

@@ -111,6 +111,7 @@ const LineChart = ({ points = [], labels, hoverLabels, width = 400, height = 150
       x: clampedIndex * step,
       y: height - (chartPoints[clampedIndex] / chartMax) * height,
       value: chartPoints[clampedIndex],
+      small: type === "dynamicsPosts" && `1`,
       label: labelText,
       date: chartHoverLabels?.[clampedIndex] || null,
     });

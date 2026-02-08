@@ -28,7 +28,6 @@ const FeedMentions = () => {
       setSelectedChannelId(userChannels[0].id);
     }
   }, [userChannels]);
-
   const { mentions, mentionsPending } = useMentions({
     channelId: selectedChannelId,
     limit: 8,
