@@ -24,7 +24,7 @@ const TableGroups = () => {
   const { channels, channelsPending } = useChannelsGroupedByFolders();
   const { mutate: deleteChannel } = useDeleteChannel();
   const [pendingCounts, setPendingCounts] = useState({});
-  console.log(channels) 
+
   useEffect(() => {
     if (!channels) return;
 

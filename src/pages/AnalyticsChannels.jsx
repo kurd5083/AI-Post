@@ -25,7 +25,6 @@ const AnalyticsChannels = () => {
   const { id } = useParams();
   const { channel } = useChannelById(Number(id));
   const { channelInfo, channelPending } = useGetTelescopeInfo(channel?.channelId);
-  console.log(channelInfo)
   const changeContent = (tab) => setActiveTab(tab);
 
   const {
@@ -159,7 +158,7 @@ const AnalyticsChannels = () => {
               dateRanges={dateRange}
             />
           ) : (
-            <PreviewTab channel_id={channel.channelId} id={channel.id} channelName={channel.name} />
+            <PreviewTab channel_id={channel.channelId} id={channel.id} channelName={channel.name} channelAva={channelInfo?.channel.avatar_url} />
           )}
         </>
       )}

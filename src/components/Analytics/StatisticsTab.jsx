@@ -141,7 +141,7 @@ const StatisticsTab = ({ id, channel_id, dateRanges }) => {
 
   useEffect(() => {
     if (!adReachPeriod) return;
-    console.log(adReachPeriod) 
+
     let points = [];
     let labels = [];
     if (adReachFilter === "24h" && adReachPeriod.hourly?.length) {
@@ -286,7 +286,6 @@ const StatisticsTab = ({ id, channel_id, dateRanges }) => {
                 <><p style={{ color: "#336CFF" }}>Средний охват</p>{item.title}</>
               ) : item.title}
             </ItemTitle>
-            {console.log(analyticsReach)} 
             <StatsCardMainValue>
               {item.content === "publications_analytics" ? (
                 postsByPeriod?.data?.reduce((sum, p) => sum + (p.posts_count || 0), 0) || 0

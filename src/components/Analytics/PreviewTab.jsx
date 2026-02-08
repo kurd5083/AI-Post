@@ -29,7 +29,7 @@ const formatPostDate = (timestamp) => {
 	return `${day} ${month}, ${hours}:${minutes}`;
 };
 
-const PreviewTab = ({ channel_id, id, channelName }) => {
+const PreviewTab = ({ channel_id, id, channelName, channelAva }) => {
 	const [viewMode, setViewMode] = useState("List");
 	const { dayTracking, dayTrackingPending } = useGetDayTracking({ channel_id });
 	const { mentions, mentionsPending } = useMentions({
@@ -41,11 +41,7 @@ const PreviewTab = ({ channel_id, id, channelName }) => {
 		setViewMode(newValue);
 	};
 
-	const getFirstTextBetweenStars = (text) => {
-		const match = text.match(/\*\*(.*?)\*\*/);
-		if (!match) return "";
-		return match[1];
-	};
+
 	return (
 		<PreviewContainer>
 			<div>
@@ -68,63 +64,87 @@ const PreviewTab = ({ channel_id, id, channelName }) => {
 				<PreviewDescription>
 					Просмотрите ленту, где указаны каналы, которые вас упомянули
 				</PreviewDescription>
-				<MentionsList
-				// ref={el => {
-				// 	mentionsRef.current = el;
-				// 	if (fadeMentionsRef) fadeMentionsRef.current = el;
-				// }}
-				// $fadeVisible={fadeMentions}
-				// $containerWidth={mentionsWidth}
-				>
+				<MentionsList>
 					{mentionsPending ? (
 						<Empty icon="📣">Загрузка упоминаний...</Empty>
+					) : mentions?.response?.items.length === 0 ? (
+						<Empty icon="📣">Упоминаний нет</Empty>
 					) : (
-						mentions?.response?.items.length === 0 ? (
-							<Empty icon="📣">Упоминаний нет</Empty>
-						) : (
-							mentions?.response?.items.map(m => (
-								viewMode === 'List' ? (
+						mentions?.response?.items.map((m) => {
+							if (!m?.postDetails) return null;
+
+							if (viewMode === 'List') {
+								return (
 									<MentionCard key={m.id}>
 										<MentionsCardChannelInfo>
-											<ChannelAva src={m.postDetails?.image} alt="" />
+											<ChannelAva src={m.postDetails.image} alt="" />
+
 											<ChannelInfoContainer>
-												<ChannelName>{m.postDetails?.channelTitle}</ChannelName>
+												<ChannelName>{m.postDetails.channelTitle}</ChannelName>
+
 												<CardDetail>
 													<MentionsCardParams>
 														<img src={users} alt="users icon" />
-														{m.postDetails?.audience}
+														{m.postDetails.audience}
 													</MentionsCardParams>
+
 													<MentionsCardParams>
-														<EyeIcon color="#6A7080" hoverColor="#6A7080" width={17} height={12} cursor="default" />
-														{m.postDetails?.views}
+														<EyeIcon
+															color="#6A7080"
+															hoverColor="#6A7080"
+															width={17}
+															height={12}
+															cursor="default"
+														/>
+														{m.postDetails.views}
 													</MentionsCardParams>
 												</CardDetail>
 											</ChannelInfoContainer>
 										</MentionsCardChannelInfo>
+
 										<MentionsCardMeta>
 											<MentionsCardMentionFrom>Упомянул канал</MentionsCardMentionFrom>
 											<MentionsCardTimestamp>
 												<TimeIcon color="#6A7080" />
-												{formatPostDate(m.postDetails?.date)}
+												{formatPostDate(m.postDetails.date)}
 											</MentionsCardTimestamp>
 										</MentionsCardMeta>
 									</MentionCard>
-								) : (
-									<PostsCard key={m.id}>
-										<PostHead>
-											<PostChannelAva src={m.postDetails?.image} />
-											<PostChannelName>{m.postDetails?.channelTitle}</PostChannelName>
-											<PostTime><TimeIcon color="#6A7080" />{formatPostDate(m.postDetails?.date)}</PostTime>
-										</PostHead>
-										<PostText dangerouslySetInnerHTML={{ __html: m.postDetails?.text }} />
-										<PostFooter>
-											<PostFooterParams><EyeIcon color="#336CFF" hoverColor="#336CFF" width={20} height={20} cursor="default" />{m.postDetails?.views}</PostFooterParams>
-											<MentionsCardMentionFrom>Упомянул канал</MentionsCardMentionFrom>
-										</PostFooter>
-									</PostsCard>
-								)
-							))
-						)
+								);
+							}
+
+							return (
+								<PostsCard key={m.id}>
+									<PostHead>
+										<PostChannelAva src={m.postDetails.image} />
+										<PostChannelName>{m.postDetails.channelTitle}</PostChannelName>
+										<PostTime>
+											<TimeIcon color="#6A7080" />
+											{formatPostDate(m.postDetails.date)}
+										</PostTime>
+									</PostHead>
+
+									<PostText
+										dangerouslySetInnerHTML={{ __html: m.postDetails.text }}
+									/>
+
+									<PostFooter>
+										<PostFooterParams>
+											<EyeIcon
+												color="#336CFF"
+												hoverColor="#336CFF"
+												width={20}
+												height={20}
+												cursor="default"
+											/>
+											{m.postDetails.views}
+										</PostFooterParams>
+
+										<MentionsCardMentionFrom>Упомянул канал</MentionsCardMentionFrom>
+									</PostFooter>
+								</PostsCard>
+							);
+						})
 					)}
 				</MentionsList>
 			</div>
@@ -141,7 +161,11 @@ const PreviewTab = ({ channel_id, id, channelName }) => {
 							dayTracking.posts.map(p => (
 								<PostsCard key={p.post_id}>
 									<PostHead>
-										<СhannelPlug width="32px" height="32px" text={channelName} radius="50%" />
+										{channelAva ? (
+											<ChannelImg src={channelAva} alt={channelName} />
+										) : (
+											<СhannelPlug width="32px" height="32px" text={channelName} radius="50%" />
+										)}
 										<PostChannelName>{channelName}</PostChannelName>
 										<PostTime>
 											<TimeIcon color="#6A7080" />
@@ -319,8 +343,15 @@ const PostsCard = styled.div`
 `;
 const PostHead = styled.div`
 	display: flex;
+	align-items: center;
 	justify-content: space-between;
 	gap: 16px;
+`;
+const ChannelImg = styled.img`
+	width: 32px;
+	height: 32px;
+	border-radius: 50%;
+	object-fit: cover;
 `;
 const PostChannelAva = styled.img`
 	width: 24px;

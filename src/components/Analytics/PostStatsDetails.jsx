@@ -11,7 +11,7 @@ const PostStatsDetails = ({ postsByPeriod, selectedPostData, subscribersDaily, s
     const todayStr = formatDate(today);
     const weekAgoStr = formatDate(new Date(today.getTime() - 7 * 86400000));
     const monthAgoStr = formatDate(new Date(today.getTime() - 30 * 86400000));
-    console.log(adReachPeriod)
+
     if (adReachPeriod) {
       setCounts({
         yesterday: adReachPeriod.by_day?.avg_ad_reach || 0,

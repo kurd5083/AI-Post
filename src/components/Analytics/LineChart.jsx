@@ -44,7 +44,6 @@ const LineChart = ({ points = [], labels, hoverLabels, width = 400, height = 150
   let chartHoverLabels = hoverLabels ? [...hoverLabels] : [];
 
   if (type === "dynamicsPosts") {
-    console.log(labels, hoverLabels, 'labels, hoverLabels') 
     if (chartPoints.length < 24) chartPoints = [...chartPoints, ...Array(24 - chartPoints.length).fill(0)];
     else chartPoints = chartPoints.slice(0, 24);
 
