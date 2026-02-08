@@ -286,6 +286,7 @@ const StatisticsTab = ({ id, channel_id, dateRanges }) => {
                 <><p style={{ color: "#336CFF" }}>Средний охват</p>{item.title}</>
               ) : item.title}
             </ItemTitle>
+            {console.log(analyticsReach)} 
             <StatsCardMainValue>
               {item.content === "publications_analytics" ? (
                 postsByPeriod?.data?.reduce((sum, p) => sum + (p.posts_count || 0), 0) || 0
@@ -301,7 +302,7 @@ const StatisticsTab = ({ id, channel_id, dateRanges }) => {
               ) : item.content === "average_advertising" ? (
                 adReachPeriod?.by_day.avg_ad_reach || 0
               ) : item.content === "average_coverage" && (
-                averageCoverageAvgPoints?.[0] || 0
+                analyticsReach?.avg_views_per_post || 0
               )}
               {item.mainSubValue && <span>{item.mainSubValue}</span>}
             </StatsCardMainValue>

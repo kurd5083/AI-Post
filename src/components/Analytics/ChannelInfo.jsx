@@ -15,25 +15,38 @@ const ChannelInfo = ({ channel }) => {
 	return (
 		<ChannelInfoContainer>
 			<ChannelHeader>
-				<СhannelPlug
-					width={
-						window.innerWidth < 480
-							? "80px"
-							: window.innerWidth < 1400
-								? "104px"
-								: "144px"
-					}
-					height={
-						window.innerWidth < 480
-							? "80px"
-							: window.innerWidth < 1400
-								? "104px"
-								: "144px"
-					}
-					radius={window.innerWidth < 1400 ? "24px" : "32px"}
-					fs={window.innerWidth < 1400 ? "24px" : "36px"}
-					text={channel.title}
-				/>
+				{channel.avatar_url ? (
+					<img
+						src={channel.avatar_url}
+						alt={channel.title}
+						style={{
+							width: window.innerWidth < 480 ? 80 : window.innerWidth < 1400 ? 104 : 144,
+							height: window.innerWidth < 480 ? 80 : window.innerWidth < 1400 ? 104 : 144,
+							borderRadius: window.innerWidth < 1400 ? 24 : 32,
+							objectFit: "cover"
+						}}
+					/>
+				) : (
+					<СhannelPlug
+						width={
+							window.innerWidth < 480
+								? "80px"
+								: window.innerWidth < 1400
+									? "104px"
+									: "144px"
+						}
+						height={
+							window.innerWidth < 480
+								? "80px"
+								: window.innerWidth < 1400
+									? "104px"
+									: "144px"
+						}
+						radius={window.innerWidth < 1400 ? "24px" : "32px"}
+						fs={window.innerWidth < 1400 ? "24px" : "36px"}
+						text={channel.title}
+					/>
+				)}
 				<div>
 					<ChannelName>{channel.title}</ChannelName>
 					<ChannelUsername>@{channel.username}</ChannelUsername>
