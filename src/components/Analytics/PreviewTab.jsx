@@ -30,7 +30,6 @@ const formatPostDate = (timestamp) => {
 };
 
 const PreviewTab = ({ channel_id, id, channelName, channelAva }) => {
-	console.log(channel_id, id)
 	const [viewMode, setViewMode] = useState("List");
 	const { dayTracking, dayTrackingPending } = useGetDayTracking({ channel_id });
 	const { mentions, mentionsPending } = useMentions({
@@ -42,7 +41,6 @@ const PreviewTab = ({ channel_id, id, channelName, channelAva }) => {
 		setViewMode(newValue);
 	};
 
-	console.log(mentions)
 	return (
 		<PreviewContainer>
 			<div>

@@ -18,7 +18,7 @@ const AnalyticsStatistics = ({ id, channelId }) => {
 
   const stat = channelStat?.response;
   const { metricsDay, metricsDayPending } = useGetMetricsDay(channelId);
-  console.log(metricsDay)
+
   return (
     metricsDayPending ? (
       <EmptyContainer>

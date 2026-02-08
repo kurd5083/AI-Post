@@ -4,6 +4,7 @@ export const useAnalyticsStore = create((set) => ({
   dayPoints: [],
   dayLabels: [],
   dayPosts: [],
+  dayPercent: [],
   subscriberPoints: [],
   subscriberLabels: [],
   subscriberDayPoints: [],
@@ -34,7 +35,7 @@ export const useAnalyticsStore = create((set) => ({
   averageCoverageErr24Filter: "week",
   averageCoverageErrFilter: "week",
 
-  setDayData: (points, labels, posts) => set({ dayPoints: points, dayLabels: labels, dayPosts: posts }),
+  setDayData: (points, labels, posts, percent) => set({ dayPoints: points, dayLabels: labels, dayPosts: posts, dayPercent: percent}),
   setSubscriberData: (points, labels) => set({ subscriberPoints: points, subscriberLabels: labels }),
   setSubscriberDayData: (points, labels) => set({ subscriberDayPoints: points, subscriberDayLabels: labels }),
   setAdReachData: (points, labels) => set({ adReachPoints: points, adReachLabels: labels }),

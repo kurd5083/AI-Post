@@ -32,6 +32,7 @@ export const usePostViewsDynamics = ({ channel_id, dayFilter, dateRanges }) => {
             total_views: p.views,
             reposts: p.forwards || 0,
             total_er_percent: p.total_er_percent || 0,
+            total_views: selectedPostData.total_views || 0,
             hourly: hourly || []
           };
         })
@@ -42,24 +43,28 @@ export const usePostViewsDynamics = ({ channel_id, dayFilter, dateRanges }) => {
 
     fetchAllHourly();
   }, [postsLastDay]);
-
   useEffect(() => {
     if (!selectedPostData) return;
     const hourlyData = selectedPostData.hourly?.data || selectedPostData.hourly || [];
     const points = hourlyData.map(h => h.views);
-    const labels = hourlyData.map(h => {
-    const hour = h.time_label.replace('h', '').padStart(2, '0');
+    const percentPoints = hourlyData.map(h => h.views_delta);
+    const totalViews = selectedPostData.total_views ?? points.reduce((sum, v) => sum + v, 0);
+    const percent = percentPoints.map(v => totalViews ? (v / totalViews) * 100 : 0);
 
-    return {
-      short: `${hour}:00`,
-      medium: `${hour}:00`,
-      full: `${hour}:00 ч.`,
-      reposts: selectedPostData.forwards,
-      total_er_percent: selectedPostData.total_er_percent,
-    };
+    const labels = hourlyData.map(h => {
+      const hour = h.time_label.replace('h', '').padStart(2, '0');
+      return {
+        short: `${hour}:00`,
+        medium: `${hour}:00`,
+        full: `${hour}:00 ч.`,
+        total_views: selectedPostData.total_views,
+        reposts: selectedPostData.reposts,
+        total_er_percent: selectedPostData.total_er_percent,
+
+      };
   });
 
-  setDayData(points, labels, postsWithHourly);
+  setDayData(points, labels, postsWithHourly, percent);
   }, [selectedPostData, postsWithHourly, setDayData]);
   
   const postOptions = useMemo(

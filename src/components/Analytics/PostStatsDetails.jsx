@@ -3,7 +3,7 @@ import styled from "styled-components";
 
 const PostStatsDetails = ({ postsByPeriod, selectedPostData, subscribersDaily, subscribersDay, adReachPeriod, analyticsReach }) => {
   const [counts, setCounts] = useState({ yesterday: 0, week: 0, month: 0 });
-  console.log(adReachPeriod)
+
   useEffect(() => {
     const today = new Date();
     const formatDate = (date) => date.toISOString().split("T")[0];
@@ -11,15 +11,6 @@ const PostStatsDetails = ({ postsByPeriod, selectedPostData, subscribersDaily, s
     const todayStr = formatDate(today);
     const weekAgoStr = formatDate(new Date(today.getTime() - 7 * 86400000));
     const monthAgoStr = formatDate(new Date(today.getTime() - 30 * 86400000));
-
-    if (adReachPeriod) {
-      setCounts({
-        yesterday: adReachPeriod.by_day?.avg_ad_reach || 0,
-        week: adReachPeriod.by_week?.avg_ad_reach || 0,
-        month: adReachPeriod.by_month?.avg_ad_reach || 0,
-      });
-      return;
-    }
 
     if (subscribersDaily?.daily_data) {
       const data = subscribersDaily.daily_data;
@@ -45,7 +36,7 @@ const PostStatsDetails = ({ postsByPeriod, selectedPostData, subscribersDaily, s
       const month = postsByPeriod.posts_last_month
       setCounts({ yesterday, week, month });
     }
-  }, [postsByPeriod, selectedPostData, subscribersDaily, adReachPeriod, analyticsReach]);
+  }, [postsByPeriod, selectedPostData, subscribersDaily, analyticsReach]);
 
   if (selectedPostData) {
     return (
@@ -97,17 +88,17 @@ const PostStatsDetails = ({ postsByPeriod, selectedPostData, subscribersDaily, s
       </>
     );
   }
-if (adReachPeriod) {
+  if (adReachPeriod) {
     return (
       <>
-        <StatsCardDetailItem $value={counts.yesterday}>
-        {counts.yesterday} <span>За 12 ч.</span>
+        <StatsCardDetailItem $value={adReachPeriod.views_12h}>
+        {adReachPeriod.views_12h} <span>За 12 ч.</span>
       </StatsCardDetailItem>
-      <StatsCardDetailItem $value={counts.week}>
-        {counts.week} <span>за 24 ч.</span>
+      <StatsCardDetailItem $value={adReachPeriod.views_24h}>
+        {adReachPeriod.views_24h} <span>за 24 ч.</span>
       </StatsCardDetailItem>
-      <StatsCardDetailItem $value={counts.month}>
-        {counts.month} <span>за 48 ч.</span>
+      <StatsCardDetailItem $value={adReachPeriod.views_48h}>
+        {adReachPeriod.views_48h} <span>за 48 ч.</span>
       </StatsCardDetailItem>
       </>
     );

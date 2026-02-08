@@ -6,6 +6,7 @@ const ChatWindow = ({ hoverData, height, width = 400 }) => {
   let tooltipOffsetX = -120; 
   if (hoverData.x < 120) tooltipOffsetX = 10;
   else if (hoverData.x > width - 120) tooltipOffsetX = -140;
+        console.log(hoverData)
 
   return (
     <>
@@ -29,7 +30,9 @@ const ChatWindow = ({ hoverData, height, width = 400 }) => {
         }}
       >
         <ChartDate>{hoverData.date}</ChartDate>
-        <ChartNumber>{hoverData.value}{hoverData.small && (
+        <ChartNumber>
+          {hoverData.value}
+          {hoverData.small != null && (
           <>
             <span> / </span>
             <small>{`${hoverData.small} %`}</small>
@@ -88,13 +91,13 @@ const ChartDate = styled.p`
   color: #D6DCEC;
   font-size: 13px;
   font-weight: 700;
-  margin-bottom: 12px;
+  margin-bottom: 8px;
 `;
 const ChartNumber = styled.p`
   color: #D6DCEC;
   font-weight: 700;
   font-size: 16px;
-  margin-bottom: 8px;
+  margin-bottom: 4px;
   span {
     font-size: 12px;
     color: #6A7080;

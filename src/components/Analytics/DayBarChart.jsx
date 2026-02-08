@@ -5,6 +5,7 @@ import ChatWindow from "@/components/Analytics/ChatWindow";
 const DayBarChart = ({
   points = [],
   labels = [],
+  percent = [],
   hoverLabels,
   tooltipLabels,
   height = 150,
@@ -75,7 +76,7 @@ const DayBarChart = ({
   const MAX_BAR_WIDTH = 44;
 
   const step = chartWidth / chartPoints.length;
-
+  console.log(percent)
   let barWidth = step * 0.7;
   let gap = step * 0.3;
 
@@ -95,7 +96,7 @@ const DayBarChart = ({
       index: clampedIndex,
       x: clampedIndex * step + barWidth / 2,
       value: chartPoints[clampedIndex],
-      small: type === "dynamicsPosts" && `1`,
+      small: type === "dynamicsPosts" && percent[clampedIndex],
       label: type === "dynamicsPosts" ? "Просмотров" : "Посты",
       tooltip: chartTooltipLabels?.[clampedIndex] || "",
       y: height - (chartPoints[clampedIndex] / chartMax) * height,

@@ -37,7 +37,7 @@ const StatisticsTab = ({ id, channel_id, dateRanges }) => {
   const { openPopup } = usePopupStore();
 
   const {
-    dayPoints, dayLabels, subscriberPoints, subscriberLabels, subscriberDayPoints, subscriberDayLabels,
+    dayPoints, dayLabels, dayPercent, subscriberPoints, subscriberLabels, subscriberDayPoints, subscriberDayLabels,
     adReachPoints, adReachLabels,
     postsByPeriodPoints, postsByPeriodLabels,
     averageCoverageAvgPoints, averageCoverageAvgLabels,
@@ -46,7 +46,7 @@ const StatisticsTab = ({ id, channel_id, dateRanges }) => {
     setAverageCoverageAvgData, setAverageCoverageErData, setAverageCoverageErr24Data, setAverageCoverageErrData
   } = useAnalyticsStore();
   const { selectedPostData, setSelectedPost, postOptions } = usePostViewsDynamics({ channel_id, dayFilter, dateRanges });
-  console.log(selectedPostData) 
+
   const today = new Date();
   const formattedToday = today.toISOString().split('T')[0];
 
@@ -286,7 +286,6 @@ const StatisticsTab = ({ id, channel_id, dateRanges }) => {
                 <><p style={{ color: "#336CFF" }}>Средний охват</p>{item.title}</>
               ) : item.title}
             </ItemTitle>
-            {console.log(adReachPeriod)}
             <StatsCardMainValue>
               {item.content === "publications_analytics" ? (
                 postsByPeriod?.data?.reduce((sum, p) => sum + (p.posts_count || 0), 0) || 0
@@ -350,8 +349,10 @@ const StatisticsTab = ({ id, channel_id, dateRanges }) => {
           <StatsChartContainer>
             {item.content === "dynamics_posts" ? (
               <DayBarChart
+                selectedPostData={selectedPostData}
                 points={dayPoints}
                 labels={dayLabels}
+                percent={dayPercent}
                 hoverLabels={dayLabels.map(l => l.full)}
                 width={400}
                 type="dynamicsPosts"
