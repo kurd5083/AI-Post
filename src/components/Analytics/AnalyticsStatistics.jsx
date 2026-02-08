@@ -8,17 +8,13 @@ import SpeakerIcon from "@/icons/SpeakerIcon";
 import my_team from "@/assets/popup/my-team.svg";
 
 import useSwipeAllowed from "@/lib/useSwipeAllowed";
-import { useChannelStat } from "@/lib/tgStat/useChannelStat";
 import { useGetMetricsDay } from "@/lib/analytics/useGetMetricsDay";
 
 const AnalyticsStatistics = ({ id, channelId }) => {
   const { isSwipe } = useSwipeAllowed(1800);
 
-  const { channelStat, channelStatLoading } = useChannelStat({ channelId: id });
-
-  const stat = channelStat?.response;
   const { metricsDay, metricsDayPending } = useGetMetricsDay(channelId);
-
+  console.log(metricsDay) 
   return (
     metricsDayPending ? (
       <EmptyContainer>
@@ -64,7 +60,7 @@ const AnalyticsStatistics = ({ id, channelId }) => {
             </StatisticsItemImg>
             <StatisticsName>
               <StatisticsText>Суточный рекл. охват</StatisticsText>
-              <StatisticsCount>{stat?.daily_reach || 0}</StatisticsCount>
+              <StatisticsCount>{metricsDay.reach.avg_daily_reach || 0}</StatisticsCount>
             </StatisticsName>
           </StatisticsItemHead>
           <StatisticsItemContent>
@@ -89,7 +85,7 @@ const AnalyticsStatistics = ({ id, channelId }) => {
             </StatisticsItemImg>
             <StatisticsName>
               <StatisticsText>Суточный рекл. охват</StatisticsText>
-              <StatisticsCount>{stat?.daily_reach || 0}</StatisticsCount>
+              <StatisticsCount>{metricsDay.reach.avg_daily_reach || 0}</StatisticsCount>
             </StatisticsName>
           </StatisticsItemHead>
           <StatisticsItemContent>
@@ -114,7 +110,7 @@ const AnalyticsStatistics = ({ id, channelId }) => {
             </StatisticsItemImg>
             <StatisticsName>
               <StatisticsText>Публикации</StatisticsText>
-              <StatisticsCount>{stat?.posts_count || 0}</StatisticsCount>
+              <StatisticsCount>{metricsDay.posts.all || 0}</StatisticsCount>
             </StatisticsName>
           </StatisticsItemHead>
           <StatisticsItemContent>

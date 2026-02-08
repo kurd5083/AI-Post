@@ -5,27 +5,10 @@ const PostStatsDetails = ({ postsByPeriod, selectedPostData, subscribersDaily, s
   const [counts, setCounts] = useState({ yesterday: 0, week: 0, month: 0 });
 
   useEffect(() => {
-    const today = new Date();
-    const formatDate = (date) => date.toISOString().split("T")[0];
-
-    const todayStr = formatDate(today);
-    const weekAgoStr = formatDate(new Date(today.getTime() - 7 * 86400000));
-    const monthAgoStr = formatDate(new Date(today.getTime() - 30 * 86400000));
-
     if (subscribersDaily?.daily_data) {
-      const data = subscribersDaily.daily_data;
-
-      const yesterday = data
-        .filter(d => d.date === todayStr)
-        .reduce((sum, d) => sum + (d.delta || 0), 0);
-
-      const week = data
-        .filter(d => d.date >= weekAgoStr)
-        .reduce((sum, d) => sum + (d.delta || 0), 0);
-
-      const month = data
-        .filter(d => d.date >= monthAgoStr)
-        .reduce((sum, d) => sum + (d.delta || 0), 0);
+      const yesterday = subscribersDaily.by_day.delta
+      const week = subscribersDaily.by_week.delta
+      const month = subscribersDaily.by_month.delta
 
       setCounts({ yesterday, week, month });
       return;

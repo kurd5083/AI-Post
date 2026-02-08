@@ -21,7 +21,7 @@ export const usePostViewsDynamics = ({ channel_id, dayFilter, dateRanges }) => {
 
   useEffect(() => {
     if (!postsLastDay?.posts?.length) return;
-
+    console.log(selectedPostData) 
     const fetchAllHourly = async () => {
       const posts = await Promise.all(
         postsLastDay.posts.map(async (p) => {
@@ -29,10 +29,9 @@ export const usePostViewsDynamics = ({ channel_id, dayFilter, dateRanges }) => {
           return {
             post_id: p.id,
             post_date: p.post_date,
-            total_views: p.views,
             reposts: p.forwards || 0,
             total_er_percent: p.total_er_percent || 0,
-            total_views: selectedPostData.total_views || 0,
+            total_views: selectedPostData?.total_views || 0,
             hourly: hourly || []
           };
         })
