@@ -7,7 +7,6 @@ import dzen_icon from "@/assets/dzen-icon.svg";
 import fire from "@/assets/tape/fire.svg";
 
 import BtnBase from "@/shared/BtnBase";
-import Empty from "@/shared/Empty";
 import TapeList from "@/components/TapeList";
 import ModernLoading from "@/components/ModernLoading";
 

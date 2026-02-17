@@ -10,11 +10,12 @@ import my_team from "@/assets/popup/my-team.svg";
 import useSwipeAllowed from "@/lib/useSwipeAllowed";
 import { useGetMetricsDay } from "@/lib/analytics/useGetMetricsDay";
 
-const AnalyticsStatistics = ({ id, channelId }) => {
+import { formatText } from "@/hooks/formatText";
+
+const AnalyticsStatistics = ({ channelId }) => {
   const { isSwipe } = useSwipeAllowed(1800);
 
   const { metricsDay, metricsDayPending } = useGetMetricsDay(channelId);
-  console.log(metricsDay) 
   return (
     metricsDayPending ? (
       <EmptyContainer>
@@ -34,7 +35,7 @@ const AnalyticsStatistics = ({ id, channelId }) => {
             </StatisticsItemImg>
             <StatisticsName>
               <StatisticsText>Подписчики</StatisticsText>
-              <StatisticsCount>{metricsDay.subscribers.subscriber_count || 0}</StatisticsCount>
+              <StatisticsCount>{formatText(metricsDay.subscribers.subscriber_count) || 0}</StatisticsCount>
             </StatisticsName>
           </StatisticsItemHead>
           <StatisticsItemContent>
@@ -60,7 +61,7 @@ const AnalyticsStatistics = ({ id, channelId }) => {
             </StatisticsItemImg>
             <StatisticsName>
               <StatisticsText>Суточный рекл. охват</StatisticsText>
-              <StatisticsCount>{metricsDay.reach.avg_daily_reach || 0}</StatisticsCount>
+              <StatisticsCount>{formatText(metricsDay.reach.avg_daily_reach) || 0}</StatisticsCount>
             </StatisticsName>
           </StatisticsItemHead>
           <StatisticsItemContent>
@@ -85,7 +86,7 @@ const AnalyticsStatistics = ({ id, channelId }) => {
             </StatisticsItemImg>
             <StatisticsName>
               <StatisticsText>Суточный рекл. охват</StatisticsText>
-              <StatisticsCount>{metricsDay.reach.avg_daily_reach || 0}</StatisticsCount>
+              <StatisticsCount>{formatText(metricsDay.reach.avg_daily_reach) || 0}</StatisticsCount>
             </StatisticsName>
           </StatisticsItemHead>
           <StatisticsItemContent>
@@ -110,7 +111,7 @@ const AnalyticsStatistics = ({ id, channelId }) => {
             </StatisticsItemImg>
             <StatisticsName>
               <StatisticsText>Публикации</StatisticsText>
-              <StatisticsCount>{metricsDay.posts.all || 0}</StatisticsCount>
+              <StatisticsCount>{formatText(metricsDay.posts.all) || 0}</StatisticsCount>
             </StatisticsName>
           </StatisticsItemHead>
           <StatisticsItemContent>

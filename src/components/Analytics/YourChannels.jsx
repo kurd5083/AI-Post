@@ -13,7 +13,6 @@ import СhannelPlug from '@/shared/СhannelPlug';
 import HighlightText from "@/shared/HighlightText";
 import Empty from "@/shared/Empty";
 
-import { slugchange } from "@/hooks/slugchange";
 import { useUserChannels } from "@/lib/channels/useUserChannels";
 
 const YourChannels = ({ debouncedQuery, viewMode }) => {
@@ -91,7 +90,7 @@ const YourChannels = ({ debouncedQuery, viewMode }) => {
 									{filteredChannels.map((item) => (
 										<TapeItem>
 											<СhannelPlug width="48px" height="48px" text={item.name} />
-											<TapeName to={slugchange(item.name)}>
+											<TapeName to={`/analytics/${item.id}`}>
 												<HighlightText text={item.name} query={debouncedQuery}>{item.name}</HighlightText>
 											</TapeName>
 											<TapeContainer>
@@ -119,7 +118,7 @@ const YourChannels = ({ debouncedQuery, viewMode }) => {
 }
 const YourChannelsSwiper = styled.div`
 	position: relative;
-  display: flex;
+  	display: flex;
 	align-items: center;
 	margin-top: 32px;
 	margin-bottom: 40px;
@@ -129,36 +128,36 @@ const YourChannelsSwiper = styled.div`
     padding: 0 32px 
 	}	
 	@media(max-width: 1400px) { 
-    padding: ${({ $padding }) => $padding || 0};
+    padding: ${({ $padding }) => $padding ? '0 24px' : 0};
 	}	
 	@media(max-width: 768px) { 
     margin-bottom: 90px;
   }
 `
 const YourChannelsButton = styled.button`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 48px;
+	height: 48px;
+	border-radius: 50%;
 	border: 2px solid  ${({ $disabled }) => ($disabled ? "#1C2438" : "transparent")};
 	background-color: ${({ $disabled }) => ($disabled ? "transparent" : "#1C2438")};
-  pointer-events: ${({ $disabled }) => ($disabled ? "none" : "auto")};
+  	pointer-events: ${({ $disabled }) => ($disabled ? "none" : "auto")};
 	flex-shrink: 0;
 
 	&:first-child {
-    transform: rotate(180deg);
-  }
+		transform: rotate(180deg);
+	}
 	@media (max-width: 1400px) {
-    position: absolute;
-    top: -80px;
-    right: 32px;
-    z-index: 2;
+		position: absolute;
+		top: -80px;
+		right: 32px;
+		z-index: 2;
 		&:first-child {
 			right: 88px;
 		}
-  }
+  	}
 	@media(max-width: 768px) { 
 		right: 50%;
 		top: auto;
@@ -171,27 +170,27 @@ const YourChannelsButton = styled.button`
   }
 `
 const YourChannelsTape = styled(Swiper)`
-  margin: 0 48px;
+  	margin: 0 48px;
 	width: 100%;
 
 	@media (max-width: 1400px) {
 		padding: 0 32px;
-    margin: 0;
-  }
+		margin: 0;
+	}
 	@media(max-width: 768px) { 
-    padding: 0 24px
-  }
+		padding: 0 24px
+	}
 `
 const TapeItem = styled(SwiperSlide)`
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-  box-sizing: border-box;
-  padding: 24px;
-  border-radius: 24px;
-  background-color: #1C2438;
-  height: 170px;
-  max-width: 265px;
+	box-sizing: border-box;
+	padding: 24px;
+	border-radius: 24px;
+	background-color: #1C2438;
+	height: 170px;
+	max-width: 265px;
 
   &:last-child {
     margin-right: 0 !important;
@@ -199,31 +198,31 @@ const TapeItem = styled(SwiperSlide)`
 	`
 const TapeName = styled(Link)`
 	margin-top: 24px;
-  margin-bottom: 16px;
-  font-weight: 700;
+	margin-bottom: 16px;
+	font-weight: 700;
 `
 const TapeContainer = styled.div`
-  display: flex;
+  	display: flex;
 	align-items: center;
 	gap: 10px;
 `
 const TapeQuantity = styled.p`
-  color: #6A7080;
-  font-size: 14px;
-  font-weight: 700;
+	color: #6A7080;
+	font-size: 14px;
+	font-weight: 700;
 `
 const YourChannelsList = styled.div`
 	display: grid;
-  gap: 24px 80px;
-  grid-template-columns: repeat(3, 1fr);
+	gap: 24px 80px;
+	grid-template-columns: repeat(3, 1fr);
 	width: 100%;
 
-  @media (max-width: 1200px) {
-    grid-template-columns: repeat(2, 1fr);
-  }
-  @media (max-width: 768px) {
-    grid-template-columns: 1fr;
-  }
+	@media (max-width: 1200px) {
+		grid-template-columns: repeat(2, 1fr);
+	}
+	@media (max-width: 768px) {
+		grid-template-columns: 1fr;
+	}
 `
 const ListItem = styled.div`
 	display: flex;
@@ -258,33 +257,34 @@ const ItemContainer = styled.div`
 `
 const ListName = styled(Link)`
 	margin-bottom: 8px;
-  font-weight: 700;
+  	font-weight: 700;
 `
 const ListContainer = styled.div`
-  display: flex;
+  	display: flex;
 	align-items: center;
 	gap: 10px;
 `
 const ListQuantity = styled.p`
- color: #6A7080;
-  font-size: 14px;
-  font-weight: 700;
+ 	color: #6A7080;
+	font-size: 14px;
+	font-weight: 700;
 `
 const GoOver = styled(Link)`
- color: #336CFF;
-  font-size: 14px;
-  font-weight: 700;
+	color: #336CFF;
+	font-size: 14px;
+	font-weight: 700;
 `
 const EmptyContainer = styled.div`
 	margin-top: 32px;
 	margin-bottom: 40px;
 	padding: 0 56px;
-  @media(max-width: 1600px) {
-    padding: 0 32px;
-  }
-  @media(max-width: 768px) {
-    padding: 0 24px;
-  }
+	
+	@media(max-width: 1600px) {
+		padding: 0 32px;
+	}
+	@media(max-width: 768px) {
+		padding: 0 24px;
+	}
 `
 
 export default YourChannels

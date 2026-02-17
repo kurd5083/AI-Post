@@ -1,6 +1,6 @@
 import { useState, useMemo } from "react";
 import styled from "styled-components";
-import { useParams } from "react-router";
+import { useParams, useSearchParams } from "react-router";
 
 import location_icon from "@/assets/location-icon.svg";
 import AiGeneratorIcon from "@/icons/AiGeneratorIcon";
@@ -23,9 +23,14 @@ import { useAnalyticsStore } from "@/store/useAnalyticsStore";
 const AnalyticsChannels = () => {
   const [activeTab, setActiveTab] = useState("statistics");
   const { id } = useParams();
-  const { channel } = useChannelById(Number(id));
-  const { channelInfo, channelPending } = useGetTelescopeInfo(channel?.channelId);
-  const changeContent = (tab) => setActiveTab(tab);
+
+  const [searchParams] = useSearchParams();
+  const monitored = searchParams.get('monitored'); 
+  const { channel } = useChannelById(Number(id), monitored);
+
+  const { channelInfo, channelPending } = useGetTelescopeInfo(monitored? id : channel?.channelId);
+
+  const changeContent = (tab) => setActiveTab(tab)
 
   const {
     dayFilter,
@@ -99,6 +104,7 @@ const AnalyticsChannels = () => {
       averageCoverageAvgFilterRange: calcRange(filters.averageCoverageAvgFilter),
     };
   }
+
   return (
     <>
       {channelPending ? (
@@ -122,7 +128,7 @@ const AnalyticsChannels = () => {
               </ChannelInfoValue>
             </ChannelInfoBlock>
           </ChannelInfoWrapper>
-          <AnalyticsStatistics id={channel?.id} channelId={channel?.channelId} />
+          <AnalyticsStatistics channelId={monitored? id : channel?.channelId} />
           <ContentHeadContainer>
             <ContentHead>
               <ContentHeadText $active={activeTab === "statistics"} onClick={() => changeContent("statistics")}>
@@ -152,17 +158,23 @@ const AnalyticsChannels = () => {
             )}
           </ContentHeadContainer>
           {activeTab === "statistics" ? (
-            <StatisticsTab
-              id={channel.id}
-              channel_id={channel.channelId}
+            <StatisticsTab  
+              id={Number(id)} 
+              channelName={monitored && channelInfo?.channel?.title} 
+              channelAva={monitored && channelInfo?.channel?.avatar_url} 
+              channelSubscriber={monitored && channelInfo?.channel?.subscriber_count} 
+              channel_id={monitored? id : channel?.channelId} 
               dateRanges={dateRange}
             />
           ) : (
-            <PreviewTab channel_id={channel.channelId} id={channel.id} channelName={channel.name} channelAva={channelInfo?.channel?.avatar_url} />
+            <PreviewTab 
+              channel_id={monitored? id : channel?.channelId} 
+              channelName={monitored? channelInfo?.channel?.title : channelInfo?.channel?.name} 
+              channelAva={channelInfo?.channel?.avatar_url} 
+            />
           )}
         </>
       )}
-
     </>
   );
 };

@@ -19,12 +19,15 @@ const DayBarChart = ({
   const [hoverData, setHoverData] = useState(null);
 
   useEffect(() => {
-    const updateWidth = () => {
-      if (chartRef.current) setChartWidth(chartRef.current.offsetWidth);
-    };
-    updateWidth();
-    window.addEventListener("resize", updateWidth);
-    return () => window.removeEventListener("resize", updateWidth);
+    if (!chartRef.current) return;
+
+    const observer = new ResizeObserver(([entry]) => {
+      setChartWidth(entry.contentRect.width);
+    });
+
+    observer.observe(chartRef.current);
+
+    return () => observer.disconnect();
   }, []);
 
   const buildYAxis = (values = [], steps = 5) => {
@@ -76,9 +79,7 @@ const DayBarChart = ({
   const MAX_BAR_WIDTH = 44;
 
   const step = chartWidth / chartPoints.length;
-  console.log(percent)
   let barWidth = step * 0.7;
-  let gap = step * 0.3;
 
   barWidth = maxColumnWidth8
     ? barWidth
@@ -170,8 +171,25 @@ const DayBarChart = ({
 
       <StatsData $chartWidth={chartWidth} $maxColumnWidth8={maxColumnWidth8}>
         {chartLabels.length > 0 &&
-          chartLabels.map((label, i) => {
+          chartLabels.map((label, i, arr) => {
+            const isFirst = i === 0;
+            const isLast = i === arr.length - 1;
+
+            let showLabel = false;
+            if (type === "dynamicsPosts") {
+              showLabel = true;
+            } else {
+              const minWidthPerTick = 70;
+              const maxTicks = Math.min(11, Math.max(1, Math.floor(chartWidth / minWidthPerTick)));
+              const step = Math.ceil(chartLabels.length / maxTicks);
+
+              if (isFirst || isLast || i % step === 0) showLabel = true;
+            }
+
+            if (!showLabel) return null;
+
             const x = i * step + barWidth / 2;
+
             return (
               <span
                 key={i}
@@ -183,7 +201,7 @@ const DayBarChart = ({
                   display: "inline-block",
                 }}
               >
-                {label}
+                {type === "dynamicsPosts" ? label : label}
               </span>
             );
           })}

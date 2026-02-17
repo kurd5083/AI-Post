@@ -4,7 +4,6 @@ import styled from "styled-components";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
 import "swiper/css";
-
 import ArrowIcon from "@/icons/ArrowIcon";
 import TgIcon from "@/icons/TgIcon";
 
@@ -14,7 +13,7 @@ import MentionsCard from "@/components/Cards/MentionsCard";
 import CustomSelectThree from "@/shared/CustomSelectThree";
 
 import { useUserChannels } from "@/lib/channels/useUserChannels";
-import { useMentions } from "@/lib/tgStat/useMentions";
+import { useMentionsDiscover } from "@/lib/analytics/useMentionsDiscover";
 
 const FeedMentions = () => {
   const [atStart, setAtStart] = useState(true);
@@ -25,12 +24,12 @@ const FeedMentions = () => {
 
   useEffect(() => {
     if (userChannels?.length) {
-      setSelectedChannelId(userChannels[0].id);
+      setSelectedChannelId(userChannels[0].channelId);
     }
   }, [userChannels]);
-  const { mentions, mentionsPending } = useMentions({
-    channelId: selectedChannelId,
-    limit: 8,
+  
+  const { mentions, mentionsPending } = useMentionsDiscover({
+    channel_id: selectedChannelId
   });
 
   const mentionItems = mentions?.response?.items || [];
@@ -45,7 +44,7 @@ const FeedMentions = () => {
           </TitleLeft>
           <CustomSelectThree
             options={userChannels?.map((c) => ({
-              id: c.id,
+              id: c.channelId,
               label: c.name,
               icon: c.name,
             }))}

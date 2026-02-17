@@ -13,7 +13,7 @@ import CustomSelectThree from "@/shared/CustomSelectThree";
 import Empty from '@/shared/Empty';
 
 import { useGetDayTracking } from "@/lib/analytics/useGetDayTracking";
-import { useMentions } from "@/lib/tgStat/useMentions";
+import { useMentionsDiscover } from "@/lib/analytics/useMentionsDiscover";
 
 const months = [
 	"янв", "фев", "мар", "апр", "май", "июн",
@@ -29,17 +29,18 @@ const formatPostDate = (timestamp) => {
 	return `${day} ${month}, ${hours}:${minutes}`;
 };
 
-const PreviewTab = ({ channel_id, id, channelName, channelAva }) => {
+const PreviewTab = ({ channel_id, channelName, channelAva }) => {
 	const [viewMode, setViewMode] = useState("List");
 	const { dayTracking, dayTrackingPending } = useGetDayTracking({ channel_id });
-	const { mentions, mentionsPending } = useMentions({
-		channelId: id,
-		limit: 8,
-	});
+	const { mentions, mentionsPending } = useMentionsDiscover({ channel_id });
+
 	const handleChange = (newValue) => {
 		if (!newValue) return;
 		setViewMode(newValue);
 	};
+
+	const posts = dayTracking?.posts || [];
+	const mentionsList = mentions?.response?.items || [];
 
 	return (
 		<PreviewContainer>
@@ -66,11 +67,10 @@ const PreviewTab = ({ channel_id, id, channelName, channelAva }) => {
 				<MentionsList>
 					{mentionsPending ? (
 						<Empty icon="📣">Загрузка упоминаний...</Empty>
-					) : !mentions || !mentions.response || mentions.response.items.length === 0 ? (
+					) : mentionsList.length === 0 ? (
 						<Empty icon="📣">Упоминаний нет</Empty>
 					) : (
-						mentions?.response?.items.map((m) => {
-							if (!m?.postDetails) return null;
+						mentionsList.map((m) => {
 
 							if (viewMode === 'List') {
 								return (
@@ -153,43 +153,41 @@ const PreviewTab = ({ channel_id, id, channelName, channelAva }) => {
 				<PostsList>
 					{dayTrackingPending ? (
 						<Empty icon="📝">Загрузка постов...</Empty>
+					) : posts.length === 0 ? (
+						<Empty icon="📝">Постов нет</Empty>
 					) : (
-						!!dayTracking.posts && dayTracking.posts.length == 0 ? (
-							<Empty icon="📝">Постов нет</Empty>
-						) : (
-							dayTracking.posts.map(p => (
-								<PostsCard key={p.post_id}>
-									<PostHead>
-										{channelAva ? (
-											<ChannelImg src={channelAva} alt={channelName} />
-										) : (
-											<СhannelPlug width="32px" height="32px" text={channelName} radius="50%" />
-										)}
-										<PostChannelName>{channelName}</PostChannelName>
-										<PostTime>
-											<TimeIcon color="#6A7080" />
-											{new Date(p.post_date).toLocaleString("ru-RU", {
-												day: "numeric",
-												month: "short",
-												hour: "2-digit",
-												minute: "2-digit",
-												timeZone: "UTC",
-											})}
-										</PostTime>
-									</PostHead>
-									<PostText>{p.text_preview}</PostText>
+						posts.map((p) => (
+							<PostsCard key={p.post_id}>
+								<PostHead>
+									{channelAva ? (
+										<ChannelImg src={channelAva} alt={channelName} />
+									) : (
+										<СhannelPlug width="32px" height="32px" text={channelName} radius="50%" />
+									)}
+									<PostChannelName>{channelName}</PostChannelName>
+									<PostTime>
+										<TimeIcon color="#6A7080" />
+										{new Date(p.post_date).toLocaleString("ru-RU", {
+											day: "numeric",
+											month: "short",
+											hour: "2-digit",
+											minute: "2-digit",
+											timeZone: "UTC",
+										})}
+									</PostTime>
+								</PostHead>
+								<PostText>{p.text_preview}</PostText>
 
-									<PostFooter>
-										<PostFooterParams>
-											<EyeIcon color="#336CFF" hoverColor="#336CFF" width={20} height={20} cursor="default" /> {p.views}
-										</PostFooterParams>
-										<PostArrow>
-											<ArrowIcon color="#6A7080" hoverColor="#6A7080" />
-										</PostArrow>
-									</PostFooter>
-								</PostsCard>
-							))
-						)
+								<PostFooter>
+									<PostFooterParams>
+										<EyeIcon color="#336CFF" hoverColor="#336CFF" width={20} height={20} cu	rsor="default" /> {p.views}
+									</PostFooterParams>
+									<PostArrow>
+										<ArrowIcon color="#6A7080" hoverColor="#6A7080" />
+									</PostArrow>
+								</PostFooter>
+							</PostsCard>
+						))
 					)}
 				</PostsList>
 			</div>
@@ -209,7 +207,7 @@ const PreviewContainer = styled.div`
 
 	}	
 	@media(max-width: 991px) { 
-			grid-template-columns: 1fr;
+		grid-template-columns: 1fr;
 	}	
 	@media(max-width: 768px) { 
 		padding: 0 24px;
@@ -247,7 +245,8 @@ const MentionsList = styled.div`
 	flex-direction: column;
 	gap: 18px;
 	margin-top: 20px;
-	max-height: 330px;
+	min-height: 330px;
+	max-height: calc(100dvh - 500px);
 	overflow-y: auto;
   	scrollbar-width: none;
 	padding-bottom: 30px;
@@ -327,7 +326,8 @@ const PostsList = styled.div`
 	flex-direction: column;
 	gap: 18px;
 	margin-top: 40px;
-	max-height: 330px;
+	min-height: 330px;
+	max-height: calc(100dvh - 500px);
 	overflow-y: auto;
   	scrollbar-width: none;
 	padding-bottom: 30px;

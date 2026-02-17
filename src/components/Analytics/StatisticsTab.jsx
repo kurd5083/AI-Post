@@ -13,6 +13,7 @@ import { useGetPostsByPeriod } from "@/lib/analytics/useGetPostsByPeriod";
 import { useGetAnalyticsReach } from "@/lib/analytics/useGetAnalyticsReach";
 import { usePostViewsDynamics } from "@/hooks/analytics/usePostViewsDynamics";
 
+import { formatText } from "@/hooks/formatText";
 import useResolution from "@/hooks/useResolution";
 
 import { useAnalyticsStore } from "@/store/useAnalyticsStore";
@@ -32,7 +33,7 @@ const parseLocalDate = (dateStr) => {
   return new Date(y, m - 1, d);
 };
 
-const StatisticsTab = ({ id, channel_id, dateRanges }) => {
+const StatisticsTab = ({ id, channel_id, channelName, channelAva, channelSubscriber, dateRanges }) => {
   const { isSmall } = useResolution(768);
   const { openPopup } = usePopupStore();
 
@@ -290,13 +291,13 @@ const StatisticsTab = ({ id, channel_id, dateRanges }) => {
               {item.content === "publications_analytics" ? (
                 postsByPeriod?.data?.reduce((sum, p) => sum + (p.posts_count || 0), 0) || 0
               ) : item.content === "subscriber_growth" ? (
-                subscribersDaily?.current_subscribers || 0
+                formatText(subscribersDaily?.current_subscribers) || 0
               ) : item.content === "subscriptions_day" ? (
                 subscribersDay?.by_day.delta || 0
-              ) : item.content === "dynamics_posts" && selectedPostData ? (
+              ) : item.content === "dynamics_posts" ? (
                 <>
-                  <span>Пост #{selectedPostData.post_id}</span>
-                  {selectedPostData.total_views || 0}
+                  <span>Пост #{selectedPostData?.post_id || 0}</span>
+                  {selectedPostData?.hourly?.current_views || 0}
                 </>
               ) : item.content === "average_advertising" ? (
                 adReachPeriod?.by_day.avg_ad_reach || 0
@@ -338,9 +339,12 @@ const StatisticsTab = ({ id, channel_id, dateRanges }) => {
               $bg="#161F37"
               $padding="12px 24px"
               onClick={() => openPopup(item.content, "popup", {
+                channelAva: channelAva,
+                channelName: channelName,
+                channelSubscriber: channelSubscriber,
                 channelId: id,
                 channel_id: channel_id,
-                dateRanges
+                dateRanges,
               })}
             >
               Подробнее
@@ -416,7 +420,7 @@ const StatisticsTab = ({ id, channel_id, dateRanges }) => {
 };
 
 const StatisticsContainer = styled.div`
-box-sizing: border-box;
+  box-sizing: border-box;
   margin-top: 40px;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(550px, 1fr));
@@ -464,6 +468,7 @@ const ButtonsMore = styled.div`
   z-index: 10;
   @media(max-width: 640px) { 
     position: static;
+    flex-wrap: wrap;
   }
 `;
 
@@ -524,6 +529,7 @@ const StatsChartContainer = styled.div`
   flex: 1;
   grid-template-rows: 150px 30px;
   padding-top: 50px;
+  width: 100%;
   @media(max-width: 768px) { 
     padding-top: 0px;
   }

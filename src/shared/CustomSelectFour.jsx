@@ -97,6 +97,7 @@ const DropdownHeader = styled.div`
   gap: 16px;
   justify-content: ${({ $view }) => $view ? 'flex-end' : 'flex-start'};
   cursor: pointer;
+  height: 46px;
 `;
 const HeaderText = styled.p`
   max-width: 180px;
@@ -121,7 +122,7 @@ const DropdownList = styled.div`
   background: ${({ $background }) => $background};
   backdrop-filter: blur(20px);
   border-radius: 12px;
-  margin-top: 20px;
+  margin-top: 10px;
   max-height: 200px;
   width: 180px;
   overflow-y: auto;

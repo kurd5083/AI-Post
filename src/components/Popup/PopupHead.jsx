@@ -1,17 +1,26 @@
 import styled from "styled-components";
+import { useSearchParams } from "react-router";
+
 import setting from "@/assets/setting.svg";
 import ArrowIcon from "@/icons/ArrowIcon";
-import { usePopupStore } from "@/store/popupStore"
-import { popupDatas } from "@/data/popupDatas";
 import CloseIcon from "@/icons/CloseIcon";
-import { useChannelById } from "@/lib/channels/useChannelById";
+
 import СhannelPlug from "@/shared/СhannelPlug";
+
+import { useChannelById } from "@/lib/channels/useChannelById";
+
+import { usePopupStore } from "@/store/popupStore"
+
+import { popupDatas } from "@/data/popupDatas";
 
 const PopupHead = () => {
   const { popup, closePopup, goBack } = usePopupStore()
   const channelId = popup?.data?.channelId;
   const foundItem = popupDatas.find(elem => elem.key == popup.content)
   const { channel } = useChannelById(channelId);
+
+  const [searchParams] = useSearchParams();
+  const monitored = searchParams.get('monitored');
 
   return (
     <>
@@ -22,10 +31,14 @@ const PopupHead = () => {
               <ArrowIcon width={8} height={16} />
             </PopupArrow>
           }
-          <СhannelPlug width="48px" height="48px" text={channel?.name || "U"} />
+          {monitored ? (
+            <PopupListAva src={popup.data.channelAva} alt={popup.data.channelName} />
+          ) : (
+            <СhannelPlug width="48px" height="48px" text={(monitored ? popup.data.channelName : channel?.name) || "U"} />
+          )}
           <PopupListInfoContent>
-            <p>{channel?.name || "Имя канала..."}</p>
-            <span>{channel?.subscribersCount || 0} Подписчиков</span>
+            <p>{(monitored ? popup.data.channelName : channel?.name) || "Имя канала..."}</p>
+            <span>{(monitored ? popup.data.channelSubscriber : channel?.subscribersCount) || 0} Подписчиков</span>
           </PopupListInfoContent>
         </PopupListInfo>
       )}
@@ -81,6 +94,7 @@ const PopupListInfo = styled.section`
   }
   @media(max-width: 768px) {
     padding: 0 24px;
+    padding-right: 80px;
   }
 `
 const PopupArrow = styled.div`
@@ -88,12 +102,20 @@ const PopupArrow = styled.div`
   cursor: pointer;
 `
 const PopupListAva = styled.img`
-  border-radius: 50%;
-`
+	width: 48px;
+	height: 48px;
+	border-radius: 50%;
+	object-fit: cover;
+`;
 const PopupListInfoContent = styled.div`
   display: flex;
   flex-direction: column;
   gap: 8px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+
   p {
     font-weight: 700;
     line-height: 16px;
@@ -104,6 +126,7 @@ const PopupListInfoContent = styled.div`
     font-weight: 700;
     line-height: 12px;
   }
+
 `
 const PopupListHead = styled.section`
   position: relative;

@@ -1,12 +1,13 @@
 import styled from "styled-components";
 
+import { formatText } from "@/hooks/formatText";
+
 const ChatWindow = ({ hoverData, height, width = 400 }) => {
   if (!hoverData) return null;
 
   let tooltipOffsetX = -120; 
   if (hoverData.x < 120) tooltipOffsetX = 10;
   else if (hoverData.x > width - 120) tooltipOffsetX = -140;
-        console.log(hoverData)
 
   return (
     <>
@@ -31,7 +32,7 @@ const ChatWindow = ({ hoverData, height, width = 400 }) => {
       >
         <ChartDate>{hoverData.date}</ChartDate>
         <ChartNumber>
-          {hoverData.value}
+          {formatText(hoverData.value)}
           {hoverData.small != null && (
           <>
             <span> / </span>

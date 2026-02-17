@@ -39,7 +39,7 @@ const PublicationsPopup = () => {
   const { postsArchived } = useGetArchivedPosts(channelId);
   const selectedChannel = userChannels.find((c) => c.id === channelId);
   const [itemsPerPage, setItemsPerPage] = useState(itemsPerPageDefault);
-  
+
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth < 768) setItemsPerPage(itemsPerPageMob);

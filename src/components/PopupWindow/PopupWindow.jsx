@@ -9,6 +9,8 @@ import ChangeTimePopup from "@/components/PopupWindow/ChangeTimePopup";
 import EnterLinkPopup from "@/components/PopupWindow/EnterLinkPopup";
 import UpdateCalendarEventPopup from "@/components/PopupWindow/UpdateCalendarEventPopup";
 import ChangeTimePopupCard from "@/components/PopupWindow/ChangeTimePopupCard";
+import ChangeUrlPopup from "@/components/PopupWindow/ChangeUrlPopup";
+
 const PopupWindow = () => {
     const { popup, goBack, closePopup } = usePopupStore();
 
@@ -33,8 +35,8 @@ const PopupWindow = () => {
                     <EnterLinkPopup />
                 ) : popup.content == 'update_calendar_event' ?(
                     <UpdateCalendarEventPopup />
-                ) : (
-                    2
+                ) : popup.content == 'change_url' && (
+                    <ChangeUrlPopup />
                 )}
             </PopupContent>
         </PopupContainer>

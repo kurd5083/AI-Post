@@ -1,24 +1,17 @@
 import styled from "styled-components";
 
-import BtnBase from "@/shared/BtnBase";
 import СhannelPlug from '@/shared/СhannelPlug';
 import Empty from "@/shared/Empty";
 
-import { useAddSubscribeChannel } from "@/lib/channels/useAddSubscribeChannel";
-
 const ChannelInfo = ({ channel }) => {
-	const { mutate: addSubscribe, isPending: subscribePending } = useAddSubscribeChannel();
-
-	const handleSubscribe = () => {
-		addSubscribe({ channel: `@${channel.username}` });
-	}
+	
 	return (
 		<ChannelInfoContainer>
 			<ChannelHeader>
 				{channel?.avatar_url ? (
 					<img
 						src={channel?.avatar_url}
-						alt={channel.title}
+						alt={channel?.title}
 						style={{
 							width: window.innerWidth < 480 ? 80 : window.innerWidth < 1400 ? 104 : 144,
 							height: window.innerWidth < 480 ? 80 : window.innerWidth < 1400 ? 104 : 144,
@@ -44,27 +37,18 @@ const ChannelInfo = ({ channel }) => {
 						}
 						radius={window.innerWidth < 1400 ? "24px" : "32px"}
 						fs={window.innerWidth < 1400 ? "24px" : "36px"}
-						text={channel.title}
+						text={channel?.title || 'U'}
 					/>
 				)}
 				<div>
-					<ChannelName>{channel.title}</ChannelName>
-					<ChannelUsername>@{channel.username}</ChannelUsername>
-					<BtnBase
-						$bg="#336CFF"
-						$color="#FFFFFF"
-						$padding="17px 40px"
-						onClick={handleSubscribe}
-						disabled={subscribePending}
-					>
-						{subscribePending ? "Подписка..." : "Отслеживать канал"}
-					</BtnBase>
+					<ChannelName>{channel?.title}</ChannelName>
+					<ChannelUsername>@{channel?.username}</ChannelUsername>
 				</div>
 			</ChannelHeader>
 			<ChannelDescription>
 				<DescriptionTitle>Описание</DescriptionTitle>
-				{channel.description ? (
-					<DescriptionText>{channel.description}</DescriptionText>
+				{channel?.description ? (
+					<DescriptionText>{channel?.description}</DescriptionText>
 				) : (
 					<Empty icon="📝">Добавьте описание</Empty>
 				)}
@@ -77,19 +61,19 @@ const ChannelInfoContainer = styled.div`
 	margin-top: 40px;
 	display: grid;
 	grid-template-columns: 1fr 1fr;
-  padding: 0 56px 40px;
+  	padding: 0 56px 40px;
 	gap: 40px 0;
  
-  @media(max-width: 1600px) { 
-    padding: 0 32px 40px 
+	@media(max-width: 1600px) { 
+		padding: 0 32px 40px 
 	}	
 	@media(max-width: 991px) { 
-   grid-template-columns: 1fr;
+   		grid-template-columns: 1fr;
 	}	
-  @media(max-width: 768px) { 
-    padding: 0 24px 40px;
+ 	@media(max-width: 768px) { 
+    	padding: 0 24px 40px;
 		margin-top: 32px;
-  }
+  	}
 `
 const ChannelHeader = styled.div`
 	display: flex;
@@ -103,25 +87,30 @@ const ChannelHeader = styled.div`
   	}
 `
 const ChannelName = styled.h2`
-  font-size: 32px;
-  font-weight: 700;
-  margin-bottom: 10px;
+	font-size: 32px;
+	font-weight: 700;
+	margin-bottom: 10px;
+	display: -webkit-box;
+	-webkit-line-clamp: 4;
+	-webkit-box-orient: vertical;
+	overflow: hidden;
 `
 const ChannelUsername = styled.p`
 	font-size: 14px;
-  font-weight: 700;
+  	font-weight: 700;
 	margin-bottom: 32px;
 	color: #6A7080;
 `
 const ChannelDescription = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  padding-left: 48px;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	padding-left: 48px;
 	border-left: 2px solid #2E3954;
+
 	@media(max-width: 480px) { 
-    padding-left: 32px;
-  }
+		padding-left: 32px;
+	}
 `
 const DescriptionTitle = styled.h3`
   font-size: 14px;

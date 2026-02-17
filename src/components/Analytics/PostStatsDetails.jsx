@@ -25,10 +25,10 @@ const PostStatsDetails = ({ postsByPeriod, selectedPostData, subscribersDaily, s
     return (
       <>
         <StatsCardDetailItem>
-          {selectedPostData.total_er_percent || 0}% <span>ER</span>
+          {selectedPostData?.hourly?.current_er_percent || 0}% <span>ER</span>
         </StatsCardDetailItem>
         <StatsCardDetailItem>
-          {selectedPostData.reposts || 0} <span>Репосты</span>
+          {selectedPostData?.hourly?.current_forwards || 0} <span>Репосты</span>
         </StatsCardDetailItem>
         <StatsCardDetailItem>
           <span>
@@ -65,7 +65,7 @@ const PostStatsDetails = ({ postsByPeriod, selectedPostData, subscribersDaily, s
           {subscribersDay.by_day.left} <span>Подписки</span>
         </StatsCardDetailItem>
 
-        <StatsCardDetailItem $value={subscribersDay.by_day.delta}>
+        <StatsCardDetailItem $value={-subscribersDay.by_day.delta}>
           {subscribersDay.by_day.delta} <span>Отписки</span>
         </StatsCardDetailItem>
       </>

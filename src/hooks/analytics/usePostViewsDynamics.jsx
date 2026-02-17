@@ -21,17 +21,15 @@ export const usePostViewsDynamics = ({ channel_id, dayFilter, dateRanges }) => {
 
   useEffect(() => {
     if (!postsLastDay?.posts?.length) return;
-    console.log(selectedPostData) 
+
     const fetchAllHourly = async () => {
       const posts = await Promise.all(
         postsLastDay.posts.map(async (p) => {
           const hourly = await getViewsDynamics({ post_id: p.id });
+
           return {
             post_id: p.id,
             post_date: p.post_date,
-            reposts: p.forwards || 0,
-            total_er_percent: p.total_er_percent || 0,
-            total_views: selectedPostData?.total_views || 0,
             hourly: hourly || []
           };
         })
@@ -47,8 +45,8 @@ export const usePostViewsDynamics = ({ channel_id, dayFilter, dateRanges }) => {
     const hourlyData = selectedPostData.hourly?.data || selectedPostData.hourly || [];
     const points = hourlyData.map(h => h.views);
     const percentPoints = hourlyData.map(h => h.views_delta);
-    const totalViews = selectedPostData.total_views ?? points.reduce((sum, v) => sum + v, 0);
-    const percent = percentPoints.map(v => totalViews ? (v / totalViews) * 100 : 0);
+    const totalViews = selectedPostData?.hourly?.current_views || 0;
+    const percent = percentPoints.map(v => totalViews ? Math.round((v / totalViews) * 100) : 0);
 
     const labels = hourlyData.map(h => {
       const hour = h.time_label.replace('h', '').padStart(2, '0');
@@ -56,16 +54,15 @@ export const usePostViewsDynamics = ({ channel_id, dayFilter, dateRanges }) => {
         short: `${hour}:00`,
         medium: `${hour}:00`,
         full: `${hour}:00 ч.`,
-        total_views: selectedPostData.total_views,
+        total_views: totalViews,
         reposts: selectedPostData.reposts,
         total_er_percent: selectedPostData.total_er_percent,
-
       };
   });
 
   setDayData(points, labels, postsWithHourly, percent);
   }, [selectedPostData, postsWithHourly, setDayData]);
-  
+
   const postOptions = useMemo(
     () =>
       postsLastDay?.posts?.map(p => ({

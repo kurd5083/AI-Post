@@ -5,6 +5,7 @@ import list from "@/assets/list.svg";
 import tape from "@/assets/tape.svg";
 
 import CustomSelectThree from "@/shared/CustomSelectThree";
+import BtnBase from "@/shared/BtnBase";
 
 import PageHead from '@/components/PageHead'
 import YourChannels from "@/components/Analytics/YourChannels";
@@ -14,7 +15,7 @@ import PageFilter from "@/components/PageFilter";
 import { useDebounce } from "@/lib/useDebounce";
 
 import useSearchStore from "@/store/searchStore";
-
+import { usePopupStore } from "@/store/popupStore"
 
 const categoriesData = [
   [
@@ -39,15 +40,15 @@ const Analytics = () => {
   const [active, setActive] = useState({ col: 0, index: 0 });
   const [viewMode, setViewMode] = useState("List");
 
+  const { openPopup } = usePopupStore();
   const { searchQuery } = useSearchStore();
   const debouncedQuery = useDebounce(searchQuery, 500);
-
-
 
   const handleChange = (newValue) => {
     if (!newValue) return;
     setViewMode(newValue);
   };
+
   return (
     <>
       <PageHead />
@@ -55,6 +56,16 @@ const Analytics = () => {
       <AnalyticsContainer>
         <TitleContainer>
           <AnalyticsTitle>Ваши каналы</AnalyticsTitle>
+          <AnalyticsButton>
+            <BtnBase
+              $bg="#336CFF"
+              $color="#FFFFFF"
+              $padding="14px 20px"
+              onClick={() => openPopup("change_url", "popup_window")}
+            >
+              Отслеживать канал
+            </BtnBase>
+          </AnalyticsButton>
           <FilterBlock>
             <img src={viewMode === 'List' ? list : tape} alt="view icon" />
             <CustomSelectThree
@@ -73,7 +84,7 @@ const Analytics = () => {
         <TitleContainer>
           <AnalyticsTitle>Отслеживаемые каналы</AnalyticsTitle>
         </TitleContainer>
-        <MonitoredChannels debouncedQuery={debouncedQuery}/>
+        <MonitoredChannels debouncedQuery={debouncedQuery} />
         <TitleContainer>
           <AnalyticsTitleBig>Все категории</AnalyticsTitleBig>
         </TitleContainer>
@@ -138,6 +149,12 @@ const FilterBlock = styled.div`
   border-radius: 8px;
   background-color: #1A1F2D;
 `;
+const AnalyticsButton = styled.div` 
+  display: flex;
+  justify-content: flex-end;
+	flex-grow: 1;
+`;
+
 const AnalyticsTitleBig = styled.h2`
 	font-size: 32px;
 	font-weight: 700;
