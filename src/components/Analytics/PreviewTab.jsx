@@ -29,18 +29,19 @@ const formatPostDate = (timestamp) => {
 	return `${day} ${month}, ${hours}:${minutes}`;
 };
 
-const PreviewTab = ({ channel_id, channelName, channelAva }) => {
+const PreviewTab = ({ monitored, channel_id, channelName, channelAva }) => {
+	console.log(channel_id)
 	const [viewMode, setViewMode] = useState("List");
 	const { dayTracking, dayTrackingPending } = useGetDayTracking({ channel_id });
 	const { mentions, mentionsPending } = useMentionsDiscover({ channel_id });
-
+	console.log(mentions?.mentions)
 	const handleChange = (newValue) => {
 		if (!newValue) return;
 		setViewMode(newValue);
 	};
 
 	const posts = dayTracking?.posts || [];
-	const mentionsList = mentions?.response?.items || [];
+	const mentionsList = (monitored ? mentions?.mentions : mentions?.response?.items) || [];
 
 	return (
 		<PreviewContainer>
@@ -70,21 +71,21 @@ const PreviewTab = ({ channel_id, channelName, channelAva }) => {
 					) : mentionsList.length === 0 ? (
 						<Empty icon="📣">Упоминаний нет</Empty>
 					) : (
-						mentionsList.map((m) => {
+						mentionsList.map((m, index) => {
 
 							if (viewMode === 'List') {
 								return (
-									<MentionCard key={m.id}>
+									<MentionCard key={index}>
 										<MentionsCardChannelInfo>
-											<ChannelAva src={m.postDetails.image} alt="" />
+											<ChannelAva src={monitored ? m.avatar_url : m.postDetails.image} alt="" />
 
 											<ChannelInfoContainer>
-												<ChannelName>{m.postDetails.channelTitle}</ChannelName>
+												<ChannelName>{monitored ? m.channel_name : m.postDetails.channelTitle}</ChannelName>
 
 												<CardDetail>
 													<MentionsCardParams>
 														<img src={users} alt="users icon" />
-														{m.postDetails.audience}
+														{monitored ? m.sub_count : m.postDetails.audience}
 													</MentionsCardParams>
 
 													<MentionsCardParams>
@@ -95,7 +96,7 @@ const PreviewTab = ({ channel_id, channelName, channelAva }) => {
 															height={12}
 															cursor="default"
 														/>
-														{m.postDetails.views}
+														{monitored ? m.views : m.postDetails.views}
 													</MentionsCardParams>
 												</CardDetail>
 											</ChannelInfoContainer>
@@ -105,7 +106,7 @@ const PreviewTab = ({ channel_id, channelName, channelAva }) => {
 											<MentionsCardMentionFrom>Упомянул канал</MentionsCardMentionFrom>
 											<MentionsCardTimestamp>
 												<TimeIcon color="#6A7080" />
-												{formatPostDate(m.postDetails.date)}
+												{monitored ? m.date : formatPostDate(m.postDetails.date)}
 											</MentionsCardTimestamp>
 										</MentionsCardMeta>
 									</MentionCard>
@@ -115,16 +116,16 @@ const PreviewTab = ({ channel_id, channelName, channelAva }) => {
 							return (
 								<PostsCard key={m.id}>
 									<PostHead>
-										<PostChannelAva src={m.postDetails.image} />
-										<PostChannelName>{m.postDetails.channelTitle}</PostChannelName>
+										<PostChannelAva src={monitored ? m.avatar_url : m.postDetails.image} />
+										<PostChannelName>{monitored ? m.channel_name : m.postDetails.channelTitle}</PostChannelName>
 										<PostTime>
 											<TimeIcon color="#6A7080" />
-											{formatPostDate(m.postDetails.date)}
+											{monitored ? m.date : formatPostDate(m.postDetails.date)}
 										</PostTime>
 									</PostHead>
 
 									<PostText
-										dangerouslySetInnerHTML={{ __html: m.postDetails.text }}
+										dangerouslySetInnerHTML={{ __html: monitored ? m.post_text : m.postDetails.text }}
 									/>
 
 									<PostFooter>
@@ -136,7 +137,7 @@ const PreviewTab = ({ channel_id, channelName, channelAva }) => {
 												height={20}
 												cursor="default"
 											/>
-											{m.postDetails.views}
+											{monitored ? m.views : m.postDetails.views}
 										</PostFooterParams>
 
 										<MentionsCardMentionFrom>Упомянул канал</MentionsCardMentionFrom>
@@ -245,7 +246,6 @@ const MentionsList = styled.div`
 	flex-direction: column;
 	gap: 18px;
 	margin-top: 20px;
-	min-height: 330px;
 	max-height: calc(100dvh - 500px);
 	overflow-y: auto;
   	scrollbar-width: none;

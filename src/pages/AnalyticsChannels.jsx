@@ -168,6 +168,7 @@ const AnalyticsChannels = () => {
             />
           ) : (
             <PreviewTab 
+              monitored={monitored}
               channel_id={monitored? id : channel?.channelId} 
               channelName={monitored? channelInfo?.channel?.title : channelInfo?.channel?.name} 
               channelAva={channelInfo?.channel?.avatar_url} 
