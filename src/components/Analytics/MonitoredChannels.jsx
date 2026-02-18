@@ -84,7 +84,7 @@ const MonitoredChannels = ({ debouncedQuery }) => {
 											<СhannelPlug width="48px" height="48px" text={item.response.title} />
 										)}
 
-										<ItemContent>
+										<ItemContent> 
 											<MonitoredChannelsName to={`/analytics/${item.telescopeTelegramId}?monitored=true`}>
 												<HighlightText
 													text={item.response.title}
