@@ -85,7 +85,7 @@ const MonitoredChannels = ({ debouncedQuery }) => {
 										)}
 
 										<ItemContent>
-											<MonitoredChannelsName to={`/analytics/-100${item.telescopeTelegramId}?monitored=true`}>
+											<MonitoredChannelsName to={`/analytics/${item.telescopeTelegramId}?monitored=true`}>
 												<HighlightText
 													text={item.response.title}
 													query={debouncedQuery}
