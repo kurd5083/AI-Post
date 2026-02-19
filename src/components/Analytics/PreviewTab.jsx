@@ -34,7 +34,7 @@ const PreviewTab = ({ monitored, channel_id, channelName, channelAva }) => {
 	const [viewMode, setViewMode] = useState("List");
 	const { dayTracking, dayTrackingPending } = useGetDayTracking({ channel_id });
 	const { mentions, mentionsPending } = useMentionsDiscover({ channel_id });
-	console.log(mentions?.mentions)
+
 	const handleChange = (newValue) => {
 		if (!newValue) return;
 		setViewMode(newValue);
